@@ -12,6 +12,7 @@ import { ContactSection } from './components/ContactSection';
 import { AdminSection } from './components/AdminSection';
 import { TeamSection } from './components/TeamSection';
 import { ClientsSection } from './components/ClientsSection';
+import { PerformanceSection } from './components/PerformanceSection';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Seeding Initial Inquiries for outstanding presentation
@@ -265,6 +266,8 @@ export default function App() {
             onDeleteClient={handleDeleteClient}
           />
         );
+      case 'performance':
+        return <PerformanceSection />;
       default:
         return <HomeSection setActiveTab={setActiveTab} setSelectedVehicleId={setSelectedVehicleId} />;
     }

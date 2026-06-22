@@ -46,4 +46,4 @@ export interface ClientItem {
   isDraft?: boolean;
 }
 
-export type ActiveTab = 'home' | 'fleet' | 'services' | 'about' | 'contact' | 'admin' | 'team' | 'clients';
+export type ActiveTab = 'home' | 'fleet' | 'services' | 'about' | 'contact' | 'admin' | 'team' | 'clients' | 'performance';

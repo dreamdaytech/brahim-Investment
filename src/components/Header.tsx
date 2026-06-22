@@ -44,6 +44,13 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             FLEET STATUS: DEPLOYABLE
           </span>
           <button 
+            onClick={() => setActiveTab('performance')}
+            className="flex items-center space-x-1 text-xs text-slate-400 hover:text-emerald-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4"
+          >
+            <Shield size={12} />
+            <span>Telemetry & Performance</span>
+          </button>
+          <button 
             onClick={onOpenAdmin}
             className="flex items-center space-x-1 text-xs text-slate-400 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4"
           >
