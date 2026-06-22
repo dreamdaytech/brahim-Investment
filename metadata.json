@@ -1,0 +1,6 @@
+{
+  "name": "BIG Group Car Rental & Driver Services",
+  "description": "Premium 4WD fleet rental, professional chauffeurs, and logistics solutions in Sierra Leone.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
