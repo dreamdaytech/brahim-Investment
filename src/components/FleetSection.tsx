@@ -49,7 +49,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
               Rigorous Preventative Maintenance Active
             </h3>
             <p className="text-xs md:text-sm text-slate-400 mt-2 leading-relaxed">
-              Every driver shift and logistics deployment begins with a meticulous mechanical scan. Under direct oversight by our workshop director on Wilkinson Road, we inspect suspension pressure, tire tread depth, battery output, and fluids, ensuring absolute upcountry runtime and zero breakdowns.
+              Every driver shift and logistics deployment begins with a meticulous mechanical scan. Under direct oversight by our workshop director on Freetown Road, we inspect suspension pressure, tire tread depth, battery output, and fluids, ensuring absolute upcountry runtime and zero breakdowns.
             </p>
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-[10px] text-slate-400 font-mono font-semibold">
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Full Diagnostic Computer Scans</span>

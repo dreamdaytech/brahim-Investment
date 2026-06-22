@@ -16,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
     { id: 'fleet', label: 'Our Fleet' },
     { id: 'services', label: 'Services' },
     { id: 'about', label: 'About Us' },
+    { id: 'clients', label: 'Partners' },
     { id: 'contact', label: 'Book Now' }
   ];
 
@@ -26,15 +27,15 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
         <div className="flex items-center space-x-6">
           <span className="flex items-center space-x-1">
             <Phone size={13} className="text-indigo-500" />
-            <span>+232 76 990 880 / +232 30 220 220</span>
+            <span>+232 79 121 013 / +232 30 133 574</span>
           </span>
           <span className="flex items-center space-x-1">
             <Mail size={13} className="text-indigo-500" />
-            <span>logistics@biggroupsl.com</span>
+            <span>bossbahonly@gmail.com</span>
           </span>
           <span className="flex items-center space-x-1">
             <MapPin size={13} className="text-indigo-500" />
-            <span>108 Wilkinson Road, Freetown, Sierra Leone</span>
+            <span>11 Freetown Road, Wilberforce, Freetown</span>
           </span>
         </div>
         <div className="flex items-center space-x-4">
@@ -74,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-1 lg:space-x-2">
           {navItems.map((item) => {
-            const isActive = activeTab === item.id;
+            const isActive = activeTab === item.id || (item.id === 'about' && activeTab === 'team');
             return (
               <button
                 key={item.id}
@@ -117,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#131a2c] border-t border-slate-800 px-4 pt-2 pb-6 space-y-2 shadow-2xl animate-fade-in">
           {navItems.map((item) => {
-            const isActive = activeTab === item.id;
+            const isActive = activeTab === item.id || (item.id === 'about' && activeTab === 'team');
             return (
               <button
                 key={item.id}
@@ -137,9 +138,9 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
           })}
           
           <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-400 space-y-2">
-            <p className="flex items-center gap-2"><Phone size={12} className="text-indigo-400" /> +232 76 990 880</p>
-            <p className="flex items-center gap-2"><Mail size={12} className="text-indigo-400" /> logistics@biggroupsl.com</p>
-            <p className="flex items-center gap-2"><MapPin size={12} className="text-indigo-400" /> 108 Wilkinson Road, Freetown</p>
+            <p className="flex items-center gap-2"><Phone size={12} className="text-indigo-400" /> +232 79 121 013 / +232 30 133 574</p>
+            <p className="flex items-center gap-2"><Mail size={12} className="text-indigo-400" /> bossbahonly@gmail.com</p>
+            <p className="flex items-center gap-2"><MapPin size={12} className="text-indigo-400" /> 11 Freetown Road, Wilberforce, Freetown</p>
           </div>
         </div>
       )}

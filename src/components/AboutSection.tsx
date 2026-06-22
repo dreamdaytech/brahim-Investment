@@ -1,9 +1,14 @@
 import React from 'react';
 import { VALUES } from '../data';
-import { Target, Award, ShieldClose, ShieldAlert, Star, Compass, UserCheck, HeartHandshake } from 'lucide-react';
+import { Target, Award, ShieldClose, ShieldAlert, Star, Compass, UserCheck, HeartHandshake, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { ActiveTab } from '../types';
 
-export const AboutSection: React.FC = () => {
+interface AboutSectionProps {
+  setActiveTab: (tab: ActiveTab) => void;
+}
+
+export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
   return (
     <div className="w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -13,7 +18,7 @@ export const AboutSection: React.FC = () => {
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE INSTITUTION</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
           <p className="mt-2 text-sm text-slate-550 leading-relaxed">
-            Registered and headquartered on Wilkinson Road, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
+            Registered and headquartered on 11 Freetown Road, Wilberforce, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
           </p>
         </div>
 
@@ -31,7 +36,7 @@ export const AboutSection: React.FC = () => {
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-150">
               <div className="space-y-1">
                 <span className="text-indigo-650 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
-                <span className="text-xs text-slate-800 font-semibold block">Wilkinson Road, Freetown</span>
+                <span className="text-xs text-slate-800 font-semibold block">11 Freetown Road, Wilberforce, Freetown</span>
               </div>
               <div className="space-y-1">
                 <span className="text-indigo-650 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
@@ -118,6 +123,17 @@ export const AboutSection: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Team Subpage Link block */}
+        <div className="mt-16 text-center">
+          <button
+            onClick={() => setActiveTab('team')}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm cursor-pointer"
+          >
+            Meet the Full Team
+            <ArrowRight size={16} />
+          </button>
+        </div>
 
       </div>
     </div>

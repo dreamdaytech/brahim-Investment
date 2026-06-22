@@ -35,8 +35,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  const [pickupLocation, setPickupLocation] = useState<string>('Freetown Wilkinson Road Compound');
-  const [dropoffLocation, setDropoffLocation] = useState<string>('Freetown Wilkinson Road Compound');
+  const [pickupLocation, setPickupLocation] = useState<string>('Freetown Road Compound');
+  const [dropoffLocation, setDropoffLocation] = useState<string>('Freetown Road Compound');
   
   const [travelScope, setTravelScope] = useState<'Freetown Only' | 'Upcountry Provinces'>('Freetown Only');
   const [fuelPolicy, setFuelPolicy] = useState<'Client Top-up' | 'Pre-paid fuel card'>('Client Top-up');
@@ -370,7 +370,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           type="text" 
                           value={pickupLocation}
                           onChange={(e) => setPickupLocation(e.target.value)}
-                          placeholder="e.g., Lungi Airport Terminal / Wilkinson Compound"
+                          placeholder="e.g., Lungi Airport Terminal / Depot Compound"
                           className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
                         />
                       </div>
@@ -499,28 +499,28 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <MapPin size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-400 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
-                    <span className="text-white leading-relaxed font-semibold">108 Wilkinson Road, Freetown, Sierra Leone</span>
+                    <span className="text-white leading-relaxed font-semibold">11 Freetown Road, Wilberforce, Freetown</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Phone size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-400 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
-                    <span className="text-white font-semibold block">+232 76 990 880</span>
-                    <span className="text-white font-semibold block">+232 30 220 220</span>
+                    <span className="text-white font-semibold block">+232 79 121 013</span>
+                    <span className="text-white font-semibold block">+232 30 133 574</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Mail size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-400 block font-mono text-[9px] uppercase">Corporate Mail</span>
-                    <span className="text-white font-semibold block">logistics@biggroupsl.com</span>
+                    <span className="text-white font-semibold block">bossbahonly@gmail.com</span>
                   </div>
                 </div>
               </div>
 
               <div className="p-3 bg-white/5 rounded-xl border border-white/10 text-[10px] text-slate-300 leading-normal">
-                📍 <strong>Located behind Standard Gym.</strong> Ample customer parking is available. Technical staff on standby 24 hours.
+                📍 <strong>Headquarters.</strong> Ample customer parking is available. Technical staff on standby 24 hours.
               </div>
             </div>
 
@@ -532,7 +532,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-600">
                 <div className="text-center pb-2 border-b border-slate-200">
                   <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">B.I.G GROUP (SL)</span>
-                  <span className="text-[8px] text-gray-400 block uppercase">Wilkinson Road Freetown</span>
+                  <span className="text-[8px] text-gray-400 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
                 </div>
 
                 <div className="space-y-1 text-[11px]">

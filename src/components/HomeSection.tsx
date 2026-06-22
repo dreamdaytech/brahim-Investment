@@ -169,7 +169,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
                 </div>
                 <div>
                   <p className="font-bold text-sm text-white">Dedicated Technical Compound</p>
-                  <p className="text-xs text-slate-400 mt-1">We maintain our private service station on Wilkinson Road with certified mechanics to service and diagnostic scan vehicles.</p>
+                  <p className="text-xs text-slate-400 mt-1">We maintain our private service station on Freetown Road with certified mechanics to service and diagnostic scan vehicles.</p>
                 </div>
               </div>
             </div>

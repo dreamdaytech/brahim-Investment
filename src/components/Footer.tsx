@@ -122,15 +122,15 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           <ul className="space-y-3 text-xs text-slate-400 font-sans">
             <li className="flex items-start space-x-2">
               <MapPin size={14} className="text-indigo-400 mt-0.5 shrink-0" />
-              <span>108 Wilkinson Road (Behind Standard Gym), Freetown, Sierra Leone</span>
+              <span>11 Freetown Road, Wilberforce, Freetown</span>
             </li>
             <li className="flex items-center space-x-2">
               <Phone size={14} className="text-indigo-400 shrink-0" />
-              <span>+232 76 990 880 / +232 30 220 220</span>
+              <span>+232 79 121 013 / +232 30 133 574</span>
             </li>
             <li className="flex items-center space-x-2">
               <Mail size={14} className="text-indigo-400 shrink-0" />
-              <span>logistics@biggroupsl.com</span>
+              <span>bossbahonly@gmail.com</span>
             </li>
           </ul>
         </div>

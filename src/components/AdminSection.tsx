@@ -8,14 +8,19 @@ interface AdminSectionProps {
   inquiries: Inquiry[];
   onUpdateStatus: (id: string, status: Inquiry['status']) => void;
   onDeleteInquiry: (id: string) => void;
+  clients: any[];
+  onAddClient: (client: any) => void;
+  onUpdateClient: (id: string, client: any) => void;
+  onDeleteClient: (id: string) => void;
 }
 
-export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateStatus, onDeleteInquiry }) => {
+export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateStatus, onDeleteInquiry, clients, onAddClient, onUpdateClient, onDeleteClient }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [passcode, setPasscode] = useState<string>('');
   const [passcodeError, setPasscodeError] = useState<string>('');
   
   // Filtering & Searches States
+  const [adminTab, setAdminTab] = useState<'reservations' | 'clients'>('reservations');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('All');
 
@@ -115,7 +120,26 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                 </span>
               </div>
               <h1 className="text-3xl font-black text-slate-900 tracking-tight mt-1">BIG Group Ops Registry</h1>
-              <p className="text-xs text-gray-500 font-mono mt-0.5">Physical Hub: Wilkinson Road, Freetown</p>
+              <p className="text-xs text-gray-500 font-mono mt-0.5">Physical Hub: 11 Freetown Road, Wilberforce, Freetown</p>
+            </div>
+
+            <div className="flex bg-slate-100 p-1 rounded-xl">
+              <button
+                onClick={() => setAdminTab('reservations')}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+                  adminTab === 'reservations' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                }`}
+              >
+                Reservations
+              </button>
+              <button
+                onClick={() => setAdminTab('clients')}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+                  adminTab === 'clients' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                }`}
+              >
+                Partners & Clients
+              </button>
             </div>
 
             <div className="flex items-center gap-2">
@@ -128,7 +152,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
             </div>
           </div>
 
-          {/* Quick Dashboard Key stats */}
+          {/* Quick Dashboard Key stats (Always Visible) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
               <div>
@@ -171,159 +195,363 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
             </div>
           </div>
 
-          {/* Filters & Searches Control Block */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-            
-            {/* Search Input bar */}
-            <div className="relative w-full md:w-96">
-              <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
-              <input 
-                type="text" 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by client, organization, preferred vehicle..."
-                className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs bg-white text-gray-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
-              />
-            </div>
-
-            {/* Filter class buttons */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1">
-                <Filter size={12} /> Status:
-              </span>
-              {['All', 'Pending', 'Approved', 'Declined'].map((sts) => (
-                <button
-                  key={sts}
-                  onClick={() => setFilterStatus(sts)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    filterStatus === sts 
-                      ? 'bg-indigo-600 text-white' 
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
-                  }`}
-                >
-                  {sts}
-                </button>
-              ))}
-            </div>
-
-          </div>
-
-          {/* Log Table Registry list */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-              <h3 className="font-extrabold tracking-tight text-slate-955">Logged Inquiries Queue ({filteredInquiries.length})</h3>
-              <span className="text-[10px] text-slate-400 font-mono uppercase bg-white px-2.5 py-1 rounded border border-slate-200">DATABASE SYNC: ONLINE</span>
-            </div>
-
-            {filteredInquiries.length === 0 ? (
-              <div className="py-20 text-center space-y-3">
-                <div className="text-slate-300 w-12 h-12 rounded-full flex items-center justify-center mx-auto bg-slate-50 border border-slate-200">
-                  <Database size={24} />
+          {adminTab === 'reservations' ? (
+            <>
+              {/* Filters & Searches Control Block */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+                
+                {/* Search Input bar */}
+                <div className="relative w-full md:w-96">
+                  <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
+                  <input 
+                    type="text" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search by client, organization, preferred vehicle..."
+                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs bg-white text-gray-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
+                  />
                 </div>
-                <h4 className="text-sm font-bold text-slate-700">No matching inquiries found</h4>
-                <p className="text-xs text-slate-400 max-w-xs mx-auto">Adjust search keys or submit a new quote via the Booking form.</p>
+
+                {/* Filter class buttons */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1">
+                    <Filter size={12} /> Status:
+                  </span>
+                  {['All', 'Pending', 'Approved', 'Declined'].map((sts) => (
+                    <button
+                      key={sts}
+                      onClick={() => setFilterStatus(sts)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        filterStatus === sts 
+                          ? 'bg-indigo-600 text-white' 
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
+                      }`}
+                    >
+                      {sts}
+                    </button>
+                  ))}
+                </div>
+
               </div>
-            ) : (
-              <div className="divide-y divide-slate-100">
-                {filteredInquiries.map((item) => (
-                  <div key={item.id} className="p-6 md:p-8 hover:bg-slate-50/50 transition-colors flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
-                    
-                    {/* Left block Info description */}
-                    <div className="space-y-3 max-w-3xl">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded border border-slate-200">
-                          {item.id}
-                        </span>
-                        <span className="text-[10px] text-gray-400 font-mono">Submitted: {item.createdAt}</span>
-                        
-                        {/* Status chip */}
-                        {item.status === 'Approved' && (
-                          <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold font-mono px-2 py-0.5 rounded flex items-center gap-1 uppercase">
-                            <ShieldCheck size={11} className="text-emerald-500 animate-pulse" /> Approved
-                          </span>
-                        )}
-                        {item.status === 'Pending' && (
-                          <span className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold font-mono px-2 py-0.5 rounded flex items-center gap-1 uppercase">
-                            Pending Screening
-                          </span>
-                        )}
-                        {item.status === 'Declined' && (
-                          <span className="bg-red-50 text-red-700 border border-red-200 text-[10px] font-bold font-mono px-2 py-0.5 rounded flex items-center gap-1 uppercase">
-                            Rejected
-                          </span>
-                        )}
-                      </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5 text-xs">
-                        <div>
-                          <p className="text-gray-400 font-mono text-[9px] uppercase">Client / Organization Contact</p>
-                          <p className="font-extrabold text-slate-900 text-sm mt-0.5">{item.fullName}</p>
-                          <p className="text-gray-500 font-semibold">{item.organization}</p>
-                          <p className="text-gray-500 font-mono text-[11px] mt-0.5">{item.email} &bull; {item.phone}</p>
-                        </div>
-                        
-                        <div>
-                          <p className="text-gray-400 font-mono text-[9px] uppercase">Renting Spec Logistics</p>
-                          <p className="font-bold text-gray-800 text-sm mt-0.5">{item.preferredVehicle} ({item.vehiclesNeeded} Unit)</p>
-                          <p className="text-gray-600 font-medium">Service Class: {item.serviceType}</p>
-                          <p className="text-gray-400 font-mono text-[10px] mt-0.5">Route Range: {item.startDate} &rarr; {item.endDate}</p>
-                          <p className="text-gray-400 font-mono text-[10px]">Pickup: {item.pickupLocation}</p>
-                        </div>
-                      </div>
+              {/* Log Table Registry list */}
+              <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                  <h3 className="font-extrabold tracking-tight text-slate-955">Logged Inquiries Queue ({filteredInquiries.length})</h3>
+                  <span className="text-[10px] text-slate-400 font-mono uppercase bg-white px-2.5 py-1 rounded border border-slate-200">DATABASE SYNC: ONLINE</span>
+                </div>
 
-                      {item.specialRequirementsDet && (
-                        <div className="bg-slate-50 p-3 rounded-lg text-xs text-gray-600 border border-slate-200 font-sans leading-normal">
-                          <strong>Vetting Checklist Remarks:</strong> {item.specialRequirementsDet}
-                        </div>
-                      )}
+                {filteredInquiries.length === 0 ? (
+                  <div className="py-20 text-center space-y-3">
+                    <div className="text-slate-300 w-12 h-12 rounded-full flex items-center justify-center mx-auto bg-slate-50 border border-slate-200">
+                      <Database size={24} />
                     </div>
-
-                    {/* Operational Action buttons */}
-                    <div className="flex sm:flex-row gap-2 w-full lg:w-auto self-end lg:self-center shrink-0">
-                      {item.status === 'Pending' && (
-                        <>
-                          <button
-                            onClick={() => onUpdateStatus(item.id, 'Approved')}
-                            className="flex-1 lg:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center"
-                          >
-                            Approve Dispatch
-                          </button>
-                          <button
-                            onClick={() => onUpdateStatus(item.id, 'Declined')}
-                            className="flex-1 lg:flex-none px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center"
-                          >
-                            Decline Unit
-                          </button>
-                        </>
-                      )}
-
-                      {item.status !== 'Pending' && (
-                        <button
-                          onClick={() => onUpdateStatus(item.id, 'Pending')}
-                          className="flex-1 lg:flex-none px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center border border-slate-200"
-                        >
-                          Reset Pending
-                        </button>
-                      )}
-
-                      <button
-                        onClick={() => onDeleteInquiry(item.id)}
-                        className="px-3 py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-center"
-                        title="Delete permanently"
-                      >
-                        Delete
-                      </button>
-                    </div>
-
+                    <h4 className="text-sm font-bold text-slate-700">No matching inquiries found</h4>
+                    <p className="text-xs text-slate-400 max-w-xs mx-auto">Adjust search keys or submit a new quote via the Booking form.</p>
                   </div>
-                ))}
+                ) : (
+                  <div className="divide-y divide-slate-100">
+                    {filteredInquiries.map((item) => (
+                      <div key={item.id} className="p-6 md:p-8 hover:bg-slate-50/50 transition-colors flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
+                        
+                        {/* Left block Info description */}
+                        <div className="space-y-3 max-w-3xl">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded border border-slate-200">
+                              {item.id}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-mono">Submitted: {item.createdAt}</span>
+                            
+                            {/* Status chip */}
+                            {item.status === 'Approved' && (
+                              <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold font-mono px-2 py-0.5 rounded flex items-center gap-1 uppercase">
+                                <ShieldCheck size={11} className="text-emerald-500 animate-pulse" /> Approved
+                              </span>
+                            )}
+                            {item.status === 'Pending' && (
+                              <span className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold font-mono px-2 py-0.5 rounded flex items-center gap-1 uppercase">
+                                Pending Screening
+                              </span>
+                            )}
+                            {item.status === 'Declined' && (
+                              <span className="bg-red-50 text-red-700 border border-red-200 text-[10px] font-bold font-mono px-2 py-0.5 rounded flex items-center gap-1 uppercase">
+                                Rejected
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5 text-xs">
+                            <div>
+                              <p className="text-gray-400 font-mono text-[9px] uppercase">Client / Organization Contact</p>
+                              <p className="font-extrabold text-slate-900 text-sm mt-0.5">{item.fullName}</p>
+                              <p className="text-gray-500 font-semibold">{item.organization}</p>
+                              <p className="text-gray-500 font-mono text-[11px] mt-0.5">{item.email} &bull; {item.phone}</p>
+                            </div>
+                            
+                            <div>
+                              <p className="text-gray-400 font-mono text-[9px] uppercase">Renting Spec Logistics</p>
+                              <p className="font-bold text-gray-800 text-sm mt-0.5">{item.preferredVehicle} ({item.vehiclesNeeded} Unit)</p>
+                              <p className="text-gray-600 font-medium">Service Class: {item.serviceType}</p>
+                              <p className="text-gray-400 font-mono text-[10px] mt-0.5">Route Range: {item.startDate} &rarr; {item.endDate}</p>
+                              <p className="text-gray-400 font-mono text-[10px]">Pickup: {item.pickupLocation}</p>
+                            </div>
+                          </div>
+
+                          {item.specialRequirementsDet && (
+                            <div className="bg-slate-50 p-3 rounded-lg text-xs text-gray-600 border border-slate-200 font-sans leading-normal">
+                              <strong>Vetting Checklist Remarks:</strong> {item.specialRequirementsDet}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Operational Action buttons */}
+                        <div className="flex sm:flex-row gap-2 w-full lg:w-auto self-end lg:self-center shrink-0">
+                          {item.status === 'Pending' && (
+                            <>
+                              <button
+                                onClick={() => onUpdateStatus(item.id, 'Approved')}
+                                className="flex-1 lg:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center"
+                              >
+                                Approve Dispatch
+                              </button>
+                              <button
+                                onClick={() => onUpdateStatus(item.id, 'Declined')}
+                                className="flex-1 lg:flex-none px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center"
+                              >
+                                Decline Unit
+                              </button>
+                            </>
+                          )}
+
+                          {item.status !== 'Pending' && (
+                            <button
+                              onClick={() => onUpdateStatus(item.id, 'Pending')}
+                              className="flex-1 lg:flex-none px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center border border-slate-200"
+                            >
+                              Reset Pending
+                            </button>
+                          )}
+
+                          <button
+                            onClick={() => onDeleteInquiry(item.id)}
+                            className="px-3 py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-center"
+                            title="Delete permanently"
+                          >
+                            Delete
+                          </button>
+                        </div>
+
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          ) : (
+            <ClientsAdminView clients={clients} onAddClient={onAddClient} onUpdateClient={onUpdateClient} onDeleteClient={onDeleteClient} />
+          )}
 
         </div>
       )}
 
+    </div>
+  );
+};
+
+const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void, onUpdateClient: (id: string, c: any) => void, onDeleteClient: (id: string) => void }> = ({ clients, onAddClient, onUpdateClient, onDeleteClient }) => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<any>({});
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  const handleEditClick = (client: any) => {
+    setEditingId(client.id);
+    setEditForm({ ...client });
+    setDeletingId(null);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingId === 'new') {
+      const newClient = { ...editForm, id: `client-${Date.now()}` };
+      onAddClient(newClient);
+    } else if (editingId) {
+      onUpdateClient(editingId, editForm);
+    }
+    setEditingId(null);
+  };
+
+  const handleAddNew = () => {
+    setEditingId('new');
+    setEditForm({ name: '', service: 'Vehicle Rental Service', status: 'Ongoing', isDraft: false });
+    setDeletingId(null);
+  };
+
+  const handleDeleteConfirm = (id: string) => {
+    onDeleteClient(id);
+    setDeletingId(null);
+  };
+
+  return (
+    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+        <h3 className="font-extrabold tracking-tight text-slate-955">Registered Partners & Clients ({clients.length})</h3>
+        <button 
+          onClick={handleAddNew}
+          disabled={editingId === 'new'}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold uppercase transition-colors hover:bg-indigo-700 disabled:opacity-50"
+        >
+          + Add Partner
+        </button>
+      </div>
+      <div className="divide-y divide-slate-100">
+        {editingId === 'new' && (
+          <div className="p-6 md:p-8 bg-indigo-50/30 transition-colors flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+            <div className="w-full space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">Partner/Client Name</label>
+                  <input 
+                    type="text" 
+                    value={editForm.name} 
+                    onChange={e => setEditForm({...editForm, name: e.target.value})}
+                    placeholder="e.g. World Health Org"
+                    autoFocus
+                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">Service Description</label>
+                  <input 
+                    type="text" 
+                    value={editForm.service} 
+                    onChange={e => setEditForm({...editForm, service: e.target.value})}
+                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">Status Indicator</label>
+                  <select 
+                    value={editForm.status} 
+                    onChange={e => setEditForm({...editForm, status: e.target.value})}
+                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                  >
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">Publishing Status</label>
+                  <select 
+                    value={editForm.isDraft ? 'true' : 'false'} 
+                    onChange={e => setEditForm({...editForm, isDraft: e.target.value === 'true'})}
+                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                  >
+                    <option value="false">Published</option>
+                    <option value="true">Draft</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={handleSaveEdit} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold uppercase transition-colors hover:bg-indigo-700">Add Partner</button>
+                <button onClick={() => setEditingId(null)} className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold uppercase transition-colors hover:bg-slate-200">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {clients.map(client => (
+          <div key={client.id} className="p-6 md:p-8 hover:bg-slate-50/50 transition-colors flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+            {editingId === client.id ? (
+              <div className="w-full space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 mb-1 block">Partner/Client Name</label>
+                    <input 
+                      type="text" 
+                      value={editForm.name} 
+                      onChange={e => setEditForm({...editForm, name: e.target.value})}
+                      className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 mb-1 block">Service Description</label>
+                    <input 
+                      type="text" 
+                      value={editForm.service} 
+                      onChange={e => setEditForm({...editForm, service: e.target.value})}
+                      className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 mb-1 block">Status Indicator</label>
+                    <select 
+                      value={editForm.status} 
+                      onChange={e => setEditForm({...editForm, status: e.target.value})}
+                      className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                    >
+                      <option value="Ongoing">Ongoing</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 mb-1 block">Publishing Status</label>
+                    <select 
+                      value={editForm.isDraft ? 'true' : 'false'} 
+                      onChange={e => setEditForm({...editForm, isDraft: e.target.value === 'true'})}
+                      className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white"
+                    >
+                      <option value="false">Published</option>
+                      <option value="true">Draft</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={handleSaveEdit} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold uppercase transition-colors hover:bg-indigo-700">Save Changes</button>
+                  <button onClick={() => setEditingId(null)} className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold uppercase transition-colors hover:bg-slate-200">Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-black text-slate-900">{client.name}</h4>
+                    {client.isDraft && <span className="bg-amber-100 text-amber-800 border border-amber-200 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase font-mono">Draft</span>}
+                  </div>
+                  <p className="text-xs text-gray-500">{client.service}</p>
+                  <div className={`mt-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-mono font-bold uppercase border ${
+                    client.status.toLowerCase().includes('completed') ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-100 text-slate-600 border-slate-200'
+                  }`}>
+                    {client.status}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  {deletingId === client.id ? (
+                    <>
+                      <button onClick={() => handleDeleteConfirm(client.id)} className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-[11px] font-bold uppercase hover:bg-red-700 transition-colors">
+                        Confirm Delete
+                      </button>
+                      <button onClick={() => setDeletingId(null)} className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-bold uppercase hover:bg-slate-200 transition-colors">
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => onUpdateClient(client.id, { isDraft: !client.isDraft })} className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-bold uppercase hover:bg-slate-200 transition-colors">
+                        {client.isDraft ? 'Publish' : 'Move to Draft'}
+                      </button>
+                      <button onClick={() => handleEditClick(client)} className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-bold uppercase hover:bg-slate-200 transition-colors">
+                        Edit Details
+                      </button>
+                      <button onClick={() => setDeletingId(client.id)} className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-[11px] font-bold uppercase hover:bg-red-100 transition-colors">
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

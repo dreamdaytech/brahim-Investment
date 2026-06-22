@@ -147,7 +147,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
                 <span className="text-[10px] uppercase tracking-widest text-indigo-600 font-mono font-bold">TECHNICAL AND QUALITY CONTROL LAB</span>
                 <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">Technical Maintenance Hub &amp; Repairs</h3>
                 <p className="text-xs text-slate-500 mt-2.5 leading-relaxed">
-                  Our private maintenance depot on Wilkinson Road is outfitted with professional diagnostic machinery. Because our fleet consists entirely of highly standardized Toyota utility bodies, we keep a pristine stock of OEM filters, heavy-duty shocks, clutch kits, and reinforced tires to guarantee immediate repairs without delays.
+                  Our private maintenance depot on Freetown Road is outfitted with professional diagnostic machinery. Because our fleet consists entirely of highly standardized Toyota utility bodies, we keep a pristine stock of OEM filters, heavy-duty shocks, clutch kits, and reinforced tires to guarantee immediate repairs without delays.
                 </p>
 
                 <div className="grid grid-cols-3 gap-4 mt-6 text-center border-t border-slate-100 pt-6">

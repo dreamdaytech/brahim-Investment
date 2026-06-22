@@ -38,4 +38,12 @@ export interface Inquiry {
   createdAt: string;
 }
 
-export type ActiveTab = 'home' | 'fleet' | 'services' | 'about' | 'contact' | 'admin';
+export interface ClientItem {
+  id: string;
+  name: string;
+  service: string;
+  status: 'Ongoing' | 'Completed' | string;
+  isDraft?: boolean;
+}
+
+export type ActiveTab = 'home' | 'fleet' | 'services' | 'about' | 'contact' | 'admin' | 'team' | 'clients';
