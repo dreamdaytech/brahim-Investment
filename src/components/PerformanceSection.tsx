@@ -3565,15 +3565,6 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="flex gap-2">
           <button 
             onClick={() => {
-              setEditingMaintenance({ startDate: new Date().toISOString().split('T')[0], status: 'Scheduled' });
-              setIsMaintenanceModalOpen(true);
-            }}
-            className="flex items-center gap-2 text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-xl hover:bg-indigo-100 transition-colors shadow-sm whitespace-nowrap"
-          >
-            <Calendar size={16} /> Schedule Maintenance
-          </button>
-          <button 
-            onClick={() => {
               setEditingMaintenance({ startDate: new Date().toISOString().split('T')[0], status: 'In Progress' });
               setIsMaintenanceModalOpen(true);
             }}
