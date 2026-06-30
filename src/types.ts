@@ -41,9 +41,43 @@ export interface Inquiry {
 export interface ClientItem {
   id: string;
   name: string;
-  service: string;
-  status: 'Ongoing' | 'Completed' | string;
+  service?: string;
+  status: 'Ongoing' | 'Completed' | 'Pending' | string;
   isDraft?: boolean;
+  shortCode?: string;
+  isPartner?: boolean;
+  contactPerson?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  headOfficeAddress?: string;
+  city?: string;
+  country?: string;
+  accountNumber?: string;
+  contractRef?: string;
+  contractStartDate?: string;
+  contractEndDate?: string;
+  creditLimit?: number;
+  totalPurchases?: number;
+  totalVolume?: number;
+  notes?: string;
+  createdAt?: string;
 }
 
 export type ActiveTab = 'home' | 'fleet' | 'services' | 'about' | 'contact' | 'admin' | 'team' | 'clients' | 'performance';
+
+export interface FuelCity {
+  id: string;
+  name: string;
+  region?: string;
+  created_at?: string;
+}
+
+export interface FuelStation {
+  id: string;
+  name: string;
+  city_id?: string;
+  is_partner?: boolean;
+  supplier?: string;
+  created_at?: string;
+}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useTransition } from 'react';
-import { collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from './lib/firebase';
+import { supabase } from './lib/supabase';
 import { ActiveTab, Vehicle, Inquiry, ClientItem } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -12,7 +11,6 @@ import { ContactSection } from './components/ContactSection';
 import { AdminSection } from './components/AdminSection';
 import { TeamSection } from './components/TeamSection';
 import { ClientsSection } from './components/ClientsSection';
-import { PerformanceSection } from './components/PerformanceSection';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Seeding Initial Inquiries for outstanding presentation
@@ -90,10 +88,13 @@ const DEFAULT_CLIENTS = [
 ];
 
 export default function App() {
-  const [activeTab, setActiveTabVar] = useState<ActiveTab>('home');
+  const [activeTab, setActiveTabVar] = useState<ActiveTab>(() => {
+    return (sessionStorage.getItem('mainActiveTab') as ActiveTab) || 'home';
+  });
   const [isPending, startTransition] = useTransition();
 
   const setActiveTab = (tab: ActiveTab) => {
+    sessionStorage.setItem('mainActiveTab', tab);
     startTransition(() => {
       setActiveTabVar(tab);
     });
@@ -111,58 +112,71 @@ export default function App() {
     return saved ? JSON.parse(saved) : DEFAULT_CLIENTS;
   });
 
-  // Connect to Firestore and listen for changes
+  // Connect to Supabase and listen for changes
   useEffect(() => {
-    // Sync Inquiries
-    const unsubscribeInquiries = onSnapshot(collection(db, 'inquiries'), (snapshot) => {
-      const data: Inquiry[] = [];
-      snapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() } as Inquiry);
-      });
-      // Sort by creation time (descending) as simple hack based on string ID or assume date
-      setInquiries(data);
-      localStorage.setItem('big_group_inquiries_cache', JSON.stringify(data));
-    });
-
-    // Sync Clients
-    const unsubscribeClients = onSnapshot(collection(db, 'clients'), (snapshot) => {
-      const data: ClientItem[] = [];
-      snapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() } as ClientItem);
-      });
-      setClients(data);
-      localStorage.setItem('big_group_clients_cache', JSON.stringify(data));
-    });
-
-    // Seed database if empty
-    const seedDatabase = async () => {
-      const { getDocs, query, limit } = await import('firebase/firestore');
-      const clientsSnapshot = await getDocs(query(collection(db, 'clients'), limit(1)));
-      if (clientsSnapshot.empty) {
-        DEFAULT_CLIENTS.forEach(async (c) => {
-          await setDoc(doc(db, 'clients', c.id), c);
-        });
+    const fetchInitialData = async () => {
+      // Inquiries
+      const { data: inquiriesData, error: inqErr } = await supabase.from('inquiries').select('*');
+      if (inqErr) console.error("Error fetching inquiries:", inqErr);
+      if (inquiriesData && inquiriesData.length > 0) {
+        setInquiries(inquiriesData as Inquiry[]);
+        localStorage.setItem('big_group_inquiries_cache', JSON.stringify(inquiriesData));
+      } else if (!inqErr) {
+        // Seed database if empty
+        const { error: seedErr } = await supabase.from('inquiries').insert(DEFAULT_INQUIRIES);
+        if (!seedErr) {
+          setInquiries(DEFAULT_INQUIRIES);
+        }
       }
-      
-      const inquiriesSnapshot = await getDocs(query(collection(db, 'inquiries'), limit(1)));
-      if (inquiriesSnapshot.empty) {
-        DEFAULT_INQUIRIES.forEach(async (iq) => {
-          await setDoc(doc(db, 'inquiries', iq.id), iq);
-        });
+
+      // Clients
+      const { data: clientsData, error: cliErr } = await supabase.from('clients').select('*');
+      if (cliErr) console.error("Error fetching clients:", cliErr);
+      if (clientsData && clientsData.length > 0) {
+        setClients(clientsData as ClientItem[]);
+        localStorage.setItem('big_group_clients_cache', JSON.stringify(clientsData));
+      } else if (!cliErr) {
+        // Seed database if empty
+        const { error: seedErr2 } = await supabase.from('clients').insert(DEFAULT_CLIENTS);
+        if (!seedErr2) {
+          setClients(DEFAULT_CLIENTS);
+        }
       }
     };
-    seedDatabase();
+
+    fetchInitialData();
+
+    // Subscribe to realtime changes
+    const inquiriesChannel = supabase.channel('public:inquiries')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, async () => {
+        const { data } = await supabase.from('inquiries').select('*');
+        if (data) {
+          setInquiries(data as Inquiry[]);
+          localStorage.setItem('big_group_inquiries_cache', JSON.stringify(data));
+        }
+      })
+      .subscribe();
+
+    const clientsChannel = supabase.channel('public:clients')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, async () => {
+        const { data } = await supabase.from('clients').select('*');
+        if (data) {
+          setClients(data as ClientItem[]);
+          localStorage.setItem('big_group_clients_cache', JSON.stringify(data));
+        }
+      })
+      .subscribe();
 
     return () => {
-      unsubscribeInquiries();
-      unsubscribeClients();
+      supabase.removeChannel(inquiriesChannel);
+      supabase.removeChannel(clientsChannel);
     };
   }, []);
 
   // Administration State modifications
   const handleUpdateStatus = async (id: string, status: Inquiry['status']) => {
     try {
-      await updateDoc(doc(db, 'inquiries', id), { status });
+      await supabase.from('inquiries').update({ status }).eq('id', id);
     } catch (error) {
       console.error("Error updating status:", error);
     }
@@ -171,7 +185,7 @@ export default function App() {
   const handleDeleteInquiry = async (id: string) => {
     if (window.confirm("Are you sure you want to permanently delete this logged inquiry from active dispatch logs?")) {
       try {
-        await deleteDoc(doc(db, 'inquiries', id));
+        await supabase.from('inquiries').delete().eq('id', id);
       } catch (error) {
         console.error("Error deleting inquiry:", error);
       }
@@ -180,7 +194,7 @@ export default function App() {
 
   const handleAddInquiry = async (newInquiry: Inquiry) => {
     try {
-      await setDoc(doc(db, 'inquiries', newInquiry.id), newInquiry);
+      await supabase.from('inquiries').insert([newInquiry]);
     } catch (error) {
       console.error("Error adding inquiry:", error);
     }
@@ -188,7 +202,7 @@ export default function App() {
 
   const handleAddClient = async (newClient: ClientItem) => {
     try {
-      await setDoc(doc(db, 'clients', newClient.id), newClient);
+      await supabase.from('clients').insert([newClient]);
     } catch (error) {
       console.error("Error adding client:", error);
     }
@@ -196,7 +210,7 @@ export default function App() {
 
   const handleUpdateClient = async (id: string, updateData: Partial<ClientItem>) => {
     try {
-      await updateDoc(doc(db, 'clients', id), updateData);
+      await supabase.from('clients').update(updateData).eq('id', id);
     } catch (error) {
       console.error("Error updating client:", error);
     }
@@ -204,7 +218,7 @@ export default function App() {
 
   const handleDeleteClient = async (id: string) => {
     try {
-      await deleteDoc(doc(db, 'clients', id));
+      await supabase.from('clients').delete().eq('id', id);
     } catch (error) {
       console.error("Error deleting client:", error);
     }
@@ -266,8 +280,6 @@ export default function App() {
             onDeleteClient={handleDeleteClient}
           />
         );
-      case 'performance':
-        return <PerformanceSection />;
       default:
         return <HomeSection setActiveTab={setActiveTab} setSelectedVehicleId={setSelectedVehicleId} />;
     }

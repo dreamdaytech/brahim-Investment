@@ -10,6 +10,21 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenAdmin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    import('../lib/supabase').then(({ supabase }) => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setAdminEmail(session?.user?.email || null);
+      });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setAdminEmail(session?.user?.email || null);
+      });
+
+      return () => subscription.unsubscribe();
+    });
+  }, []);
 
   const navItems: { id: ActiveTab; label: string }[] = [
     { id: 'home', label: 'Home' },
@@ -44,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             FLEET STATUS: DEPLOYABLE
           </span>
           <button 
-            onClick={() => setActiveTab('performance')}
+            onClick={onOpenAdmin}
             className="flex items-center space-x-1 text-xs text-slate-400 hover:text-emerald-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4"
           >
             <Shield size={12} />
@@ -54,8 +69,17 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             onClick={onOpenAdmin}
             className="flex items-center space-x-1 text-xs text-slate-400 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4"
           >
-            <Lock size={12} />
-            <span>Admin Portal</span>
+            {adminEmail ? (
+              <>
+                <Shield size={12} className="text-emerald-500" />
+                <span className="text-emerald-400">{adminEmail}</span>
+              </>
+            ) : (
+              <>
+                <Lock size={12} />
+                <span>Admin Portal</span>
+              </>
+            )}
           </button>
         </div>
       </div>

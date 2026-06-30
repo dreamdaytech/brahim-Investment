@@ -486,6 +486,38 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           {/* RIGHT COLUMN: CONTACT DETAILS & REAL-TIME ESTIMATE SUMMARY */}
           <div className="space-y-8">
             
+            {/* REAL-TIME PREVIEW BOARD */}
+            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+              <span className="text-[10px] uppercase font-mono font-bold text-gray-400 block mb-1">live proposal preview</span>
+              <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">Dynamic Rental Breakdown</h4>
+
+              <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-600">
+                <div className="text-center pb-2 border-b border-slate-200">
+                  <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">B.I.G GROUP (SL)</span>
+                  <span className="text-[8px] text-gray-400 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
+                </div>
+
+                <div className="space-y-1 text-[11px]">
+                  <p><strong>REPRESENTATIVE:</strong> {fullName || '---'}</p>
+                  <p><strong>ORGANIZATION:</strong> {organization || '---'}</p>
+                  <p><strong>SERVICE TYPE:</strong> {serviceType}</p>
+                  <p><strong>VEHICLE UNIT:</strong> {currentVehicleObj.name}</p>
+                  <p><strong>QUANTITY:</strong> {vehiclesNeeded} Unit(s)</p>
+                  {startDate && <p><strong>DEPLOY DATE:</strong> {startDate}</p>}
+                  {endDate && <p><strong>RETURN DATE:</strong> {endDate}</p>}
+                  <p><strong>TERRAIN ZONE:</strong> {travelScope}</p>
+                  <p><strong>FUEL:</strong> {fuelPolicy}</p>
+                </div>
+
+                <hr className="border-slate-200" />
+
+                <div className="flex justify-between items-center font-bold text-slate-900">
+                  <span>VETTED SECURITY STATUS:</span>
+                  <span className="text-emerald-600 font-bold uppercase block">CLEARED READY</span>
+                </div>
+              </div>
+            </div>
+
             {/* Quick Contacts Block */}
             <div className="bg-[#0f172a] text-slate-300 rounded-3xl p-6 border border-slate-800 shadow-sm space-y-6">
               <div>
@@ -521,38 +553,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
               <div className="p-3 bg-white/5 rounded-xl border border-white/10 text-[10px] text-slate-300 leading-normal">
                 📍 <strong>Headquarters.</strong> Ample customer parking is available. Technical staff on standby 24 hours.
-              </div>
-            </div>
-
-            {/* REAL-TIME PREVIEW BOARD */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-              <span className="text-[10px] uppercase font-mono font-bold text-gray-400 block mb-1">live proposal preview</span>
-              <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">Dynamic Rental Breakdown</h4>
-
-              <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-600">
-                <div className="text-center pb-2 border-b border-slate-200">
-                  <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">B.I.G GROUP (SL)</span>
-                  <span className="text-[8px] text-gray-400 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
-                </div>
-
-                <div className="space-y-1 text-[11px]">
-                  <p><strong>REPRESENTATIVE:</strong> {fullName || '---'}</p>
-                  <p><strong>ORGANIZATION:</strong> {organization || '---'}</p>
-                  <p><strong>SERVICE TYPE:</strong> {serviceType}</p>
-                  <p><strong>VEHICLE UNIT:</strong> {currentVehicleObj.name}</p>
-                  <p><strong>QUANTITY:</strong> {vehiclesNeeded} Unit(s)</p>
-                  {startDate && <p><strong>DEPLOY DATE:</strong> {startDate}</p>}
-                  {endDate && <p><strong>RETURN DATE:</strong> {endDate}</p>}
-                  <p><strong>TERRAIN ZONE:</strong> {travelScope}</p>
-                  <p><strong>FUEL:</strong> {fuelPolicy}</p>
-                </div>
-
-                <hr className="border-slate-200" />
-
-                <div className="flex justify-between items-center font-bold text-slate-900">
-                  <span>VETTED SECURITY STATUS:</span>
-                  <span className="text-emerald-600 font-bold uppercase block">CLEARED READY</span>
-                </div>
               </div>
             </div>
 

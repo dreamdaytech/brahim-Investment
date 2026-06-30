@@ -39,9 +39,9 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
     const publishedClients = clients.filter(c => !c.isDraft);
     if (filter === 'All') return publishedClients;
     return publishedClients.filter(client => {
-      const isCompleted = client.status.toLowerCase().includes('completed');
-      if (filter === 'Completed') return isCompleted;
-      if (filter === 'Ongoing') return !isCompleted;
+      const status = client.status || 'Ongoing';
+      if (filter === 'Completed') return status === 'Completed' || status === 'Inactive';
+      if (filter === 'Ongoing') return status === 'Ongoing' || status === 'Active' || (status !== 'Completed' && status !== 'Inactive' && status !== 'Pending');
       return true;
     });
   }, [filter, clients]);
@@ -82,7 +82,10 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
         {/* Clients Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredClients.map((client, idx) => {
-            const isCompleted = client.status.toLowerCase().includes('completed');
+            const status = client.status || 'Ongoing';
+            const isCompleted = status === 'Completed' || status === 'Inactive';
+            const isPending = status === 'Pending';
+            const isOngoing = !isCompleted && !isPending;
             
             return (
               <motion.div 
@@ -108,12 +111,14 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
 
                 <div className="mt-6 pt-4 border-t border-slate-100">
                   <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase ${
-                    isCompleted 
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' 
-                      : 'bg-amber-50 text-amber-700 border border-amber-100'
+                    isCompleted
+                      ? 'bg-slate-100 text-slate-500 border border-slate-200'
+                      : isPending
+                      ? 'bg-amber-50 text-amber-700 border border-amber-100'
+                      : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                   }`}>
-                    {isCompleted ? <CheckCircle2 size={12} /> : <RefreshCw size={12} className="animate-[spin_4s_linear_infinite]" />}
-                    <span>{client.status}</span>
+                    {isCompleted ? <CheckCircle2 size={12} /> : isPending ? <RefreshCw size={12} /> : <RefreshCw size={12} className="animate-[spin_4s_linear_infinite]" />}
+                    <span>{isCompleted ? 'Completed' : isPending ? 'Pending' : 'Ongoing'}</span>
                   </div>
                 </div>
               </motion.div>
