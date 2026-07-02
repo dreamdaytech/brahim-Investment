@@ -64,7 +64,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Quick Links */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-350 border-l-2 border-indigo-500 pl-2 mb-4">Core Fleet</h3>
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-300 border-l-2 border-indigo-500 pl-2 mb-4">Core Fleet</h3>
           <ul className="space-y-2 text-xs text-slate-400 font-sans">
             <li>
               <button onClick={() => setActiveTab('fleet')} className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
@@ -91,7 +91,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Services Navigation */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-350 border-l-2 border-indigo-500 pl-2 mb-4">Logistics Services</h3>
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-300 border-l-2 border-indigo-500 pl-2 mb-4">Logistics Services</h3>
           <ul className="space-y-2 text-xs text-slate-400 font-sans">
             <li>
               <button onClick={() => setActiveTab('services')} className="hover:text-white hover:underline transition-all cursor-pointer">
@@ -118,7 +118,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Contacts */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-350 border-l-2 border-indigo-500 pl-2 mb-4">Contact Points</h3>
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-300 border-l-2 border-indigo-500 pl-2 mb-4">Contact Points</h3>
           <ul className="space-y-3 text-xs text-slate-400 font-sans">
             <li className="flex items-start space-x-2">
               <MapPin size={14} className="text-indigo-400 mt-0.5 shrink-0" />

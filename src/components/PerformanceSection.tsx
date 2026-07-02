@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, MoreVertical, Filter } from 'lucide-react';
+import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award } from 'lucide-react';
+
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
   BarChart, Bar, AreaChart, Area
@@ -59,6 +60,15 @@ export interface Driver {
   suspensionCount?: number;
 }
 
+export interface VehicleDocument {
+  id?: string;
+  vehicleId?: string;
+  docType: string;
+  label: string;
+  fileUrl: string;
+  uploadedAt?: string;
+}
+
 export interface Vehicle {
   id: string;
   makeModel: string;
@@ -70,6 +80,9 @@ export interface Vehicle {
   isCompanyRegistered: boolean;
   type: string;
   status: 'Available' | 'Maintenance' | 'Decommissioned';
+  imageUrl?: string;
+  galleryUrls?: string[];
+  documents?: VehicleDocument[];
 }
 
 export interface FuelSupplier {
@@ -363,8 +376,10 @@ const generateMockLogs = (): TripLog[] => {
 export const initialLogs = generateMockLogs();
 
 export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = [] }) => {
-  const [activeTab, _setActiveTab] = useState<'dashboard' | 'dispatch' | 'maintenance' | 'logs' | 'drivers' | 'driver_details' | 'vehicles' | 'leaderboard' | 'fuel' | 'scoring'>(() => {
-    return (sessionStorage.getItem('adminActiveTab') as any) || 'dashboard';
+  const [activeTab, _setActiveTab] = useState<'dashboard' | 'dispatch' | 'maintenance' | 'logs' | 'drivers' | 'driver_details' | 'vehicles' | 'leaderboard' | 'fuel'>(() => {
+    const saved = sessionStorage.getItem('adminActiveTab');
+    if (saved === 'scoring') return 'leaderboard';
+    return (saved as any) || 'dashboard';
   });
 
   const setActiveTab = (tab: any) => {
@@ -427,6 +442,24 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   const [activeDispatches, _setActiveDispatches] = useState<ActiveDispatch[]>([]);
   const [maintenanceRecords, _setMaintenanceRecords] = useState<MaintenanceRecord[]>([]);
   const [serverDriverScores, setServerDriverScores] = useState<any[]>([]);
+  const [awardModal, setAwardModal] = useState<{ driverId: string; driverName: string } | null>(null);
+  const [awardType, setAwardType] = useState('Driver of the Month');
+  const [awardNote, setAwardNote] = useState('');
+  const [awardSaving, setAwardSaving] = useState(false);
+  const [awardSuccess, setAwardSuccess] = useState(false);
+  const [awardPeriod, setAwardPeriod] = useState<string>(() =>
+    new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
+  );
+  const [hofFilter, setHofFilter] = useState<string>('All Time');
+
+  // Leaderboard Filters & Sorting
+  const [leaderboardPeriodType, setLeaderboardPeriodType] = useState<'Rolling' | 'Month' | 'Year' | 'All Time'>('Rolling');
+  const [leaderboardPeriodValue, setLeaderboardPeriodValue] = useState<string>('Monthly');
+  const [leaderboardSearch, setLeaderboardSearch] = useState('');
+  const [leaderboardStatus, setLeaderboardStatus] = useState<'all' | 'eligible' | 'disqualified'>('all');
+  const [leaderboardSortField, setLeaderboardSortField] = useState<'score' | 'trips' | 'distance' | 'efficiency' | 'incidents' | 'variance' | 'name'>('score');
+  const [leaderboardSortDirection, setLeaderboardSortDirection] = useState<'asc' | 'desc'>('desc');
+
   const [allStatusLogs, setAllStatusLogs] = useState<DriverStatusLog[]>([]);
 
   // Initialize data from Supabase
@@ -824,6 +857,26 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   const [deletingLogId, setDeletingLogId] = useState<string | null>(null);
 
   // Scoring Engine
+  const leaderboardLogs = useMemo(() => {
+    if (leaderboardPeriodType === 'Rolling') {
+      return filteredLogs;
+    }
+    if (leaderboardPeriodType === 'All Time') {
+      return logs;
+    }
+    return logs.filter(l => {
+      const d = new Date(l.date);
+      if (leaderboardPeriodType === 'Year') {
+        return d.getFullYear().toString() === leaderboardPeriodValue;
+      }
+      if (leaderboardPeriodType === 'Month') {
+        const logMonth = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+        return logMonth === leaderboardPeriodValue;
+      }
+      return true;
+    });
+  }, [logs, filteredLogs, leaderboardPeriodType, leaderboardPeriodValue]);
+
   const driverScores = useMemo(() => {
     return drivers.map(driver => {
       const driverLogs = filteredLogs.filter(l => l.driverId === driver.id);
@@ -867,10 +920,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         if (hasVariance) score -= 15;
       });
 
-      // Simple bonus logic
       if (driverLogs.length > 0) {
         const efficiency = totalConsumed > 0 ? totalDistance / totalConsumed : 0;
-        if (efficiency > 10) score += 5; // Example bonus for good km/L
+        if (efficiency > 10) score += 5;
       }
 
       return {
@@ -889,6 +941,71 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       };
     }).sort((a, b) => b.score - a.score);
   }, [drivers, filteredLogs]);
+
+  const leaderboardScores = useMemo(() => {
+    return drivers.map(driver => {
+      const driverLogs = leaderboardLogs.filter(l => l.driverId === driver.id);
+      
+      let score = 100;
+      let totalDistance = 0;
+      let totalConsumed = 0;
+      let totalIssued = 0;
+      let cost = 0;
+      let incidents = 0;
+      let policyViolations = 0;
+      let routeDeviations = 0;
+      let speeding = 0;
+      let idling = 0;
+      let varianceWarnings = 0;
+
+      driverLogs.forEach(l => {
+        const tripFuelIssued = l.fuelCollections ? l.fuelCollections.reduce((sum, fc) => sum + fc.liters, 0) : (l.fuelIssuedLiters || 0);
+        const tripFuelCost = l.fuelCollections ? l.fuelCollections.reduce((sum, fc) => sum + (fc.liters * fc.costPerLiter), 0) : ((l.fuelIssuedLiters || 0) * (l.fuelCostPerLiter || 0));
+
+        totalDistance += l.distanceTraveledKm;
+        totalConsumed += l.fuelConsumedLiters;
+        totalIssued += tripFuelIssued;
+        cost += tripFuelCost;
+        incidents += l.incidents;
+        policyViolations += l.policyViolations || 0;
+        routeDeviations += l.routeDeviations || 0;
+        speeding += l.speedingEvents;
+        idling += l.idlingTimeHours;
+        
+        // 10% threshold for variance
+        const hasVariance = tripFuelIssued > l.fuelConsumedLiters * 1.1; 
+        if (hasVariance) varianceWarnings++;
+        
+        score -= (l.incidents * 20);
+        score -= ((l.policyViolations || 0) * 5);
+        score -= ((l.routeDeviations || 0) * 5);
+        score -= (l.speedingEvents * 2);
+        score -= (l.harshBraking * 2);
+        score -= (l.idlingTimeHours * 1);
+        if (hasVariance) score -= 15;
+      });
+
+      if (driverLogs.length > 0) {
+        const efficiency = totalConsumed > 0 ? totalDistance / totalConsumed : 0;
+        if (efficiency > 10) score += 5;
+      }
+
+      return {
+        driver,
+        score: driverLogs.length === 0 ? 0 : Math.max(0, Math.round(score)),
+        trips: driverLogs.length,
+        totalDistance,
+        efficiency: totalConsumed > 0 ? (totalDistance / totalConsumed).toFixed(1) : '0.0',
+        varianceWarnings,
+        cost,
+        incidents,
+        policyViolations,
+        routeDeviations,
+        speeding,
+        idling
+      };
+    }).sort((a, b) => b.score - a.score);
+  }, [drivers, leaderboardLogs]);
 
   const expiringDocuments = useMemo(() => {
     const docs: { type: string, name: string, days: number, entityId: string }[] = [];
@@ -2161,151 +2278,607 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     );
   };
 
-  const renderLeaderboard = () => (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
+  const renderLeaderboard = () => {
+    const isDisqualified = (ds: typeof driverScores[0]) =>
+      ds.incidents >= 1 || ds.varianceWarnings >= 2;
+
+    const rankStyle = (idx: number, disq: boolean) => {
+      if (disq) return { badge: 'bg-red-50 text-red-400', label: String(idx + 1) };
+      if (idx === 0) return { badge: 'bg-amber-100 text-amber-700', label: '🥇' };
+      if (idx === 1) return { badge: 'bg-slate-200 text-slate-700', label: '🥈' };
+      if (idx === 2) return { badge: 'bg-orange-100 text-orange-700', label: '🥉' };
+      return { badge: 'bg-slate-50 text-slate-400', label: String(idx + 1) };
+    };
+
+    const currentMonthLabel = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    // Generate last 24 months (newest first) for pickers
+    const last24Months: string[] = Array.from({ length: 24 }, (_, i) => {
+      const d = new Date();
+      d.setDate(1);
+      d.setMonth(d.getMonth() - i);
+      return d.toLocaleString('default', { month: 'long', year: 'numeric' });
+    });
+
+    // Parses both new pipe format ("type|period|note|date") and legacy (" - " format)
+    const parseAward = (raw: string): { type: string; period: string; note: string; date: string } => {
+      if (raw.includes('|')) {
+        const [type = '', period = '', note = '', date = ''] = raw.split('|');
+        return { type, period, note, date };
+      }
+      const parts = raw.split(' - ');
+      const date = parts.pop() || '';
+      const rest = parts.join(' - ');
+      const noteMatch = rest.match(/\((.+?)\)$/);
+      const note = noteMatch ? noteMatch[1] : '';
+      const type = rest.replace(/\s*\(.+?\)$/, '').trim();
+      return { type, period: '', note, date };
+    };
+
+    const allAwardedDrivers = leaderboardScores
+      .filter(ds => ds.driver.awards && ds.driver.awards.length > 0)
+      .flatMap(ds => (ds.driver.awards as string[]).map(aw => ({
+        driver: ds.driver,
+        raw: aw,
+        parsed: parseAward(aw),
+      })))
+      .sort((a, b) => {
+        const dateA = new Date(a.parsed.date).getTime() || 0;
+        const dateB = new Date(b.parsed.date).getTime() || 0;
+        return dateB - dateA;
+      });
+
+    // Unique periods present in actual award records (for filter pills)
+    const hofPeriods = ['All Time', ...Array.from(new Set(
+      allAwardedDrivers.map(e => e.parsed.period).filter(Boolean)
+    ))];
+
+    const hofAwards = hofFilter === 'All Time'
+      ? allAwardedDrivers
+      : allAwardedDrivers.filter(e => e.parsed.period === hofFilter);
+
+    // Group by period for "All Time" display
+    const groupedHof: Record<string, typeof allAwardedDrivers> = {};
+    hofAwards.forEach(e => {
+      const key = e.parsed.period || 'Legacy Awards';
+      if (!groupedHof[key]) groupedHof[key] = [];
+      groupedHof[key].push(e);
+    });
+
+    const penaltyRules = [
+      { label: 'Incident', penalty: -20, unit: 'each' },
+      { label: 'Policy Violation', penalty: -5, unit: 'each' },
+      { label: 'Route Deviation', penalty: -5, unit: 'each' },
+      { label: 'Speeding Event', penalty: -2, unit: 'each' },
+      { label: 'Fuel Variance Flag', penalty: -15, unit: 'each' },
+      { label: 'Idling Time', penalty: -1, unit: 'per hr' },
+    ];
+
+    const handleSort = (field: typeof leaderboardSortField) => {
+      if (leaderboardSortField === field) {
+        setLeaderboardSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      } else {
+        setLeaderboardSortField(field);
+        setLeaderboardSortDirection('desc');
+      }
+    };
+
+    const SortIcon = ({ field }: { field: typeof leaderboardSortField }) => {
+      if (leaderboardSortField !== field) return <ArrowUpDown size={12} className="inline-block ml-1 opacity-20" />;
+      return leaderboardSortDirection === 'asc' 
+        ? <ChevronUp size={14} className="inline-block ml-1 text-indigo-500" />
+        : <ChevronDown size={14} className="inline-block ml-1 text-indigo-500" />;
+    };
+
+    // Filter and Sort Data
+    const processedScores = leaderboardScores
+      .filter(ds => ds.trips > 0)
+      .filter(ds => {
+        if (leaderboardStatus === 'eligible') return !isDisqualified(ds);
+        if (leaderboardStatus === 'disqualified') return isDisqualified(ds);
+        return true;
+      })
+      .filter(ds => {
+        if (!leaderboardSearch.trim()) return true;
+        return ds.driver.name.toLowerCase().includes(leaderboardSearch.toLowerCase());
+      })
+      .sort((a, b) => {
+        let valA: any = a[leaderboardSortField as keyof typeof a];
+        let valB: any = b[leaderboardSortField as keyof typeof b];
+        
+        if (leaderboardSortField === 'name') {
+          valA = a.driver.name;
+          valB = b.driver.name;
+        } else if (leaderboardSortField === 'variance') {
+          valA = a.varianceWarnings;
+          valB = b.varianceWarnings;
+        } else if (leaderboardSortField === 'distance') {
+          valA = a.totalDistance;
+          valB = b.totalDistance;
+        }
+
+        if (typeof valA === 'string' && typeof valB === 'string') {
+          return leaderboardSortDirection === 'asc' 
+            ? valA.localeCompare(valB) 
+            : valB.localeCompare(valA);
+        }
+        return leaderboardSortDirection === 'asc' ? valA - valB : valB - valA;
+      });
+
+    return (
+      <div className="space-y-8 animate-fade-in">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Driver Leaderboard & Awards</h2>
-          <p className="text-slate-500 text-sm mt-1">Ranking based on efficiency, compliance, and behavior</p>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Driver Performance &amp; Awards</h2>
+          <p className="text-slate-500 text-sm mt-1">
+            Live metrics from{' '}
+            <span className="font-bold text-indigo-600">{leaderboardLogs.length} trip logs</span>
+            {' '}— scoring period: <span className="font-bold text-slate-700">{leaderboardPeriodType === 'Rolling' ? 'Last 30 Days' : leaderboardPeriodValue}</span>
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => { setAwardModal({ driverId: '', driverName: '' }); setAwardType('Driver of the Month'); setAwardNote(''); setAwardSuccess(false); }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm shadow-sm transition-colors shrink-0"
+          >
+            <Gift size={15} /> Issue Award
+          </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm whitespace-nowrap">
-          <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
-            <tr>
-              <th className="px-6 py-4 font-semibold w-16 text-center">Rank</th>
-              <th className="px-6 py-4 font-semibold">Driver</th>
-              <th className="px-6 py-4 font-semibold text-center">Score</th>
-              <th className="px-6 py-4 font-semibold">Trips</th>
-              <th className="px-6 py-4 font-semibold">Efficiency</th>
-              <th className="px-6 py-4 font-semibold">Fuel Cost</th>
-              <th className="px-6 py-4 font-semibold text-center">Warnings</th>
-              <th className="px-6 py-4 font-semibold text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {[...driverScores].sort((a, b) => b.score - a.score).map((ds, idx) => (
-              <tr key={ds.driver.id} className="hover:bg-slate-50/50 transition-colors">
-                <td className="px-6 py-4 text-center">
-                  <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-black text-sm ${
-                    idx === 0 ? 'bg-amber-100 text-amber-700' :
-                    idx === 1 ? 'bg-slate-200 text-slate-700' :
-                    idx === 2 ? 'bg-orange-100 text-orange-800' :
-                    'bg-slate-50 text-slate-400'
-                  }`}>
-                    {idx + 1}
-                  </span>
-                </td>
-                <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
-                  <img src={ds.driver.imgUrl} alt={ds.driver.name} className="w-8 h-8 rounded-full" />
-                  <div className="flex flex-col">
-                    <span>{ds.driver.name}</span>
-                    {ds.driver.awards && ds.driver.awards.length > 0 && (
-                      <span className="text-[10px] text-amber-600 font-bold flex items-center gap-1"><Trophy size={10} /> {ds.driver.awards.length} Awards</span>
+      {/* Scoring Algorithm Key */}
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+        <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-3">Scoring Algorithm — Every driver starts at 100 pts</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+          {penaltyRules.map(p => (
+            <div key={p.label} className="bg-white border border-slate-200 rounded-xl p-3 text-center shadow-sm">
+              <span className="text-red-500 font-black text-sm">{p.penalty}</span><span className="text-slate-400 text-[10px] font-mono"> pts</span>
+              <p className="text-[10px] text-slate-600 font-semibold mt-0.5 leading-tight">{p.label}</p>
+              <p className="text-[9px] text-slate-400 font-mono">{p.unit}</p>
+            </div>
+          ))}
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center shadow-sm">
+            <span className="text-emerald-500 font-black text-sm">+5</span><span className="text-slate-400 text-[10px] font-mono"> pts</span>
+            <p className="text-[10px] text-slate-600 font-semibold mt-0.5 leading-tight">Efficiency Bonus</p>
+            <p className="text-[9px] text-slate-400 font-mono">if &gt;10 km/L</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Combined Rankings Table Controls */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex gap-2">
+          <select 
+            value={leaderboardPeriodType}
+            onChange={e => {
+              const type = e.target.value as any;
+              setLeaderboardPeriodType(type);
+              if (type === 'Rolling') setLeaderboardPeriodValue('Monthly');
+              else if (type === 'Month') setLeaderboardPeriodValue(currentMonthLabel);
+              else if (type === 'Year') setLeaderboardPeriodValue(new Date().getFullYear().toString());
+              else if (type === 'All Time') setLeaderboardPeriodValue('All Time');
+            }}
+            className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+          >
+            <option value="Rolling">Rolling Window</option>
+            <option value="Month">Specific Month</option>
+            <option value="Year">Specific Year</option>
+            <option value="All Time">All Time</option>
+          </select>
+          
+          {leaderboardPeriodType === 'Month' && (
+            <select
+              value={leaderboardPeriodValue}
+              onChange={e => setLeaderboardPeriodValue(e.target.value)}
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+            >
+              {last24Months.map(m => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          )}
+
+          {leaderboardPeriodType === 'Year' && (
+            <select
+              value={leaderboardPeriodValue}
+              onChange={e => setLeaderboardPeriodValue(e.target.value)}
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+            >
+              {[0, 1, 2].map(offset => {
+                const y = (new Date().getFullYear() - offset).toString();
+                return <option key={y} value={y}>{y}</option>;
+              })}
+            </select>
+          )}
+        </div>
+
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input 
+            type="text" 
+            placeholder="Search drivers by name..."
+            value={leaderboardSearch}
+            onChange={e => setLeaderboardSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+          />
+        </div>
+        <div className="shrink-0 flex items-center gap-2">
+          <Filter size={14} className="text-slate-400" />
+          <select 
+            value={leaderboardStatus} 
+            onChange={e => setLeaderboardStatus(e.target.value as any)}
+            className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+          >
+            <option value="all">All Drivers</option>
+            <option value="eligible">Award Eligible Only</option>
+            <option value="disqualified">Disqualified Only</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Combined Rankings Table */}
+      {leaderboardScores.filter(ds => ds.trips > 0).length === 0 ? (
+        <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-12 text-center">
+          <Activity size={36} className="text-slate-300 mx-auto mb-3" />
+          <p className="text-slate-400 font-bold">No trip data for this period</p>
+          <p className="text-xs text-slate-300 mt-1">Add trip logs to see driver scores here.</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+              <tr>
+                <th className="px-4 py-4 font-semibold w-14 text-center">Rank</th>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('name')}>
+                  Driver <SortIcon field="name" />
+                </th>
+                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('score')}>
+                  Score <SortIcon field="score" />
+                </th>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('trips')}>
+                  Trips <SortIcon field="trips" />
+                </th>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('distance')}>
+                  Distance <SortIcon field="distance" />
+                </th>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('efficiency')}>
+                  Efficiency <SortIcon field="efficiency" />
+                </th>
+                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('incidents')}>
+                  Incidents <SortIcon field="incidents" />
+                </th>
+                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('variance')}>
+                  Variance <SortIcon field="variance" />
+                </th>
+                <th className="px-4 py-4 font-semibold text-center">Award Status</th>
+                <th className="px-4 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {processedScores.length === 0 ? (
+                <tr>
+                  <td colSpan={10} className="px-4 py-12 text-center text-slate-400">
+                    No drivers match your current filters.
+                  </td>
+                </tr>
+              ) : processedScores.map((ds, idx) => {
+                const disq = isDisqualified(ds);
+                // Dynamic rank based on processed order
+                const rs = rankStyle(idx, disq);
+                return (
+                  <tr key={ds.driver.id} className={`transition-colors ${disq ? 'bg-red-50/20 hover:bg-red-50/40' : 'hover:bg-slate-50/50'}`}>
+                    <td className="px-4 py-4 text-center">
+                      <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-black text-sm ${rs.badge}`}>{rs.label}</span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative shrink-0">
+                          <img src={ds.driver.imgUrl} alt={ds.driver.name} className="w-9 h-9 rounded-full border-2 border-slate-100 object-cover" />
+                          {idx === 0 && !disq && <span className="absolute -top-1 -right-1 text-[11px]">🥇</span>}
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-900">{ds.driver.name}</span>
+                          {ds.driver.awards && ds.driver.awards.length > 0 ? (
+                            <p className="text-[10px] text-amber-600 font-bold flex items-center gap-1"><Trophy size={9} /> {ds.driver.awards.length} Award{ds.driver.awards.length !== 1 ? 's' : ''}</p>
+                          ) : (
+                            <p className="text-[10px] text-slate-400 font-mono">No awards yet</p>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-lg font-black ${
+                        ds.trips === 0 ? 'bg-slate-50 text-slate-300' :
+                        ds.score >= 90 ? 'bg-emerald-50 text-emerald-600' :
+                        ds.score >= 70 ? 'bg-blue-50 text-blue-600' :
+                        ds.score >= 50 ? 'bg-amber-50 text-amber-600' :
+                        'bg-red-50 text-red-600'
+                      }`}>{ds.trips === 0 ? '—' : ds.score}</span>
+                    </td>
+                    <td className="px-4 py-4 text-slate-600 font-mono">{ds.trips}</td>
+                    <td className="px-4 py-4 text-slate-600 font-mono">{ds.totalDistance.toFixed(1)} km</td>
+                    <td className="px-4 py-4 font-mono">
+                      <span className={Number(ds.efficiency) >= 10 ? 'text-emerald-600 font-bold' : 'text-slate-600'}>
+                        {ds.efficiency} km/L{Number(ds.efficiency) >= 10 && <span className="text-[10px] text-emerald-500 ml-1">+5</span>}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      {ds.incidents > 0 ? (
+                        <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-lg text-xs font-bold">
+                          <AlertTriangle size={11} /> {ds.incidents} <span className="text-red-400 font-normal">(-{ds.incidents * 20})</span>
+                        </span>
+                      ) : (
+                        <span className="text-emerald-500 text-xs font-bold flex items-center justify-center gap-1"><CheckCircle2 size={11} /> None</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      {ds.varianceWarnings > 0 ? (
+                        <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-lg text-xs font-bold">
+                          <AlertTriangle size={11} /> {ds.varianceWarnings} <span className="text-amber-500 font-normal">(-{ds.varianceWarnings * 15})</span>
+                        </span>
+                      ) : (
+                        <span className="text-emerald-500 text-xs font-bold flex items-center justify-center gap-1"><CheckCircle2 size={11} /> Clean</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      {ds.trips === 0 ? (
+                        <span className="text-slate-300 text-xs font-mono">No trips</span>
+                      ) : disq ? (
+                        <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 border border-red-100 px-2 py-1 rounded-lg text-xs font-bold">
+                          <AlertTriangle size={11} /> Disqualified
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-lg text-xs font-bold">
+                          <CheckCircle2 size={11} /> Eligible
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => { setAwardModal({ driverId: ds.driver.id, driverName: ds.driver.name }); setAwardType('Driver of the Month'); setAwardNote(''); setAwardSuccess(false); }}
+                          className="text-amber-600 hover:text-white bg-amber-50 hover:bg-amber-500 p-1.5 rounded-lg transition-colors"
+                          title="Issue Award"
+                        ><Gift size={14} /></button>
+                        <button onClick={() => setSelectedDriverScorecard(ds.driver.id)}
+                          className="text-sm font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                          Scorecard
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Disqualification Rules */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex gap-4 items-start">
+        <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-sm font-bold text-amber-900">Disqualification Rules</p>
+          <p className="text-xs text-amber-700 mt-1 leading-relaxed">
+            A driver is <strong>automatically disqualified</strong> from monthly award eligibility if they have{' '}
+            <strong>1 or more incident</strong> or <strong>2 or more fuel variance flags</strong> in the scoring period.
+          </p>
+        </div>
+      </div>
+
+      {/* Awards Hall of Fame */}
+      <div className="space-y-5">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <Award size={20} className="text-amber-500" />
+            <div>
+              <h3 className="text-lg font-black text-slate-900">Awards Hall of Fame</h3>
+              <p className="text-xs text-slate-400">
+                {hofFilter === 'All Time'
+                  ? `${allAwardedDrivers.length} total award${allAwardedDrivers.length !== 1 ? 's' : ''} across all months`
+                  : `${hofAwards.length} award${hofAwards.length !== 1 ? 's' : ''} for ${hofFilter}`}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Month filter pills — only shown when there are awards */}
+        {allAwardedDrivers.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {hofPeriods.map(p => (
+              <button key={p} onClick={() => setHofFilter(p)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                  hofFilter === p
+                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300 hover:bg-amber-50'
+                }`}>
+                {p}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Empty state */}
+        {allAwardedDrivers.length === 0 ? (
+          <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center">
+            <Trophy size={32} className="text-slate-300 mx-auto mb-3" />
+            <p className="text-slate-400 font-medium text-sm">No awards have been issued yet.</p>
+            <p className="text-xs text-slate-300 mt-1">Use the "Issue Award" button above to recognise a driver.</p>
+          </div>
+        ) : hofAwards.length === 0 ? (
+          <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-8 text-center">
+            <Calendar size={28} className="text-slate-300 mx-auto mb-2" />
+            <p className="text-slate-400 font-medium text-sm">No awards recorded for {hofFilter}.</p>
+          </div>
+        ) : hofFilter === 'All Time' ? (
+          /* Grouped by month */
+          <div className="space-y-6">
+            {Object.entries(groupedHof).map(([period, entries]) => (
+              <div key={period}>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">{period}</span>
+                  <span className="bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-0.5 rounded-full">{entries.length}</span>
+                  <div className="flex-1 h-px bg-slate-100" />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {entries.map((entry, i) => (
+                    <div key={i} className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3 shadow-sm hover:shadow-md transition-shadow">
+                      <div className="bg-amber-100 p-2 rounded-xl shrink-0"><Trophy size={16} className="text-amber-600" /></div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-black text-amber-900 text-sm leading-tight">{entry.parsed.type}</p>
+                        {entry.parsed.note && <p className="text-[10px] text-amber-700 mt-0.5 italic">"{entry.parsed.note}"</p>}
+                        <div className="flex items-center gap-2 mt-2">
+                          <img src={entry.driver.imgUrl} alt={entry.driver.name} className="w-5 h-5 rounded-full border border-amber-200 object-cover" />
+                          <span className="text-xs font-bold text-amber-700 truncate">{entry.driver.name}</span>
+                        </div>
+                        {entry.parsed.date && (
+                          <p className="text-[10px] text-amber-400 font-mono mt-1.5 flex items-center gap-1">
+                            <Calendar size={9} /> Issued {entry.parsed.date}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* Single month filtered view */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {hofAwards.map((entry, i) => (
+              <div key={i} className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-amber-100 p-2.5 rounded-xl shrink-0"><Trophy size={18} className="text-amber-600" /></div>
+                <div className="min-w-0">
+                  <p className="font-black text-amber-900 text-sm">{entry.parsed.type}</p>
+                  {entry.parsed.note && <p className="text-[10px] text-amber-700 italic mt-0.5">"{entry.parsed.note}"</p>}
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <img src={entry.driver.imgUrl} alt={entry.driver.name} className="w-5 h-5 rounded-full border border-amber-200 object-cover" />
+                    <span className="text-xs font-bold text-amber-700 truncate">{entry.driver.name}</span>
+                  </div>
+                  {entry.parsed.date && (
+                    <p className="text-[10px] text-amber-500 font-mono mt-1.5 flex items-center gap-1">
+                      <Calendar size={9} /> Issued {entry.parsed.date}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Award Modal */}
+      {awardModal !== null && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
+            <div className="px-6 py-5 bg-gradient-to-r from-amber-500 to-yellow-400 rounded-t-3xl flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-xl"><Trophy size={20} className="text-white" /></div>
+                <div>
+                  <h2 className="text-lg font-black text-white">Issue Award</h2>
+                  <p className="text-amber-100 text-xs mt-0.5">Recognise exceptional performance</p>
+                </div>
+              </div>
+              <button onClick={() => { setAwardModal(null); setAwardSuccess(false); }} className="text-amber-100 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl p-1.5 transition-colors"><X size={18} /></button>
+            </div>
+            {awardSuccess ? (
+              <div className="p-8 text-center space-y-4">
+                <div className="bg-emerald-50 border-4 border-emerald-400 rounded-full w-16 h-16 mx-auto flex items-center justify-center"><CheckCircle2 size={32} className="text-emerald-500" /></div>
+                <h3 className="text-xl font-black text-slate-900">Award Issued!</h3>
+                <p className="text-sm text-slate-500">Saved to the driver's permanent record and synced to the database.</p>
+                <button onClick={() => { setAwardModal(null); setAwardSuccess(false); }} className="mt-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors">Done</button>
+              </div>
+            ) : (
+              <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+                {/* Driver selector */}
+                <div>
+                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Driver</label>
+                  <select value={awardModal.driverId} onChange={e => { const d = drivers.find(dr => dr.id === e.target.value); setAwardModal({ driverId: e.target.value, driverName: d?.name || '' }); }}
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    <option value="">— Select a driver —</option>
+                    {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                  </select>
+                </div>
+
+                {/* Scoring Period */}
+                <div>
+                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                    Scoring Period
+                    <span className="ml-2 text-[10px] font-normal text-slate-400 normal-case">Which month is this award for?</span>
+                  </label>
+                  <select value={awardPeriod} onChange={e => setAwardPeriod(e.target.value)}
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    {last24Months.map((m, i) => (
+                      <option key={m} value={m}>{m}{i === 0 ? ' (Current Month)' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Award Type */}
+                <div>
+                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Award Type</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Driver of the Month', 'Top Fuel Efficiency', 'Zero Incidents Award', 'Most Trips Completed', 'Best Punctuality', 'Special Recognition'].map(type => (
+                      <button key={type} onClick={() => setAwardType(type)}
+                        className={`px-3 py-2 rounded-xl text-xs font-bold text-left transition-all border ${
+                          awardType === type ? 'bg-amber-500 text-white border-amber-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-amber-50 hover:border-amber-300'
+                        }`}>{type}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Note */}
+                <div>
+                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Note <span className="text-slate-300 normal-case font-normal">(optional)</span></label>
+                  <textarea value={awardNote} onChange={e => setAwardNote(e.target.value)} rows={2}
+                    placeholder="Add a custom citation for this award..."
+                    className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none" />
+                </div>
+
+                {/* Live preview */}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-3">
+                  <Trophy size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                  <div className="text-xs text-amber-800 leading-relaxed">
+                    <span className="font-black">{awardType}</span>
+                    {awardNote && <span className="italic"> — "{awardNote}"</span>}
+                    <span className="text-amber-500 font-semibold"> · {awardPeriod}</span>
+                    {awardModal.driverName && (
+                      <span className="text-amber-600"> · {awardModal.driverName}</span>
                     )}
                   </div>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-xl text-lg font-black ${
-                    ds.score >= 90 ? 'bg-emerald-50 text-emerald-600' :
-                    ds.score >= 70 ? 'bg-blue-50 text-blue-600' :
-                    ds.score >= 50 ? 'bg-amber-50 text-amber-600' :
-                    'bg-red-50 text-red-600'
-                  }`}>{ds.score}</span>
-                </td>
-                <td className="px-6 py-4 text-slate-600">{ds.trips}</td>
-                <td className="px-6 py-4 text-slate-600 font-mono">{ds.efficiency} km/L</td>
-                <td className="px-6 py-4 text-slate-600 font-mono text-red-500">-{ds.cost.toLocaleString()}</td>
-                <td className="px-6 py-4 text-center">
-                  {ds.varianceWarnings > 0 || ds.incidents > 0 || ds.policyViolations > 0 ? (
-                    <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-lg text-xs font-bold">
-                      <AlertTriangle size={12} /> {ds.varianceWarnings + ds.incidents + ds.policyViolations}
-                    </span>
-                  ) : (
-                    <span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg text-xs font-bold flex items-center justify-center gap-1 w-fit mx-auto">
-                      <CheckCircle2 size={12} /> Clean
-                    </span>
-                  )}
-                </td>
-                <td className="px-6 py-4 text-right">
-                  <button onClick={() => setSelectedDriverScorecard(ds.driver.id)} className="text-sm font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
-                    View Card
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3 pt-1">
+                  <button onClick={() => { setAwardModal(null); setAwardSuccess(false); }} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-colors">Cancel</button>
+                  <button
+                    disabled={!awardModal.driverId || awardSaving}
+                    onClick={() => {
+                      if (!awardModal.driverId) return;
+                      setAwardSaving(true);
+                      const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                      // Pipe-delimited format: type|period|note|date
+                      const entry = `${awardType}|${awardPeriod}|${awardNote}|${dateStr}`;
+                      setDrivers((prev: any) => prev.map((d: any) => d.id === awardModal!.driverId ? { ...d, awards: [...(d.awards || []), entry] } : d));
+                      setTimeout(() => { setAwardSaving(false); setAwardSuccess(true); setHofFilter(awardPeriod); }, 600);
+                    }}
+                    className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+                  >
+                    {awardSaving ? <span className="animate-pulse">Saving...</span> : <><Gift size={14} /> Issue Award</>}
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-
-  const renderScoring = () => (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Automated Monthly Scoring</h2>
-          <p className="text-slate-500 text-sm mt-1">Live metrics evaluating driver performance and calculating monthly awards.</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 border-b border-slate-100">
-            <tr>
-              <th className="px-6 py-4 font-bold text-slate-500 uppercase">Driver</th>
-              <th className="px-6 py-4 font-bold text-slate-500 uppercase text-center">Score</th>
-              <th className="px-6 py-4 font-bold text-slate-500 uppercase">Distance</th>
-              <th className="px-6 py-4 font-bold text-slate-500 uppercase">Efficiency</th>
-              <th className="px-6 py-4 font-bold text-slate-500 uppercase text-center">Fuel Variance</th>
-              <th className="px-6 py-4 font-bold text-slate-500 uppercase text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {serverDriverScores.sort((a, b) => b.score - a.score).map((ds) => {
-              const driver = drivers.find(d => d.id === ds.driver_id);
-              if (!driver) return null;
-              
-              return (
-              <tr key={ds.driver_id} className="hover:bg-slate-50/50 transition-colors">
-                <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
-                  <img src={driver.imgUrl} alt={driver.name} className="w-8 h-8 rounded-full" />
-                  <span>{driver.name}</span>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-xl text-lg font-black ${
-                    ds.score >= 90 ? 'bg-emerald-50 text-emerald-600' :
-                    ds.score >= 70 ? 'bg-blue-50 text-blue-600' :
-                    ds.score >= 50 ? 'bg-amber-50 text-amber-600' :
-                    'bg-red-50 text-red-600'
-                  }`}>{ds.score}</span>
-                </td>
-                <td className="px-6 py-4 text-slate-600 font-mono">{Number(ds.distance || 0).toFixed(1)} km</td>
-                <td className="px-6 py-4 text-slate-600 font-mono">{(ds.consumed || 0) > 0 ? (Number(ds.distance || 0) / Number(ds.consumed || 1)).toFixed(1) : '0.0'} km/L</td>
-                <td className="px-6 py-4 text-center">
-                  <span className={`font-mono font-bold ${ds.disqualified ? 'text-red-600' : 'text-emerald-600'}`}>
-                    {(Number(ds.fuel_variance_percentage || 0) * 100).toFixed(1)}%
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {ds.disqualified ? (
-                    <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-lg text-xs font-bold">
-                      <AlertTriangle size={12} /> Disqualified
-                    </span>
-                  ) : (
-                    <span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg text-xs font-bold flex items-center justify-center gap-1 w-fit mx-auto">
-                      <CheckCircle2 size={12} /> Eligible
-                    </span>
-                  )}
-                </td>
-              </tr>
-            )})}
-          </tbody>
-        </table>
-      </div>
+      )}
     </div>
-  );
+    );
+  };
+
 
   const handleSaveCity = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -3741,8 +4314,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           { id: 'fuel', label: 'Fuel', icon: Fuel },
           { id: 'drivers', label: 'Drivers', icon: User },
           { id: 'vehicles', label: 'Vehicles', icon: Car },
-          { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
-          { id: 'scoring', label: 'Scoring', icon: ShieldAlert },
+          { id: 'leaderboard', label: 'Performance & Awards', icon: Trophy },
+
         ].map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -3771,7 +4344,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       {activeTab === 'driver_details' && renderDriverDetails()}
       { activeTab === 'vehicles' && renderVehicles() }
       { activeTab === 'leaderboard' && renderLeaderboard() }
-      { activeTab === 'scoring' && renderScoring() }
+
 
       {/* Log Modal */}
       {isLogModalOpen && (

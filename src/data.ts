@@ -15,8 +15,8 @@ export const VEHICLES: Vehicle[] = [
       'Chilled Center Console drink box',
       'Heavy-duty suspension tailored for Sierra Leonean roads'
     ],
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA80uYh85m4vNLCuiR9IVe7LANbiSD68yDOKmV-dC99lK2Urdp3y19dyJW5zhey_x3NSlBuJ8qAxiEoTYTp8XmTeageQQ-TZ477-oMh40Rh5PFGNLfGMSqqNRhjOhBuEPaQT3DoR-RG1vMiabXItb3PzpRARfSgO93p-CuBbvE9OhiaeT3KyuOwpMeshR_TCeAuIA1d_ahIVb_Mytc_vg93OqQCKZ28jpoM2yFRN0U0G4MlxYY_-wnR_g-4nhWlDlrI7CVBL68V0Uc',
-    gallery: [
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA80uYh85m4vNLCuiR9IVe7LANbiSD68yDOKmV-dC99lK2Urdp3y19dyJW5zhey_x3NSlBuJ8qAxiEoTYTp8XmTeageQQ-TZ477-oMh40Rh5PFGNLfGMSqqNRhjOhBuEPaQT3DoR-RG1vMiabXItb3PzpRARfSgO93p-CuBbvE9OhiaeT3KyuOwpMeshR_TCeAuIA1d_ahIVb_Mytc_vg93OqQCKZ28jpoM2yFRN0U0G4MlxYY_-wnR_g-4nhWlDlrI7CVBL68V0Uc',
+    galleryUrls: [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuA80uYh85m4vNLCuiR9IVe7LANbiSD68yDOKmV-dC99lK2Urdp3y19dyJW5zhey_x3NSlBuJ8qAxiEoTYTp8XmTeageQQ-TZ477-oMh40Rh5PFGNLfGMSqqNRhjOhBuEPaQT3DoR-RG1vMiabXItb3PzpRARfSgO93p-CuBbvE9OhiaeT3KyuOwpMeshR_TCeAuIA1d_ahIVb_Mytc_vg93OqQCKZ28jpoM2yFRN0U0G4MlxYY_-wnR_g-4nhWlDlrI7CVBL68V0Uc',
       'https://lh3.googleusercontent.com/aida-public/AB6AXuCn0MU34fmPtH0TaKKtBkOUBCIrqqmXi3WlVx0EnR5xdjlBXATq7rJURczgEu8T3OApWn81DUrz6R5r0cWfc75npPoM5fL4X1f08TB0aUvxjXKcOo0XIOOmuNp1nVHvEVXHdjXz3iMUAtafaCCp5vm3TV00Ti59HWAKqPO4eWpcgIu9-LM9qCQ5Rxrjx8MDpYjdqiZlOONCTzUB818wrrBfN91V5U2OjbnsZMhRvRYvgYSuPL3sY6_cIitiQInr8-RffvZ46ysuxF4'
     ],
@@ -46,8 +46,8 @@ export const VEHICLES: Vehicle[] = [
       'Ultra-premium leather upholstered interior',
       'Reenforced underbody bash plates'
     ],
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCdHsybOomm21gTtq_PQn889DOcbgLJ2maLWiuypr3ssgLZsqNxO0gYKsCExEhsrN5edi-c3LnQCV9jjjYCiZU26A_gaKLX7Bw-7GP5zxJKeMElAoW13VIaHNkePiLQ7X_4-oFPauF0t8iX6QmnQHynEduxPpIaxTcMN0x_nCvArxH9sIm6DVrKAy6PtIUrIqSroAaZH6sye_0ZC3HvX3ctBT_KCt8MSj1auV0Wy7Hci1gU49loKgIIlM4jTdELNzuDhieV5YBeSSg',
-    gallery: [
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCdHsybOomm21gTtq_PQn889DOcbgLJ2maLWiuypr3ssgLZsqNxO0gYKsCExEhsrN5edi-c3LnQCV9jjjYCiZU26A_gaKLX7Bw-7GP5zxJKeMElAoW13VIaHNkePiLQ7X_4-oFPauF0t8iX6QmnQHynEduxPpIaxTcMN0x_nCvArxH9sIm6DVrKAy6PtIUrIqSroAaZH6sye_0ZC3HvX3ctBT_KCt8MSj1auV0Wy7Hci1gU49loKgIIlM4jTdELNzuDhieV5YBeSSg',
+    galleryUrls: [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuCdHsybOomm21gTtq_PQn889DOcbgLJ2maLWiuypr3ssgLZsqNxO0gYKsCExEhsrN5edi-c3LnQCV9jjjYCiZU26A_gaKLX7Bw-7GP5zxJKeMElAoW13VIaHNkePiLQ7X_4-oFPauF0t8iX6QmnQHynEduxPpIaxTcMN0x_nCvArxH9sIm6DVrKAy6PtIUrIqSroAaZH6sye_0ZC3HvX3ctBT_KCt8MSj1auV0Wy7Hci1gU49loKgIIlM4jTdELNzuDhieV5YBeSSg',
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBk4Sy77sM_D51guPMkYxasFWbrfxVLb_Z9YrOeLBsMlbWv_OTouvHBm4yEzjostnK1FyIX8Mbai9GGCDM9KzQB1JT0H3mMrW9XRxRmo39JACgJ0jNGWsg7FTZLaxyKOfKFfBqfZP8cVzcqRigeSu4qXrQcPohxGFwTIJ8e3Wyr67m-gwNTFA_JUUWILtokkq6YVPL81x1gQLPwywsvnu-x_gBkuTY_PC63rqUyWpTk4K8dP3HPagtSlBIFetzC6oz-yXyRn4fKxj8'
     ],
@@ -77,8 +77,8 @@ export const VEHICLES: Vehicle[] = [
       'Power sliding rear window for easy cargo access',
       'Reenforced coil-spring rear suspension'
     ],
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDPBDsC6X_LxcHzoH67sNOy3HRZtjAaHYlzO7XiaJYzT_LFHaw2ZjP2w1Ud1Oqo7itK2te9DFm52qc2hyhZRigvBx4DXE-ipUvPK29JJkVyLc8L8rYeXFRPV-Ny9Dm7YKFfw8QqmY9wX6XJ4TyrS3ayICSgHCvEuuxfoqifvFYqPv54tED_ycELgCtSLdhIMNyEUoRlWe3Ff7TjvcHZuCQ-9Xvwk9QAKiRPHdh6OdhfrAkErz3fPI8nijwQ0unyrS0pcugThIIh9ws',
-    gallery: [
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDPBDsC6X_LxcHzoH67sNOy3HRZtjAaHYlzO7XiaJYzT_LFHaw2ZjP2w1Ud1Oqo7itK2te9DFm52qc2hyhZRigvBx4DXE-ipUvPK29JJkVyLc8L8rYeXFRPV-Ny9Dm7YKFfw8QqmY9wX6XJ4TyrS3ayICSgHCvEuuxfoqifvFYqPv54tED_ycELgCtSLdhIMNyEUoRlWe3Ff7TjvcHZuCQ-9Xvwk9QAKiRPHdh6OdhfrAkErz3fPI8nijwQ0unyrS0pcugThIIh9ws',
+    galleryUrls: [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDPBDsC6X_LxcHzoH67sNOy3HRZtjAaHYlzO7XiaJYzT_LFHaw2ZjP2w1Ud1Oqo7itK2te9DFm52qc2hyhZRigvBx4DXE-ipUvPK29JJkVyLc8L8rYeXFRPV-Ny9Dm7YKFfw8QqmY9wX6XJ4TyrS3ayICSgHCvEuuxfoqifvFYqPv54tED_ycELgCtSLdhIMNyEUoRlWe3Ff7TjvcHZuCQ-9Xvwk9QAKiRPHdh6OdhfrAkErz3fPI8nijwQ0unyrS0pcugThIIh9ws',
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBGhWHMqkzzsD86ZD9UTyhBtP_UXJFJQ56euIqXyS3SRoVzsn2IjZI2QdIsIxhEBMvhcDc0kgYoeRvq39ZmDKBDXoFOqtjfs6UkHU1KjauwykvurqXFck_dbNdYsI4cMvcAIm2PVIbSDPpCh_FP2EFc4y1GzgotX62enq1INcI4YtxnfVEYH1JOq7d6LRVJRcT6hEc92i5e8SxB27ar21XP5yaUIPdHsMc14X4fpYLNlY0Ru7yhncAFqButiO4Nu_9unqvC_d6EleA'
     ],
@@ -108,8 +108,8 @@ export const VEHICLES: Vehicle[] = [
       'Reenforced leaf-spring rear suspension',
       'Heavy duty snorkel for water wading'
     ],
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJAJuwLKqmbCse-Nr7f2kMge-783BnAN83YrbCbBXXFQrYAmiS8gNRJE6LO38MhZ4HT7FLSAvK4p1lFYDTP8R7h01aKz2OMLo5TPSAWjtAGFHniLvoUXT8H-65iXd0WnnFFC9NBcRpAYn8OfD5ZiK6EDeQjRiE0OeYq7NEz3v9TyfDQLWYfnzw5bnBblcr2aAfRVqDMj2jMQAGU0wHTnKL4gua7OZoKq9J9OpAHaCf5BexXZQyIcKXTi3kpYvw-Z8HsP8-BEj8Xzw',
-    gallery: [
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJAJuwLKqmbCse-Nr7f2kMge-783BnAN83YrbCbBXXFQrYAmiS8gNRJE6LO38MhZ4HT7FLSAvK4p1lFYDTP8R7h01aKz2OMLo5TPSAWjtAGFHniLvoUXT8H-65iXd0WnnFFC9NBcRpAYn8OfD5ZiK6EDeQjRiE0OeYq7NEz3v9TyfDQLWYfnzw5bnBblcr2aAfRVqDMj2jMQAGU0wHTnKL4gua7OZoKq9J9OpAHaCf5BexXZQyIcKXTi3kpYvw-Z8HsP8-BEj8Xzw',
+    galleryUrls: [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBJAJuwLKqmbCse-Nr7f2kMge-783BnAN83YrbCbBXXFQrYAmiS8gNRJE6LO38MhZ4HT7FLSAvK4p1lFYDTP8R7h01aKz2OMLo5TPSAWjtAGFHniLvoUXT8H-65iXd0WnnFFC9NBcRpAYn8OfD5ZiK6EDeQjRiE0OeYq7NEz3v9TyfDQLWYfnzw5bnBblcr2aAfRVqDMj2jMQAGU0wHTnKL4gua7OZoKq9J9OpAHaCf5BexXZQyIcKXTi3kpYvw-Z8HsP8-BEj8Xzw'
     ],
     seats: 5,

@@ -143,7 +143,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 </div>
                 <div>
                   <h2 className="text-3xl font-black text-slate-900 tracking-tight">Proposal Request Received</h2>
-                  <p className="text-sm text-slate-550 mt-2 leading-relaxed">
+                  <p className="text-sm text-slate-500 mt-2 leading-relaxed">
                     Thank you, <strong>{fullName}</strong>. We have registered your inquiry on our Freetown servers. An official, itemized logistics quote complete with driver security credentials and fuel cycle audits will be generated under direct oversight by <strong>Emmanuel Kpakama</strong> and dispatched to <strong>{email}</strong> within 30 minutes.
                   </p>
                 </div>
@@ -318,7 +318,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         <button 
                           type="button"
                           onClick={() => setVehiclesNeeded(prev => Math.max(1, prev - 1))}
-                          className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-705 font-bold"
+                          className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-700 font-bold"
                         >
                           <Minus size={14} />
                         </button>
@@ -326,7 +326,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         <button 
                           type="button"
                           onClick={() => setVehiclesNeeded(prev => prev + 1)}
-                          className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-705 font-bold"
+                          className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-700 font-bold"
                         >
                           <Plus size={14} />
                         </button>

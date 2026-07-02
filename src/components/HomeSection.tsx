@@ -216,7 +216,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
                 {/* Vehicle photo */}
                 <div className="relative h-56 w-full bg-slate-100 overflow-hidden">
                   <img 
-                    src={vehicle.image} 
+                    src={vehicle.imageUrl || (vehicle as any).image} 
                     alt={vehicle.name}
                     className="w-full h-full object-cover select-none"
                     referrerPolicy="no-referrer"

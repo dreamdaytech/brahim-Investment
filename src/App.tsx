@@ -87,6 +87,130 @@ const DEFAULT_CLIENTS = [
   { id: 'client-16', name: 'Mas Company SL Ltd', service: 'Vehicle Rental Service Within Freetown', status: 'Ongoing' }
 ];
 
+// Mappers
+const mapInquiryFromDB = (dbItem: any): Inquiry => ({
+  id: dbItem.id,
+  fullName: dbItem.fullname || dbItem.fullName,
+  organization: dbItem.organization,
+  email: dbItem.email,
+  phone: dbItem.phone,
+  serviceType: dbItem.servicetype || dbItem.serviceType,
+  startDate: dbItem.startdate || dbItem.startDate,
+  endDate: dbItem.enddate || dbItem.endDate,
+  preferredVehicle: dbItem.preferredvehicle || dbItem.preferredVehicle,
+  vehiclesNeeded: dbItem.vehiclesneeded || dbItem.vehiclesNeeded,
+  pickupLocation: dbItem.pickuplocation || dbItem.pickupLocation,
+  dropoffLocation: dbItem.dropofflocation || dbItem.dropoffLocation,
+  specialRequirementsDet: dbItem.specialrequirementsdet || dbItem.specialRequirementsDet,
+  status: dbItem.status,
+  createdAt: dbItem.createdat || dbItem.createdAt
+});
+
+const mapInquiryToDB = (uiItem: Partial<Inquiry>): any => {
+  const mapped: any = {};
+  if (uiItem.id !== undefined) mapped.id = uiItem.id;
+  if (uiItem.fullName !== undefined) mapped.fullname = uiItem.fullName;
+  if (uiItem.organization !== undefined) mapped.organization = uiItem.organization;
+  if (uiItem.email !== undefined) mapped.email = uiItem.email;
+  if (uiItem.phone !== undefined) mapped.phone = uiItem.phone;
+  if (uiItem.serviceType !== undefined) mapped.servicetype = uiItem.serviceType;
+  if (uiItem.startDate !== undefined) mapped.startdate = uiItem.startDate;
+  if (uiItem.endDate !== undefined) mapped.enddate = uiItem.endDate;
+  if (uiItem.preferredVehicle !== undefined) mapped.preferredvehicle = uiItem.preferredVehicle;
+  if (uiItem.vehiclesNeeded !== undefined) mapped.vehiclesneeded = uiItem.vehiclesNeeded;
+  if (uiItem.pickupLocation !== undefined) mapped.pickuplocation = uiItem.pickupLocation;
+  if (uiItem.dropoffLocation !== undefined) mapped.dropofflocation = uiItem.dropoffLocation;
+  if (uiItem.specialRequirementsDet !== undefined) mapped.specialrequirementsdet = uiItem.specialRequirementsDet;
+  if (uiItem.status !== undefined) mapped.status = uiItem.status;
+  if (uiItem.createdAt !== undefined) mapped.createdat = uiItem.createdAt;
+  return mapped;
+};
+
+const mapClientFromDB = (dbItem: any): ClientItem => ({
+  id: dbItem.id,
+  name: dbItem.name,
+  service: dbItem.service,
+  status: dbItem.status,
+  isDraft: dbItem.isdraft ?? dbItem.isDraft,
+  shortCode: dbItem.short_code ?? dbItem.shortCode,
+  isPartner: dbItem.is_partner ?? dbItem.isPartner,
+  contactPerson: dbItem.contact_person ?? dbItem.contactPerson,
+  phone: dbItem.phone,
+  email: dbItem.email,
+  website: dbItem.website,
+  headOfficeAddress: dbItem.head_office_address ?? dbItem.headOfficeAddress,
+  city: dbItem.city,
+  country: dbItem.country,
+  accountNumber: dbItem.account_number ?? dbItem.accountNumber,
+  contractRef: dbItem.contract_ref ?? dbItem.contractRef,
+  contractStartDate: dbItem.contract_start_date ?? dbItem.contractStartDate,
+  contractEndDate: dbItem.contract_end_date ?? dbItem.contractEndDate,
+  creditLimit: dbItem.credit_limit !== undefined && dbItem.credit_limit !== null ? Number(dbItem.credit_limit) : dbItem.creditLimit,
+  totalPurchases: dbItem.total_purchases !== undefined && dbItem.total_purchases !== null ? Number(dbItem.total_purchases) : dbItem.totalPurchases,
+  totalVolume: dbItem.total_volume !== undefined && dbItem.total_volume !== null ? Number(dbItem.total_volume) : dbItem.totalVolume,
+  notes: dbItem.notes,
+  logoUrl: dbItem.logoUrl,
+  createdAt: dbItem.created_at ?? dbItem.createdAt
+});
+
+const mapClientToDB = (uiItem: Partial<ClientItem>): any => {
+  const mapped: any = {};
+  if (uiItem.id !== undefined) mapped.id = uiItem.id;
+  if (uiItem.name !== undefined) mapped.name = uiItem.name;
+  if (uiItem.service !== undefined) mapped.service = uiItem.service;
+  if (uiItem.status !== undefined) mapped.status = uiItem.status;
+  if (uiItem.isDraft !== undefined) mapped.isdraft = uiItem.isDraft;
+  if (uiItem.shortCode !== undefined) mapped.short_code = uiItem.shortCode;
+  if (uiItem.isPartner !== undefined) mapped.is_partner = uiItem.isPartner;
+  if (uiItem.contactPerson !== undefined) mapped.contact_person = uiItem.contactPerson;
+  if (uiItem.phone !== undefined) mapped.phone = uiItem.phone;
+  if (uiItem.email !== undefined) mapped.email = uiItem.email;
+  if (uiItem.website !== undefined) mapped.website = uiItem.website;
+  if (uiItem.headOfficeAddress !== undefined) mapped.head_office_address = uiItem.headOfficeAddress;
+  if (uiItem.city !== undefined) mapped.city = uiItem.city;
+  if (uiItem.country !== undefined) mapped.country = uiItem.country;
+  if (uiItem.accountNumber !== undefined) mapped.account_number = uiItem.accountNumber;
+  if (uiItem.contractRef !== undefined) mapped.contract_ref = uiItem.contractRef;
+  if (uiItem.contractStartDate !== undefined) mapped.contract_start_date = uiItem.contractStartDate;
+  if (uiItem.contractEndDate !== undefined) mapped.contract_end_date = uiItem.contractEndDate;
+  if (uiItem.creditLimit !== undefined) mapped.credit_limit = uiItem.creditLimit;
+  if (uiItem.totalPurchases !== undefined) mapped.total_purchases = uiItem.totalPurchases;
+  if (uiItem.totalVolume !== undefined) mapped.total_volume = uiItem.totalVolume;
+  if (uiItem.notes !== undefined) mapped.notes = uiItem.notes;
+  if (uiItem.logoUrl !== undefined) mapped.logoUrl = uiItem.logoUrl;
+  if (uiItem.createdAt !== undefined) mapped.created_at = uiItem.createdAt;
+  return mapped;
+};
+
+const mapVehicleFromDB = (dbItem: any) => ({
+  id: dbItem.id,
+  makeModel: dbItem.make_model,
+  year: dbItem.year,
+  odometer: dbItem.odometer,
+  plateNumber: dbItem.plate_number,
+  insuranceExpiry: dbItem.insurance_expiry,
+  condition: dbItem.condition,
+  isCompanyRegistered: dbItem.is_company_registered,
+  type: dbItem.type,
+  status: dbItem.status,
+  imageUrl: dbItem.image_url,
+  galleryUrls: dbItem.gallery_urls,
+  showOnFleet: dbItem.show_on_fleet,
+  vehicleCategory: dbItem.vehicle_category,
+  description: dbItem.description,
+  pricePerDay: dbItem.price_per_day,
+  features: dbItem.features,
+  fuelType: dbItem.fuel_type,
+  transmission: dbItem.transmission,
+  seats: dbItem.seats,
+  engineLabel: dbItem.engine_label,
+  specEngineSize: dbItem.spec_engine_size,
+  specDrivetrain: dbItem.spec_drivetrain,
+  specGroundClearance: dbItem.spec_ground_clearance,
+  specFuelCapacity: dbItem.spec_fuel_capacity,
+  specBestFor: dbItem.spec_best_for,
+});
+
 export default function App() {
   const [activeTab, setActiveTabVar] = useState<ActiveTab>(() => {
     return (sessionStorage.getItem('mainActiveTab') as ActiveTab) || 'home';
@@ -111,6 +235,7 @@ export default function App() {
     const saved = localStorage.getItem('big_group_clients_cache');
     return saved ? JSON.parse(saved) : DEFAULT_CLIENTS;
   });
+  const [fleetVehicles, setFleetVehicles] = useState<any[]>([]);
 
   // Connect to Supabase and listen for changes
   useEffect(() => {
@@ -119,11 +244,12 @@ export default function App() {
       const { data: inquiriesData, error: inqErr } = await supabase.from('inquiries').select('*');
       if (inqErr) console.error("Error fetching inquiries:", inqErr);
       if (inquiriesData && inquiriesData.length > 0) {
-        setInquiries(inquiriesData as Inquiry[]);
-        localStorage.setItem('big_group_inquiries_cache', JSON.stringify(inquiriesData));
+        const mapped = inquiriesData.map(mapInquiryFromDB);
+        setInquiries(mapped);
+        localStorage.setItem('big_group_inquiries_cache', JSON.stringify(mapped));
       } else if (!inqErr) {
         // Seed database if empty
-        const { error: seedErr } = await supabase.from('inquiries').insert(DEFAULT_INQUIRIES);
+        const { error: seedErr } = await supabase.from('inquiries').insert(DEFAULT_INQUIRIES.map(mapInquiryToDB));
         if (!seedErr) {
           setInquiries(DEFAULT_INQUIRIES);
         }
@@ -133,14 +259,25 @@ export default function App() {
       const { data: clientsData, error: cliErr } = await supabase.from('clients').select('*');
       if (cliErr) console.error("Error fetching clients:", cliErr);
       if (clientsData && clientsData.length > 0) {
-        setClients(clientsData as ClientItem[]);
-        localStorage.setItem('big_group_clients_cache', JSON.stringify(clientsData));
+        const mapped = clientsData.map(mapClientFromDB);
+        setClients(mapped);
+        localStorage.setItem('big_group_clients_cache', JSON.stringify(mapped));
       } else if (!cliErr) {
         // Seed database if empty
-        const { error: seedErr2 } = await supabase.from('clients').insert(DEFAULT_CLIENTS);
+        const { error: seedErr2 } = await supabase.from('clients').insert(DEFAULT_CLIENTS.map(mapClientToDB));
         if (!seedErr2) {
           setClients(DEFAULT_CLIENTS);
         }
+      }
+
+      // Fleet vehicles (public page)
+      const { data: vehiclesData } = await supabase
+        .from('vehicles')
+        .select('*')
+        .eq('show_on_fleet', true)
+        .eq('status', 'Available');
+      if (vehiclesData) {
+        setFleetVehicles(vehiclesData.map(mapVehicleFromDB));
       }
     };
 
@@ -151,8 +288,9 @@ export default function App() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, async () => {
         const { data } = await supabase.from('inquiries').select('*');
         if (data) {
-          setInquiries(data as Inquiry[]);
-          localStorage.setItem('big_group_inquiries_cache', JSON.stringify(data));
+          const mapped = data.map(mapInquiryFromDB);
+          setInquiries(mapped);
+          localStorage.setItem('big_group_inquiries_cache', JSON.stringify(mapped));
         }
       })
       .subscribe();
@@ -161,8 +299,22 @@ export default function App() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, async () => {
         const { data } = await supabase.from('clients').select('*');
         if (data) {
-          setClients(data as ClientItem[]);
-          localStorage.setItem('big_group_clients_cache', JSON.stringify(data));
+          const mapped = data.map(mapClientFromDB);
+          setClients(mapped);
+          localStorage.setItem('big_group_clients_cache', JSON.stringify(mapped));
+        }
+      })
+      .subscribe();
+
+    const vehiclesChannel = supabase.channel('public:vehicles')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'vehicles' }, async () => {
+        const { data: vehiclesData } = await supabase
+          .from('vehicles')
+          .select('*')
+          .eq('show_on_fleet', true)
+          .eq('status', 'Available');
+        if (vehiclesData) {
+          setFleetVehicles(vehiclesData.map(mapVehicleFromDB));
         }
       })
       .subscribe();
@@ -170,6 +322,7 @@ export default function App() {
     return () => {
       supabase.removeChannel(inquiriesChannel);
       supabase.removeChannel(clientsChannel);
+      supabase.removeChannel(vehiclesChannel);
     };
   }, []);
 
@@ -194,7 +347,7 @@ export default function App() {
 
   const handleAddInquiry = async (newInquiry: Inquiry) => {
     try {
-      await supabase.from('inquiries').insert([newInquiry]);
+      await supabase.from('inquiries').insert([mapInquiryToDB(newInquiry)]);
     } catch (error) {
       console.error("Error adding inquiry:", error);
     }
@@ -202,7 +355,7 @@ export default function App() {
 
   const handleAddClient = async (newClient: ClientItem) => {
     try {
-      await supabase.from('clients').insert([newClient]);
+      await supabase.from('clients').insert([mapClientToDB(newClient)]);
     } catch (error) {
       console.error("Error adding client:", error);
     }
@@ -210,7 +363,7 @@ export default function App() {
 
   const handleUpdateClient = async (id: string, updateData: Partial<ClientItem>) => {
     try {
-      await supabase.from('clients').update(updateData).eq('id', id);
+      await supabase.from('clients').update(mapClientToDB(updateData)).eq('id', id);
     } catch (error) {
       console.error("Error updating client:", error);
     }
@@ -241,7 +394,8 @@ export default function App() {
         return (
           <FleetSection 
             setActiveTab={setActiveTab} 
-            setSelectedVehicleId={setSelectedVehicleId} 
+            setSelectedVehicleId={setSelectedVehicleId}
+            fleetVehicles={fleetVehicles}
           />
         );
       case 'services':

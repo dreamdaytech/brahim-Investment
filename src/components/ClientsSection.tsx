@@ -56,7 +56,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
           <div className="max-w-2xl">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">RECOGNIZED LOGISTICS PARTNERS</span>
             <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-4">Proven Operational Record</h1>
-            <p className="mt-4 text-sm md:text-base text-slate-550 leading-relaxed">
+            <p className="mt-4 text-sm md:text-base text-slate-500 leading-relaxed">
               We exclusively support organizations requiring uncompromising fleet standards, including high-availability diplomatic missions, international health programs, and corporate deployments across rigorous terrain.
             </p>
           </div>
@@ -98,9 +98,17 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
               >
                 <div>
                   <div className="flex items-center gap-4 mb-5">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 bg-gradient-to-br ${getAvatarGradient(idx)} font-mono font-black text-lg tracking-tighter group-hover:scale-105 transition-transform`}>
-                      {getInitials(client.name)}
-                    </div>
+                    {client.logoUrl ? (
+                      <img
+                        src={client.logoUrl}
+                        alt={client.name}
+                        className="w-14 h-14 rounded-2xl object-contain bg-white border border-slate-200 shadow-sm shrink-0 group-hover:scale-105 transition-transform p-1"
+                      />
+                    ) : (
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 bg-gradient-to-br ${getAvatarGradient(idx)} font-mono font-black text-lg tracking-tighter group-hover:scale-105 transition-transform`}>
+                        {getInitials(client.name)}
+                      </div>
+                    )}
                     <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight flex-1">{client.name}</h3>
                   </div>
                   

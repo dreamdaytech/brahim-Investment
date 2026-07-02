@@ -1,23 +1,60 @@
 import React, { useState, startTransition } from 'react';
-import { ActiveTab, Vehicle } from '../types';
+import { ActiveTab } from '../types';
 import { VEHICLES } from '../data';
-import { ShieldAlert, Info, Fuel, AlertTriangle, Users, Compass, CircleCheck, Star, Sparkles, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { ShieldAlert, Info, Fuel, Users, CircleCheck, X, ArrowLeft } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface FleetSectionProps {
   setActiveTab: (tab: ActiveTab) => void;
   setSelectedVehicleId: (id: string) => void;
+  fleetVehicles?: any[];
 }
 
-export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSelectedVehicleId }) => {
+export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSelectedVehicleId, fleetVehicles }) => {
   const [filterType, setFilterType] = useState<string>('All');
-  const [selectedSpecVehicle, setSelectedSpecVehicle] = useState<Vehicle | null>(null);
+  const [selectedSpecVehicle, setSelectedSpecVehicle] = useState<any | null>(null);
 
-  const vehicleTypes = ['All', 'Heavy SUV', 'Mid SUV', 'Truck'];
+  // Use live DB vehicles if available, else fall back to hardcoded data
+  const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
+    ? fleetVehicles.map(v => ({
+        id: v.id,
+        name: v.makeModel,
+        type: v.vehicleCategory || v.type || 'SUV',
+        fuel: v.fuelType || 'Diesel',
+        transmission: v.transmission || 'Automatic',
+        seats: v.seats || 5,
+        engine: v.engineLabel || '',
+        pricePerDay: v.pricePerDay || 0,
+        description: v.description || '',
+        features: v.features || [],
+        image: v.imageUrl || '',
+        gallery: v.galleryUrls || [],
+        detailedSpecs: {
+          engineSize: v.specEngineSize || '',
+          drivetrain: v.specDrivetrain || '',
+          groundClearance: v.specGroundClearance || '',
+          fuelCapacity: v.specFuelCapacity || '',
+          bestFor: v.specBestFor || '',
+        },
+      }))
+    : VEHICLES.map(v => ({
+        id: v.id,
+        name: v.name,
+        type: v.type,
+        fuel: v.fuel,
+        transmission: v.transmission,
+        seats: v.seats,
+        engine: v.engine,
+        pricePerDay: v.pricePerDay,
+        description: v.description,
+        features: v.features,
+        image: v.imageUrl || (v as any).image || '',
+        gallery: v.galleryUrls || (v as any).gallery || [],
+        detailedSpecs: v.detailedSpecs,
+      }));
 
-  const filteredVehicles = filterType === 'All' 
-    ? VEHICLES 
-    : VEHICLES.filter(v => v.type === filterType);
+  const vehicleTypes = ['All', ...Array.from(new Set(sourceVehicles.map(v => v.type)))];
+  const filteredVehicles = filterType === 'All' ? sourceVehicles : sourceVehicles.filter(v => v.type === filterType);
 
   const handleInquire = (vehicleId: string) => {
     startTransition(() => {
@@ -25,6 +62,197 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
       setActiveTab('contact');
     });
   };
+
+  if (selectedSpecVehicle) {
+    return (
+      <div className="w-full bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 font-sans">
+        <div className="max-w-6xl mx-auto">
+          
+          {/* Breadcrumb Navigation */}
+          <div className="mb-8">
+            <button
+              onClick={() => setSelectedSpecVehicle(null)}
+              className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer group text-xs font-bold uppercase tracking-wider font-mono bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm"
+            >
+              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform text-indigo-600" />
+              <span>Back to Fleet Registry</span>
+            </button>
+          </div>
+
+          {/* Main Details Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left side: Images (7 Cols) */}
+            <div className="lg:col-span-7 space-y-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm relative aspect-[16/10]"
+              >
+                {(selectedSpecVehicle.gallery?.[1] || selectedSpecVehicle.image) ? (
+                  <img 
+                    src={selectedSpecVehicle.gallery?.[1] || selectedSpecVehicle.image} 
+                    alt={selectedSpecVehicle.name} 
+                    className="w-full h-full object-cover select-none"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                    <span className="text-6xl font-black text-slate-300">{selectedSpecVehicle.name?.slice(0, 2)}</span>
+                  </div>
+                )}
+                <span className="absolute top-6 left-6 bg-[#0f172a] text-indigo-400 text-xs uppercase font-mono font-bold px-3 py-1.5 rounded-lg border border-slate-800 shadow-lg">
+                  {selectedSpecVehicle.type}
+                </span>
+              </motion.div>
+
+              {/* Gallery Section */}
+              {selectedSpecVehicle.gallery && selectedSpecVehicle.gallery.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.15 }}
+                  className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm"
+                >
+                  <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest mb-4">Visual Media Profiles</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {selectedSpecVehicle.gallery.map((imgUrl: string, idx: number) => (
+                      <div key={idx} className="aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 relative group">
+                        <img 
+                          src={imgUrl} 
+                          alt={`${selectedSpecVehicle.name} - View ${idx + 1}`} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Right side: Key Info, Booking & Tech Specs (5 Cols) */}
+            <div className="lg:col-span-5 space-y-6">
+              
+              {/* Primary details card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-6"
+              >
+                <div>
+                  <span className="bg-emerald-50 text-emerald-700 text-[10px] font-mono font-bold px-2.5 py-1 rounded border border-emerald-100 uppercase tracking-widest">
+                    Vetted Fleet Asset
+                  </span>
+                  <h1 className="text-3xl font-black text-slate-900 tracking-tight mt-3 leading-tight">{selectedSpecVehicle.name}</h1>
+                  {selectedSpecVehicle.description && (
+                    <p className="mt-4 text-xs md:text-sm text-slate-500 leading-relaxed font-medium">
+                      {selectedSpecVehicle.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Core characteristics */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span className="text-slate-400 text-[10px] font-mono block uppercase">Transmission</span>
+                    <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.transmission}</span>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span className="text-slate-400 text-[10px] font-mono block uppercase">Fuel Type</span>
+                    <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.fuel}</span>
+                  </div>
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span className="text-slate-400 text-[10px] font-mono block uppercase">Seating Capacity</span>
+                    <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.seats} Adults</span>
+                  </div>
+                  <div className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50">
+                    <span className="text-indigo-500 text-[10px] font-mono block uppercase">Daily Rate (Est)</span>
+                    <span className="font-extrabold text-indigo-700 text-sm mt-0.5 block">${selectedSpecVehicle.pricePerDay}<span className="text-[10px] text-indigo-400 font-normal ml-0.5">/day</span></span>
+                  </div>
+                </div>
+
+                {/* Action button */}
+                <button
+                  onClick={() => {
+                    handleInquire(selectedSpecVehicle.id);
+                    setSelectedSpecVehicle(null);
+                  }}
+                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-xs tracking-wider uppercase transition-colors shadow-md cursor-pointer text-center"
+                >
+                  Request Dispatch Setup
+                </button>
+              </motion.div>
+
+              {/* Spec sheet card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-5"
+              >
+                <h3 className="text-base font-black text-slate-900 tracking-tight">Technical Specifications</h3>
+                
+                <div className="space-y-3 divide-y divide-slate-100 text-xs font-semibold">
+                  <div className="flex justify-between py-2.5">
+                    <span className="text-slate-400 font-mono uppercase text-[10px]">Engine Capacity</span>
+                    <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.engineSize || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between py-2.5">
+                    <span className="text-slate-400 font-mono uppercase text-[10px]">Drivetrain</span>
+                    <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.drivetrain || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between py-2.5">
+                    <span className="text-slate-400 font-mono uppercase text-[10px]">Ground Clearance</span>
+                    <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.groundClearance || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between py-2.5">
+                    <span className="text-slate-400 font-mono uppercase text-[10px]">Fuel Capacity</span>
+                    <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.fuelCapacity || 'N/A'}</span>
+                  </div>
+                </div>
+
+                {selectedSpecVehicle.detailedSpecs.bestFor && (
+                  <div className="bg-indigo-50/30 p-4 rounded-xl border border-indigo-100 text-xs mt-4">
+                    <span className="text-indigo-600 font-mono font-bold uppercase tracking-wider block mb-1">STRATEGIC ALIGNMENT: Best For</span>
+                    <p className="text-slate-700 font-sans leading-relaxed font-medium">{selectedSpecVehicle.detailedSpecs.bestFor}</p>
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Custom modifications list */}
+              {selectedSpecVehicle.features && selectedSpecVehicle.features.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.25 }}
+                  className="bg-[#0f172a] text-white rounded-3xl p-8 border border-slate-800 shadow-xl space-y-5"
+                >
+                  <div>
+                    <span className="text-indigo-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-1">
+                      SECURITY &amp; RUNTIME SPECS
+                    </span>
+                    <h3 className="text-base font-black tracking-tight text-slate-100">Custom Upcountry Setup</h3>
+                  </div>
+                  <ul className="space-y-3">
+                    {selectedSpecVehicle.features.map((feature: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed font-medium">
+                        <CircleCheck size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 font-sans">
@@ -34,7 +262,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
         <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">Sierra Leone Ready Fleet</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Our Premium 4WD Fleet</h1>
-          <p className="mt-2 text-sm text-slate-550">
+          <p className="mt-2 text-sm text-slate-500">
             Uncompromising mechanical safety and peak structural capability. Fully customized with heavy-duty suspension and extra-clearance setups for regional terrain demands.
           </p>
         </div>
@@ -85,12 +313,18 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
             >
               {/* Image side */}
               <div className="md:w-1/2 relative bg-slate-50 min-h-[220px] max-h-[300px] md:max-h-full">
-                <img 
-                  src={vehicle.image} 
-                  alt={vehicle.name} 
-                  className="w-full h-full object-cover select-none"
-                  referrerPolicy="no-referrer"
-                />
+                {vehicle.image ? (
+                  <img 
+                    src={vehicle.image} 
+                    alt={vehicle.name} 
+                    className="w-full h-full object-cover select-none"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-full h-full min-h-[220px] flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                    <span className="text-4xl font-black text-slate-300">{vehicle.name.slice(0, 2)}</span>
+                  </div>
+                )}
                 <span className="absolute top-4 left-4 bg-[#0f172a] text-indigo-400 text-[10px] uppercase font-mono font-bold px-2.5 py-1 rounded shadow-sm border border-slate-800">
                   {vehicle.type}
                 </span>
@@ -130,7 +364,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                     </button>
                     <button
                       onClick={() => setSelectedSpecVehicle(vehicle)}
-                      className="py-3 bg-slate-50 hover:bg-slate-100 text-slate-705 font-bold rounded-xl text-[11px] uppercase border border-slate-200 transition-all text-center flex items-center justify-center gap-1 cursor-pointer"
+                      className="py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-[11px] uppercase border border-slate-200 transition-all text-center flex items-center justify-center gap-1 cursor-pointer"
                     >
                       <Info size={12} />
                       <span>Specifications</span>
@@ -141,96 +375,6 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
             </div>
           ))}
         </div>
-
-        {/* Dynamic Spec Modal Dialogue */}
-        <AnimatePresence>
-          {selectedSpecVehicle && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-xl w-full border border-slate-200 p-6 relative max-h-[90vh] overflow-y-auto"
-              >
-                <button
-                  onClick={() => setSelectedSpecVehicle(null)}
-                  className="absolute top-4 right-4 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-700 hover:text-black transition-colors cursor-pointer"
-                >
-                  <X size={18} />
-                </button>
-
-                <span className="text-[10px] uppercase tracking-widest text-indigo-600 font-mono font-bold block mb-1">
-                  OFF-ROAD PROFILE SCI-01
-                </span>
-                <h3 className="text-2xl font-black text-[#0f172a] tracking-tight">{selectedSpecVehicle.name}</h3>
-
-                {/* Main Modal Spec Image */}
-                <div className="my-5 h-48 w-full rounded-2xl bg-slate-50 overflow-hidden relative border border-slate-100">
-                  <img 
-                    src={selectedSpecVehicle.gallery[1] || selectedSpecVehicle.image} 
-                    alt={selectedSpecVehicle.name} 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <span className="absolute bottom-3 left-3 bg-indigo-600 text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded uppercase">
-                    Field-Proven Upcountry Setup
-                  </span>
-                </div>
-
-                {/* In Depth Specs list */}
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                      <span className="text-slate-400 text-[10px] font-mono block">ENGINE CAPACITY</span>
-                      <span className="font-bold text-slate-850 text-sm">{selectedSpecVehicle.detailedSpecs.engineSize}</span>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                      <span className="text-slate-400 text-[10px] font-mono block">DRIVETRAIN CONFIGURATION</span>
-                      <span className="font-bold text-slate-850 text-sm">{selectedSpecVehicle.detailedSpecs.drivetrain}</span>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                      <span className="text-slate-400 text-[10px] font-mono block">GROUND CLEARANCE</span>
-                      <span className="font-bold text-slate-850 text-sm">{selectedSpecVehicle.detailedSpecs.groundClearance}</span>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                      <span className="text-slate-400 text-[10px] font-mono block">FUEL CAPACITY</span>
-                      <span className="font-bold text-slate-850 text-sm">{selectedSpecVehicle.detailedSpecs.fuelCapacity}</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-indigo-50/30 p-4 rounded-xl border border-indigo-100 text-xs">
-                     <span className="text-indigo-650 font-mono font-bold uppercase tracking-wider block mb-1">STRATEGIC ALIGNMENT: Best For</span>
-                    <p className="text-slate-700 font-sans leading-relaxed">{selectedSpecVehicle.detailedSpecs.bestFor}</p>
-                  </div>
-
-                  <hr className="border-slate-200" />
-
-                  <div>
-                    <span className="text-[10px] text-slate-500 font-mono font-bold block mb-2 uppercase">Custom Modifications Installed for Safe Transit</span>
-                    <ul className="text-xs text-slate-600 space-y-1.5 pl-4 list-disc">
-                      {selectedSpecVehicle.features.map((feature, idx) => (
-                        <li key={idx} className="leading-relaxed">{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <button
-                    onClick={() => {
-                      handleInquire(selectedSpecVehicle.id);
-                      setSelectedSpecVehicle(null);
-                    }}
-                    className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold uppercase tracking-wider text-xs rounded-xl transition-all shadow-md cursor-pointer text-center"
-                  >
-                    Select vehicle &amp; proceed to book
-                  </button>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
 
       </div>
     </div>

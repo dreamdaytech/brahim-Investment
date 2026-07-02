@@ -5,8 +5,8 @@ export interface Vehicle {
   transmission: 'Automatic' | 'Manual';
   fuel: 'Diesel' | 'Petrol';
   features: string[];
-  image: string;
-  gallery: string[];
+  imageUrl?: string;
+  galleryUrls?: string[];
   seats: number;
   engine: string;
   pricePerDay: number;
@@ -61,6 +61,7 @@ export interface ClientItem {
   totalPurchases?: number;
   totalVolume?: number;
   notes?: string;
+  logoUrl?: string;
   createdAt?: string;
 }
 

@@ -57,8 +57,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
         {/* Header Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">LOGISTICS EXCELLENCE</span>
-          <h1 className="text-3xl md:text-5xl font-black text-slate-905 tracking-tight mt-3">Comprehensive Services</h1>
-          <p className="mt-2 text-sm text-slate-550 leading-relaxed">
+          <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Comprehensive Services</h1>
+          <p className="mt-2 text-sm text-slate-500 leading-relaxed">
             High-integrity fleet solutions for demanding upcountry and Freetown missions. Grounded on program integrity, direct OEM parts inventory, and defensively certified drivers.
           </p>
         </div>
@@ -71,7 +71,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
             <div className="p-8">
               <span className="text-[10px] uppercase tracking-widest text-indigo-600 font-mono font-bold">DEPLOYMENT CAPABILITY MODEL</span>
               <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">Vehicle Rental &amp; Deployment</h3>
-              <p className="text-xs text-slate-550 mt-2 leading-relaxed">
+              <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 We manage a dedicated, fully insured fleet configured according to rigorous global standards. From independent research tours to corporate executive pools, our administrative dispatch handles everything from police clearance to toll payments flawlessly.
               </p>
 
@@ -135,7 +135,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
               </ul>
             </div>
 
-            <div className="mt-12 p-3.5 bg-white/5 rounded-xl border border-white/10 text-xs text-indigo-305 font-mono text-center">
+            <div className="mt-12 p-3.5 bg-white/5 rounded-xl border border-white/10 text-xs text-indigo-300 font-mono text-center">
               VETTED DIPLOMATIC &amp; VIP DRIVERS AVAILABLE
             </div>
           </div>
@@ -272,7 +272,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
             <div className="bg-[#0f172a] text-slate-300 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-xl text-center md:text-left">
               <span className="text-[10px] uppercase font-mono font-bold tracking-widest text-indigo-400 block mb-1">ITEMIZED DEPLOYMENT ESTIMATE</span>
               <h4 className="text-lg font-bold text-white tracking-tight">{selectedVehicle.name}</h4>
-              <p className="text-xs text-slate-450 mt-1">Configured for continuous operations under BIG Group safety standards.</p>
+              <p className="text-xs text-slate-400 mt-1">Configured for continuous operations under BIG Group safety standards.</p>
 
               <hr className="border-slate-800 my-4" />
 

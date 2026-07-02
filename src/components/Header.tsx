@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ActiveTab } from '../types';
-import { Phone, Mail, MapPin, Menu, X, Shield, Lock } from 'lucide-react';
+import { Phone, Mail, MapPin, Menu, X, Shield, Lock, User, LogOut, LayoutDashboard } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -10,16 +10,17 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenAdmin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [adminEmail, setAdminEmail] = useState<string | null>(null);
+  const [adminUser, setAdminUser] = useState<any>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   React.useEffect(() => {
     import('../lib/supabase').then(({ supabase }) => {
       supabase.auth.getSession().then(({ data: { session } }) => {
-        setAdminEmail(session?.user?.email || null);
+        setAdminUser(session?.user || null);
       });
 
       const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        setAdminEmail(session?.user?.email || null);
+        setAdminUser(session?.user || null);
       });
 
       return () => subscription.unsubscribe();
@@ -58,29 +59,73 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
             FLEET STATUS: DEPLOYABLE
           </span>
-          <button 
-            onClick={onOpenAdmin}
-            className="flex items-center space-x-1 text-xs text-slate-400 hover:text-emerald-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4"
-          >
-            <Shield size={12} />
-            <span>Telemetry & Performance</span>
-          </button>
-          <button 
-            onClick={onOpenAdmin}
-            className="flex items-center space-x-1 text-xs text-slate-400 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4"
-          >
-            {adminEmail ? (
-              <>
-                <Shield size={12} className="text-emerald-500" />
-                <span className="text-emerald-400">{adminEmail}</span>
-              </>
-            ) : (
-              <>
-                <Lock size={12} />
-                <span>Admin Portal</span>
-              </>
-            )}
-          </button>
+
+          {adminUser ? (
+            <div className="relative flex items-center h-full">
+              <button 
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center space-x-2 text-xs text-slate-400 hover:text-emerald-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
+              >
+                {adminUser.user_metadata?.avatar_url ? (
+                  <img src={adminUser.user_metadata.avatar_url} alt="Admin" className="w-5 h-5 rounded-full object-cover border border-emerald-500/30" />
+                ) : (
+                  <Shield size={12} className="text-emerald-500" />
+                )}
+                <span className="text-emerald-400">{adminUser.user_metadata?.full_name || adminUser.email}</span>
+              </button>
+              
+              {dropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)}></div>
+                  <div className="absolute right-0 top-8 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden text-left">
+                    <div className="px-4 py-3 border-b border-slate-800 bg-slate-900/50">
+                      <p className="text-sm font-semibold text-white truncate">{adminUser.user_metadata?.full_name || 'Administrator'}</p>
+                      <p className="text-[10px] text-slate-400 truncate mt-0.5">{adminUser.email}</p>
+                    </div>
+                    <div className="p-1.5">
+                      <button 
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          onOpenAdmin();
+                          setTimeout(() => window.dispatchEvent(new CustomEvent('open-admin-overview')), 50);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <LayoutDashboard size={14} /> Dashboard
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          onOpenAdmin();
+                          setTimeout(() => window.dispatchEvent(new CustomEvent('open-admin-profile')), 50);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <User size={14} /> Profile & Settings
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          import('../lib/supabase').then(({ supabase }) => supabase.auth.signOut());
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 rounded-lg flex items-center gap-2 mt-0.5 cursor-pointer transition-colors"
+                      >
+                        <LogOut size={14} /> Sign Out
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <button 
+              onClick={onOpenAdmin}
+              className="flex items-center space-x-1 text-xs text-slate-400 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
+            >
+              <Lock size={12} />
+              <span>Admin Portal</span>
+            </button>
+          )}
         </div>
       </div>
 

@@ -17,7 +17,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE INSTITUTION</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
-          <p className="mt-2 text-sm text-slate-550 leading-relaxed">
+          <p className="mt-2 text-sm text-slate-500 leading-relaxed">
             Registered and headquartered on 11 Freetown Road, Wilberforce, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
           </p>
         </div>
@@ -35,11 +35,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-150">
               <div className="space-y-1">
-                <span className="text-indigo-650 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
+                <span className="text-indigo-600 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
                 <span className="text-xs text-slate-800 font-semibold block">11 Freetown Road, Wilberforce, Freetown</span>
               </div>
               <div className="space-y-1">
-                <span className="text-indigo-650 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
+                <span className="text-indigo-600 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
                 <span className="text-xs text-slate-800 font-semibold block">Vetted 4WD Field Operations</span>
               </div>
             </div>
@@ -56,7 +56,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         </div>
 
         {/* The Foundation of Our Service (Bento of Core Values) */}
-        <section className="bg-[#0f172a] text-slate-350 py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
+        <section className="bg-[#0f172a] text-slate-300 py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-indigo-400 text-xs font-mono font-bold tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">ADMINISTRATIVE CODES</span>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mt-3">The Foundation of Our Service</h2>
@@ -116,9 +116,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
               </p>
 
               <div className="flex flex-wrap gap-2 pt-2 text-[10px] text-slate-500 font-mono">
-                <span className="bg-slate-50 text-slate-650 px-2.5 py-1 rounded-full border border-slate-200">Defensive-Driving Assessor</span>
-                <span className="bg-slate-50 text-slate-650 px-2.5 py-1 rounded-full border border-slate-200">Missions Liaison Lead</span>
-                <span className="bg-slate-50 text-slate-650 px-2.5 py-1 rounded-full border border-slate-200">12+ Yrs Vetted Experience</span>
+                <span className="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">Defensive-Driving Assessor</span>
+                <span className="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">Missions Liaison Lead</span>
+                <span className="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">12+ Yrs Vetted Experience</span>
               </div>
             </div>
           </div>

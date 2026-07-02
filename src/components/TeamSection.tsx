@@ -105,7 +105,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
           <div className="max-w-2xl">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE PEOPLE BEHIND THE FLEET</span>
             <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-4">Our Operational Team</h1>
-            <p className="mt-4 text-sm md:text-base text-slate-550 leading-relaxed">
+            <p className="mt-4 text-sm md:text-base text-slate-500 leading-relaxed">
               Logistics is more than vehicles—it is about the experienced, vetted professionals ensuring your mission remains completely secure, responsive, and seamless from departure to return.
             </p>
           </div>
