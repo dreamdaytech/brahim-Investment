@@ -83,6 +83,16 @@ export interface Vehicle {
   imageUrl?: string;
   galleryUrls?: string[];
   documents?: VehicleDocument[];
+  // Public Fleet fields
+  showOnFleet?: boolean;
+  vehicleCategory?: string;
+  description?: string;
+  pricePerDay?: number;
+  features?: string[];
+  fuelType?: string;
+  transmission?: string;
+  seats?: number;
+  engineLabel?: string;
 }
 
 export interface FuelSupplier {
@@ -512,7 +522,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       if (vehiclesRes.data) _setVehicles(vehiclesRes.data.map(v => ({
         id: v.id, makeModel: v.make_model, year: v.year, odometer: v.odometer || 0, plateNumber: v.plate_number,
         insuranceExpiry: v.insurance_expiry, condition: v.condition, isCompanyRegistered: v.is_company_registered,
-        type: v.type || 'SUV', status: v.status   // #17 fix: was always hardcoded 'SUV'
+        type: v.type || 'SUV', status: v.status,   // #17 fix: was always hardcoded 'SUV'
+        showOnFleet: v.show_on_fleet, vehicleCategory: v.vehicle_category, description: v.description,
+        pricePerDay: v.price_per_day, features: v.features, fuelType: v.fuel_type, transmission: v.transmission,
+        seats: v.seats, engineLabel: v.engine_label, imageUrl: v.image_url, galleryUrls: v.gallery_urls
       })));
 
       if (dispatchesRes.data) _setActiveDispatches(dispatchesRes.data.map(d => ({
@@ -608,7 +621,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       const next = typeof action === 'function' ? (action as any)(prev) : action;
       handleSupabaseSync('vehicles', prev, next, v => ({
         id: v.id, make_model: v.makeModel, year: v.year, odometer: v.odometer, plate_number: v.plateNumber, status: v.status,
-        insurance_expiry: v.insuranceExpiry, condition: v.condition, is_company_registered: v.isCompanyRegistered
+        insurance_expiry: v.insuranceExpiry, condition: v.condition, is_company_registered: v.isCompanyRegistered,
+        show_on_fleet: v.showOnFleet, vehicle_category: v.vehicleCategory, description: v.description,
+        price_per_day: v.pricePerDay, features: v.features, fuel_type: v.fuelType, transmission: v.transmission,
+        seats: v.seats, engine_label: v.engineLabel, image_url: v.imageUrl, gallery_urls: v.galleryUrls, type: v.type
       }));
       return next;
     });
@@ -5016,6 +5032,16 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 isCompanyRegistered: fd.get('isCompanyRegistered') === 'true',
                 type: fd.get('type') as string,
                 status: fd.get('status') as any,
+                // Public Fleet fields
+                showOnFleet: fd.get('showOnFleet') === 'true',
+                vehicleCategory: fd.get('vehicleCategory') as string,
+                description: fd.get('description') as string,
+                pricePerDay: Number(fd.get('pricePerDay')) || 0,
+                fuelType: fd.get('fuelType') as string,
+                transmission: fd.get('transmission') as string,
+                seats: Number(fd.get('seats')) || 5,
+                engineLabel: fd.get('engineLabel') as string,
+                imageUrl: fd.get('imageUrl') as string,
               };
               if (editingVehicle?.id) {
                 setVehicles(prev => prev.map(v => v.id === editingVehicle.id ? { ...v, ...data } : v));
@@ -5072,6 +5098,56 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <option value="Maintenance">Maintenance</option>
                     <option value="Decommissioned">Decommissioned</option>
                   </select>
+                </div>
+              </div>
+
+              {/* Marketing & Public Profile Section */}
+              <div className="mt-8 pt-6 border-t border-slate-200">
+                <h3 className="text-sm font-black text-slate-800 mb-4">Marketing & Public Profile</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Show on Public Fleet?</label>
+                    <select name="showOnFleet" required defaultValue={editingVehicle?.showOnFleet ? 'true' : 'false'} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 font-medium">
+                      <option value="true">Yes, show to public</option>
+                      <option value="false">No, hide from public</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Vehicle Category</label>
+                    <input type="text" name="vehicleCategory" defaultValue={editingVehicle?.vehicleCategory || editingVehicle?.type || ''} placeholder="e.g. SUV, Sedan, 4WD" className="w-full p-2 border border-slate-200 rounded-xl" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Image URL</label>
+                    <input type="url" name="imageUrl" defaultValue={editingVehicle?.imageUrl || ''} placeholder="https://example.com/image.jpg" className="w-full p-2 border border-slate-200 rounded-xl" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Short Description</label>
+                    <textarea name="description" rows={2} defaultValue={editingVehicle?.description || ''} placeholder="Luxurious and comfortable ride for long trips..." className="w-full p-2 border border-slate-200 rounded-xl"></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Price Per Day ($)</label>
+                    <input type="number" name="pricePerDay" defaultValue={editingVehicle?.pricePerDay || 0} min="0" step="0.01" className="w-full p-2 border border-slate-200 rounded-xl" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Seats</label>
+                    <input type="number" name="seats" defaultValue={editingVehicle?.seats || 5} min="1" className="w-full p-2 border border-slate-200 rounded-xl" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Fuel Type</label>
+                    <select name="fuelType" defaultValue={editingVehicle?.fuelType || 'Diesel'} className="w-full p-2 border border-slate-200 rounded-xl">
+                      <option value="Diesel">Diesel</option>
+                      <option value="Petrol">Petrol</option>
+                      <option value="Hybrid">Hybrid</option>
+                      <option value="EV">EV</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Transmission</label>
+                    <select name="transmission" defaultValue={editingVehicle?.transmission || 'Automatic'} className="w-full p-2 border border-slate-200 rounded-xl">
+                      <option value="Automatic">Automatic</option>
+                      <option value="Manual">Manual</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
