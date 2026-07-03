@@ -345,11 +345,21 @@ export default function App() {
     }
   };
 
-  const handleAddInquiry = async (newInquiry: Inquiry) => {
+  const handleAddInquiry = async (newInquiry: Inquiry): Promise<{success: boolean, error?: string}> => {
     try {
-      await supabase.from('inquiries').insert([mapInquiryToDB(newInquiry)]);
-    } catch (error) {
-      console.error("Error adding inquiry:", error);
+      const { error } = await supabase.from('inquiries').insert([mapInquiryToDB(newInquiry)]);
+      if (error) {
+        console.error("Error adding inquiry:", error);
+        return { success: false, error: error.message || JSON.stringify(error) };
+      }
+      
+      // Update local state immediately so it appears in the dashboard without requiring a refresh
+      setInquiries(prev => [newInquiry, ...prev]);
+      
+      return { success: true };
+    } catch (error: any) {
+      console.error("Exception adding inquiry:", error);
+      return { success: false, error: error.message || 'Unknown error occurred' };
     }
   };
 
@@ -388,6 +398,7 @@ export default function App() {
           <HomeSection 
             setActiveTab={setActiveTab} 
             setSelectedVehicleId={setSelectedVehicleId} 
+            fleetVehicles={fleetVehicles}
           />
         );
       case 'fleet':
@@ -420,6 +431,7 @@ export default function App() {
             estimateDetails={estimateDetails}
             clearEstimateDetails={handleClearEstimate}
             onAddInquiry={handleAddInquiry}
+            fleetVehicles={fleetVehicles}
           />
         );
       case 'admin':
@@ -440,7 +452,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f7f9fb] text-gray-900 selection:bg-indigo-600 selection:text-white antialiased">
+    <div className="flex flex-col min-h-screen bg-[#f7f9fb] text-slate-950 selection:bg-indigo-600 selection:text-white antialiased">
       {/* Dynamic sticky header */}
       <Header 
         activeTab={activeTab} 
@@ -454,7 +466,7 @@ export default function App() {
           <div className="w-full h-96 flex items-center justify-center bg-[#f7f9fb]">
             <div className="flex flex-col items-center space-y-3">
               <span className="w-12 h-12 rounded-full border-4 border-[#131b2e] border-t-transparent animate-spin"></span>
-              <span className="text-xs font-mono font-bold text-gray-500 uppercase tracking-widest">Compiling Dispatch Port...</span>
+              <span className="text-xs font-mono font-bold text-slate-600 uppercase tracking-widest">Compiling Dispatch Port...</span>
             </div>
           </div>
         ) : (

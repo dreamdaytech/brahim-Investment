@@ -55,8 +55,8 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
           {/* Use header button for back if accessed as subpage, otherwise just regular header */}
           <div className="max-w-2xl">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">RECOGNIZED LOGISTICS PARTNERS</span>
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-4">Proven Operational Record</h1>
-            <p className="mt-4 text-sm md:text-base text-slate-500 leading-relaxed">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-4">Proven Operational Record</h1>
+            <p className="mt-4 text-sm md:text-base text-slate-600 leading-relaxed">
               We exclusively support organizations requiring uncompromising fleet standards, including high-availability diplomatic missions, international health programs, and corporate deployments across rigorous terrain.
             </p>
           </div>
@@ -69,8 +69,8 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
                 onClick={() => setFilter(status)}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   filter === status
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                    ? 'bg-white text-slate-950 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-700 hover:bg-slate-200/50'
                 }`}
               >
                 {status}
@@ -109,10 +109,10 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
                         {getInitials(client.name)}
                       </div>
                     )}
-                    <h3 className="text-lg font-black text-slate-900 tracking-tight leading-tight flex-1">{client.name}</h3>
+                    <h3 className="text-lg font-black text-slate-950 tracking-tight leading-tight flex-1">{client.name}</h3>
                   </div>
                   
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed border-l-2 border-indigo-100 pl-3">
+                  <p className="text-xs text-slate-600 font-medium leading-relaxed border-l-2 border-indigo-100 pl-3">
                     {client.service}
                   </p>
                 </div>
@@ -120,7 +120,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
                 <div className="mt-6 pt-4 border-t border-slate-100">
                   <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase ${
                     isCompleted
-                      ? 'bg-slate-100 text-slate-500 border border-slate-200'
+                      ? 'bg-slate-100 text-slate-600 border border-slate-200'
                       : isPending
                       ? 'bg-amber-50 text-amber-700 border border-amber-100'
                       : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
@@ -144,7 +144,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, cl
           <div className="max-w-xl">
             <span className="text-indigo-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-2">VETTED EXCELLENCE</span>
             <h3 className="text-2xl font-black tracking-tight text-white">Trust In Official Deployments</h3>
-            <p className="text-xs md:text-sm text-slate-400 mt-3 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-500 mt-3 leading-relaxed">
               B.I.G Group's continuous operational record highlights our capacity for long-term fleet stability, proactive mechanical resolution, and seamless compliance with international non-profit security demands.
             </p>
           </div>

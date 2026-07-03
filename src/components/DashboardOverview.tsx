@@ -49,9 +49,9 @@ const KpiCard: React.FC<{
 }> = ({ label, value, sub, icon, iconBg, valueColor }) => (
   <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-start justify-between hover:shadow-md transition-shadow">
     <div className="flex-1 min-w-0">
-      <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest truncate">{label}</p>
+      <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest truncate">{label}</p>
       <p className={`text-3xl font-black mt-1 ${valueColor}`}>{value}</p>
-      <p className="text-xs text-slate-500 mt-0.5 truncate">{sub}</p>
+      <p className="text-xs text-slate-600 mt-0.5 truncate">{sub}</p>
     </div>
     <div className={`p-3 rounded-xl border shrink-0 ml-3 ${iconBg}`}>
       {icon}
@@ -62,10 +62,10 @@ const KpiCard: React.FC<{
 // ── Utilisation bar ───────────────────────────────────────────────────────────
 const UtilBar: React.FC<{ label: string; value: number; sub: string; color: string; barClass: string }> = ({ label, value, sub, color, barClass }) => (
   <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-    <p className="text-xs font-mono font-bold text-slate-400 uppercase mb-3">{label}</p>
+    <p className="text-xs font-mono font-bold text-slate-500 uppercase mb-3">{label}</p>
     <div className="flex items-end gap-3">
       <span className={`text-4xl font-black ${color}`}>{value}%</span>
-      <span className="text-sm text-slate-500 mb-1">{sub}</span>
+      <span className="text-sm text-slate-600 mb-1">{sub}</span>
     </div>
     <div className="mt-3 h-3 bg-slate-100 rounded-full overflow-hidden">
       <div className={`h-full rounded-full transition-all duration-700 ${barClass}`} style={{ width: `${Math.min(value, 100)}%` }} />
@@ -328,7 +328,7 @@ export const DashboardOverview: React.FC = () => {
         <div className="text-center space-y-3">
           <AlertTriangle size={32} className="text-red-400 mx-auto" />
           <p className="text-sm font-bold text-slate-700">Could not load overview</p>
-          <p className="text-xs text-slate-500">{error}</p>
+          <p className="text-xs text-slate-600">{error}</p>
         </div>
       </div>
     );
@@ -349,8 +349,8 @@ export const DashboardOverview: React.FC = () => {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Platform Overview</h2>
-          <p className="text-slate-500 text-sm mt-0.5">Live analytics across fleet, drivers &amp; operations · BIG Group SL</p>
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Platform Overview</h2>
+          <p className="text-slate-600 text-sm mt-0.5">Live analytics across fleet, drivers &amp; operations · BIG Group SL</p>
         </div>
         <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200 w-fit">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -368,10 +368,10 @@ export const DashboardOverview: React.FC = () => {
 
       {/* ── Row 2 KPIs ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Trip Logs" value={data.totalTripLogs} sub="total recorded" icon={<FileText size={20} className="text-slate-600" />} iconBg="bg-slate-50 border-slate-200" valueColor="text-slate-900" />
+        <KpiCard label="Trip Logs" value={data.totalTripLogs} sub="total recorded" icon={<FileText size={20} className="text-slate-700" />} iconBg="bg-slate-50 border-slate-200" valueColor="text-slate-950" />
         <KpiCard label="Fuel Consumed" value={`${data.totalFuelConsumed.toLocaleString()} L`} sub="all trips total" icon={<TrendingUp size={20} className="text-violet-600" />} iconBg="bg-violet-50 border-violet-100" valueColor="text-violet-600" />
         <KpiCard label="In Maintenance" value={data.inMaintenanceVehicles} sub="vehicles grounded" icon={<Wrench size={20} className="text-orange-500" />} iconBg="bg-orange-50 border-orange-100" valueColor="text-orange-500" />
-        <KpiCard label="Incidents" value={data.totalIncidents} sub="logged this period" icon={<AlertTriangle size={20} className={data.totalIncidents > 0 ? "text-red-600" : "text-slate-400"} />} iconBg={data.totalIncidents > 0 ? "bg-red-50 border-red-100" : "bg-slate-50 border-slate-200"} valueColor={data.totalIncidents > 0 ? "text-red-600" : "text-slate-400"} />
+        <KpiCard label="Incidents" value={data.totalIncidents} sub="logged this period" icon={<AlertTriangle size={20} className={data.totalIncidents > 0 ? "text-red-600" : "text-slate-500"} />} iconBg={data.totalIncidents > 0 ? "bg-red-50 border-red-100" : "bg-slate-50 border-slate-200"} valueColor={data.totalIncidents > 0 ? "text-red-600" : "text-slate-500"} />
       </div>
 
       {/* ── Utilisation Bars ── */}
@@ -387,10 +387,10 @@ export const DashboardOverview: React.FC = () => {
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-slate-900">Trip Activity — Last 28 Days</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Weekly trips &amp; distance breakdown</p>
+              <h3 className="font-bold text-slate-950">Trip Activity — Last 28 Days</h3>
+              <p className="text-xs text-slate-500 mt-0.5">Weekly trips &amp; distance breakdown</p>
             </div>
-            <BarChart2 size={18} className="text-slate-300" />
+            <BarChart2 size={18} className="text-slate-400" />
           </div>
           {data.tripTrend.some(t => t.trips > 0 || t.distance > 0) ? (
             <ResponsiveContainer width="100%" height={200}>
@@ -404,8 +404,8 @@ export const DashboardOverview: React.FC = () => {
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-48 flex flex-col items-center justify-center gap-2 text-slate-400">
-              <Clock size={24} className="text-slate-300" />
+            <div className="h-48 flex flex-col items-center justify-center gap-2 text-slate-500">
+              <Clock size={24} className="text-slate-400" />
               <p className="text-sm">No trip data in the last 28 days</p>
             </div>
           )}
@@ -415,10 +415,10 @@ export const DashboardOverview: React.FC = () => {
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-slate-900">Fleet Status</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Current vehicle distribution</p>
+              <h3 className="font-bold text-slate-950">Fleet Status</h3>
+              <p className="text-xs text-slate-500 mt-0.5">Current vehicle distribution</p>
             </div>
-            <Car size={18} className="text-slate-300" />
+            <Car size={18} className="text-slate-400" />
           </div>
           {vehiclePieData.length > 0 ? (
             <>
@@ -435,15 +435,15 @@ export const DashboardOverview: React.FC = () => {
                   <div key={i} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: s.color }} />
-                      <span className="text-slate-600">{s.name}</span>
+                      <span className="text-slate-700">{s.name}</span>
                     </div>
-                    <span className="font-bold text-slate-900">{s.value}</span>
+                    <span className="font-bold text-slate-950">{s.value}</span>
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <div className="h-44 flex items-center justify-center text-slate-400 text-sm">No fleet data</div>
+            <div className="h-44 flex items-center justify-center text-slate-500 text-sm">No fleet data</div>
           )}
         </div>
       </div>
@@ -454,10 +454,10 @@ export const DashboardOverview: React.FC = () => {
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-slate-900">Fuel vs Distance by Week</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Consumption vs mileage correlation</p>
+              <h3 className="font-bold text-slate-950">Fuel vs Distance by Week</h3>
+              <p className="text-xs text-slate-500 mt-0.5">Consumption vs mileage correlation</p>
             </div>
-            <Fuel size={18} className="text-slate-300" />
+            <Fuel size={18} className="text-slate-400" />
           </div>
           {data.tripTrend.some(t => t.fuel > 0 || t.distance > 0) ? (
             <ResponsiveContainer width="100%" height={180}>
@@ -472,7 +472,7 @@ export const DashboardOverview: React.FC = () => {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-44 flex items-center justify-center text-slate-400 text-sm">No fuel or distance data yet</div>
+            <div className="h-44 flex items-center justify-center text-slate-500 text-sm">No fuel or distance data yet</div>
           )}
         </div>
 
@@ -480,10 +480,10 @@ export const DashboardOverview: React.FC = () => {
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-slate-900">System Alerts</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Active notices &amp; flags</p>
+              <h3 className="font-bold text-slate-950">System Alerts</h3>
+              <p className="text-xs text-slate-500 mt-0.5">Active notices &amp; flags</p>
             </div>
-            <ShieldAlert size={18} className="text-slate-300" />
+            <ShieldAlert size={18} className="text-slate-400" />
           </div>
           <div className="space-y-2">
             {data.recentAlerts.map((alert, i) => (
@@ -500,21 +500,21 @@ export const DashboardOverview: React.FC = () => {
             <Users size={20} className="text-indigo-600" />
           </div>
           <p className="text-3xl font-black text-indigo-600">{data.activeDrivers}</p>
-          <p className="text-xs font-bold text-slate-500 uppercase font-mono mt-1">Active Drivers</p>
+          <p className="text-xs font-bold text-slate-600 uppercase font-mono mt-1">Active Drivers</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 text-center">
           <div className="w-12 h-12 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center mx-auto mb-3">
             <Activity size={20} className="text-amber-500" />
           </div>
           <p className="text-3xl font-black text-amber-500">{data.warningDrivers}</p>
-          <p className="text-xs font-bold text-slate-500 uppercase font-mono mt-1">On Warning</p>
+          <p className="text-xs font-bold text-slate-600 uppercase font-mono mt-1">On Warning</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 text-center">
           <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-3">
             <AlertTriangle size={20} className="text-red-500" />
           </div>
           <p className="text-3xl font-black text-red-500">{data.suspendedDrivers}</p>
-          <p className="text-xs font-bold text-slate-500 uppercase font-mono mt-1">Suspended</p>
+          <p className="text-xs font-bold text-slate-600 uppercase font-mono mt-1">Suspended</p>
         </div>
       </div>
 
@@ -523,15 +523,15 @@ export const DashboardOverview: React.FC = () => {
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-slate-900">Top Performing Drivers</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Ranked by automated scoring engine</p>
+              <h3 className="font-bold text-slate-950">Top Performing Drivers</h3>
+              <p className="text-xs text-slate-500 mt-0.5">Ranked by automated scoring engine</p>
             </div>
             <Award size={18} className="text-amber-400" />
           </div>
           <div className="space-y-3">
             {data.topDrivers.map((d, i) => (
               <div key={i} className="flex items-center gap-4">
-                <span className={`text-sm font-black w-6 text-center ${i === 0 ? 'text-amber-500' : i === 1 ? 'text-slate-400' : i === 2 ? 'text-orange-400' : 'text-slate-300'}`}>
+                <span className={`text-sm font-black w-6 text-center ${i === 0 ? 'text-amber-500' : i === 1 ? 'text-slate-500' : i === 2 ? 'text-orange-400' : 'text-slate-400'}`}>
                   #{i + 1}
                 </span>
                 {d.img ? (

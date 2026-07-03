@@ -96,7 +96,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
         <div className="mb-12">
           <button
             onClick={() => setActiveTab('about')}
-            className="group flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-6 cursor-pointer"
+            className="group flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors mb-6 cursor-pointer"
           >
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to About Us
@@ -104,8 +104,8 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
 
           <div className="max-w-2xl">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE PEOPLE BEHIND THE FLEET</span>
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-4">Our Operational Team</h1>
-            <p className="mt-4 text-sm md:text-base text-slate-500 leading-relaxed">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-4">Our Operational Team</h1>
+            <p className="mt-4 text-sm md:text-base text-slate-600 leading-relaxed">
               Logistics is more than vehicles—it is about the experienced, vetted professionals ensuring your mission remains completely secure, responsive, and seamless from departure to return.
             </p>
           </div>
@@ -137,11 +137,11 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
               {/* Profile Details */}
               <div className="space-y-4 flex-1">
                 <div>
-                  <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">{member.name}</h3>
+                  <h3 className="text-xl md:text-2xl font-black text-slate-950 tracking-tight">{member.name}</h3>
                   <p className="text-sm font-semibold text-indigo-600 mt-1">{member.role}</p>
                 </div>
                 
-                <p className="text-sm text-slate-500 leading-relaxed max-w-3xl">
+                <p className="text-sm text-slate-600 leading-relaxed max-w-3xl">
                   {truncateBio(member.bio, 120)}
                 </p>
 
@@ -150,13 +150,13 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                     {member.skills.slice(0, 2).map((skill: string, sIdx: number) => (
                       <span 
                         key={sIdx}
-                        className="bg-slate-50 text-slate-600 px-3 py-1 rounded-lg border border-slate-200 text-xs font-mono font-medium"
+                        className="bg-slate-50 text-slate-700 px-3 py-1 rounded-lg border border-slate-200 text-xs font-mono font-medium"
                       >
                         {skill}
                       </span>
                     ))}
                     {member.skills.length > 2 && (
-                      <span className="bg-slate-50 text-slate-400 px-3 py-1 rounded-lg border border-slate-200 text-xs font-mono font-medium">
+                      <span className="bg-slate-50 text-slate-500 px-3 py-1 rounded-lg border border-slate-200 text-xs font-mono font-medium">
                         +{member.skills.length - 2} more
                       </span>
                     )}
@@ -198,7 +198,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
               >
                 <button 
                   onClick={() => setSelectedMember(null)}
-                  className="absolute top-4 right-4 p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full transition-colors cursor-pointer z-20"
+                  className="absolute top-4 right-4 p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full transition-colors cursor-pointer z-20"
                 >
                   <X size={20} />
                 </button>
@@ -220,7 +220,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                   {/* Modal Details */}
                   <div className="flex-1 space-y-6">
                     <div>
-                      <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">{selectedMember.name}</h2>
+                      <h2 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tight">{selectedMember.name}</h2>
                       <p className="text-base font-semibold text-indigo-600 mt-1">{selectedMember.role}</p>
                       {selectedMember.dedicatedRole && (
                         <div className="mt-3 bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-start gap-3">
@@ -232,7 +232,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                       )}
                     </div>
 
-                    <p className="text-slate-600 leading-relaxed text-[15px] md:text-base">
+                    <p className="text-slate-700 leading-relaxed text-[15px] md:text-base">
                       {selectedMember.bio}
                     </p>
 
@@ -240,27 +240,27 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 border border-slate-100 rounded-2xl p-5">
                         {selectedMember.phone && (
                           <div className="flex flex-col gap-1">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Phone</span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Phone</span>
                             <div className="flex items-start gap-2.5 text-sm font-medium text-slate-700">
-                              <Phone size={16} className="text-slate-400 shrink-0 mt-0.5" />
+                              <Phone size={16} className="text-slate-500 shrink-0 mt-0.5" />
                               <span className="break-words">{selectedMember.phone}</span>
                             </div>
                           </div>
                         )}
                         {selectedMember.email && (
                           <div className="flex flex-col gap-1">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Email</span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Email</span>
                             <div className="flex items-start gap-2.5 text-sm font-medium text-slate-700">
-                              <Mail size={16} className="text-slate-400 shrink-0 mt-0.5" />
+                              <Mail size={16} className="text-slate-500 shrink-0 mt-0.5" />
                               <span className="break-all">{selectedMember.email}</span>
                             </div>
                           </div>
                         )}
                         {selectedMember.languages && (
                           <div className="flex flex-col gap-1 sm:col-span-2">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Languages</span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Languages</span>
                             <div className="flex items-start gap-2.5 text-sm font-medium text-slate-700">
-                              <Globe size={16} className="text-slate-400 shrink-0 mt-0.5" />
+                              <Globe size={16} className="text-slate-500 shrink-0 mt-0.5" />
                               <span>{selectedMember.languages}</span>
                             </div>
                           </div>
@@ -269,7 +269,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                     )}
 
                     <div className="pt-2">
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Core Expertise</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Core Expertise</h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedMember.skills.map((skill: string, sIdx: number) => (
                           <span 

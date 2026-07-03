@@ -310,8 +310,8 @@ export const CorporateBilling: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Corporate Accounts</h2>
-          <p className="text-slate-500 text-sm mt-1">Manage B2B relationships and billing rates</p>
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Corporate Accounts</h2>
+          <p className="text-slate-600 text-sm mt-1">Manage B2B relationships and billing rates</p>
         </div>
         <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">
           <Plus size={16} /> New Account
@@ -328,24 +328,24 @@ export const CorporateBilling: React.FC = () => {
                   <Building2 size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 leading-tight">{account.name}</h3>
-                  <p className="text-xs text-slate-500">{account.status}</p>
+                  <h3 className="font-bold text-slate-950 leading-tight">{account.name}</h3>
+                  <p className="text-xs text-slate-600">{account.status}</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-3 mb-6">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500 font-medium">Contact:</span>
-                <span className="text-slate-900 font-bold">{account.contactPerson}</span>
+                <span className="text-slate-600 font-medium">Contact:</span>
+                <span className="text-slate-950 font-bold">{account.contactPerson}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500 font-medium">Billing:</span>
+                <span className="text-slate-600 font-medium">Billing:</span>
                 <span className="text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded text-xs font-bold">{account.billingType}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500 font-medium">Rate:</span>
-                <span className="text-slate-900 font-bold font-mono">${account.rate.toLocaleString()}</span>
+                <span className="text-slate-600 font-medium">Rate:</span>
+                <span className="text-slate-950 font-bold font-mono">${account.rate.toLocaleString()}</span>
               </div>
             </div>
 
@@ -377,14 +377,14 @@ export const CorporateBilling: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Invoice Ledger</h2>
-          <p className="text-slate-500 text-sm mt-1">Track payments and outstanding balances</p>
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Invoice Ledger</h2>
+          <p className="text-slate-600 text-sm mt-1">Track payments and outstanding balances</p>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
         <table className="w-full text-left text-sm whitespace-nowrap">
-          <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+          <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
             <tr>
               <th className="px-6 py-4 font-semibold">Invoice ID</th>
               <th className="px-6 py-4 font-semibold">Client</th>
@@ -398,18 +398,18 @@ export const CorporateBilling: React.FC = () => {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {invoices.length === 0 ? (
-              <tr><td colSpan={8} className="px-6 py-12 text-center text-slate-500 text-sm">No invoices yet. Generate one from the Accounts tab.</td></tr>
+              <tr><td colSpan={8} className="px-6 py-12 text-center text-slate-600 text-sm">No invoices yet. Generate one from the Accounts tab.</td></tr>
             ) : invoices.map(invoice => {
               const account = accounts.find(a => a.id === invoice.accountId);
               return (
                 <tr key={invoice.id} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4 font-bold text-slate-900 font-mono">{invoice.id}</td>
+                  <td className="px-6 py-4 font-bold text-slate-950 font-mono">{invoice.id}</td>
                   <td className="px-6 py-4 text-slate-700 font-medium">{account?.name}</td>
-                  <td className="px-6 py-4 text-slate-600">{invoice.date}</td>
-                  <td className="px-6 py-4 text-slate-600">{invoice.period}</td>
-                  <td className="px-6 py-4 text-slate-600 font-mono">{invoice.tripCount ?? '—'}</td>
+                  <td className="px-6 py-4 text-slate-700">{invoice.date}</td>
+                  <td className="px-6 py-4 text-slate-700">{invoice.period}</td>
+                  <td className="px-6 py-4 text-slate-700 font-mono">{invoice.tripCount ?? '—'}</td>
                   {/* #23 Currency standardised to $ for billing */}
-                  <td className="px-6 py-4 font-bold text-slate-900 font-mono">${invoice.amount.toLocaleString()}</td>
+                  <td className="px-6 py-4 font-bold text-slate-950 font-mono">${invoice.amount.toLocaleString()}</td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                       invoice.status === 'Paid' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
@@ -424,7 +424,7 @@ export const CorporateBilling: React.FC = () => {
                       {/* #4 Download PDF — opens print dialog */}
                       <button
                         onClick={() => printInvoice(invoice, account)}
-                        className="text-slate-500 hover:text-indigo-600 p-1.5 hover:bg-indigo-50 rounded-md transition-colors"
+                        className="text-slate-600 hover:text-indigo-600 p-1.5 hover:bg-indigo-50 rounded-md transition-colors"
                         title="Download / Print PDF"
                       >
                         <Download size={16} />
@@ -432,7 +432,7 @@ export const CorporateBilling: React.FC = () => {
                       {/* #4 Email client — mailto link */}
                       <a
                         href={`mailto:${account?.email}?subject=Invoice ${invoice.id} — ${invoice.period}&body=Dear ${account?.contactPerson},%0A%0APlease find attached your invoice for ${invoice.period}.%0A%0AInvoice ID: ${invoice.id}%0APeriod: ${invoice.period}%0AAmount Due: $${invoice.amount.toLocaleString()}%0A%0APlease remit payment at your earliest convenience.%0A%0ARegards,%0ABIG Group Fleet Management`}
-                        className="text-slate-500 hover:text-indigo-600 p-1.5 hover:bg-indigo-50 rounded-md transition-colors"
+                        className="text-slate-600 hover:text-indigo-600 p-1.5 hover:bg-indigo-50 rounded-md transition-colors"
                         title="Email Client"
                       >
                         <Mail size={16} />
@@ -452,11 +452,11 @@ export const CorporateBilling: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-200 pb-6">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl font-black text-slate-950 tracking-tight flex items-center gap-3">
             <Building2 className="text-indigo-600" size={32} />
             Corporate Billing
           </h1>
-          <p className="text-slate-500 mt-2 font-medium">B2B client management and automated invoicing from live trip data.</p>
+          <p className="text-slate-600 mt-2 font-medium">B2B client management and automated invoicing from live trip data.</p>
         </div>
       </div>
 
@@ -474,7 +474,7 @@ export const CorporateBilling: React.FC = () => {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
                 isActive
                   ? 'bg-white text-indigo-600 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                  : 'text-slate-600 hover:text-slate-700 hover:bg-slate-200/50'
               }`}
             >
               <Icon size={16} /> {tab.label}

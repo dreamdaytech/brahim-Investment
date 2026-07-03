@@ -1046,8 +1046,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Performance Overview</h2>
-          <p className="text-slate-500 text-sm mt-1">Aggregated data from {filteredLogs.length} trips</p>
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Performance Overview</h2>
+          <p className="text-slate-600 text-sm mt-1">Aggregated data from {filteredLogs.length} trips</p>
         </div>
         <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
           {['Daily', 'Weekly', 'Monthly'].map((t) => (
@@ -1057,7 +1057,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 timeframe === t 
                   ? 'bg-white text-indigo-600 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-700'
+                  : 'text-slate-600 hover:text-slate-700'
               }`}
             >
               {t}
@@ -1076,7 +1076,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             {expiringDocuments.map((doc, i) => (
               <div key={i} className="bg-white p-3 rounded-xl border border-red-100 flex justify-between items-center">
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase">{doc.type}</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">{doc.type}</p>
                   <p className="font-bold text-slate-800 text-sm">{doc.name}</p>
                 </div>
                 <div className={`px-2 py-1 rounded-md text-xs font-bold ${doc.days < 0 ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>
@@ -1094,10 +1094,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <Navigation size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Distance</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Distance</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-xl font-black text-slate-900">{totalDistance.toLocaleString()}</h3>
-              <span className="text-xs font-semibold text-slate-500">km</span>
+              <h3 className="text-xl font-black text-slate-950">{totalDistance.toLocaleString()}</h3>
+              <span className="text-xs font-semibold text-slate-600">km</span>
             </div>
           </div>
         </div>
@@ -1107,10 +1107,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <Fuel size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Efficiency</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Efficiency</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-xl font-black text-slate-900">{avgEfficiency}</h3>
-              <span className="text-xs font-semibold text-slate-500">km/L</span>
+              <h3 className="text-xl font-black text-slate-950">{avgEfficiency}</h3>
+              <span className="text-xs font-semibold text-slate-600">km/L</span>
             </div>
           </div>
         </div>
@@ -1120,9 +1120,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <CheckCircle2 size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Trips</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Total Trips</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-xl font-black text-slate-900">{filteredLogs.length}</h3>
+              <h3 className="text-xl font-black text-slate-950">{filteredLogs.length}</h3>
             </div>
           </div>
         </div>
@@ -1132,9 +1132,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <Activity size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Utilization</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Utilization</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-xl font-black text-slate-900">
+              <h3 className="text-xl font-black text-slate-950">
                 {vehicles.filter(v => v.status !== 'Decommissioned').length > 0 
                   ? Math.round((activeDispatches.length / vehicles.filter(v => v.status !== 'Decommissioned').length) * 100) 
                   : 0}%
@@ -1148,9 +1148,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <Briefcase size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cost / KM</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cost / KM</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-xl font-black text-slate-900">
+              <h3 className="text-xl font-black text-slate-950">
                 ${totalDistance > 0 ? ((allFuelCollections.reduce((acc, fc) => acc + (fc.liters * fc.costPerLiter), 0) + maintenanceRecords.reduce((acc, m) => acc + m.cost, 0)) / totalDistance).toFixed(2) : '0.00'}
               </h3>
             </div>
@@ -1162,9 +1162,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <AlertTriangle size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Incidents</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Incidents</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-xl font-black text-slate-900">{totalIncidents}</h3>
+              <h3 className="text-xl font-black text-slate-950">{totalIncidents}</h3>
             </div>
           </div>
         </div>
@@ -1237,8 +1237,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <div>
-          {!isSubTab && <h2 className="text-2xl font-black text-slate-900 tracking-tight">Trip Logs</h2>}
-          {!isSubTab && <p className="text-slate-500 text-sm mt-1">Record and track daily driver assignments</p>}
+          {!isSubTab && <h2 className="text-2xl font-black text-slate-950 tracking-tight">Trip Logs</h2>}
+          {!isSubTab && <p className="text-slate-600 text-sm mt-1">Record and track daily driver assignments</p>}
         </div>
         <div className="flex items-center gap-2">
           {/* #27 CSV Export */}
@@ -1267,7 +1267,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               a.download = `trip-logs-${new Date().toISOString().split('T')[0]}.csv`;
               a.click(); URL.revokeObjectURL(url);
             }}
-            className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
+            className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Export CSV
@@ -1309,7 +1309,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
               doc.save(`trip-logs-${new Date().toISOString().split('T')[0]}.pdf`);
             }}
-            className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
+            className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             Export PDF
@@ -1320,7 +1320,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input 
               type="text" 
               placeholder="Search date, driver, or vehicle..." 
@@ -1340,7 +1340,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {logFiltersOpen && (
           <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Driver</label>
+              <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Driver</label>
               <select 
                 value={logFilterDriver}
                 onChange={(e) => setLogFilterDriver(e.target.value)}
@@ -1351,7 +1351,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Vehicle</label>
+              <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Vehicle</label>
               <select 
                 value={logFilterVehicle}
                 onChange={(e) => setLogFilterVehicle(e.target.value)}
@@ -1362,11 +1362,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">From Date</label>
+              <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">From Date</label>
               <input type="date" value={logDateFrom} onChange={e => setLogDateFrom(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">To Date</label>
+              <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">To Date</label>
               <input type="date" value={logDateTo} onChange={e => setLogDateTo(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
             </div>
           </div>
@@ -1376,28 +1376,28 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       <div className="bg-white rounded-2xl border border-slate-200 overflow-visible shadow-sm">
         <div className="overflow-visible">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider select-none">
+            <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider select-none">
               <tr>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('date')}>
-                  <div className="flex items-center gap-1">Date <ArrowUpDown size={12} className={logSortConfig.key === 'date' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex items-center gap-1">Date <ArrowUpDown size={12} className={logSortConfig.key === 'date' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('driverId')}>
-                  <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={logSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={logSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('vehicleId')}>
-                  <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={logSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={logSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('distanceTraveledKm')}>
-                  <div className="flex items-center gap-1">Distance <ArrowUpDown size={12} className={logSortConfig.key === 'distanceTraveledKm' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex items-center gap-1">Distance <ArrowUpDown size={12} className={logSortConfig.key === 'distanceTraveledKm' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('fuelConsumedLiters')}>
-                  <div className="flex items-center gap-1">Fuel Used <ArrowUpDown size={12} className={logSortConfig.key === 'fuelConsumedLiters' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex items-center gap-1">Fuel Used <ArrowUpDown size={12} className={logSortConfig.key === 'fuelConsumedLiters' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('fuelIssuedLiters')}>
-                  <div className="flex items-center gap-1">Fuel Issued <ArrowUpDown size={12} className={logSortConfig.key === 'fuelIssuedLiters' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex items-center gap-1">Fuel Issued <ArrowUpDown size={12} className={logSortConfig.key === 'fuelIssuedLiters' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors text-center" onClick={() => handleLogSort('incidents')}>
-                  <div className="flex justify-center items-center gap-1">Incidents <ArrowUpDown size={12} className={logSortConfig.key === 'incidents' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                  <div className="flex justify-center items-center gap-1">Incidents <ArrowUpDown size={12} className={logSortConfig.key === 'incidents' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -1405,7 +1405,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <tbody className="divide-y divide-slate-100">
               {processedLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-slate-600">
                     No matching trip logs found.
                   </td>
                 </tr>
@@ -1418,14 +1418,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 const hasVariance = tripFuelIssued > 0 && tripFuelIssued > log.fuelConsumedLiters * 1.1;
                 return (
                   <tr key={log.id} className={`transition-colors ${hasVariance ? 'bg-red-50/50 hover:bg-red-50' : 'hover:bg-slate-50/50'}`}>
-                    <td className="px-6 py-4 font-medium text-slate-900">{log.date}</td>
+                    <td className="px-6 py-4 font-medium text-slate-950">{log.date}</td>
                     <td className="px-6 py-4 text-slate-700">{driver?.name || 'Unknown Driver'}</td>
                     <td className="px-6 py-4 text-slate-700">
                       {vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : 'Unknown Vehicle'}
                     </td>
-                    <td className="px-6 py-4 text-slate-600">{log.distanceTraveledKm} km</td>
-                    <td className="px-6 py-4 text-slate-600">{log.fuelConsumedLiters} L</td>
-                    <td className="px-6 py-4 text-slate-600 font-bold">
+                    <td className="px-6 py-4 text-slate-700">{log.distanceTraveledKm} km</td>
+                    <td className="px-6 py-4 text-slate-700">{log.fuelConsumedLiters} L</td>
+                    <td className="px-6 py-4 text-slate-700 font-bold">
                       {tripFuelIssued > 0 ? tripFuelIssued : '-'} L
                       {hasVariance && <AlertTriangle size={12} className="inline ml-1 text-red-500" title="High Fuel Variance" />}
                     </td>
@@ -1433,7 +1433,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       {log.incidents > 0 ? (
                         <span className="inline-flex items-center justify-center bg-red-100 text-red-700 font-bold w-6 h-6 rounded-full text-xs">{log.incidents}</span>
                       ) : (
-                        <span className="text-slate-300">-</span>
+                        <span className="text-slate-400">-</span>
                       )}
                     </td>
                     <td className={`px-6 py-4 text-right relative ${activeLogMenu === log.id ? 'z-50' : 'z-0'}`}>
@@ -1455,14 +1455,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           </span>
                         )}
                         {(!log.approvalStatus || log.approvalStatus === 'Pending') && (
-                          <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-1 rounded-lg">
+                          <span className="flex items-center gap-1 text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-lg">
                             <Clock size={11} /> Pending
                           </span>
                         )}
 
                         <button 
                           onClick={() => setActiveLogMenu(activeLogMenu === log.id ? null : log.id)}
-                          className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100 transition-colors"
+                          className="text-slate-500 hover:text-slate-700 p-1 rounded-full hover:bg-slate-100 transition-colors"
                         >
                           <MoreVertical size={16} />
                         </button>
@@ -1498,7 +1498,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                 }}
                                 className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left"
                               >
-                                <FileText size={14} className="text-slate-500" /> View Log
+                                <FileText size={14} className="text-slate-600" /> View Log
                               </button>
                               <button
                                 onClick={() => { 
@@ -1531,7 +1531,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                   <input type="text" value={flagNoteInput} onChange={e => setFlagNoteInput(e.target.value)} placeholder="Reason..." className="text-xs border border-slate-200 rounded p-1.5 w-full" autoFocus />
                                   <div className="flex gap-2">
                                     <button onClick={() => { handleFlagLog(log.id, flagNoteInput); setActiveLogMenu(null); }} className="text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1.5 rounded w-full transition-colors">Flag</button>
-                                    <button onClick={() => { setFlaggingLogId(null); setFlagNoteInput(''); }} className="text-xs text-slate-500 hover:text-slate-700 bg-white border border-slate-200 w-full rounded">Cancel</button>
+                                    <button onClick={() => { setFlaggingLogId(null); setFlagNoteInput(''); }} className="text-xs text-slate-600 hover:text-slate-700 bg-white border border-slate-200 w-full rounded">Cancel</button>
                                   </div>
                                 </div>
                               ) : (
@@ -1548,7 +1548,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                   <p className="text-xs text-red-600 font-bold">Confirm delete?</p>
                                   <div className="flex gap-2">
                                     <button onClick={() => { setLogs(prev => prev.filter(l => l.id !== log.id)); setDeletingTripLogId(null); setActiveLogMenu(null); }} className="text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1.5 rounded w-full transition-colors">Yes</button>
-                                    <button onClick={() => { setDeletingTripLogId(null); }} className="text-xs text-slate-500 hover:text-slate-700 bg-white border border-slate-200 w-full rounded">No</button>
+                                    <button onClick={() => { setDeletingTripLogId(null); }} className="text-xs text-slate-600 hover:text-slate-700 bg-white border border-slate-200 w-full rounded">No</button>
                                   </div>
                                 </div>
                               ) : (
@@ -1573,7 +1573,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {/* #14 Pagination controls */}
         {processedLogs.length > LOG_PAGE_SIZE && (
           <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50 rounded-b-2xl">
-            <span className="text-xs text-slate-500 font-mono">
+            <span className="text-xs text-slate-600 font-mono">
               Showing {logPage * LOG_PAGE_SIZE + 1}–{Math.min((logPage + 1) * LOG_PAGE_SIZE, processedLogs.length)} of {processedLogs.length} records
             </span>
             <div className="flex gap-2">
@@ -1596,8 +1596,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Driver Roster</h2>
-          <p className="text-slate-500 text-sm mt-1">Manage personnel and driver status</p>
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Driver Roster</h2>
+          <p className="text-slate-600 text-sm mt-1">Manage personnel and driver status</p>
         </div>
         <div className="flex items-center gap-2">
           <button 
@@ -1636,9 +1636,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
       {drivers.length === 0 ? (
         <div className="bg-white p-12 rounded-2xl border border-slate-200 shadow-sm text-center col-span-full">
-          <User size={48} className="mx-auto text-slate-300 mb-4" />
-          <h3 className="text-lg font-bold text-slate-900">No Drivers Found</h3>
-          <p className="text-slate-500 mt-2">Add your first driver to start building your roster.</p>
+          <User size={48} className="mx-auto text-slate-400 mb-4" />
+          <h3 className="text-lg font-bold text-slate-950">No Drivers Found</h3>
+          <p className="text-slate-600 mt-2">Add your first driver to start building your roster.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -1661,8 +1661,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <span className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${driver.status === 'Active' ? 'bg-emerald-400' : driver.status === 'Warning' ? 'bg-amber-400' : 'bg-red-400'}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-black text-slate-900 truncate">{driver.name}</h3>
-                    {driver.nationality && <p className="text-[11px] text-slate-400 mt-0.5">{driver.nationality}</p>}
+                    <h3 className="text-sm font-black text-slate-950 truncate">{driver.name}</h3>
+                    {driver.nationality && <p className="text-[11px] text-slate-500 mt-0.5">{driver.nationality}</p>}
                     <span className={`mt-1.5 inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full ${
                       driver.status === 'Active' ? 'bg-emerald-50 text-emerald-700' :
                       driver.status === 'Warning' ? 'bg-amber-50 text-amber-700' :
@@ -1672,11 +1672,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   {/* Action buttons */}
                   <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={(e) => { e.stopPropagation(); setEditingDriver(driver); setIsDriverModalOpen(true); }}
-                      className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-indigo-50 hover:border-indigo-200 text-slate-500 hover:text-indigo-600 rounded-lg transition-all">
+                      className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-indigo-50 hover:border-indigo-200 text-slate-600 hover:text-indigo-600 rounded-lg transition-all">
                       <PenTool size={12}/>
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); setDrivers(prev => prev.filter(d => d.id !== driver.id)); }}
-                      className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-500 hover:text-red-500 rounded-lg transition-all">
+                      className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-500 rounded-lg transition-all">
                       <AlertTriangle size={12}/>
                     </button>
                   </div>
@@ -1685,32 +1685,32 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 {/* Card body — contact & license details */}
                 <div className="px-5 py-4 space-y-2 border-t border-slate-50">
                   {driver.phone && (
-                    <div className="flex items-center gap-2 text-xs text-slate-600">
-                      <span className="text-slate-300 shrink-0">📞</span>
+                    <div className="flex items-center gap-2 text-xs text-slate-700">
+                      <span className="text-slate-400 shrink-0">📞</span>
                       <span className="truncate">{driver.phone}</span>
                     </div>
                   )}
                   {driver.email && (
-                    <div className="flex items-center gap-2 text-xs text-slate-600">
-                      <span className="text-slate-300 shrink-0">✉️</span>
+                    <div className="flex items-center gap-2 text-xs text-slate-700">
+                      <span className="text-slate-400 shrink-0">✉️</span>
                       <span className="truncate">{driver.email}</span>
                     </div>
                   )}
                   {driver.licenseNumber && (
-                    <div className="flex items-center gap-2 text-xs text-slate-600">
-                      <span className="text-slate-300 shrink-0">🪪</span>
+                    <div className="flex items-center gap-2 text-xs text-slate-700">
+                      <span className="text-slate-400 shrink-0">🪪</span>
                       <span className="truncate">{driver.licenseType ? `${driver.licenseType} · ` : ''}{driver.licenseNumber}</span>
                     </div>
                   )}
                   {driver.licenseExpiry && (
-                    <div className={`flex items-center gap-2 text-xs font-semibold ${licenseExpired ? 'text-red-600' : licenseExpiringSoon ? 'text-amber-600' : 'text-slate-600'}`}>
+                    <div className={`flex items-center gap-2 text-xs font-semibold ${licenseExpired ? 'text-red-600' : licenseExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
                       <span className="shrink-0">{licenseExpired ? <AlertTriangle size={14} className="text-red-500" /> : licenseExpiringSoon ? <Clock size={14} className="text-amber-500" /> : '🟢'}</span>
                       <span>License expires: {new Date(driver.licenseExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })}</span>
                     </div>
                   )}
                   {driver.nextOfKinName && (
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <span className="text-slate-300 shrink-0">🤝</span>
+                    <div className="flex items-center gap-2 text-xs text-slate-600">
+                      <span className="text-slate-400 shrink-0">🤝</span>
                       <span className="truncate">NOK: {driver.nextOfKinName}{driver.nextOfKinPhone ? ` · ${driver.nextOfKinPhone}` : ''}</span>
                     </div>
                   )}
@@ -1744,8 +1744,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     if (!driver) {
       return (
         <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200">
-          <AlertCircle size={48} className="text-slate-300 mb-4" />
-          <h3 className="text-lg font-bold text-slate-900">Driver Not Found</h3>
+          <AlertCircle size={48} className="text-slate-400 mb-4" />
+          <h3 className="text-lg font-bold text-slate-950">Driver Not Found</h3>
           <button onClick={() => setActiveTab('drivers')} className="mt-4 text-indigo-600 font-bold hover:underline">
             Return to Drivers
           </button>
@@ -1763,13 +1763,13 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setActiveTab('drivers')}
-              className="p-2 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"
+              className="p-2 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors shadow-sm"
             >
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Driver Profile</h2>
-              <p className="text-slate-500 text-sm mt-1">Detailed information and records</p>
+              <h2 className="text-2xl font-black text-slate-950 tracking-tight">Driver Profile</h2>
+              <p className="text-slate-600 text-sm mt-1">Detailed information and records</p>
             </div>
           </div>
           <button 
@@ -1793,19 +1793,19 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   onError={e => { (e.target as HTMLImageElement).src = `https://i.pravatar.cc/150?u=${driver.id}`; }}
                 />
                 <div className="mb-2 min-w-0">
-                  <h1 className="text-3xl font-black text-slate-900 truncate">{driver.name}</h1>
-                  <p className="text-slate-500 font-medium">{driver.nationality || 'Sierra Leonean'}</p>
+                  <h1 className="text-3xl font-black text-slate-950 truncate">{driver.name}</h1>
+                  <p className="text-slate-600 font-medium">{driver.nationality || 'Sierra Leonean'}</p>
                 </div>
               </div>
               <div className="mb-2 text-right shrink-0 max-w-[220px]">
                 <span className={`px-4 py-1.5 text-sm font-bold uppercase tracking-wider rounded-full shadow-sm inline-block ${
                   driver.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
                   driver.status === 'Warning' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-                  (driver.status === 'Contract Cancelled' || driver.status === 'Left Company') ? 'bg-slate-100 text-slate-600 border border-slate-200' :
+                  (driver.status === 'Contract Cancelled' || driver.status === 'Left Company') ? 'bg-slate-100 text-slate-700 border border-slate-200' :
                   'bg-red-50 text-red-700 border border-red-100'
                 }`}>{driver.status}</span>
                 {driver.statusReason && (
-                  <p className="text-xs text-slate-500 mt-2 break-words line-clamp-3">{driver.statusReason}</p>
+                  <p className="text-xs text-slate-600 mt-2 break-words line-clamp-3">{driver.statusReason}</p>
                 )}
               </div>
             </div>
@@ -1813,22 +1813,22 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Personal Info */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Contact Information</h3>
+                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Contact Information</h3>
                 {driver.phone && (
                   <div className="flex items-center gap-3 text-slate-700">
-                    <Phone className="text-slate-400" size={18} />
+                    <Phone className="text-slate-500" size={18} />
                     <span>{driver.phone}</span>
                   </div>
                 )}
                 {driver.email && (
                   <div className="flex items-center gap-3 text-slate-700">
-                    <Mail className="text-slate-400" size={18} />
+                    <Mail className="text-slate-500" size={18} />
                     <span>{driver.email}</span>
                   </div>
                 )}
                 {driver.address && (
                   <div className="flex items-center gap-3 text-slate-700">
-                    <MapPin className="text-slate-400" size={18} />
+                    <MapPin className="text-slate-500" size={18} />
                     <span className="leading-snug">{driver.address}</span>
                   </div>
                 )}
@@ -1836,30 +1836,30 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
               {/* License & IDs */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Identification</h3>
+                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Identification</h3>
                 {driver.nationalId && (
                   <div className="flex items-center gap-3 text-slate-700">
-                    <CreditCard className="text-slate-400" size={18} />
+                    <CreditCard className="text-slate-500" size={18} />
                     <div>
-                      <p className="text-xs text-slate-500">National ID</p>
+                      <p className="text-xs text-slate-600">National ID</p>
                       <p className="font-semibold">{driver.nationalId}</p>
                     </div>
                   </div>
                 )}
                 {driver.licenseNumber && (
                   <div className="flex items-center gap-3 text-slate-700">
-                    <CheckCircle2 className="text-slate-400" size={18} />
+                    <CheckCircle2 className="text-slate-500" size={18} />
                     <div>
-                      <p className="text-xs text-slate-500">{driver.licenseType || 'Driving License'}</p>
+                      <p className="text-xs text-slate-600">{driver.licenseType || 'Driving License'}</p>
                       <p className="font-semibold">{driver.licenseNumber}</p>
                     </div>
                   </div>
                 )}
                 {driver.licenseExpiry && (
                   <div className={`flex items-center gap-3 ${licenseExpired ? 'text-red-700' : licenseExpiringSoon ? 'text-amber-700' : 'text-slate-700'}`}>
-                    {licenseExpired ? <AlertTriangle className="text-red-500" size={18} /> : licenseExpiringSoon ? <Clock className="text-amber-500" size={18} /> : <Calendar className="text-slate-400" size={18} />}
+                    {licenseExpired ? <AlertTriangle className="text-red-500" size={18} /> : licenseExpiringSoon ? <Clock className="text-amber-500" size={18} /> : <Calendar className="text-slate-500" size={18} />}
                     <div>
-                      <p className={`text-xs ${licenseExpired ? 'text-red-500 font-bold' : licenseExpiringSoon ? 'text-amber-600 font-bold' : 'text-slate-500'}`}>
+                      <p className={`text-xs ${licenseExpired ? 'text-red-500 font-bold' : licenseExpiringSoon ? 'text-amber-600 font-bold' : 'text-slate-600'}`}>
                         {licenseExpired ? 'License Expired' : licenseExpiringSoon ? 'License Expiring Soon' : 'License Expiry'}
                       </p>
                       <p className="font-semibold">{new Date(driver.licenseExpiry).toLocaleDateString()}</p>
@@ -1870,24 +1870,24 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
               {/* Emergency Contacts */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Emergency / NOK</h3>
+                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Emergency / NOK</h3>
                 {driver.nextOfKinName && (
                   <div className="flex items-start gap-3 text-slate-700">
-                    <Users className="text-slate-400 mt-0.5" size={18} />
+                    <Users className="text-slate-500 mt-0.5" size={18} />
                     <div>
-                      <p className="text-xs text-slate-500">Next of Kin ({driver.nextOfKinRelationship || 'Relative'})</p>
+                      <p className="text-xs text-slate-600">Next of Kin ({driver.nextOfKinRelationship || 'Relative'})</p>
                       <p className="font-semibold">{driver.nextOfKinName}</p>
-                      {driver.nextOfKinPhone && <p className="text-sm text-slate-500">{driver.nextOfKinPhone}</p>}
+                      {driver.nextOfKinPhone && <p className="text-sm text-slate-600">{driver.nextOfKinPhone}</p>}
                     </div>
                   </div>
                 )}
                 {driver.emergencyContactName && (
                   <div className="flex items-start gap-3 text-slate-700">
-                    <ShieldAlert className="text-slate-400 mt-0.5" size={18} />
+                    <ShieldAlert className="text-slate-500 mt-0.5" size={18} />
                     <div>
-                      <p className="text-xs text-slate-500">Emergency Contact</p>
+                      <p className="text-xs text-slate-600">Emergency Contact</p>
                       <p className="font-semibold">{driver.emergencyContactName}</p>
-                      {driver.emergencyContactPhone && <p className="text-sm text-slate-500">{driver.emergencyContactPhone}</p>}
+                      {driver.emergencyContactPhone && <p className="text-sm text-slate-600">{driver.emergencyContactPhone}</p>}
                     </div>
                   </div>
                 )}
@@ -1898,15 +1898,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
         {/* Documents Section */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
+          <h3 className="text-lg font-black text-slate-950 mb-6 flex items-center gap-2">
             <FileText className="text-indigo-600" size={20} />
             Documents & Attachments
           </h3>
           
           {(!driver.documents || driver.documents.length === 0) ? (
             <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-              <FileText className="mx-auto text-slate-300 mb-2" size={32} />
-              <p className="text-slate-500 font-medium">No documents uploaded</p>
+              <FileText className="mx-auto text-slate-400 mb-2" size={32} />
+              <p className="text-slate-600 font-medium">No documents uploaded</p>
               <button 
                 onClick={() => { setEditingDriver(driver); setIsDriverModalOpen(true); }}
                 className="mt-2 text-sm text-indigo-600 font-bold hover:underline"
@@ -1923,15 +1923,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       <FileText size={20} />
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm text-slate-900 truncate" title={doc.fileName}>{doc.fileName}</p>
-                      <p className="text-xs text-slate-500 uppercase">{doc.documentType}</p>
+                      <p className="font-semibold text-sm text-slate-950 truncate" title={doc.fileName}>{doc.fileName}</p>
+                      <p className="text-xs text-slate-600 uppercase">{doc.documentType}</p>
                     </div>
                   </div>
                   <a 
                     href={doc.fileUrl} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                   >
                     <Download size={18} />
                   </a>
@@ -1944,7 +1944,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {/* ── Status History Timeline ──────────────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+            <h3 className="text-lg font-black text-slate-950 flex items-center gap-2">
               <Shield className="text-indigo-600" size={20} />
               Status History
             </h3>
@@ -1966,9 +1966,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
           {(!driver.statusLogs || driver.statusLogs.length === 0) ? (
             <div className="text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-              <Shield className="mx-auto text-slate-300 mb-2" size={32} />
-              <p className="text-slate-500 font-medium text-sm">No status changes recorded</p>
-              <p className="text-slate-400 text-xs mt-1">Changes will appear here automatically when you update this driver's status</p>
+              <Shield className="mx-auto text-slate-400 mb-2" size={32} />
+              <p className="text-slate-600 font-medium text-sm">No status changes recorded</p>
+              <p className="text-slate-500 text-xs mt-1">Changes will appear here automatically when you update this driver's status</p>
             </div>
           ) : (
             <div className="relative">
@@ -1980,8 +1980,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     'Active':             { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', dot: 'bg-emerald-400' },
                     'Warning':            { bg: 'bg-amber-50',   text: 'text-amber-700',   border: 'border-amber-200',   dot: 'bg-amber-400'   },
                     'Suspended':          { bg: 'bg-red-50',     text: 'text-red-700',     border: 'border-red-200',     dot: 'bg-red-500'     },
-                    'Contract Cancelled': { bg: 'bg-slate-50',   text: 'text-slate-600',   border: 'border-slate-200',   dot: 'bg-slate-400'   },
-                    'Left Company':       { bg: 'bg-slate-50',   text: 'text-slate-600',   border: 'border-slate-200',   dot: 'bg-slate-400'   },
+                    'Contract Cancelled': { bg: 'bg-slate-50',   text: 'text-slate-700',   border: 'border-slate-200',   dot: 'bg-slate-400'   },
+                    'Left Company':       { bg: 'bg-slate-50',   text: 'text-slate-700',   border: 'border-slate-200',   dot: 'bg-slate-400'   },
                   };
                   const isEditingThis = editingLogId === log.id;
                   const isDeletingThis = deletingLogId === log.id;
@@ -2057,7 +2057,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           /* ── EDIT MODE ─────────────────────────────────────────────────── */
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase w-14 shrink-0">Status</label>
+                              <label className="text-[10px] font-bold text-slate-600 uppercase w-14 shrink-0">Status</label>
                               <select
                                 value={editingLogForm.status}
                                 onChange={e => setEditingLogForm(f => ({ ...f, status: e.target.value }))}
@@ -2071,7 +2071,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               </select>
                             </div>
                             <div className="flex gap-2">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase w-14 shrink-0 pt-1.5">Reason</label>
+                              <label className="text-[10px] font-bold text-slate-600 uppercase w-14 shrink-0 pt-1.5">Reason</label>
                               <textarea
                                 value={editingLogForm.reason}
                                 onChange={e => setEditingLogForm(f => ({ ...f, reason: e.target.value }))}
@@ -2082,7 +2082,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                             <div className="flex justify-end gap-2 pt-1">
                               <button
                                 onClick={() => setEditingLogId(null)}
-                                className="px-3 py-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
+                                className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
                               >
                                 Cancel
                               </button>
@@ -2104,7 +2104,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                             <div className="flex gap-2">
                               <button
                                 onClick={() => setDeletingLogId(null)}
-                                className="px-3 py-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
+                                className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition"
                               >
                                 Cancel
                               </button>
@@ -2127,21 +2127,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                 {idx === 0 && (
                                   <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">Latest</span>
                                 )}
-                                <span className="text-xs text-slate-400">{formattedDate} · {formattedTime}</span>
+                                <span className="text-xs text-slate-500">{formattedDate} · {formattedTime}</span>
                               </div>
                               {/* Action buttons — visible on hover */}
                               <div className="flex gap-1 opacity-0 group-hover/log:opacity-100 transition-opacity shrink-0">
                                 <button
                                   onClick={() => { setEditingLogId(log.id); setEditingLogForm({ status: log.status, reason: log.reason || '' }); setDeletingLogId(null); }}
                                   title="Edit this entry"
-                                  className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                  className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                                 >
                                   <PenTool size={13} />
                                 </button>
                                 <button
                                   onClick={() => { setDeletingLogId(log.id); setEditingLogId(null); }}
                                   title="Delete this entry"
-                                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                  className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                 >
                                   <Trash2 size={13} />
                                 </button>
@@ -2151,10 +2151,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               <p className="text-sm text-slate-700 mt-2 leading-relaxed">{log.reason}</p>
                             )}
                             {!log.reason && (
-                              <p className="text-xs text-slate-400 mt-2 italic">No reason recorded</p>
+                              <p className="text-xs text-slate-500 mt-2 italic">No reason recorded</p>
                             )}
                             {log.recordedBy && (
-                              <p className="text-[11px] text-slate-400 mt-2 flex items-center gap-1">
+                              <p className="text-[11px] text-slate-500 mt-2 flex items-center gap-1">
                                 <User size={10} /> Recorded by {log.recordedBy}
                               </p>
                             )}
@@ -2177,8 +2177,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       <div className="space-y-6 animate-fade-in">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Fleet Vehicles</h2>
-            <p className="text-slate-500 text-sm mt-1">Manage vehicles and asset status</p>
+            <h2 className="text-2xl font-black text-slate-950 tracking-tight">Fleet Vehicles</h2>
+            <p className="text-slate-600 text-sm mt-1">Manage vehicles and asset status</p>
           </div>
           <button 
             onClick={() => { setEditingVehicle(null); setIsVehicleModalOpen(true); }}
@@ -2190,7 +2190,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input 
               type="text" 
               placeholder="Search by Make/Model or Plate..." 
@@ -2215,7 +2215,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+            <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'makeModel', direction: prev.key === 'makeModel' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
                   Make & Model <ArrowUpDown size={12} className="inline ml-1" />
@@ -2236,29 +2236,29 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <tbody className="divide-y divide-slate-100">
               {sortedAndFilteredVehicles.map(vehicle => (
                 <tr key={vehicle.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
-                    <div className="p-2 bg-slate-100 rounded-lg text-slate-500"><Car size={16} /></div>
+                  <td className="px-6 py-4 font-bold text-slate-950 flex items-center gap-3">
+                    <div className="p-2 bg-slate-100 rounded-lg text-slate-600"><Car size={16} /></div>
                     <div className="flex flex-col">
                       <span>{vehicle.makeModel}</span>
-                      <span className="text-xs text-slate-400 font-normal">{vehicle.isCompanyRegistered ? 'Company Owned' : 'External'}</span>
+                      <span className="text-xs text-slate-500 font-normal">{vehicle.isCompanyRegistered ? 'Company Owned' : 'External'}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-slate-600">{vehicle.year}</td>
-                  <td className="px-6 py-4 text-slate-600">{(vehicle.odometer || 0).toLocaleString()} km</td>
+                  <td className="px-6 py-4 text-slate-700">{vehicle.year}</td>
+                  <td className="px-6 py-4 text-slate-700">{(vehicle.odometer || 0).toLocaleString()} km</td>
                   <td className="px-6 py-4 text-slate-700 font-mono">{vehicle.plateNumber}</td>
                   <td className="px-6 py-4">
                     {(() => {
                       const insExpired = vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date();
                       const insExpiringSoon = !insExpired && vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
                       return (
-                        <div className={`flex items-center gap-1.5 text-xs font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-600'}`}>
+                        <div className={`flex items-center gap-1.5 text-xs font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
                           {insExpired ? <AlertTriangle size={12} /> : insExpiringSoon ? <Clock size={12} /> : null}
                           {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : 'N/A'}
                         </div>
                       );
                     })()}
                   </td>
-                  <td className="px-6 py-4 text-slate-600">{vehicle.condition}</td>
+                  <td className="px-6 py-4 text-slate-700">{vehicle.condition}</td>
                   <td className="px-6 py-4 text-center">
                     <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                       vehicle.status === 'Available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
@@ -2282,7 +2282,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               ))}
               {sortedAndFilteredVehicles.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={8} className="px-6 py-8 text-center text-slate-600">
                     No vehicles match your search.
                   </td>
                 </tr>
@@ -2303,7 +2303,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       if (idx === 0) return { badge: 'bg-amber-100 text-amber-700', label: '🥇' };
       if (idx === 1) return { badge: 'bg-slate-200 text-slate-700', label: '🥈' };
       if (idx === 2) return { badge: 'bg-orange-100 text-orange-700', label: '🥉' };
-      return { badge: 'bg-slate-50 text-slate-400', label: String(idx + 1) };
+      return { badge: 'bg-slate-50 text-slate-500', label: String(idx + 1) };
     };
 
     const currentMonthLabel = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -2426,8 +2426,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Driver Performance &amp; Awards</h2>
-          <p className="text-slate-500 text-sm mt-1">
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Driver Performance &amp; Awards</h2>
+          <p className="text-slate-600 text-sm mt-1">
             Live metrics from{' '}
             <span className="font-bold text-indigo-600">{leaderboardLogs.length} trip logs</span>
             {' '}— scoring period: <span className="font-bold text-slate-700">{leaderboardPeriodType === 'Rolling' ? 'Last 30 Days' : leaderboardPeriodValue}</span>
@@ -2445,19 +2445,19 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
       {/* Scoring Algorithm Key */}
       <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-        <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-3">Scoring Algorithm — Every driver starts at 100 pts</p>
+        <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-3">Scoring Algorithm — Every driver starts at 100 pts</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
           {penaltyRules.map(p => (
             <div key={p.label} className="bg-white border border-slate-200 rounded-xl p-3 text-center shadow-sm">
-              <span className="text-red-500 font-black text-sm">{p.penalty}</span><span className="text-slate-400 text-[10px] font-mono"> pts</span>
-              <p className="text-[10px] text-slate-600 font-semibold mt-0.5 leading-tight">{p.label}</p>
-              <p className="text-[9px] text-slate-400 font-mono">{p.unit}</p>
+              <span className="text-red-500 font-black text-sm">{p.penalty}</span><span className="text-slate-500 text-[10px] font-mono"> pts</span>
+              <p className="text-[10px] text-slate-700 font-semibold mt-0.5 leading-tight">{p.label}</p>
+              <p className="text-[9px] text-slate-500 font-mono">{p.unit}</p>
             </div>
           ))}
           <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center shadow-sm">
-            <span className="text-emerald-500 font-black text-sm">+5</span><span className="text-slate-400 text-[10px] font-mono"> pts</span>
-            <p className="text-[10px] text-slate-600 font-semibold mt-0.5 leading-tight">Efficiency Bonus</p>
-            <p className="text-[9px] text-slate-400 font-mono">if &gt;10 km/L</p>
+            <span className="text-emerald-500 font-black text-sm">+5</span><span className="text-slate-500 text-[10px] font-mono"> pts</span>
+            <p className="text-[10px] text-slate-700 font-semibold mt-0.5 leading-tight">Efficiency Bonus</p>
+            <p className="text-[9px] text-slate-500 font-mono">if &gt;10 km/L</p>
           </div>
         </div>
       </div>
@@ -2510,7 +2510,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         </div>
 
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
           <input 
             type="text" 
             placeholder="Search drivers by name..."
@@ -2520,7 +2520,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           />
         </div>
         <div className="shrink-0 flex items-center gap-2">
-          <Filter size={14} className="text-slate-400" />
+          <Filter size={14} className="text-slate-500" />
           <select 
             value={leaderboardStatus} 
             onChange={e => setLeaderboardStatus(e.target.value as any)}
@@ -2536,14 +2536,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       {/* Combined Rankings Table */}
       {leaderboardScores.filter(ds => ds.trips > 0).length === 0 ? (
         <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-12 text-center">
-          <Activity size={36} className="text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-400 font-bold">No trip data for this period</p>
-          <p className="text-xs text-slate-300 mt-1">Add trip logs to see driver scores here.</p>
+          <Activity size={36} className="text-slate-400 mx-auto mb-3" />
+          <p className="text-slate-500 font-bold">No trip data for this period</p>
+          <p className="text-xs text-slate-400 mt-1">Add trip logs to see driver scores here.</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+            <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
               <tr>
                 <th className="px-4 py-4 font-semibold w-14 text-center">Rank</th>
                 <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('name')}>
@@ -2574,7 +2574,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <tbody className="divide-y divide-slate-100">
               {processedScores.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="px-4 py-12 text-center text-slate-400">
+                  <td colSpan={10} className="px-4 py-12 text-center text-slate-500">
                     No drivers match your current filters.
                   </td>
                 </tr>
@@ -2594,28 +2594,28 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           {idx === 0 && !disq && <span className="absolute -top-1 -right-1 text-[11px]">🥇</span>}
                         </div>
                         <div>
-                          <span className="font-bold text-slate-900">{ds.driver.name}</span>
+                          <span className="font-bold text-slate-950">{ds.driver.name}</span>
                           {ds.driver.awards && ds.driver.awards.length > 0 ? (
                             <p className="text-[10px] text-amber-600 font-bold flex items-center gap-1"><Trophy size={9} /> {ds.driver.awards.length} Award{ds.driver.awards.length !== 1 ? 's' : ''}</p>
                           ) : (
-                            <p className="text-[10px] text-slate-400 font-mono">No awards yet</p>
+                            <p className="text-[10px] text-slate-500 font-mono">No awards yet</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-4 text-center">
                       <span className={`inline-flex items-center px-3 py-1 rounded-xl text-lg font-black ${
-                        ds.trips === 0 ? 'bg-slate-50 text-slate-300' :
+                        ds.trips === 0 ? 'bg-slate-50 text-slate-400' :
                         ds.score >= 90 ? 'bg-emerald-50 text-emerald-600' :
                         ds.score >= 70 ? 'bg-blue-50 text-blue-600' :
                         ds.score >= 50 ? 'bg-amber-50 text-amber-600' :
                         'bg-red-50 text-red-600'
                       }`}>{ds.trips === 0 ? '—' : ds.score}</span>
                     </td>
-                    <td className="px-4 py-4 text-slate-600 font-mono">{ds.trips}</td>
-                    <td className="px-4 py-4 text-slate-600 font-mono">{ds.totalDistance.toFixed(1)} km</td>
+                    <td className="px-4 py-4 text-slate-700 font-mono">{ds.trips}</td>
+                    <td className="px-4 py-4 text-slate-700 font-mono">{ds.totalDistance.toFixed(1)} km</td>
                     <td className="px-4 py-4 font-mono">
-                      <span className={Number(ds.efficiency) >= 10 ? 'text-emerald-600 font-bold' : 'text-slate-600'}>
+                      <span className={Number(ds.efficiency) >= 10 ? 'text-emerald-600 font-bold' : 'text-slate-700'}>
                         {ds.efficiency} km/L{Number(ds.efficiency) >= 10 && <span className="text-[10px] text-emerald-500 ml-1">+5</span>}
                       </span>
                     </td>
@@ -2639,7 +2639,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     </td>
                     <td className="px-4 py-4 text-center">
                       {ds.trips === 0 ? (
-                        <span className="text-slate-300 text-xs font-mono">No trips</span>
+                        <span className="text-slate-400 text-xs font-mono">No trips</span>
                       ) : disq ? (
                         <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 border border-red-100 px-2 py-1 rounded-lg text-xs font-bold">
                           <AlertTriangle size={11} /> Disqualified
@@ -2690,8 +2690,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="flex items-center gap-3">
             <Award size={20} className="text-amber-500" />
             <div>
-              <h3 className="text-lg font-black text-slate-900">Awards Hall of Fame</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-lg font-black text-slate-950">Awards Hall of Fame</h3>
+              <p className="text-xs text-slate-500">
                 {hofFilter === 'All Time'
                   ? `${allAwardedDrivers.length} total award${allAwardedDrivers.length !== 1 ? 's' : ''} across all months`
                   : `${hofAwards.length} award${hofAwards.length !== 1 ? 's' : ''} for ${hofFilter}`}
@@ -2708,7 +2708,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
                   hofFilter === p
                     ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300 hover:bg-amber-50'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-amber-300 hover:bg-amber-50'
                 }`}>
                 {p}
               </button>
@@ -2719,14 +2719,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {/* Empty state */}
         {allAwardedDrivers.length === 0 ? (
           <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center">
-            <Trophy size={32} className="text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-400 font-medium text-sm">No awards have been issued yet.</p>
-            <p className="text-xs text-slate-300 mt-1">Use the "Issue Award" button above to recognise a driver.</p>
+            <Trophy size={32} className="text-slate-400 mx-auto mb-3" />
+            <p className="text-slate-500 font-medium text-sm">No awards have been issued yet.</p>
+            <p className="text-xs text-slate-400 mt-1">Use the "Issue Award" button above to recognise a driver.</p>
           </div>
         ) : hofAwards.length === 0 ? (
           <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-8 text-center">
-            <Calendar size={28} className="text-slate-300 mx-auto mb-2" />
-            <p className="text-slate-400 font-medium text-sm">No awards recorded for {hofFilter}.</p>
+            <Calendar size={28} className="text-slate-400 mx-auto mb-2" />
+            <p className="text-slate-500 font-medium text-sm">No awards recorded for {hofFilter}.</p>
           </div>
         ) : hofFilter === 'All Time' ? (
           /* Grouped by month */
@@ -2734,7 +2734,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             {Object.entries(groupedHof).map(([period, entries]) => (
               <div key={period}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">{period}</span>
+                  <span className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest">{period}</span>
                   <span className="bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-0.5 rounded-full">{entries.length}</span>
                   <div className="flex-1 h-px bg-slate-100" />
                 </div>
@@ -2803,15 +2803,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             {awardSuccess ? (
               <div className="p-8 text-center space-y-4">
                 <div className="bg-emerald-50 border-4 border-emerald-400 rounded-full w-16 h-16 mx-auto flex items-center justify-center"><CheckCircle2 size={32} className="text-emerald-500" /></div>
-                <h3 className="text-xl font-black text-slate-900">Award Issued!</h3>
-                <p className="text-sm text-slate-500">Saved to the driver's permanent record and synced to the database.</p>
+                <h3 className="text-xl font-black text-slate-950">Award Issued!</h3>
+                <p className="text-sm text-slate-600">Saved to the driver's permanent record and synced to the database.</p>
                 <button onClick={() => { setAwardModal(null); setAwardSuccess(false); }} className="mt-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors">Done</button>
               </div>
             ) : (
               <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
                 {/* Driver selector */}
                 <div>
-                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Driver</label>
+                  <label className="text-xs font-mono font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Driver</label>
                   <select value={awardModal.driverId} onChange={e => { const d = drivers.find(dr => dr.id === e.target.value); setAwardModal({ driverId: e.target.value, driverName: d?.name || '' }); }}
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <option value="">— Select a driver —</option>
@@ -2821,9 +2821,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
                 {/* Scoring Period */}
                 <div>
-                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                  <label className="text-xs font-mono font-bold text-slate-600 uppercase tracking-wider block mb-1.5">
                     Scoring Period
-                    <span className="ml-2 text-[10px] font-normal text-slate-400 normal-case">Which month is this award for?</span>
+                    <span className="ml-2 text-[10px] font-normal text-slate-500 normal-case">Which month is this award for?</span>
                   </label>
                   <select value={awardPeriod} onChange={e => setAwardPeriod(e.target.value)}
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400">
@@ -2835,12 +2835,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
                 {/* Award Type */}
                 <div>
-                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Award Type</label>
+                  <label className="text-xs font-mono font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Award Type</label>
                   <div className="grid grid-cols-2 gap-2">
                     {['Driver of the Month', 'Top Fuel Efficiency', 'Zero Incidents Award', 'Most Trips Completed', 'Best Punctuality', 'Special Recognition'].map(type => (
                       <button key={type} onClick={() => setAwardType(type)}
                         className={`px-3 py-2 rounded-xl text-xs font-bold text-left transition-all border ${
-                          awardType === type ? 'bg-amber-500 text-white border-amber-500 shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-amber-50 hover:border-amber-300'
+                          awardType === type ? 'bg-amber-500 text-white border-amber-500 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-amber-50 hover:border-amber-300'
                         }`}>{type}</button>
                     ))}
                   </div>
@@ -2848,7 +2848,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
                 {/* Note */}
                 <div>
-                  <label className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Note <span className="text-slate-300 normal-case font-normal">(optional)</span></label>
+                  <label className="text-xs font-mono font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Note <span className="text-slate-400 normal-case font-normal">(optional)</span></label>
                   <textarea value={awardNote} onChange={e => setAwardNote(e.target.value)} rows={2}
                     placeholder="Add a custom citation for this award..."
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none" />
@@ -3159,7 +3159,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       if (pm === 'Voucher') return 'bg-purple-50 text-purple-700 border border-purple-200';
       if (pm === 'Mobile Money') return 'bg-amber-50 text-amber-700 border border-amber-200';
       if (pm === 'Cash') return 'bg-slate-50 text-slate-700 border border-slate-200';
-      return 'bg-slate-50 text-slate-500 border border-slate-200';
+      return 'bg-slate-50 text-slate-600 border border-slate-200';
     };
 
     return (
@@ -3167,8 +3167,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Fuel Management</h2>
-            <p className="text-slate-500 text-sm mt-1">Multi-project · Multi-station · Trip-linked fuel tracking</p>
+            <h2 className="text-2xl font-black text-slate-950 tracking-tight">Fuel Management</h2>
+            <p className="text-slate-600 text-sm mt-1">Multi-project · Multi-station · Trip-linked fuel tracking</p>
           </div>
           <div className="flex flex-col items-end gap-3">
             <div className="flex bg-slate-100 rounded-xl p-1 gap-1">
@@ -3176,7 +3176,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <button
                   key={tab}
                   onClick={() => setFuelSubTab(tab)}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all capitalize ${fuelSubTab === tab ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all capitalize ${fuelSubTab === tab ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-600 hover:text-slate-700'}`}
                 >
                   {tab === 'overview' ? '📊 Overview' : tab === 'fuel' ? '⛽ Fuel Logs' : '⚙️ Settings'}
                 </button>
@@ -3230,8 +3230,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <Icon size={18} />
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
-                <h3 className="text-base font-black text-slate-900 truncate">{value}</h3>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
+                <h3 className="text-base font-black text-slate-950 truncate">{value}</h3>
               </div>
             </div>
           ))}
@@ -3241,58 +3241,58 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Fuel by Project */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider mb-4">By Project</h3>
+            <h3 className="font-bold text-slate-950 text-sm uppercase tracking-wider mb-4">By Project</h3>
             <div className="space-y-3">
               {fuelBySupplier.map(({ supplier, liters }) => (
                 <div key={supplier}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="font-bold text-slate-700">{supplier}</span>
-                    <span className="text-slate-500">{liters.toFixed(0)} L</span>
+                    <span className="text-slate-600">{liters.toFixed(0)} L</span>
                   </div>
                   <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
                     <div className={`h-full rounded-full ${supplierColors[supplier as string] || 'bg-slate-400'}`} style={{ width: `${(liters / maxSupplierLiters) * 100}%` }} />
                   </div>
                 </div>
               ))}
-              {fuelBySupplier.length === 0 && <p className="text-xs text-slate-400 italic">No data yet.</p>}
+              {fuelBySupplier.length === 0 && <p className="text-xs text-slate-500 italic">No data yet.</p>}
             </div>
           </div>
 
           {/* Fuel by Driver */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider mb-4">By Driver</h3>
+            <h3 className="font-bold text-slate-950 text-sm uppercase tracking-wider mb-4">By Driver</h3>
             <div className="space-y-3">
               {fuelByDriver.slice(0, 5).map(({ driver, liters }) => (
                 <div key={driver.id}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="font-bold text-slate-700 truncate">{driver.name}</span>
-                    <span className="text-slate-500 shrink-0 ml-2">{liters.toFixed(0)} L</span>
+                    <span className="text-slate-600 shrink-0 ml-2">{liters.toFixed(0)} L</span>
                   </div>
                   <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
                     <div className="h-full bg-indigo-400 rounded-full" style={{ width: `${(liters / maxBarLiters) * 100}%` }} />
                   </div>
                 </div>
               ))}
-              {fuelByDriver.length === 0 && <p className="text-xs text-slate-400 italic">No data yet.</p>}
+              {fuelByDriver.length === 0 && <p className="text-xs text-slate-500 italic">No data yet.</p>}
             </div>
           </div>
 
           {/* Fuel by City */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider mb-4">By City</h3>
+            <h3 className="font-bold text-slate-950 text-sm uppercase tracking-wider mb-4">By City</h3>
             <div className="space-y-3">
               {fuelByCity.map(({ city, liters }) => (
                 <div key={city}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="font-bold text-slate-700">{city}</span>
-                    <span className="text-slate-500">{liters.toFixed(0)} L</span>
+                    <span className="text-slate-600">{liters.toFixed(0)} L</span>
                   </div>
                   <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
                     <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${(liters / maxCityLiters) * 100}%` }} />
                   </div>
                 </div>
               ))}
-              {fuelByCity.length === 0 && <p className="text-xs text-slate-400 italic">No data yet.</p>}
+              {fuelByCity.length === 0 && <p className="text-xs text-slate-500 italic">No data yet.</p>}
             </div>
           </div>
         </div>
@@ -3306,7 +3306,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="p-4 space-y-4">
             <div className="flex flex-wrap gap-3">
               <div className="relative flex-1 min-w-[250px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                 <input
                   type="text"
                   placeholder="Search driver, station, or city..."
@@ -3367,12 +3367,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </div>
 
           {/* Summary row + Export */}
-          <div className="px-5 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-4 text-xs text-slate-500">
+          <div className="px-5 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-4 text-xs text-slate-600">
             <span><span className="font-bold text-slate-700">{filteredTx.length}</span> transactions</span>
             <span><span className="font-bold text-indigo-600">{filteredLiters.toFixed(0)} L</span> total</span>
             <span><span className="font-bold text-slate-700">Le {filteredCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> cost</span>
             <div className="ml-auto flex items-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase mr-2">Export:</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">Export:</span>
               <div className="flex rounded-lg overflow-hidden border border-slate-200 shadow-sm">
                 <button
                   onClick={exportFuelCSV}
@@ -3397,7 +3397,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           {/* ── Transaction Table ── */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-slate-50 text-slate-400 font-mono text-[10px] uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-slate-50 text-slate-500 font-mono text-[10px] uppercase tracking-wider border-b border-slate-100">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Date / Time</th>
                   <th className="px-5 py-3 font-semibold">Driver</th>
@@ -3416,7 +3416,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {pagedTx.length === 0 && (
-                  <tr><td colSpan={12} className="px-5 py-10 text-center text-slate-400">No transactions match your filters.</td></tr>
+                  <tr><td colSpan={12} className="px-5 py-10 text-center text-slate-500">No transactions match your filters.</td></tr>
                 )}
                 {pagedTx.map(fc => {
                   const driver = drivers.find(d => d.id === fc.driverId);
@@ -3425,8 +3425,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   return (
                     <tr key={fc.id} className={`hover:bg-slate-50/80 transition-colors ${isNonPartner ? 'bg-amber-50/30' : ''}`}>
                       <td className="px-5 py-3">
-                        <div className="font-medium text-slate-900">{fc.date}</div>
-                        {fc.time && <div className="text-xs text-slate-400">{fc.time}</div>}
+                        <div className="font-medium text-slate-950">{fc.date}</div>
+                        {fc.time && <div className="text-xs text-slate-500">{fc.time}</div>}
                       </td>
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
@@ -3434,34 +3434,34 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           <span className="font-bold text-slate-800">{driver?.name || '—'}</span>
                         </div>
                       </td>
-                      <td className="px-5 py-3 text-slate-600">
+                      <td className="px-5 py-3 text-slate-700">
                         <div className="text-xs">{vehicle?.makeModel || '—'}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{vehicle?.plateNumber}</div>
+                        <div className="text-[10px] text-slate-500 font-mono">{vehicle?.plateNumber}</div>
                       </td>
                       <td className="px-5 py-3">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${supplierColors[fc.supplier || ''] || 'bg-slate-100 text-slate-600'} text-white`}>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${supplierColors[fc.supplier || ''] || 'bg-slate-100 text-slate-700'} text-white`}>
                           {fc.supplier || '—'}
                         </span>
                       </td>
                       <td className="px-5 py-3 text-slate-700 max-w-[180px]">
                         <div className="font-medium truncate">{fc.stationName}</div>
-                        {fc.district && <div className="text-[10px] text-slate-400">{fc.district}</div>}
+                        {fc.district && <div className="text-[10px] text-slate-500">{fc.district}</div>}
                       </td>
-                      <td className="px-5 py-3 text-slate-600">{fc.location || '—'}</td>
+                      <td className="px-5 py-3 text-slate-700">{fc.location || '—'}</td>
                       <td className="px-5 py-3">
                         {fc.fuelType ? (
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${ fc.fuelType === 'Diesel' ? 'bg-amber-50 text-amber-700 border border-amber-200' : fc.fuelType === 'Premium' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-green-50 text-green-700 border border-green-200' }`}>{fc.fuelType}</span>
                         ) : '—'}
                       </td>
                       <td className="px-5 py-3 font-bold text-indigo-700">{fc.liters.toFixed(1)} L</td>
-                      <td className="px-5 py-3 text-slate-500 font-mono">Le {fc.costPerLiter.toFixed(2)}</td>
+                      <td className="px-5 py-3 text-slate-600 font-mono">Le {fc.costPerLiter.toFixed(2)}</td>
                       <td className="px-5 py-3 font-bold text-slate-800">Le {(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                       <td className="px-5 py-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${paymentBadge(fc.paymentMethod)}`}>
                           {fc.paymentMethod || '—'}
                         </span>
                       </td>
-                      <td className="px-5 py-3 font-mono text-xs text-slate-500">{fc.receiptNumber || '—'}</td>
+                      <td className="px-5 py-3 font-mono text-xs text-slate-600">{fc.receiptNumber || '—'}</td>
                       <td className="px-5 py-3">
                         {isNonPartner ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-red-100 text-red-700 border border-red-200" title={fc.nonPartnerReason}>
@@ -3482,7 +3482,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
               <span>Page {fuelPage + 1} of {totalPages}</span>
               <div className="flex gap-2">
                 <button disabled={fuelPage === 0} onClick={() => setFuelPage(p => p - 1)} className="px-3 py-1.5 rounded-lg border border-slate-200 disabled:opacity-40 hover:bg-slate-50 font-bold">← Prev</button>
@@ -3510,19 +3510,19 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">
                   {fuelCities.length === 0 ? (
-                    <div className="text-center py-10 text-slate-400 text-sm">No cities defined yet.</div>
+                    <div className="text-center py-10 text-slate-500 text-sm">No cities defined yet.</div>
                   ) : (
                     fuelCities.map(city => (
                       <div key={city.id} className="flex justify-between items-center p-3 rounded-xl border border-slate-100 bg-white hover:border-slate-200 transition-colors">
                         <div>
                           <p className="text-sm font-bold text-slate-800">{city.name}</p>
-                          {city.region && <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{city.region}</p>}
+                          {city.region && <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{city.region}</p>}
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => { setEditingCity(city); setIsCityModalOpen(true); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                          <button onClick={() => { setEditingCity(city); setIsCityModalOpen(true); }} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                             <PenTool size={14} />
                           </button>
-                          <button onClick={() => handleDeleteCity(city.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                          <button onClick={() => handleDeleteCity(city.id)} className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                             <Trash2 size={14} />
                           </button>
                         </div>
@@ -3545,7 +3545,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">
                   {fuelStations.length === 0 ? (
-                    <div className="text-center py-10 text-slate-400 text-sm">No stations defined yet.</div>
+                    <div className="text-center py-10 text-slate-500 text-sm">No stations defined yet.</div>
                   ) : (
                     fuelStations.map(station => {
                       const cityName = fuelCities.find(c => c.id === station.city_id)?.name;
@@ -3556,16 +3556,16 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               <p className="text-sm font-bold text-slate-800">{station.name}</p>
                               {station.is_partner && <span className="px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[9px] font-bold uppercase tracking-wider">Partner</span>}
                             </div>
-                            <div className="flex items-center gap-2 mt-1 text-[10px] font-bold text-slate-500">
+                            <div className="flex items-center gap-2 mt-1 text-[10px] font-bold text-slate-600">
                               {cityName && <span className="flex items-center gap-0.5"><MapPin size={10} /> {cityName}</span>}
                               {station.supplier && <span>• Supplier: {station.supplier}</span>}
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => { setEditingStation(station); setIsStationModalOpen(true); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                            <button onClick={() => { setEditingStation(station); setIsStationModalOpen(true); }} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                               <PenTool size={14} />
                             </button>
-                            <button onClick={() => handleDeleteStation(station.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                            <button onClick={() => handleDeleteStation(station.id)} className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                               <Trash2 size={14} />
                             </button>
                           </div>
@@ -3733,8 +3733,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {/* Dispatch Top Header & Tabs */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Dispatch Management</h2>
-            <p className="text-slate-500 text-sm mt-1">Manage active dispatches and view completed archives</p>
+            <h2 className="text-2xl font-black text-slate-950 tracking-tight">Dispatch Management</h2>
+            <p className="text-slate-600 text-sm mt-1">Manage active dispatches and view completed archives</p>
           </div>
           <button 
             onClick={() => { setEditingDispatch(null); setIsDispatchModalOpen(true); }}
@@ -3748,7 +3748,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <button
             onClick={() => setDispatchSubTab('active')}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-              dispatchSubTab === 'active' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              dispatchSubTab === 'active' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
             }`}
           >
             <Navigation size={16} /> Active Dispatches
@@ -3756,7 +3756,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <button
             onClick={() => setDispatchSubTab('completed')}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-              dispatchSubTab === 'completed' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              dispatchSubTab === 'completed' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
             }`}
           >
             <CheckCircle2 size={16} /> Completed Dispatches
@@ -3764,7 +3764,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <button
             onClick={() => setDispatchSubTab('logs')}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-              dispatchSubTab === 'logs' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              dispatchSubTab === 'logs' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
             }`}
           >
             <FileText size={16} /> Trip Logs
@@ -3776,7 +3776,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
               <input 
                 type="text" 
                 placeholder="Search date, driver, or vehicle..." 
@@ -3811,7 +3811,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   a.download = `${isAct ? 'active' : 'completed'}-dispatches-${new Date().toISOString().split('T')[0]}.csv`;
                   a.click(); URL.revokeObjectURL(url);
                 }}
-                className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
+                className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Export CSV
@@ -3853,7 +3853,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
                   doc.save(`${isAct ? 'active' : 'completed'}-dispatches-${new Date().toISOString().split('T')[0]}.pdf`);
                 }}
-                className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
+                className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 Export PDF
@@ -3871,7 +3871,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 animate-fade-in">
               {dispatchSubTab === 'active' && (
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Status</label>
                 <select 
                   value={dispatchFilter}
                   onChange={(e) => setDispatchFilter(e.target.value as any)}
@@ -3883,7 +3883,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
               )}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Driver</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Driver</label>
                 <select 
                   value={dispatchFilterDriver}
                   onChange={(e) => setDispatchFilterDriver(e.target.value)}
@@ -3894,7 +3894,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Vehicle</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Vehicle</label>
                 <select 
                   value={dispatchFilterVehicle}
                   onChange={(e) => setDispatchFilterVehicle(e.target.value)}
@@ -3905,11 +3905,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">From Date</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">From Date</label>
                 <input type="date" value={dispatchDateFrom} onChange={e => setDispatchDateFrom(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">To Date</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">To Date</label>
                 <input type="date" value={dispatchDateTo} onChange={e => setDispatchDateTo(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
               </div>
             </div>
@@ -3922,7 +3922,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         ) : dispatchSubTab === 'active' ? (
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
             {filteredActive.length === 0 ? (
-              <div className="p-12 text-center text-slate-500">
+              <div className="p-12 text-center text-slate-600">
                 <CheckCircle2 size={48} className="mx-auto mb-4 text-indigo-500 opacity-50" />
                 <p className="font-bold">No Active Dispatches Found</p>
                 <p className="text-sm mt-1">Try adjusting your filters.</p>
@@ -3930,22 +3930,22 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             ) : (
               <div className="w-full">
                 <table className="w-full text-left text-sm block md:table">
-                <thead className="hidden md:table-header-group bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+                <thead className="hidden md:table-header-group bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
                   <tr>
                     <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('dispatchTime')}>
-                      <div className="flex items-center gap-1">Dispatch Time <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                      <div className="flex items-center gap-1">Dispatch Time <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                     </th>
                     <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('driverId')}>
-                      <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                      <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                     </th>
                     <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('vehicleId')}>
-                      <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                      <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                     </th>
                     <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('odometerOut')}>
-                      <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                      <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                     </th>
                     <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('expectedReturnDate')}>
-                      <div className="flex items-center gap-1">Expected Return <ArrowUpDown size={12} className={dispatchSortConfig.key === 'expectedReturnDate' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                      <div className="flex items-center gap-1">Expected Return <ArrowUpDown size={12} className={dispatchSortConfig.key === 'expectedReturnDate' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                     </th>
                   </tr>
                 </thead>
@@ -3955,30 +3955,30 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     const vehicle = vehicles.find(v => v.id === dispatch.vehicleId);
                     return (
                       <tr key={dispatch.id} onClick={() => setSelectedDispatchDetailsId(dispatch.id)} className={`block md:table-row cursor-pointer transition-colors p-4 md:p-0 ${new Date(dispatch.expectedReturnDate) < new Date(new Date().toDateString()) ? 'bg-red-50/40 hover:bg-red-50' : 'hover:bg-slate-50/50'}`}>
-                        <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 font-medium text-slate-900 border-b border-slate-100 md:border-0">
-                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Time</span>
+                        <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 font-medium text-slate-950 border-b border-slate-100 md:border-0">
+                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Time</span>
                           {new Date(dispatch.dispatchTime).toLocaleString()}
                         </td>
                         <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 text-slate-700 border-b border-slate-100 md:border-0">
-                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Driver</span>
+                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Driver</span>
                           <div className="flex items-center justify-end gap-2 text-right">
                             {driver?.imgUrl && <img src={driver.imgUrl} alt="" className="w-6 h-6 rounded-full" />}
                             <span className="font-bold">{driver?.name}</span>
                           </div>
                         </td>
                         <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 text-slate-700 border-b border-slate-100 md:border-0">
-                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Vehicle</span>
+                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Vehicle</span>
                           <div className="text-right md:text-left">
                             <div className="font-bold">{vehicle?.makeModel}</div>
-                            <div className="text-xs text-slate-500">{vehicle?.plateNumber}</div>
+                            <div className="text-xs text-slate-600">{vehicle?.plateNumber}</div>
                           </div>
                         </td>
-                        <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 text-slate-600 font-mono border-b border-slate-100 md:border-0">
-                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Odo Out</span>
+                        <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 text-slate-700 font-mono border-b border-slate-100 md:border-0">
+                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Odo Out</span>
                           {dispatch.odometerOut.toLocaleString()} km
                         </td>
                         <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-4 border-b border-slate-100 md:border-0">
-                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Return</span>
+                          <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Return</span>
                           <div className="flex items-center gap-2">
                             <span className={`font-bold ${new Date(dispatch.expectedReturnDate) < new Date(new Date().toDateString()) ? 'text-red-600' : 'text-amber-600'}`}>
                               {dispatch.expectedReturnDate}
@@ -4001,8 +4001,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         ) : (
           <div className="bg-white rounded-2xl border border-emerald-100 overflow-hidden shadow-sm">
             {filteredCompleted.length === 0 ? (
-              <div className="p-12 text-center text-slate-500">
-                <CheckCircle2 size={48} className="mx-auto mb-4 text-slate-300 opacity-50" />
+              <div className="p-12 text-center text-slate-600">
+                <CheckCircle2 size={48} className="mx-auto mb-4 text-slate-400 opacity-50" />
                 <p className="font-bold">No Completed Dispatches Found</p>
                 <p className="text-sm mt-1">Try adjusting your filters.</p>
               </div>
@@ -4011,26 +4011,26 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2 bg-emerald-50/50">
                   <CheckCircle2 size={16} className="text-emerald-500" />
                   <h3 className="font-bold text-slate-700 text-sm">Completed Dispatches — Session Archive</h3>
-                  <span className="ml-auto text-xs text-slate-400">{filteredCompleted.length} returned this session</span>
+                  <span className="ml-auto text-xs text-slate-500">{filteredCompleted.length} returned this session</span>
                 </div>
                 <div className="w-full">
                   <table className="w-full text-left text-sm block md:table">
-                    <thead className="hidden md:table-header-group bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+                    <thead className="hidden md:table-header-group bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
                       <tr>
                         <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('dispatchTime')}>
-                          <div className="flex items-center gap-1">Returned At <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                          <div className="flex items-center gap-1">Returned At <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                         </th>
                         <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('driverId')}>
-                          <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                          <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                         </th>
                         <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('vehicleId')}>
-                          <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                          <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                         </th>
                         <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('odometerOut')}>
-                          <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                          <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                         </th>
                         <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('fuelLevelOut')}>
-                          <div className="flex items-center gap-1">Fuel Level Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'fuelLevelOut' ? 'text-indigo-500' : 'text-slate-300'} /></div>
+                          <div className="flex items-center gap-1">Fuel Level Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'fuelLevelOut' ? 'text-indigo-500' : 'text-slate-400'} /></div>
                         </th>
                       </tr>
                     </thead>
@@ -4040,27 +4040,27 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         const cdVehicle = vehicles.find(v => v.id === cd.vehicleId);
                         return (
                           <tr key={cd.id} onClick={() => setSelectedDispatchDetailsId(cd.id)} className="block md:table-row cursor-pointer hover:bg-emerald-50/30 p-4 md:p-0">
-                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 text-slate-500 text-xs border-b border-slate-100 md:border-0">
-                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Returned At</span>
+                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 text-slate-600 text-xs border-b border-slate-100 md:border-0">
+                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Returned At</span>
                               {new Date(cd.completedAt).toLocaleString()}
                             </td>
                             <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 font-medium text-slate-700 border-b border-slate-100 md:border-0">
-                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Driver</span>
+                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Driver</span>
                               {cdDriver?.name || cd.driverId}
                             </td>
-                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 text-slate-600 border-b border-slate-100 md:border-0">
-                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Vehicle</span>
+                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 text-slate-700 border-b border-slate-100 md:border-0">
+                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Vehicle</span>
                               <div className="text-right md:text-left">
                                 <div className="font-bold">{cdVehicle?.makeModel}</div>
-                                <div className="text-xs text-slate-400">{cdVehicle?.plateNumber}</div>
+                                <div className="text-xs text-slate-500">{cdVehicle?.plateNumber}</div>
                               </div>
                             </td>
-                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 font-mono text-slate-600 border-b border-slate-100 md:border-0">
-                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Odo Out</span>
+                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 font-mono text-slate-700 border-b border-slate-100 md:border-0">
+                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Odo Out</span>
                               {cd.odometerOut.toLocaleString()} km
                             </td>
-                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 text-slate-600 border-b border-slate-100 md:border-0">
-                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-400 tracking-wider">Fuel Out</span>
+                            <td className="flex justify-between items-center md:table-cell px-0 py-2 md:px-6 md:py-3 text-slate-700 border-b border-slate-100 md:border-0">
+                              <span className="md:hidden text-[10px] font-bold uppercase text-slate-500 tracking-wider">Fuel Out</span>
                               {cd.fuelLevelOut}
                             </td>
                           </tr>
@@ -4135,7 +4135,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             {upcomingMaintenance.map((item, i) => (
               <div key={i} className="bg-white p-3 rounded-xl border border-amber-100 flex justify-between items-center shadow-sm cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => { setEditingMaintenance(item.record); setIsMaintenanceModalOpen(true); }}>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase">{item.vehicle.plateNumber}</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">{item.vehicle.plateNumber}</p>
                   <p className="font-bold text-slate-800 text-sm">{item.vehicle.makeModel}</p>
                 </div>
                 <div className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${item.days < 0 ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>
@@ -4148,8 +4148,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Fleet Maintenance Logs</h2>
-          <p className="text-slate-500 text-sm mt-1">Track vehicle repairs, costs, and availability</p>
+          <h2 className="text-2xl font-black text-slate-950 tracking-tight">Fleet Maintenance Logs</h2>
+          <p className="text-slate-600 text-sm mt-1">Track vehicle repairs, costs, and availability</p>
         </div>
         <div className="flex gap-2">
           <button 
@@ -4168,7 +4168,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="relative flex-1 min-w-[250px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
             <input
               type="text"
               placeholder="Search by vehicle or issue..."
@@ -4208,7 +4208,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <FileText size={14} /> Export PDF
           </button>
         </div>
-        <div className="flex justify-between items-center text-xs text-slate-500 pt-3 border-t border-slate-100">
+        <div className="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-100">
           <span>Showing <span className="font-bold text-slate-700">{filteredMaintenanceRecords.length}</span> records</span>
           <span>Total Filtered Cost: <span className="font-bold text-indigo-600">Le {totalFilteredCost.toLocaleString()}</span></span>
         </div>
@@ -4217,7 +4217,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
         <div>
           <table className="w-full text-left text-sm whitespace-nowrap">
-          <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+          <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
             <tr>
               <th className="px-6 py-4 font-semibold">Start Date</th>
               <th className="px-6 py-4 font-semibold">Return Date</th>
@@ -4237,21 +4237,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   record.status === 'Scheduled' ? 'bg-blue-50/40 hover:bg-blue-100/50' :
                   'bg-amber-50/40 hover:bg-amber-100/50'
                 }`}>
-                  <td className="px-6 py-4 font-medium text-slate-900">{record.startDate}</td>
+                  <td className="px-6 py-4 font-medium text-slate-950">{record.startDate}</td>
                   <td className="px-6 py-4 text-slate-700">{record.completionDate || '-'}</td>
                   <td className="px-6 py-4 text-slate-700">
                     <div className="font-bold">{vehicle?.makeModel}</div>
-                    <div className="text-xs text-slate-500">{vehicle?.plateNumber}</div>
+                    <div className="text-xs text-slate-600">{vehicle?.plateNumber}</div>
                   </td>
                   <td className="px-6 py-4 text-slate-700">
                     <div className="font-bold">{driver?.name || '-'}</div>
                   </td>
-                  <td className="px-6 py-4 font-bold text-slate-900">Le {record.cost.toLocaleString()}</td>
+                  <td className="px-6 py-4 font-bold text-slate-950">Le {record.cost.toLocaleString()}</td>
                   <td className="px-6 py-4 text-right">
                     <button
                       id={`maint-btn-${record.id}`}
                       onClick={() => setActiveMaintenanceMenu(activeMaintenanceMenu === record.id ? null : record.id)}
-                      className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100 transition-colors"
+                      className="text-slate-500 hover:text-slate-700 p-1 rounded-full hover:bg-slate-100 transition-colors"
                     >
                       <MoreVertical size={16} />
                     </button>
@@ -4267,7 +4267,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           <div className="fixed inset-0 z-[9998]" onClick={() => setActiveMaintenanceMenu(null)} />
                           <div style={{ position: 'fixed', top: topPos, right: rightPos, zIndex: 9999 }} className="w-48 bg-white rounded-lg shadow-xl border border-slate-100 py-1 overflow-hidden">
                             <button onClick={() => { setActiveMaintenanceMenu(null); setViewingMaintenance(record); }} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
-                              <FileText size={14} className="text-slate-500" /> View Record
+                              <FileText size={14} className="text-slate-600" /> View Record
                             </button>
                             <button onClick={() => { setActiveMaintenanceMenu(null); setEditingMaintenance(record); setIsMaintenanceModalOpen(true); }} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
                               <PenTool size={14} className="text-indigo-500" /> Edit Record
@@ -4293,19 +4293,19 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         </div>
         {totalMaintPages > 1 && (
           <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-            <span className="text-xs text-slate-500 font-medium">Page {clampedMaintPage} of {totalMaintPages}</span>
+            <span className="text-xs text-slate-600 font-medium">Page {clampedMaintPage} of {totalMaintPages}</span>
             <div className="flex gap-2">
               <button 
                 onClick={() => setMaintCurrentPage(p => Math.max(1, p - 1))}
                 disabled={clampedMaintPage === 1}
-                className="px-3 py-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>
               <button 
                 onClick={() => setMaintCurrentPage(p => Math.min(totalMaintPages, p + 1))}
                 disabled={clampedMaintPage === totalMaintPages}
-                className="px-3 py-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>
@@ -4342,7 +4342,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 isActive 
                   ? 'bg-white text-indigo-600 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                  : 'text-slate-600 hover:text-slate-700 hover:bg-slate-200/50'
               }`}
             >
               <Icon size={14} /> <span className="hidden sm:inline">{tab.label}</span><span className="sm:hidden">{tab.label.split(' ')[0]}</span>
@@ -4470,11 +4470,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               setOdometerWarnings({});
             }} className="p-6 grid grid-cols-2 gap-4">
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Date</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Date</label>
                 <input type="date" name="date" required defaultValue={editingLog?.date || new Date().toISOString().split('T')[0]} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 flex items-center gap-1.5">
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5 flex items-center gap-1.5">
                   <Briefcase size={12} /> Project
                 </label>
                 <select
@@ -4487,21 +4487,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Driver</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver</label>
                 <select name="driverId" required defaultValue={editingLog?.driverId} className="w-full p-2 border border-slate-200 rounded-xl">
                   <option value="">Select Driver</option>
                   {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Vehicle</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
                 <select name="vehicleId" required defaultValue={editingLog?.vehicleId} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Vehicle</option>
                   {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Destination District</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Destination District</label>
                 <select name="district" defaultValue={editingLog?.district} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select District</option>
                   {["Bo", "Bombali", "Bonthe", "Falaba", "Kailahun", "Kambia", "Karene", "Kenema", "Koinadugu", "Kono", "Moyamba", "Port Loko", "Pujehun", "Tonkolili", "Western Area Rural", "Western Area Urban"].map(d => (
@@ -4511,9 +4511,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Distance (km)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Distance (km)</label>
                 {editingTripLegs.length > 0 ? (
-                  <div className="w-full p-2 border border-slate-200 rounded-xl bg-slate-100 text-slate-500 cursor-not-allowed">
+                  <div className="w-full p-2 border border-slate-200 rounded-xl bg-slate-100 text-slate-600 cursor-not-allowed">
                     {editingTripLegs.reduce((sum, leg) => sum + Math.max(0, (leg.odometerEnd || 0) - (leg.odometerStart || 0)), 0)} (Calculated from legs)
                     <input type="hidden" name="distanceTraveledKm" value={editingTripLegs.reduce((sum, leg) => sum + Math.max(0, (leg.odometerEnd || 0) - (leg.odometerStart || 0)), 0)} />
                   </div>
@@ -4524,10 +4524,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
                 <div className="flex justify-between items-center mb-4">
                   <div className="cursor-pointer flex items-center gap-2 select-none" onClick={() => setIsFuelTransactionsExpanded(!isFuelTransactionsExpanded)}>
-                    {isFuelTransactionsExpanded ? <ChevronDown size={18} className="text-slate-400" /> : <ChevronRight size={18} className="text-slate-400" />}
+                    {isFuelTransactionsExpanded ? <ChevronDown size={18} className="text-slate-500" /> : <ChevronRight size={18} className="text-slate-500" />}
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5"><Fuel size={14} className="text-indigo-500" /> Fuel Transactions</h3>
-                      <p className="text-[10px] text-slate-400 mt-0.5">Record every fuel stop as a separate entry.</p>
+                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Fuel size={14} className="text-indigo-500" /> Fuel Transactions</h3>
+                      <p className="text-[10px] text-slate-500 mt-0.5">Record every fuel stop as a separate entry.</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -4543,14 +4543,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </div>
                 {isFuelTransactionsExpanded && (
                   <div className="space-y-4">
-                    {editingFuelCollections.length === 0 && <p className="text-xs text-slate-400 italic text-center py-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">No fuel stops recorded for this trip.</p>}
+                    {editingFuelCollections.length === 0 && <p className="text-xs text-slate-500 italic text-center py-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">No fuel stops recorded for this trip.</p>}
                   {editingFuelCollections.map((fc, i) => {
                     const isMin = minimizedFuelStops[fc.id || i];
                     return (
                     <div key={fc.id || i} className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
                       <div className="flex items-center justify-between mb-1 cursor-pointer select-none" onClick={() => setMinimizedFuelStops(prev => ({ ...prev, [fc.id || i]: !prev[fc.id || i] }))}>
                         <div className="flex items-center gap-2">
-                           {isMin ? <ChevronRight size={14} className="text-slate-400" /> : <ChevronDown size={14} className="text-slate-400" />}
+                           {isMin ? <ChevronRight size={14} className="text-slate-500" /> : <ChevronDown size={14} className="text-slate-500" />}
                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-wider">Stop {i + 1} {fc.stationName ? `- ${fc.stationName}` : ''}</span>
                         </div>
                         <button type="button" onClick={(e) => { 
@@ -4568,14 +4568,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       {/* Row 1: Project + Station */}
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Project</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Project</label>
                           <select value={fc.supplier || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; const chosen = fuelSuppliers.find(s => s.name === e.target.value); n[i] = { ...n[i], supplier: e.target.value, isPartnerStation: chosen ? chosen.isPartner : false }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg bg-white">
                             <option value="">Select Project</option>
                             {fuelSuppliers.map(s => <option key={s.id} value={s.name}>{s.name}{s.isPartner ? ' ✓' : ''}</option>)}
                           </select>
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Station Name</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Station Name</label>
                           <select value={fc.stationName || ''} onChange={e => {
                             const station = fuelStations.find(s => s.name === e.target.value);
                             setEditingFuelCollections(prev => {
@@ -4596,14 +4596,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         {/* Row 2: City + District */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">City</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">City</label>
                           <select value={fc.location || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], location: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required>
                             <option value="">Select City...</option>
                             {fuelCities.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                           </select>
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">District</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">District</label>
                           <select value={fc.district || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], district: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg bg-white">
                             <option value="">Select District...</option>
                             {["Bo", "Bombali", "Bonthe", "Falaba", "Kailahun", "Kambia", "Karene", "Kenema", "Koinadugu", "Kono", "Moyamba", "Port Loko", "Pujehun", "Tonkolili", "Western Area Rural", "Western Area Urban"].map(d => (
@@ -4614,7 +4614,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         {/* Row 3: Litres + Cost/L */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Litres</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Litres</label>
                           <input type="number" step="0.1" value={fc.liters || ''} onChange={e => setEditingFuelCollections(prev => { 
                             const n = [...prev]; 
                             n[i] = { ...n[i], liters: Number(e.target.value) }; 
@@ -4624,14 +4624,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Cost / Litre (Le)</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Cost / Litre (Le)</label>
                           <input type="number" step="0.01" value={fc.costPerLiter || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], costPerLiter: Number(e.target.value) }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required />
                         </div>
                         {/* Row 3b: Fuel Type */}
                         <div className="col-span-2">
                           <div className="grid grid-cols-3 gap-2">
                             {(['Petrol', 'Diesel', 'Premium'] as const).map(ft => (
-                              <label key={ft} className={`flex items-center justify-center gap-1.5 p-1.5 rounded-lg border-2 cursor-pointer text-xs font-bold transition-all ${ fc.fuelType === ft ? ft === 'Diesel' ? 'border-amber-400 bg-amber-50 text-amber-700' : ft === 'Premium' ? 'border-purple-400 bg-purple-50 text-purple-700' : 'border-green-400 bg-green-50 text-green-700' : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300' }`}>
+                              <label key={ft} className={`flex items-center justify-center gap-1.5 p-1.5 rounded-lg border-2 cursor-pointer text-xs font-bold transition-all ${ fc.fuelType === ft ? ft === 'Diesel' ? 'border-amber-400 bg-amber-50 text-amber-700' : ft === 'Premium' ? 'border-purple-400 bg-purple-50 text-purple-700' : 'border-green-400 bg-green-50 text-green-700' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300' }`}>
                                 <input type="radio" name={`fuelType-${fc.id}`} value={ft} checked={fc.fuelType === ft} onChange={() => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], fuelType: ft }; return n; })} className="hidden" />
                                 {ft}
                               </label>
@@ -4640,15 +4640,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         {/* Row 4: Date + Payment Method + Time */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Fill-up</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Date of Fill-up</label>
                           <input type="date" value={fc.date || editingLog?.date || new Date().toISOString().split('T')[0]} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], date: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Time of Fill-up</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Time of Fill-up</label>
                           <input type="time" value={fc.time || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], time: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Payment Method</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Payment Method</label>
                           <select value={fc.paymentMethod || 'Fuel Card'} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], paymentMethod: e.target.value as any }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg bg-white">
                             <option value="Fuel Card">Fuel Card</option>
                             <option value="Voucher">Voucher</option>
@@ -4658,7 +4658,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         {/* Row 5: Receipt + Partner toggle */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Receipt / Ref #</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Receipt / Ref #</label>
                           <input type="text" placeholder="e.g. REC-1234" value={fc.receiptNumber || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], receiptNumber: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div className="flex flex-col justify-end">
@@ -4676,7 +4676,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         )}
                         {/* Remarks */}
                         <div className="col-span-2">
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Remarks</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Remarks</label>
                           <input type="text" placeholder="Optional notes for this stop..." value={fc.remarks || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], remarks: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         {/* Total display */}
@@ -4696,35 +4696,35 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
               
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Total Litres (Fuel Consumed)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Total Litres (Fuel Consumed)</label>
                 <input type="number" step="0.1" name="fuelConsumedLiters" required value={editingLog?.fuelConsumedLiters ?? 0} onChange={e => setEditingLog(prev => prev ? { ...prev, fuelConsumedLiters: Number(e.target.value) } : prev)} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
-                <h3 className="text-sm font-bold text-slate-900 mb-4">Behavior & Compliance</h3>
+                <h3 className="text-sm font-bold text-slate-950 mb-4">Behavior & Compliance</h3>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Incidents</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Incidents</label>
                 <input type="number" name="incidents" defaultValue={editingLog?.incidents || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Speeding Events</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Speeding Events</label>
                 <input type="number" name="speedingEvents" defaultValue={editingLog?.speedingEvents || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Harsh Braking</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Harsh Braking</label>
                 <input type="number" name="harshBraking" defaultValue={editingLog?.harshBraking || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Idling Time (Hrs)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Idling Time (Hrs)</label>
                 <input type="number" step="0.1" name="idlingTimeHours" defaultValue={editingLog?.idlingTimeHours || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Route Deviations</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Route Deviations</label>
                 <input type="number" name="routeDeviations" defaultValue={editingLog?.routeDeviations || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Policy Violations</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Policy Violations</label>
                 <input type="number" name="policyViolations" defaultValue={editingLog?.policyViolations || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
               
@@ -4738,7 +4738,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               
               {/* #18 Notes field */}
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Trip Notes</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Trip Notes</label>
                 <textarea
                   name="notes"
                   rows={2}
@@ -4752,10 +4752,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
                 <div className="flex justify-between items-center mb-3">
                   <div className="cursor-pointer flex items-center gap-2 select-none" onClick={() => setIsTripLegsExpanded(!isTripLegsExpanded)}>
-                    {isTripLegsExpanded ? <ChevronDown size={18} className="text-slate-400" /> : <ChevronRight size={18} className="text-slate-400" />}
+                    {isTripLegsExpanded ? <ChevronDown size={18} className="text-slate-500" /> : <ChevronRight size={18} className="text-slate-500" />}
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5"><Navigation size={14} className="text-indigo-500" /> Trip Legs (Route Log)</h3>
-                      <p className="text-[10px] text-slate-400 mt-0.5">Record each stop with departure, destination, times, and odometer.</p>
+                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Navigation size={14} className="text-indigo-500" /> Trip Legs (Route Log)</h3>
+                      <p className="text-[10px] text-slate-500 mt-0.5">Record each stop with departure, destination, times, and odometer.</p>
                     </div>
                   </div>
                   <button
@@ -4782,7 +4782,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 {isTripLegsExpanded && (
                   <>
                     {editingTripLegs.length === 0 && (
-                      <p className="text-xs text-slate-400 italic py-2 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">No legs recorded. Use a single Distance field above, or add legs for detailed route tracking.</p>
+                      <p className="text-xs text-slate-500 italic py-2 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">No legs recorded. Use a single Distance field above, or add legs for detailed route tracking.</p>
                     )}
 
                     <div className="space-y-3">
@@ -4792,7 +4792,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <div key={leg.id || i} className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
                       <div className="flex justify-between items-center cursor-pointer select-none" onClick={() => setMinimizedTripLegs(prev => ({ ...prev, [leg.id || i]: !prev[leg.id || i] }))}>
                         <div className="flex items-center gap-2">
-                           {isMin ? <ChevronRight size={14} className="text-slate-400" /> : <ChevronDown size={14} className="text-slate-400" />}
+                           {isMin ? <ChevronRight size={14} className="text-slate-500" /> : <ChevronDown size={14} className="text-slate-500" />}
                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-wider">Leg {i + 1} {leg.departurePoint && leg.destinationPoint ? `- ${leg.departurePoint} to ${leg.destinationPoint}` : ''}</span>
                         </div>
                         <button type="button" onClick={(e) => {
@@ -4806,31 +4806,31 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       {!isMin && (
                       <div className="grid grid-cols-2 gap-2 mt-2">
                         <div className="col-span-2">
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Leg</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Date of Leg</label>
                           <input type="date" value={leg.date || editingLog?.date || new Date().toISOString().split('T')[0]} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], date: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">From</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">From</label>
                           <input type="text" placeholder="Departure point" value={leg.departurePoint || ''} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], departurePoint: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Depart Time</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Depart Time</label>
                           <input type="time" value={leg.departureTime || ''} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], departureTime: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">To</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">To</label>
                           <input type="text" placeholder="Destination point" value={leg.destinationPoint || ''} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], destinationPoint: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Arrival Time</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Arrival Time</label>
                           <input type="time" value={leg.arrivalTime || ''} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], arrivalTime: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Odo Start (km)</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Odo Start (km)</label>
                           <input type="number" value={leg.odometerStart || ''} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], odometerStart: Number(e.target.value) }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Odo End (km)</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Odo End (km)</label>
                           <input
                             type="number"
                             value={leg.odometerEnd || ''}
@@ -4859,7 +4859,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           {odometerWarnings[i] && <p className="text-[10px] text-amber-600 mt-1">{odometerWarnings[i]}</p>}
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Purpose of Trip</label>
+                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Purpose of Trip</label>
                           <input type="text" placeholder="e.g. Site visit, Patient transport, Resupply..." value={leg.purposeOfTrip || ''} onChange={e => setEditingTripLegs(prev => { const n = [...prev]; n[i] = { ...n[i], purposeOfTrip: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
                         </div>
                       </div>
@@ -4869,7 +4869,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </div>
 
                 {editingTripLegs.length > 0 && (
-                  <div className="mt-2 text-xs text-slate-500 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
+                  <div className="mt-2 text-xs text-slate-600 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
                     Auto-calculated distance: <span className="font-bold text-indigo-700">
                       {editingTripLegs.reduce((sum, l) => sum + Math.max(0, (l.odometerEnd || 0) - (l.odometerStart || 0)), 0).toLocaleString()} km
                     </span> from {editingTripLegs.length} leg(s).
@@ -4883,8 +4883,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
                 <div className="flex justify-between items-center mb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5"><Users size={14} className="text-indigo-500" /> Passenger Manifest</h3>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Record all passengers travelling on this trip for accountability.</p>
+                    <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Users size={14} className="text-indigo-500" /> Passenger Manifest</h3>
+                    <p className="text-[10px] text-slate-500 mt-0.5">Record all passengers travelling on this trip for accountability.</p>
                   </div>
                   <button
                     type="button"
@@ -4896,13 +4896,13 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </div>
 
                 {editingPassengers.length === 0 && (
-                  <p className="text-xs text-slate-400 italic py-2 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">No passengers recorded.</p>
+                  <p className="text-xs text-slate-500 italic py-2 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">No passengers recorded.</p>
                 )}
 
                 <div className="space-y-2">
                   {editingPassengers.map((pax, i) => (
                     <div key={pax.id || i} className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0">{i + 1}</div>
+                      <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600 shrink-0">{i + 1}</div>
                       <input
                         type="text"
                         placeholder="Full name"
@@ -5052,27 +5052,27 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             }} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Make & Model</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Make & Model</label>
                   <input type="text" name="makeModel" required defaultValue={editingVehicle?.makeModel || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Year</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Year</label>
                   <input type="number" name="year" required defaultValue={editingVehicle?.year || new Date().getFullYear()} className="w-full p-2 border border-slate-200 rounded-xl" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Odometer (km)</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Odometer (km)</label>
                   <input type="number" name="odometer" required defaultValue={editingVehicle?.odometer || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">License Plate</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">License Plate</label>
                   <input type="text" name="plateNumber" required defaultValue={editingVehicle?.plateNumber || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Insurance Expiry</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Insurance Expiry</label>
                   <input type="date" name="insuranceExpiry" required defaultValue={editingVehicle?.insuranceExpiry || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Condition</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Condition</label>
                   <select name="condition" required defaultValue={editingVehicle?.condition || 'Excellent'} className="w-full p-2 border border-slate-200 rounded-xl">
                     <option value="Excellent">Excellent</option>
                     <option value="Good">Good</option>
@@ -5081,18 +5081,18 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Company Registered?</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Company Registered?</label>
                   <select name="isCompanyRegistered" required defaultValue={editingVehicle?.isCompanyRegistered !== false ? 'true' : 'false'} className="w-full p-2 border border-slate-200 rounded-xl">
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Type (SUV, Sedan)</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Type (SUV, Sedan)</label>
                   <input type="text" name="type" required defaultValue={editingVehicle?.type || 'SUV'} className="w-full p-2 border border-slate-200 rounded-xl" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Status</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Status</label>
                   <select name="status" required defaultValue={editingVehicle?.status || 'Available'} className="w-full p-2 border border-slate-200 rounded-xl">
                     <option value="Available">Available</option>
                     <option value="Maintenance">Maintenance</option>
@@ -5106,34 +5106,34 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <h3 className="text-sm font-black text-slate-800 mb-4">Marketing & Public Profile</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Show on Public Fleet?</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Show on Public Fleet?</label>
                     <select name="showOnFleet" required defaultValue={editingVehicle?.showOnFleet ? 'true' : 'false'} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 font-medium">
                       <option value="true">Yes, show to public</option>
                       <option value="false">No, hide from public</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Vehicle Category</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle Category</label>
                     <input type="text" name="vehicleCategory" defaultValue={editingVehicle?.vehicleCategory || editingVehicle?.type || ''} placeholder="e.g. SUV, Sedan, 4WD" className="w-full p-2 border border-slate-200 rounded-xl" />
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Image URL</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Image URL</label>
                     <input type="url" name="imageUrl" defaultValue={editingVehicle?.imageUrl || ''} placeholder="https://example.com/image.jpg" className="w-full p-2 border border-slate-200 rounded-xl" />
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Short Description</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Short Description</label>
                     <textarea name="description" rows={2} defaultValue={editingVehicle?.description || ''} placeholder="Luxurious and comfortable ride for long trips..." className="w-full p-2 border border-slate-200 rounded-xl"></textarea>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Price Per Day ($)</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Price Per Day ($)</label>
                     <input type="number" name="pricePerDay" defaultValue={editingVehicle?.pricePerDay || 0} min="0" step="0.01" className="w-full p-2 border border-slate-200 rounded-xl" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Seats</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Seats</label>
                     <input type="number" name="seats" defaultValue={editingVehicle?.seats || 5} min="1" className="w-full p-2 border border-slate-200 rounded-xl" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Fuel Type</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Fuel Type</label>
                     <select name="fuelType" defaultValue={editingVehicle?.fuelType || 'Diesel'} className="w-full p-2 border border-slate-200 rounded-xl">
                       <option value="Diesel">Diesel</option>
                       <option value="Petrol">Petrol</option>
@@ -5142,7 +5142,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Transmission</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Transmission</label>
                     <select name="transmission" defaultValue={editingVehicle?.transmission || 'Automatic'} className="w-full p-2 border border-slate-200 rounded-xl">
                       <option value="Automatic">Automatic</option>
                       <option value="Manual">Manual</option>
@@ -5190,21 +5190,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   <div className="p-6 space-y-6">
                     <div className="grid grid-cols-3 gap-4">
                       <div className="bg-slate-50 p-4 rounded-xl text-center">
-                        <div className="text-2xl font-black text-slate-900">{ds.trips}</div>
-                        <div className="text-xs font-bold text-slate-500 uppercase">Trips Logged</div>
+                        <div className="text-2xl font-black text-slate-950">{ds.trips}</div>
+                        <div className="text-xs font-bold text-slate-600 uppercase">Trips Logged</div>
                       </div>
                       <div className="bg-slate-50 p-4 rounded-xl text-center">
-                        <div className="text-2xl font-black text-slate-900">{ds.totalDistance} <span className="text-sm">km</span></div>
-                        <div className="text-xs font-bold text-slate-500 uppercase">Total Distance</div>
+                        <div className="text-2xl font-black text-slate-950">{ds.totalDistance} <span className="text-sm">km</span></div>
+                        <div className="text-xs font-bold text-slate-600 uppercase">Total Distance</div>
                       </div>
                       <div className="bg-slate-50 p-4 rounded-xl text-center">
-                        <div className="text-2xl font-black text-slate-900">{ds.efficiency} <span className="text-sm">km/L</span></div>
-                        <div className="text-xs font-bold text-slate-500 uppercase">Avg Efficiency</div>
+                        <div className="text-2xl font-black text-slate-950">{ds.efficiency} <span className="text-sm">km/L</span></div>
+                        <div className="text-xs font-bold text-slate-600 uppercase">Avg Efficiency</div>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2"><AlertTriangle className="text-amber-500" size={16} /> Infractions & Behaviors</h3>
+                      <h3 className="text-sm font-black text-slate-950 uppercase tracking-wider mb-3 flex items-center gap-2"><AlertTriangle className="text-amber-500" size={16} /> Infractions & Behaviors</h3>
                       <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
                         <div className="flex justify-between items-center p-3">
                           <span className="text-sm font-semibold text-slate-700">Fuel Variance Warnings (Theft Suspicion)</span>
@@ -5228,7 +5228,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         <div className="flex justify-between items-center p-3">
                           <span className="text-sm font-semibold text-slate-700">Total Idling Time</span>
-                          <span className={`text-sm font-black ${ds.idling > 5 ? 'text-amber-600' : 'text-slate-600'}`}>{ds.idling} hrs</span>
+                          <span className={`text-sm font-black ${ds.idling > 5 ? 'text-amber-600' : 'text-slate-700'}`}>{ds.idling} hrs</span>
                         </div>
                       </div>
                     </div>
@@ -5341,14 +5341,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               setEditingDispatch(null);
             }} className="p-6 grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Driver</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver</label>
                 <select name="driverId" defaultValue={editingDispatch?.driverId || ''} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Driver</option>
                   {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Vehicle</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
                 <select name="vehicleId" defaultValue={editingDispatch?.vehicleId || ''} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Vehicle</option>
                   {vehicles.filter(v => v.status === 'Available' || v.id === editingDispatch?.vehicleId).map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
@@ -5356,7 +5356,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
 
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Project</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Project</label>
                 <select name="projectId" defaultValue={editingDispatch?.projectId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">None / Internal</option>
                   {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -5364,11 +5364,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Odometer Out</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Odometer Out</label>
                 <input type="number" name="odometerOut" defaultValue={editingDispatch?.odometerOut || ''} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Fuel Level OUT</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Fuel Level OUT</label>
                 <select name="fuelLevelOut" defaultValue={editingDispatch?.fuelLevelOut || '100'} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="100">100% — Full</option>
                   <option value="90">90%</option>
@@ -5384,17 +5384,17 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Visual Condition / Notes</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Visual Condition / Notes</label>
                 <textarea name="conditionOut" defaultValue={editingDispatch?.conditionOut || ''} placeholder="e.g. Clean, scratch on left door" required rows={2} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white resize-none" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Dispatch Date</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Dispatch Date</label>
                 <input type="datetime-local" name="dispatchTime" required
                   defaultValue={editingDispatch?.dispatchTime ? new Date(new Date(editingDispatch.dispatchTime).getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16) : new Date(Date.now() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 16)}
                   className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Expected Return Date</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Expected Return Date</label>
                 {/* #25: Default to tomorrow, not today */}
                 <input type="date" name="expectedReturnDate" required
                   defaultValue={editingDispatch?.expectedReturnDate || new Date(Date.now() + 86400000).toISOString().split('T')[0]}
@@ -5467,21 +5467,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               setIsMaintenanceModalOpen(false);
             }} className="p-6 grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Vehicle</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
                 <select name="vehicleId" required defaultValue={editingMaintenance?.vehicleId} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Vehicle</option>
                   {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Driver (Optional)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver (Optional)</label>
                 <select name="driverId" defaultValue={editingMaintenance?.driverId} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Driver</option>
                   {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Status</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Status</label>
                 <select name="status" required defaultValue={editingMaintenance?.status} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="Scheduled">Scheduled</option>
                   <option value="In Progress">In Progress (Out of Service)</option>
@@ -5489,31 +5489,31 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Start Date</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Start Date</label>
                 <input type="date" name="startDate" required defaultValue={editingMaintenance?.startDate} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Return Date</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Return Date</label>
                 <input type="date" name="completionDate" defaultValue={editingMaintenance?.completionDate || editingMaintenance?.expectedCompletionDate} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Issues & Repairs Performed</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Issues & Repairs Performed</label>
                 <textarea name="issuesFound" required defaultValue={editingMaintenance?.issuesFound} rows={3} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" placeholder="e.g. Oil change, brakes replaced, scratched bumper fixed"></textarea>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Mechanic / Shop Name</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Mechanic / Shop Name</label>
                 <input type="text" name="mechanicOrShop" defaultValue={editingMaintenance?.mechanicOrShop} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Mechanic Contact</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Mechanic Contact</label>
                 <input type="text" name="mechanicContact" defaultValue={editingMaintenance?.mechanicContact} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Mechanic Address</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Mechanic Address</label>
                 <input type="text" name="mechanicAddress" defaultValue={editingMaintenance?.mechanicAddress} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Total Cost (Le)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Total Cost (Le)</label>
                 <input type="number" name="cost" required defaultValue={editingMaintenance?.cost} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div className="col-span-2 flex justify-end mt-4">
@@ -5530,38 +5530,38 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 sticky top-0 z-10">
               <div className="flex items-center gap-3">
-                <div className="bg-slate-200 p-2 rounded-xl text-slate-600">
+                <div className="bg-slate-200 p-2 rounded-xl text-slate-700">
                   <FileText size={20} />
                 </div>
                 <div>
                   <h3 className="font-black text-slate-800 text-lg">Maintenance Record Details</h3>
-                  <p className="text-slate-500 text-xs mt-0.5">View details for the selected log.</p>
+                  <p className="text-slate-600 text-xs mt-0.5">View details for the selected log.</p>
                 </div>
               </div>
-              <button type="button" onClick={() => setViewingMaintenance(null)} className="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg p-1.5 transition-colors"><X size={18}/></button>
+              <button type="button" onClick={() => setViewingMaintenance(null)} className="text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg p-1.5 transition-colors"><X size={18}/></button>
             </div>
             
             <div className="p-6">
               <div className="bg-slate-50 rounded-xl p-5 border border-slate-100 mb-6">
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Vehicle</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Vehicle</p>
                     <p className="font-bold text-slate-800">{vehicles.find(v => v.id === viewingMaintenance.vehicleId)?.makeModel || 'N/A'}</p>
-                    <p className="text-sm text-slate-500">{vehicles.find(v => v.id === viewingMaintenance.vehicleId)?.plateNumber || ''}</p>
+                    <p className="text-sm text-slate-600">{vehicles.find(v => v.id === viewingMaintenance.vehicleId)?.plateNumber || ''}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Driver</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Driver</p>
                     <p className="font-bold text-slate-800">{drivers.find(d => d.id === viewingMaintenance.driverId)?.name || 'N/A'}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t border-slate-200 pt-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Start Date</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Start Date</p>
                     <p className="font-medium text-slate-800">{viewingMaintenance.startDate}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Return Date</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Return Date</p>
                     <p className="font-medium text-slate-800">{viewingMaintenance.completionDate || viewingMaintenance.expectedCompletionDate || '-'}</p>
                   </div>
                 </div>
@@ -5571,17 +5571,17 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <h4 className="text-sm font-bold text-slate-800 uppercase border-b border-slate-100 pb-2 mb-3">Issue & Cost</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Issues Found</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Issues Found</p>
                     <div className="bg-slate-50 rounded-lg p-3 text-slate-700 text-sm whitespace-pre-wrap min-h-[60px] border border-slate-100">
                       {viewingMaintenance.issuesFound || 'None specified.'}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Total Cost</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Total Cost</p>
                     <p className="font-black text-lg text-emerald-600">Le {viewingMaintenance.cost.toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Status</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Status</p>
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${
                       viewingMaintenance.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                       viewingMaintenance.status === 'Scheduled' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
@@ -5597,15 +5597,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <h4 className="text-sm font-bold text-slate-800 uppercase border-b border-slate-100 pb-2 mb-3">Mechanic Details</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Mechanic / Shop</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Mechanic / Shop</p>
                     <p className="font-medium text-slate-800">{viewingMaintenance.mechanicOrShop || '-'}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Contact</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Contact</p>
                     <p className="font-medium text-slate-800">{viewingMaintenance.mechanicContact || '-'}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Address</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Address</p>
                     <p className="font-medium text-slate-800">{viewingMaintenance.mechanicAddress || '-'}</p>
                   </div>
                 </div>
@@ -5615,7 +5615,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 rounded-b-2xl">
               <button 
                 onClick={() => setViewingMaintenance(null)}
-                className="px-6 py-2.5 rounded-xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                className="px-6 py-2.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-950 transition-colors"
               >
                 Close
               </button>
@@ -5630,38 +5630,38 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 sticky top-0 z-10">
               <div className="flex items-center gap-3">
-                <div className="bg-slate-200 p-2 rounded-xl text-slate-600">
+                <div className="bg-slate-200 p-2 rounded-xl text-slate-700">
                   <FileText size={20} />
                 </div>
                 <div>
                   <h3 className="font-black text-slate-800 text-lg">Trip Log Details</h3>
-                  <p className="text-slate-500 text-xs mt-0.5">View details for the selected trip log.</p>
+                  <p className="text-slate-600 text-xs mt-0.5">View details for the selected trip log.</p>
                 </div>
               </div>
-              <button type="button" onClick={() => setViewingLog(null)} className="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg p-1.5 transition-colors"><X size={18}/></button>
+              <button type="button" onClick={() => setViewingLog(null)} className="text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg p-1.5 transition-colors"><X size={18}/></button>
             </div>
             
             <div className="p-6">
               <div className="bg-slate-50 rounded-xl p-5 border border-slate-100 mb-6">
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Vehicle</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Vehicle</p>
                     <p className="font-bold text-slate-800">{vehicles.find(v => v.id === viewingLog.vehicleId)?.makeModel || 'N/A'}</p>
-                    <p className="text-sm text-slate-500">{vehicles.find(v => v.id === viewingLog.vehicleId)?.plateNumber || ''}</p>
+                    <p className="text-sm text-slate-600">{vehicles.find(v => v.id === viewingLog.vehicleId)?.plateNumber || ''}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Driver</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Driver</p>
                     <p className="font-bold text-slate-800">{drivers.find(d => d.id === viewingLog.driverId)?.name || 'N/A'}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t border-slate-200 pt-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Start Date</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Start Date</p>
                     <p className="font-medium text-slate-800">{viewingLog.date}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Return Date</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Return Date</p>
                     <p className="font-medium text-slate-800">{viewingLog.returnDate || '-'}</p>
                   </div>
                 </div>
@@ -5671,19 +5671,19 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <h4 className="text-sm font-bold text-slate-800 uppercase border-b border-slate-100 pb-2 mb-3">Trip Performance</h4>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Distance</p>
-                    <p className="font-black text-lg text-slate-700">{viewingLog.distanceTraveledKm} <span className="text-sm font-bold text-slate-500">km</span></p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Distance</p>
+                    <p className="font-black text-lg text-slate-700">{viewingLog.distanceTraveledKm} <span className="text-sm font-bold text-slate-600">km</span></p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Fuel Consumed</p>
-                    <p className="font-black text-lg text-slate-700">{viewingLog.fuelConsumedLiters} <span className="text-sm font-bold text-slate-500">L</span></p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Fuel Consumed</p>
+                    <p className="font-black text-lg text-slate-700">{viewingLog.fuelConsumedLiters} <span className="text-sm font-bold text-slate-600">L</span></p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Incidents</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Incidents</p>
                     <p className="font-black text-lg text-slate-700">{viewingLog.incidents}</p>
                   </div>
                   <div className="col-span-3 mt-2">
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Trip Notes</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Trip Notes</p>
                     <div className="bg-slate-50 rounded-lg p-3 text-slate-700 text-sm whitespace-pre-wrap min-h-[60px] border border-slate-100">
                       {viewingLog.notes || 'None specified.'}
                     </div>
@@ -5695,17 +5695,17 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <h4 className="text-sm font-bold text-slate-800 uppercase border-b border-slate-100 pb-2 mb-3">Status</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Approval</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Approval</p>
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${
                       viewingLog.approvalStatus === 'Approved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                       viewingLog.approvalStatus === 'Flagged' ? 'bg-red-50 text-red-700 border border-red-200' :
-                      'bg-slate-100 text-slate-600 border border-slate-200'
+                      'bg-slate-100 text-slate-700 border border-slate-200'
                     }`}>
                       {viewingLog.approvalStatus || 'Pending'}
                     </span>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Status</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase mb-1">Status</p>
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${
                       viewingLog.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                       viewingLog.status === 'In Progress' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
@@ -5716,7 +5716,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   </div>
                   {viewingLog.approvalStatus === 'Flagged' && viewingLog.approvalNotes && (
                     <div className="col-span-2">
-                      <p className="text-xs font-bold text-slate-400 uppercase mb-1">Flag Reason</p>
+                      <p className="text-xs font-bold text-slate-500 uppercase mb-1">Flag Reason</p>
                       <p className="font-medium text-red-600 bg-red-50 p-2 rounded-lg border border-red-100">{viewingLog.approvalNotes}</p>
                     </div>
                   )}
@@ -5727,7 +5727,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 rounded-b-2xl">
               <button 
                 onClick={() => setViewingLog(null)}
-                className="px-6 py-2.5 rounded-xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                className="px-6 py-2.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-950 transition-colors"
               >
                 Close
               </button>
@@ -5769,7 +5769,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <div className="p-6 space-y-5">
                 {/* Approver Name */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Approver Name <span className="text-red-500">*</span></label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Approver Name <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     value={approvalApproverName}
@@ -5782,15 +5782,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
                 {/* Date (auto) */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Approval Date</label>
-                  <div className="w-full p-2.5 border border-slate-100 rounded-xl bg-slate-50 text-sm text-slate-600 font-medium flex items-center gap-2">
-                    <Calendar size={14} className="text-slate-400" /> {today} <span className="text-xs text-slate-400 ml-1">(auto-set by system)</span>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Approval Date</label>
+                  <div className="w-full p-2.5 border border-slate-100 rounded-xl bg-slate-50 text-sm text-slate-700 font-medium flex items-center gap-2">
+                    <Calendar size={14} className="text-slate-500" /> {today} <span className="text-xs text-slate-500 ml-1">(auto-set by system)</span>
                   </div>
                 </div>
 
                 {/* Approval Notes */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Approval Notes <span className="text-slate-400 font-normal">(optional)</span></label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Approval Notes <span className="text-slate-500 font-normal">(optional)</span></label>
                   <textarea
                     value={approvalNoteInput}
                     onChange={e => setApprovalNoteInput(e.target.value)}
@@ -5803,10 +5803,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 {/* Signature Section */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase">Signature <span className="text-red-500">*</span></label>
+                    <label className="text-xs font-bold text-slate-600 uppercase">Signature <span className="text-red-500">*</span></label>
                     <div className="flex gap-1 bg-slate-100 rounded-lg p-0.5">
-                      <button type="button" onClick={() => { setApprovalSignatureMode('draw'); setApprovalSignatureData(null); }} className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-md transition-all ${approvalSignatureMode === 'draw' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}`}><PenTool size={14} /> Draw</button>
-                      <button type="button" onClick={() => { setApprovalSignatureMode('upload'); clearApprovalCanvas(); }} className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-md transition-all ${approvalSignatureMode === 'upload' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}`}><Upload size={14} /> Upload</button>
+                      <button type="button" onClick={() => { setApprovalSignatureMode('draw'); setApprovalSignatureData(null); }} className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-md transition-all ${approvalSignatureMode === 'draw' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-600'}`}><PenTool size={14} /> Draw</button>
+                      <button type="button" onClick={() => { setApprovalSignatureMode('upload'); clearApprovalCanvas(); }} className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-md transition-all ${approvalSignatureMode === 'upload' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-600'}`}><Upload size={14} /> Upload</button>
                     </div>
                   </div>
 
@@ -5827,11 +5827,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         onTouchEnd={endApprovalDraw}
                       />
                       <div className="absolute bottom-2 right-2 flex gap-2">
-                        <button type="button" onClick={clearApprovalCanvas} className="text-[10px] font-bold text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded-lg hover:bg-slate-50 transition-colors">Clear</button>
+                        <button type="button" onClick={clearApprovalCanvas} className="text-[10px] font-bold text-slate-600 bg-white border border-slate-200 px-2 py-1 rounded-lg hover:bg-slate-50 transition-colors">Clear</button>
                       </div>
                       {!approvalSignatureData && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <p className="text-xs text-slate-400">Sign here using your finger or mouse</p>
+                          <p className="text-xs text-slate-500">Sign here using your finger or mouse</p>
                         </div>
                       )}
                     </div>
@@ -5849,9 +5849,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                       ) : (
                         <label className="flex flex-col items-center gap-2 cursor-pointer">
-                          <Upload size={20} className="text-slate-400" />
-                          <span className="text-xs text-slate-500 font-medium">Click to upload signature image</span>
-                          <span className="text-[10px] text-slate-400">PNG, JPG, SVG supported</span>
+                          <Upload size={20} className="text-slate-500" />
+                          <span className="text-xs text-slate-600 font-medium">Click to upload signature image</span>
+                          <span className="text-[10px] text-slate-500">PNG, JPG, SVG supported</span>
                           <input type="file" accept="image/*" className="hidden" onChange={e => {
                             const f = e.target.files?.[0];
                             if (!f) return;
@@ -5896,7 +5896,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
               {/* Footer */}
               <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button onClick={() => setApprovalModalLogId(null)} className="px-5 py-2.5 rounded-xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 transition-colors text-sm">Cancel</button>
+                <button onClick={() => setApprovalModalLogId(null)} className="px-5 py-2.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 transition-colors text-sm">Cancel</button>
                 <button
                   disabled={!approvalApproverName.trim() || (logForApproval?.approvalStatus !== 'Approved' && !approvalSignatureData)}
                   onClick={() => handleApproveLog(approvalModalLogId!, approvalApproverName.trim(), approvalNoteInput.trim(), approvalSignatureData)}
@@ -5916,15 +5916,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-scale-up">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <h3 className="font-bold text-slate-800">{editingCity.id ? 'Edit City' : 'Add New City'}</h3>
-              <button onClick={() => setIsCityModalOpen(false)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"><X size={18} /></button>
+              <button onClick={() => setIsCityModalOpen(false)} className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"><X size={18} /></button>
             </div>
             <form onSubmit={handleSaveCity} className="p-5 space-y-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">City Name</label>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">City Name</label>
                 <input type="text" value={editingCity.name || ''} onChange={e => setEditingCity({ ...editingCity, name: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400" required placeholder="e.g. Freetown" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Region (Optional)</label>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Region (Optional)</label>
                 <input type="text" value={editingCity.region || ''} onChange={e => setEditingCity({ ...editingCity, region: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400" placeholder="e.g. Western Area" />
               </div>
               <div className="flex justify-end pt-2">
@@ -5941,16 +5941,16 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-scale-up">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <h3 className="font-bold text-slate-800">{editingStation.id ? 'Edit Station' : 'Add New Station'}</h3>
-              <button onClick={() => setIsStationModalOpen(false)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"><X size={18} /></button>
+              <button onClick={() => setIsStationModalOpen(false)} className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"><X size={18} /></button>
             </div>
             <form onSubmit={handleSaveStation} className="p-5 space-y-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Station Name</label>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Station Name</label>
                 <input type="text" value={editingStation.name || ''} onChange={e => setEditingStation({ ...editingStation, name: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400" required placeholder="e.g. NP Main Street" />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Supplier Brand</label>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Supplier Brand</label>
                 <select value={editingStation.supplier || ''} onChange={e => setEditingStation({ ...editingStation, supplier: e.target.value || undefined })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400">
                   <option value="">None / Other</option>
                   <option value="NP">NP</option>

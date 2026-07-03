@@ -31,7 +31,7 @@ const Field: React.FC<{
   label: string; required?: boolean; children: React.ReactNode; span?: boolean;
 }> = ({ label, required, children, span }) => (
   <div className={span ? 'col-span-2' : ''}>
-    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
       {label}{required && <span className="text-red-400 ml-0.5">*</span>}
     </label>
     {children}
@@ -51,7 +51,7 @@ const TabPill: React.FC<{
     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
       active
         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-        : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
     }`}
   >
     {done && !active ? <CheckCircle2 size={13} className="text-emerald-500" /> : icon}
@@ -406,7 +406,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                 <div className="flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
                   <div>
                     <p className="font-black text-slate-800 text-sm">Show on Public Fleet Page</p>
-                    <p className="text-xs text-slate-500 mt-0.5">When enabled, this vehicle will appear on the 'Our Fleet' public page</p>
+                    <p className="text-xs text-slate-600 mt-0.5">When enabled, this vehicle will appear on the 'Our Fleet' public page</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked={fleetForm.showOnFleet} onChange={setFleet('showOnFleet')} className="sr-only peer" />
@@ -456,7 +456,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                     </Field>
 
                     <div>
-                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100">Detailed Specifications (Spec Sheet)</p>
+                      <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100">Detailed Specifications (Spec Sheet)</p>
                       <div className="grid grid-cols-2 gap-4">
                         <Field label="Engine Size">
                           <input type="text" value={fleetForm.specEngineSize} onChange={setFleet('specEngineSize')} className={inp} placeholder="e.g. 2982 cc Turbo Diesel" />
@@ -485,7 +485,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
               <div className="space-y-6">
                 <div className="mb-4">
                   <p className="text-sm font-bold text-slate-700 mb-1">Primary Featured Image</p>
-                  <p className="text-xs text-slate-400 mb-4">This image will appear on the Fleet Vehicles table and main details view.</p>
+                  <p className="text-xs text-slate-500 mb-4">This image will appear on the Fleet Vehicles table and main details view.</p>
                   
                   <div className="flex gap-4 items-start">
                     {primaryImagePreview ? (
@@ -499,7 +499,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                       </div>
                     ) : (
                       <div className="w-32 h-32 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex items-center justify-center shrink-0">
-                        <Image size={24} className="text-slate-300" />
+                        <Image size={24} className="text-slate-400" />
                       </div>
                     )}
                     
@@ -521,7 +521,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
 
                 <div className="pt-4 border-t border-slate-100">
                   <p className="text-sm font-bold text-slate-700 mb-1">Gallery Images</p>
-                  <p className="text-xs text-slate-400 mb-4">Upload multiple photos for condition reports or full vehicle views.</p>
+                  <p className="text-xs text-slate-500 mb-4">Upload multiple photos for condition reports or full vehicle views.</p>
                   
                   <div className="flex flex-wrap gap-4">
                     {galleryUrls.map((url, i) => (
@@ -547,8 +547,8 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                     
                     {!readonly && (
                       <label className="w-24 h-24 rounded-xl bg-slate-50 border border-dashed border-slate-300 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors shrink-0">
-                        <Plus size={20} className="text-slate-400 mb-1" />
-                        <span className="text-[10px] font-bold text-slate-500">Add Photos</span>
+                        <Plus size={20} className="text-slate-500 mb-1" />
+                        <span className="text-[10px] font-bold text-slate-600">Add Photos</span>
                         <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
                           if (e.target.files?.length) {
                             const newFiles = Array.from(e.target.files);
@@ -583,7 +583,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-bold text-slate-700 truncate">{doc.label}</p>
                               <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-[10px] uppercase font-bold text-slate-400">{doc.docType.replace('_', ' ')}</span>
+                                <span className="text-[10px] uppercase font-bold text-slate-500">{doc.docType.replace('_', ' ')}</span>
                                 {doc.expiryDate && (
                                   <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                                     isExpired ? 'bg-red-100 text-red-700' : 
@@ -609,11 +609,11 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                 {!readonly && (
                   <div className={editingVehicle?.documents?.length ? "pt-4 border-t border-slate-100" : ""}>
                     <p className="text-sm font-bold text-slate-700 mb-1">Upload New Document</p>
-                  <p className="text-xs text-slate-400 mb-4">Attach insurance, registration, and set their expiry dates for tracking.</p>
+                  <p className="text-xs text-slate-500 mb-4">Attach insurance, registration, and set their expiry dates for tracking.</p>
 
                   <div className="grid grid-cols-2 gap-3 mb-3">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Document Type</label>
+                      <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Document Type</label>
                       <select
                         value={newDocType}
                         onChange={e => setNewDocType(e.target.value)}
@@ -623,7 +623,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Document Name / Label</label>
+                      <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Document Name / Label</label>
                       <input
                         type="text"
                         value={newDocLabel}
@@ -633,12 +633,12 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Expiry Date (Optional)</label>
+                      <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Expiry Date (Optional)</label>
                       <input
                         type="date"
                         value={newDocExpiry}
                         onChange={e => setNewDocExpiry(e.target.value)}
-                        className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2.5 outline-none text-slate-600"
+                        className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2.5 outline-none text-slate-700"
                       />
                     </div>
                     <div className="flex items-end">
@@ -658,19 +658,19 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                   {/* Pending documents list */}
                   {pendingDocs.length > 0 && (
                     <div className="space-y-2 mt-4">
-                      <p className="text-xs font-bold text-slate-500 uppercase mb-2">Files Ready to Upload</p>
+                      <p className="text-xs font-bold text-slate-600 uppercase mb-2">Files Ready to Upload</p>
                       {pendingDocs.map(doc => (
                         <div key={doc.key} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
                           {doc.previewUrl ? (
                             <img src={doc.previewUrl} alt={doc.label} className="w-10 h-10 rounded-lg object-cover shrink-0" />
                           ) : (
                             <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center shrink-0">
-                              <FileText size={16} className="text-slate-400" />
+                              <FileText size={16} className="text-slate-500" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-bold text-slate-700 truncate">{doc.label}</p>
-                            <p className="text-[10px] text-slate-400 truncate">
+                            <p className="text-[10px] text-slate-500 truncate">
                               {doc.file.name} · {(doc.file.size / 1024).toFixed(0)} KB
                               {doc.expiryDate && ` · Expires: ${doc.expiryDate}`}
                             </p>
@@ -700,19 +700,19 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
             <div className="flex gap-2">
               {tab !== 'details' && (
                 <button type="button" onClick={() => setTab(tab === 'documents' ? 'images' : 'details')}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
+                  className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
                   ← Back
                 </button>
               )}
               {tab !== 'documents' && !readonly && (
                 <button type="button" onClick={() => setTab(tab === 'details' ? 'images' : 'documents')}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
+                  className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
                   Next →
                 </button>
               )}
               {tab === 'documents' && readonly && (
                 <button type="button" onClick={() => {}}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition opacity-0 pointer-events-none">
+                  className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition opacity-0 pointer-events-none">
                   placeholder
                 </button>
               )}
@@ -726,7 +726,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
               ) : (
                 <>
                   <button type="button" onClick={onClose}
-                    className="px-5 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
+                    className="px-5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
                     Cancel
                   </button>
                   <button

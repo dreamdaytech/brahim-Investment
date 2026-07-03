@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveTab, Vehicle, Inquiry } from '../types';
 import { VEHICLES } from '../data';
-import { Phone, Mail, MapPin, Send, Calendar, CheckSquare, Sparkles, Building, Briefcase, Plus, Minus, ArrowRight, ShieldAlert, BadgeCheck } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Calendar, CheckSquare, Sparkles, Building, Briefcase, Plus, Minus, ArrowRight, ShieldAlert, BadgeCheck, ChevronDown, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface ContactSectionProps {
@@ -9,7 +9,8 @@ interface ContactSectionProps {
   setSelectedVehicleId: (id: string) => void;
   estimateDetails: { vehicleId: string; days: number; chauffeur: boolean; provincial: boolean; total: number } | null;
   clearEstimateDetails: () => void;
-  onAddInquiry: (inquiry: Inquiry) => void;
+  onAddInquiry: (inquiry: Inquiry) => Promise<{success: boolean, error?: string}> | void;
+  fleetVehicles?: any[];
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
@@ -17,11 +18,33 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   setSelectedVehicleId,
   estimateDetails,
   clearEstimateDetails,
-  onAddInquiry
+  onAddInquiry,
+  fleetVehicles
 }) => {
+  // Use live DB vehicles if available, else fall back to hardcoded data
+  const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
+    ? fleetVehicles.map(v => ({
+        id: v.id,
+        name: v.makeModel,
+        type: v.vehicleCategory || v.type || 'SUV',
+        pricePerDay: v.pricePerDay || 0,
+        imageUrl: v.imageUrl || (v.images && v.images[0]) || ''
+      }))
+    : VEHICLES.map(v => ({
+        id: v.id,
+        name: v.name,
+        type: v.type,
+        pricePerDay: v.pricePerDay,
+        imageUrl: v.imageUrl || ''
+      }));
+
   // Wizard Step State
   const [step, setStep] = useState<number>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  
+  // Custom Dropdown State
+  const [isVehicleDropdownOpen, setIsVehicleDropdownOpen] = useState<boolean>(false);
+  const [vehicleSearchTerm, setVehicleSearchTerm] = useState<string>('');
 
   // Form Fields State
   const [fullName, setFullName] = useState<string>('');
@@ -30,7 +53,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   const [phone, setPhone] = useState<string>('');
   
   const [serviceType, setServiceType] = useState<Inquiry['serviceType']>('Chauffeur Driven');
-  const [preferredVehicle, setPreferredVehicle] = useState<string>(selectedVehicleId || VEHICLES[0].id);
+  const [preferredVehicle, setPreferredVehicle] = useState<string>(selectedVehicleId || sourceVehicles[0].id);
   const [vehiclesNeeded, setVehiclesNeeded] = useState<number>(1);
   
   const [startDate, setStartDate] = useState<string>('');
@@ -81,7 +104,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     return true;
   };
 
-  const currentVehicleObj = VEHICLES.find(v => v.id === preferredVehicle) || VEHICLES[0];
+  const currentVehicleObj = sourceVehicles.find(v => v.id === preferredVehicle) || sourceVehicles[0];
 
   const handleNext = () => {
     if (validateStep(step)) {
@@ -95,7 +118,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     setStep(prev => Math.max(1, prev - 1));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!termsAccepted) {
       alert("Please accept the BIG Group vehicle vetting & agreement code to proceed.");
@@ -121,7 +144,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       createdAt: new Date().toLocaleDateString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     };
 
-    onAddInquiry(newInquiry);
+    const result = await onAddInquiry(newInquiry);
+    if (result && !result.success) {
+      alert(`Booking submission failed: ${result.error}\nPlease contact support or try again later.`);
+      return;
+    }
+
     setIsSubmitted(true);
     clearEstimateDetails();
   };
@@ -142,8 +170,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <BadgeCheck size={44} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-slate-900 tracking-tight">Proposal Request Received</h2>
-                  <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+                  <h2 className="text-3xl font-black text-slate-950 tracking-tight">Proposal Request Received</h2>
+                  <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                     Thank you, <strong>{fullName}</strong>. We have registered your inquiry on our Freetown servers. An official, itemized logistics quote complete with driver security credentials and fuel cycle audits will be generated under direct oversight by <strong>Emmanuel Kpakama</strong> and dispatched to <strong>{email}</strong> within 30 minutes.
                   </p>
                 </div>
@@ -152,11 +180,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <span className="text-[9px] font-mono font-bold text-indigo-600 block uppercase tracking-wide">CONFIRMATION DETAILS</span>
                   <div className="grid grid-cols-2 gap-4 text-xs">
                     <div>
-                      <span className="text-slate-400 block font-mono">REQUEST REFERENCE</span>
+                      <span className="text-slate-500 block font-mono">REQUEST REFERENCE</span>
                       <span className="font-bold text-slate-800">BIG-9482-A</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 block font-mono">DISPATCH WINDOW</span>
+                      <span className="text-slate-500 block font-mono">DISPATCH WINDOW</span>
                       <span className="font-bold text-slate-800">Under 30 Minutes</span>
                     </div>
                   </div>
@@ -182,8 +210,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               <form onSubmit={handleSubmit} className="space-y-8">
                 <div>
                   <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider font-mono">LOGISTICS DIRECT PORTAL</span>
-                  <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mt-1">Book Your Vehicle</h1>
-                  <p className="text-xs text-slate-500 mt-1">Please provide accurate corporate coordinates to ensure dynamic proposal vetting.</p>
+                  <h1 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tight mt-1">Book Your Vehicle</h1>
+                  <p className="text-xs text-slate-600 mt-1">Please provide accurate corporate coordinates to ensure dynamic proposal vetting.</p>
                 </div>
 
                 {/* Progress Indicators */}
@@ -196,16 +224,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   ].map((pStep) => (
                     <div key={pStep.s} className="flex items-center space-x-2 shrink-0">
                       <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono transition-colors ${
-                        step >= pStep.s ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-400'
+                        step >= pStep.s ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
                       }`}>
                         {pStep.s}
                       </span>
                       <span className={`text-[10px] font-bold uppercase tracking-wider font-sans ${
-                        step >= pStep.s ? 'text-indigo-600' : 'text-slate-400'
+                        step >= pStep.s ? 'text-indigo-600' : 'text-slate-500'
                       }`}>
                         {pStep.text}
                       </span>
-                      {pStep.s < 4 && <span className="text-slate-300 font-mono text-sm">&rarr;</span>}
+                      {pStep.s < 4 && <span className="text-slate-400 font-mono text-sm">&rarr;</span>}
                     </div>
                   ))}
                 </div>
@@ -274,22 +302,25 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Choose General Program Class Of Service</label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {[
-                          { val: 'Chauffeur Driven', title: 'Chauffeur Driven' },
-                          { val: 'Self-Drive Fleet', title: 'Self-Drive Fleet' },
-                          { val: 'Custom Logistics', title: 'Custom Logistics' },
-                          { val: 'Event Transport', title: 'Event Transport' }
+                          { val: 'Chauffeur Driven', title: 'Chauffeur Driven', desc: 'Professional driver provided for your comfort and safety' },
+                          { val: 'Self-Drive Fleet', title: 'Self-Drive Fleet', desc: 'Rent a vehicle and drive yourself with complete freedom' },
+                          { val: 'Custom Logistics', title: 'Custom Logistics', desc: 'Tailored transport solutions for corporate and cargo needs' },
+                          { val: 'Event Transport', title: 'Event Transport', desc: 'Coordinated transportation for weddings, conferences, and tours' }
                         ].map((srv) => (
                           <div 
                             key={srv.val}
                             onClick={() => setServiceType(srv.val as any)}
-                            className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between select-none ${
+                            className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start select-none ${
                               serviceType === srv.val 
                                 ? 'bg-indigo-50 border-indigo-600 text-indigo-900' 
                                 : 'bg-white border-slate-200 hover:bg-slate-50'
                             }`}
                           >
-                            <span className="text-xs font-bold">{srv.title}</span>
-                            <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                            <div className="flex-1 pr-2">
+                              <span className="text-xs font-bold block">{srv.title}</span>
+                              <span className={`text-[10px] leading-snug block mt-1 ${serviceType === srv.val ? 'text-indigo-700/80' : 'text-slate-600'}`}>{srv.desc}</span>
+                            </div>
+                            <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
                               serviceType === srv.val ? 'border-indigo-605 bg-indigo-600' : 'border-slate-300'
                             }`}>
                               {serviceType === srv.val && <span className="w-1.5 h-1.5 bg-white rounded-full"></span>}
@@ -299,37 +330,78 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       </div>
                     </div>
 
-                    <div>
-                      <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Preferred Vehicle Class</label>
-                      <select 
-                        value={preferredVehicle}
-                        onChange={(e) => setPreferredVehicle(e.target.value)}
-                        className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm cursor-pointer"
-                      >
-                        {VEHICLES.map((v) => (
-                          <option key={v.id} value={v.id}>{v.name} (${v.pricePerDay}/day - Est.)</option>
-                        ))}
-                      </select>
-                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="relative">
+                        <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Preferred Vehicle Class</label>
+                        <div 
+                          onClick={() => setIsVehicleDropdownOpen(!isVehicleDropdownOpen)}
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:outline-none shadow-sm cursor-pointer flex items-center justify-between"
+                        >
+                          <span className="font-medium truncate">
+                            {sourceVehicles.find(v => v.id === preferredVehicle)?.name || 'Select a vehicle...'} 
+                            {sourceVehicles.find(v => v.id === preferredVehicle) && ` ($${sourceVehicles.find(v => v.id === preferredVehicle)?.pricePerDay}/day - Est.)`}
+                          </span>
+                          <ChevronDown size={14} className="text-slate-500 shrink-0 ml-2" />
+                        </div>
 
-                    <div>
-                      <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Number of vehicles needed</label>
-                      <div className="flex items-center space-x-4">
-                        <button 
-                          type="button"
-                          onClick={() => setVehiclesNeeded(prev => Math.max(1, prev - 1))}
-                          className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-700 font-bold"
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <span className="font-mono font-bold text-lg text-slate-800">{vehiclesNeeded}</span>
-                        <button 
-                          type="button"
-                          onClick={() => setVehiclesNeeded(prev => prev + 1)}
-                          className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-700 font-bold"
-                        >
-                          <Plus size={14} />
-                        </button>
+                        {isVehicleDropdownOpen && (
+                          <div className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden flex flex-col">
+                            <div className="p-3 border-b border-slate-100 bg-slate-50 flex items-center">
+                              <Search size={14} className="text-slate-500 mr-2" />
+                              <input 
+                                type="text" 
+                                placeholder="Search vehicles..." 
+                                value={vehicleSearchTerm}
+                                onChange={(e) => setVehicleSearchTerm(e.target.value)}
+                                className="w-full bg-transparent border-none focus:ring-0 text-xs text-slate-700 p-0"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                            <div className="max-h-60 overflow-y-auto p-1 custom-scrollbar">
+                              {sourceVehicles.filter(v => v.name.toLowerCase().includes(vehicleSearchTerm.toLowerCase()) || v.type.toLowerCase().includes(vehicleSearchTerm.toLowerCase())).length > 0 ? (
+                                sourceVehicles.filter(v => v.name.toLowerCase().includes(vehicleSearchTerm.toLowerCase()) || v.type.toLowerCase().includes(vehicleSearchTerm.toLowerCase())).map((v) => (
+                                  <div 
+                                    key={v.id} 
+                                    onClick={() => {
+                                      setPreferredVehicle(v.id);
+                                      setIsVehicleDropdownOpen(false);
+                                      setVehicleSearchTerm('');
+                                    }}
+                                    className={`p-3 rounded-lg cursor-pointer text-xs flex justify-between items-center transition-colors ${
+                                      preferredVehicle === v.id ? 'bg-indigo-50 text-indigo-700 font-bold' : 'hover:bg-slate-50 text-slate-700'
+                                    }`}
+                                  >
+                                    <span className="truncate">{v.name}</span>
+                                    <span className="text-[10px] text-slate-500 ml-2 whitespace-nowrap">${v.pricePerDay}/day</span>
+                                  </div>
+                                ))
+                              ) : (
+                                <div className="p-4 text-center text-xs text-slate-500">No vehicles found matching "{vehicleSearchTerm}"</div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Number of vehicles needed</label>
+                        <div className="flex items-center space-x-4">
+                          <button 
+                            type="button"
+                            onClick={() => setVehiclesNeeded(prev => Math.max(1, prev - 1))}
+                            className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-700 font-bold"
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span className="font-mono font-bold text-lg text-slate-800">{vehiclesNeeded}</span>
+                          <button 
+                            type="button"
+                            onClick={() => setVehiclesNeeded(prev => prev + 1)}
+                            className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center border border-slate-200 cursor-pointer text-slate-700 font-bold"
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -437,7 +509,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           onChange={(e) => setTermsAccepted(e.target.checked)}
                           className="w-5 h-5 text-indigo-600 rounded border-slate-300 accent-indigo-600 mt-0.5 shrink-0 cursor-pointer"
                         />
-                        <span className="text-[11px] text-slate-600 font-sans leading-relaxed">
+                        <span className="text-[11px] text-slate-700 font-sans leading-relaxed">
                           I verify and agree that the driver and logistics coordinators assigned by B.I.G Group are fully credentialed, and that our organization guarantees compliance with direct vehicle diagnostic checks and local safety audits during the scope of leasing.
                         </span>
                       </label>
@@ -488,14 +560,24 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             
             {/* REAL-TIME PREVIEW BOARD */}
             <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-              <span className="text-[10px] uppercase font-mono font-bold text-gray-400 block mb-1">live proposal preview</span>
-              <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">Dynamic Rental Breakdown</h4>
+              <span className="text-[10px] uppercase font-mono font-bold text-slate-500 block mb-1">live proposal preview</span>
+              <h4 className="text-sm font-extrabold text-slate-950 tracking-tight">Dynamic Rental Breakdown</h4>
 
-              <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-600">
+              <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-700">
                 <div className="text-center pb-2 border-b border-slate-200">
                   <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">B.I.G GROUP (SL)</span>
-                  <span className="text-[8px] text-gray-400 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
+                  <span className="text-[8px] text-slate-500 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
                 </div>
+
+                {currentVehicleObj.imageUrl && (
+                  <div className="flex justify-center py-2">
+                    <img 
+                      src={currentVehicleObj.imageUrl} 
+                      alt={currentVehicleObj.name} 
+                      className="h-24 w-auto object-contain drop-shadow-md rounded-lg"
+                    />
+                  </div>
+                )}
 
                 <div className="space-y-1 text-[11px]">
                   <p><strong>REPRESENTATIVE:</strong> {fullName || '---'}</p>
@@ -511,7 +593,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
                 <hr className="border-slate-200" />
 
-                <div className="flex justify-between items-center font-bold text-slate-900">
+                <div className="flex justify-between items-center font-bold text-slate-950">
                   <span>VETTED SECURITY STATUS:</span>
                   <span className="text-emerald-600 font-bold uppercase block">CLEARED READY</span>
                 </div>
@@ -519,25 +601,25 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             </div>
 
             {/* Quick Contacts Block */}
-            <div className="bg-[#0f172a] text-slate-300 rounded-3xl p-6 border border-slate-800 shadow-sm space-y-6">
+            <div className="bg-[#0f172a] text-slate-400 rounded-3xl p-6 border border-slate-800 shadow-sm space-y-6">
               <div>
                 <span className="text-[9px] uppercase tracking-wider text-indigo-400 font-mono font-bold block mb-1">BRAHIM INVESTMENT GROUP</span>
                 <h3 className="text-xl font-bold text-white tracking-tight">Direct Contact Info</h3>
-                <p className="text-xs text-slate-400 mt-1">Get immediate answers for emergency deployments.</p>
+                <p className="text-xs text-slate-500 mt-1">Get immediate answers for emergency deployments.</p>
               </div>
 
               <div className="space-y-4 text-xs">
                 <div className="flex items-start gap-3">
                   <MapPin size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-400 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
+                    <span className="text-slate-500 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
                     <span className="text-white leading-relaxed font-semibold">11 Freetown Road, Wilberforce, Freetown</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Phone size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-400 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
+                    <span className="text-slate-500 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
                     <span className="text-white font-semibold block">+232 79 121 013</span>
                     <span className="text-white font-semibold block">+232 30 133 574</span>
                   </div>
@@ -545,13 +627,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div className="flex items-start gap-3">
                   <Mail size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-400 block font-mono text-[9px] uppercase">Corporate Mail</span>
+                    <span className="text-slate-500 block font-mono text-[9px] uppercase">Corporate Mail</span>
                     <span className="text-white font-semibold block">bossbahonly@gmail.com</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-3 bg-white/5 rounded-xl border border-white/10 text-[10px] text-slate-300 leading-normal">
+              <div className="p-3 bg-white/5 rounded-xl border border-white/10 text-[10px] text-slate-400 leading-normal">
                 📍 <strong>Headquarters.</strong> Ample customer parking is available. Technical staff on standby 24 hours.
               </div>
             </div>

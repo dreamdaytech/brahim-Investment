@@ -7,9 +7,30 @@ import { motion } from 'motion/react';
 interface HomeSectionProps {
   setActiveTab: (tab: ActiveTab) => void;
   setSelectedVehicleId: (id: string) => void;
+  fleetVehicles?: any[];
 }
 
-export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelectedVehicleId }) => {
+export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelectedVehicleId, fleetVehicles }) => {
+  // Use live DB vehicles if available, else fall back to hardcoded data
+  const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
+    ? fleetVehicles.map(v => ({
+        id: v.id,
+        name: v.makeModel,
+        type: v.vehicleCategory || v.type || 'SUV',
+        seats: v.seats || 5,
+        engine: v.engineLabel || '',
+        pricePerDay: v.pricePerDay || 0,
+        image: v.imageUrl || '',
+      }))
+    : VEHICLES.map(v => ({
+        id: v.id,
+        name: v.name,
+        type: v.type,
+        seats: v.seats,
+        engine: v.engine,
+        pricePerDay: v.pricePerDay,
+        image: v.imageUrl || (v as any).image || '',
+      }));
   const handleQuickBook = (vehicleId: string) => {
     startTransition(() => {
       setSelectedVehicleId(vehicleId);
@@ -27,7 +48,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
   };
 
   return (
-    <div className="w-full bg-slate-50 text-slate-900 overflow-x-hidden font-sans">
+    <div className="w-full bg-slate-50 text-slate-950 overflow-x-hidden font-sans">
       {/* 1. HERO SECTION WITH OFFROAD LAND CRUISER */}
       <section className="relative h-[620px] w-full flex items-center justify-center overflow-hidden">
         {/* Background Image with darken filters */}
@@ -56,7 +77,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
           <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight max-w-3xl">
             Premium Car Rental &amp; Driver Services
           </h1>
-          <p className="mt-4 text-base md:text-lg text-slate-300 max-w-2xl leading-relaxed">
+          <p className="mt-4 text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed">
             Engineered for diplomats, global NGOs, banks, and senior executives. We operate the most rigorously maintained 4WD fleet in Freetown with absolute administrative integrity.
           </p>
 
@@ -83,7 +104,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
       {/* 2. PARTNERS LOGO BAND */}
       <section className="bg-white py-8 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs uppercase tracking-widest text-slate-400 font-bold font-mono">Trusted by International Partners</p>
+          <p className="text-xs uppercase tracking-widest text-slate-500 font-bold font-mono">Trusted by International Partners</p>
           <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4 items-center justify-center opacity-90 font-serif">
             {PARTNER_LOGOS.map((partner, idx) => (
               <div 
@@ -105,7 +126,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#0f172a] mt-4">
             Uncompromising Transportation Solutions
           </h2>
-          <p className="mt-3 text-sm md:text-base text-slate-500">
+          <p className="mt-3 text-sm md:text-base text-slate-600">
             From single executive airport transfers to massive institutional multi-vehicle development deployments, BIG Group guarantees absolute fleet readiness.
           </p>
         </div>
@@ -122,14 +143,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
                   {serviceIconMap(service.iconName)}
                 </div>
                 <h3 className="text-xl font-bold text-[#0f172a] tracking-tight">{service.title}</h3>
-                <p className="text-sm text-slate-500 mt-3 leading-relaxed">{service.description}</p>
+                <p className="text-sm text-slate-600 mt-3 leading-relaxed">{service.description}</p>
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-100">
                 <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-wide block mb-3">Highlights Include:</span>
                 <ul className="space-y-2">
                   {service.highlights.map((h, hIdx) => (
-                    <li key={hIdx} className="flex items-center text-xs text-slate-600 font-sans gap-2">
+                    <li key={hIdx} className="flex items-center text-xs text-slate-700 font-sans gap-2">
                       <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
                       <span>{h}</span>
                     </li>
@@ -149,7 +170,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-4">
               Honesty of Safe Travel &amp; Deep Local Expertise.
             </h2>
-            <p className="text-slate-300 mt-4 leading-relaxed text-sm md:text-base">
+            <p className="text-slate-400 mt-4 leading-relaxed text-sm md:text-base">
               The terrain in Sierra Leone requires absolute vehicular readiness. We do not compromise on tire tread depths, technical brake scanning, suspension durability upgrades, or administrative clarity. We are fully registered and completely clear of any bureaucratic issues.
             </p>
 
@@ -160,7 +181,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
                 </div>
                 <div>
                   <p className="font-bold text-sm text-white">Full Fuel Tank Transparency</p>
-                  <p className="text-xs text-slate-400 mt-1">No hidden fuel processing charges. Straightforward operational billings and clear mileage audits.</p>
+                  <p className="text-xs text-slate-500 mt-1">No hidden fuel processing charges. Straightforward operational billings and clear mileage audits.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -169,7 +190,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
                 </div>
                 <div>
                   <p className="font-bold text-sm text-white">Dedicated Technical Compound</p>
-                  <p className="text-xs text-slate-400 mt-1">We maintain our private service station on Freetown Road with certified mechanics to service and diagnostic scan vehicles.</p>
+                  <p className="text-xs text-slate-500 mt-1">We maintain our private service station on Freetown Road with certified mechanics to service and diagnostic scan vehicles.</p>
                 </div>
               </div>
             </div>
@@ -184,7 +205,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
             />
             <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md p-4 rounded-xl border border-slate-705/40 text-center">
               <p className="text-xs font-mono font-bold text-indigo-400">OUR PREMIUM OFF-ROAD TRANSIT LINE-UP</p>
-              <p className="text-[10px] text-slate-300 mt-1">Configured for continuous deployments across Sierra Leone.</p>
+              <p className="text-[10px] text-slate-400 mt-1">Configured for continuous deployments across Sierra Leone.</p>
             </div>
           </div>
         </div>
@@ -207,7 +228,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {VEHICLES.slice(0, 3).map((vehicle) => (
+          {sourceVehicles.slice(0, 3).map((vehicle) => (
             <div 
               key={vehicle.id} 
               className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
@@ -238,15 +259,15 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
                     </div>
                   </div>
                   <h3 className="text-lg font-bold text-[#0f172a] tracking-tight">{vehicle.name}</h3>
-                  <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">{vehicle.description}</p>
+                  <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed">{vehicle.description}</p>
 
-                  <div className="grid grid-cols-2 gap-3 mt-4 bg-slate-50 p-3 rounded-lg text-xs text-slate-600 border border-slate-100">
+                  <div className="grid grid-cols-2 gap-3 mt-4 bg-slate-50 p-3 rounded-lg text-xs text-slate-700 border border-slate-100">
                     <div>
-                      <span className="text-slate-400 text-[10px] block font-mono">DRIVETRAIN</span>
+                      <span className="text-slate-500 text-[10px] block font-mono">DRIVETRAIN</span>
                       <span className="font-semibold text-slate-800">Heavy Range 4x4</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[10px] block font-mono">SEATING</span>
+                      <span className="text-slate-500 text-[10px] block font-mono">SEATING</span>
                       <span className="font-semibold text-slate-800">{vehicle.seats} Full Seats</span>
                     </div>
                   </div>
@@ -271,20 +292,20 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
       <section className="bg-slate-50 py-16 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
-            <p className="text-3xl md:text-5xl font-black text-slate-900">100%</p>
-            <p className="text-xs uppercase font-mono font-semibold text-slate-400 mt-2 tracking-wider">Mission Success Rate</p>
+            <p className="text-3xl md:text-5xl font-black text-slate-950">100%</p>
+            <p className="text-xs uppercase font-mono font-semibold text-slate-500 mt-2 tracking-wider">Mission Success Rate</p>
           </div>
           <div>
-            <p className="text-3xl md:text-5xl font-black text-slate-900">24hr</p>
-            <p className="text-xs uppercase font-mono font-semibold text-slate-400 mt-2 tracking-wider">Dynamic Dispatch Desk</p>
+            <p className="text-3xl md:text-5xl font-black text-slate-950">24hr</p>
+            <p className="text-xs uppercase font-mono font-semibold text-slate-500 mt-2 tracking-wider">Dynamic Dispatch Desk</p>
           </div>
           <div>
-            <p className="text-3xl md:text-5xl font-black text-slate-900">Vetted</p>
-            <p className="text-xs uppercase font-mono font-semibold text-slate-400 mt-2 tracking-wider">Professional Chauffeurs</p>
+            <p className="text-3xl md:text-5xl font-black text-slate-950">Vetted</p>
+            <p className="text-xs uppercase font-mono font-semibold text-slate-500 mt-2 tracking-wider">Professional Chauffeurs</p>
           </div>
           <div>
-            <p className="text-3xl md:text-5xl font-black text-slate-900">Zero</p>
-            <p className="text-xs uppercase font-mono font-semibold text-slate-400 mt-2 tracking-wider">Administrative Friction</p>
+            <p className="text-3xl md:text-5xl font-black text-slate-950">Zero</p>
+            <p className="text-xs uppercase font-mono font-semibold text-slate-500 mt-2 tracking-wider">Administrative Friction</p>
           </div>
         </div>
       </section>
@@ -301,7 +322,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
               <h3 className="text-2xl md:text-4xl font-extrabold tracking-tight mt-2">
                 Need a formal multi-vehicle institutional quote?
               </h3>
-              <p className="text-xs md:text-sm text-slate-300 mt-3 leading-relaxed">
+              <p className="text-xs md:text-sm text-slate-400 mt-3 leading-relaxed">
                 Contact our senior administration. We rapidly generate compliant, itemized logistic proposals complete with driver certifications, preventative scan clearances, and transparent terms.
               </p>
             </div>

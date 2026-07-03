@@ -37,9 +37,9 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
   ];
 
   return (
-    <header className="w-full bg-[#0f172a] text-slate-300 shadow-sm z-50 sticky top-0 border-b border-slate-800">
+    <header className="w-full bg-[#0f172a] text-slate-400 shadow-sm z-50 sticky top-0 border-b border-slate-800">
       {/* Top Banner Contact Info */}
-      <div className="hidden md:flex w-full bg-[#090d16] text-xs py-2 px-6 border-b border-slate-800 justify-between items-center text-slate-400 font-sans">
+      <div className="hidden md:flex w-full bg-[#090d16] text-xs py-2 px-6 border-b border-slate-800 justify-between items-center text-slate-500 font-sans">
         <div className="flex items-center space-x-6">
           <span className="flex items-center space-x-1">
             <Phone size={13} className="text-indigo-500" />
@@ -64,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             <div className="relative flex items-center h-full">
               <button 
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center space-x-2 text-xs text-slate-400 hover:text-emerald-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
+                className="flex items-center space-x-2 text-xs text-slate-500 hover:text-emerald-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
               >
                 {adminUser.user_metadata?.avatar_url ? (
                   <img src={adminUser.user_metadata.avatar_url} alt="Admin" className="w-5 h-5 rounded-full object-cover border border-emerald-500/30" />
@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                   <div className="absolute right-0 top-8 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden text-left">
                     <div className="px-4 py-3 border-b border-slate-800 bg-slate-900/50">
                       <p className="text-sm font-semibold text-white truncate">{adminUser.user_metadata?.full_name || 'Administrator'}</p>
-                      <p className="text-[10px] text-slate-400 truncate mt-0.5">{adminUser.email}</p>
+                      <p className="text-[10px] text-slate-500 truncate mt-0.5">{adminUser.email}</p>
                     </div>
                     <div className="p-1.5">
                       <button 
@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                           onOpenAdmin();
                           setTimeout(() => window.dispatchEvent(new CustomEvent('open-admin-overview')), 50);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <LayoutDashboard size={14} /> Dashboard
                       </button>
@@ -99,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                           onOpenAdmin();
                           setTimeout(() => window.dispatchEvent(new CustomEvent('open-admin-profile')), 50);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <User size={14} /> Profile & Settings
                       </button>
@@ -120,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
           ) : (
             <button 
               onClick={onOpenAdmin}
-              className="flex items-center space-x-1 text-xs text-slate-400 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
+              className="flex items-center space-x-1 text-xs text-slate-500 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
             >
               <Lock size={12} />
               <span>Admin Portal</span>
@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
               <span className="text-2xl font-black tracking-wider text-white">B.I.G</span>
               <span className="text-xs font-semibold text-indigo-400">GROUP</span>
             </div>
-            <p className="text-[10px] tracking-widest text-slate-500 font-mono -mt-1">BRAHIM INVESTMENT GROUP</p>
+            <p className="text-[10px] tracking-widest text-slate-600 font-mono -mt-1">BRAHIM INVESTMENT GROUP</p>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                   isActive 
                     ? 'bg-indigo-600 text-white shadow-sm font-semibold' 
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 {item.label}
@@ -175,7 +175,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
         <div className="flex md:hidden items-center space-x-3">
           <button
             onClick={onOpenAdmin}
-            className="p-1.5 text-slate-400 hover:text-indigo-400 transition-colors"
+            className="p-1.5 text-slate-500 hover:text-indigo-400 transition-colors"
             title="Admin Logs"
           >
             <Lock size={18} />
@@ -183,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
           
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none cursor-pointer"
+            className="p-2 rounded-md text-slate-500 hover:text-white hover:bg-slate-800 focus:outline-none cursor-pointer"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -205,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                 className={`w-full text-left px-4 py-3 rounded-md text-base font-semibold block transition-colors ${
                   isActive 
                     ? 'bg-indigo-600 text-white font-bold' 
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 {item.label}
@@ -213,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             );
           })}
           
-          <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-400 space-y-2">
+          <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-500 space-y-2">
             <p className="flex items-center gap-2"><Phone size={12} className="text-indigo-400" /> +232 79 121 013 / +232 30 133 574</p>
             <p className="flex items-center gap-2"><Mail size={12} className="text-indigo-400" /> bossbahonly@gmail.com</p>
             <p className="flex items-center gap-2"><MapPin size={12} className="text-indigo-400" /> 11 Freetown Road, Wilberforce, Freetown</p>

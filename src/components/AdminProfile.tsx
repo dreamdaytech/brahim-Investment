@@ -105,8 +105,8 @@ export const AdminProfile: React.FC = () => {
             <ShieldCheck size={20} className="text-indigo-600" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-slate-900">Admin Profile</h2>
-            <p className="text-sm text-slate-500">Manage your administrative identity and contact details</p>
+            <h2 className="text-xl font-black text-slate-950">Admin Profile</h2>
+            <p className="text-sm text-slate-600">Manage your administrative identity and contact details</p>
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export const AdminProfile: React.FC = () => {
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="Admin Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <User size={40} className="text-slate-300" />
+                  <User size={40} className="text-slate-400" />
                 )}
                 <div 
                   onClick={() => fileInputRef.current?.click()}
@@ -146,8 +146,8 @@ export const AdminProfile: React.FC = () => {
               />
             </div>
             <div className="text-center sm:text-left">
-              <h3 className="text-sm font-bold text-slate-900">Profile Photo</h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-sm">
+              <h3 className="text-sm font-bold text-slate-950">Profile Photo</h3>
+              <p className="text-xs text-slate-600 mt-1 max-w-sm">
                 Click the avatar to upload a new profile picture. Recommended size: 256x256px.
               </p>
               <button 
@@ -185,7 +185,7 @@ export const AdminProfile: React.FC = () => {
                 type="email"
                 disabled
                 value={email}
-                className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed"
+                className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm font-medium text-slate-600 cursor-not-allowed"
                 title="Email cannot be changed here"
               />
             </div>

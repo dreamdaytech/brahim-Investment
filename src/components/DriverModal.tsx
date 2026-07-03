@@ -31,7 +31,7 @@ const Field: React.FC<{
   label: string; required?: boolean; children: React.ReactNode; span?: boolean;
 }> = ({ label, required, children, span }) => (
   <div className={span ? 'col-span-2' : ''}>
-    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
       {label}{required && <span className="text-red-400 ml-0.5">*</span>}
     </label>
     {children}
@@ -51,7 +51,7 @@ const TabPill: React.FC<{
     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
       active
         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-        : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
     }`}
   >
     {done && !active ? <CheckCircle2 size={13} className="text-emerald-500" /> : icon}
@@ -247,7 +247,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                       {photoPreview ? (
                         <img src={photoPreview} alt="preview" className="w-full h-full object-cover" />
                       ) : (
-                        <Camera size={22} className="text-slate-300" />
+                        <Camera size={22} className="text-slate-400" />
                       )}
                     </div>
                     {photoUploading && (
@@ -258,7 +258,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                   </div>
                   <div>
                     <p className="text-sm font-bold text-slate-700 mb-1">Driver Photo</p>
-                    <p className="text-xs text-slate-400 mb-3">Upload a clear headshot photo (JPG, PNG)</p>
+                    <p className="text-xs text-slate-500 mb-3">Upload a clear headshot photo (JPG, PNG)</p>
                     <button
                       type="button"
                       onClick={() => photoInputRef.current?.click()}
@@ -317,7 +317,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                               Previously suspended {suspensionCount}×
                             </span>
                           )}
-                          <span className="text-[10px] text-slate-400">This reason will be saved to the driver's history log</span>
+                          <span className="text-[10px] text-slate-500">This reason will be saved to the driver's history log</span>
                         </div>
                       )}
                       <textarea
@@ -363,7 +363,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                 {/* Document uploads */}
                 <div className="pt-4 border-t border-slate-100">
                   <p className="text-sm font-bold text-slate-700 mb-1">Upload Documents</p>
-                  <p className="text-xs text-slate-400 mb-4">Attach license scans, ID copies, medical certs, or any important files</p>
+                  <p className="text-xs text-slate-500 mb-4">Attach license scans, ID copies, medical certs, or any important files</p>
 
                   {/* Add doc row */}
                   <div className="flex gap-2 mb-4">
@@ -394,8 +394,8 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
 
                   {/* Pending documents list */}
                   {pendingDocs.length === 0 ? (
-                    <div className="flex flex-col items-center gap-2 py-8 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400">
-                      <FileText size={28} className="text-slate-300" />
+                    <div className="flex flex-col items-center gap-2 py-8 border-2 border-dashed border-slate-200 rounded-2xl text-slate-500">
+                      <FileText size={28} className="text-slate-400" />
                       <p className="text-xs">No documents attached yet</p>
                     </div>
                   ) : (
@@ -406,19 +406,19 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                             <img src={doc.previewUrl} alt={doc.label} className="w-10 h-10 rounded-lg object-cover shrink-0" />
                           ) : (
                             <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center shrink-0">
-                              <FileText size={16} className="text-slate-400" />
+                              <FileText size={16} className="text-slate-500" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-bold text-slate-700 truncate">{doc.label}</p>
-                            <p className="text-[10px] text-slate-400 truncate">{doc.file.name} · {(doc.file.size / 1024).toFixed(0)} KB</p>
+                            <p className="text-[10px] text-slate-500 truncate">{doc.file.name} · {(doc.file.size / 1024).toFixed(0)} KB</p>
                           </div>
                           <div className="shrink-0">
                             {doc.status === 'uploading' && <Loader2 size={14} className="animate-spin text-indigo-400" />}
                             {doc.status === 'done' && <CheckCircle2 size={14} className="text-emerald-500" />}
                             {doc.status === 'error' && <AlertCircle size={14} className="text-red-400" />}
                             {doc.status === 'pending' && (
-                              <button type="button" onClick={() => removeDoc(doc.key)} className="p-1 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition">
+                              <button type="button" onClick={() => removeDoc(doc.key)} className="p-1 hover:bg-red-50 rounded-lg text-slate-500 hover:text-red-500 transition">
                                 <Trash2 size={13} />
                               </button>
                             )}
@@ -437,7 +437,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
 
                 <div>
                   <p className="text-sm font-bold text-slate-700 mb-0.5">Next of Kin</p>
-                  <p className="text-xs text-slate-400 mb-4">Primary person to contact in case of emergency</p>
+                  <p className="text-xs text-slate-500 mb-4">Primary person to contact in case of emergency</p>
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Full Name" span>
                       <input type="text" value={form.nextOfKinName} onChange={set('nextOfKinName')} className={inp} placeholder="e.g. Fatima Sesay" />
@@ -461,7 +461,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
 
                 <div className="pt-5 border-t border-slate-100">
                   <p className="text-sm font-bold text-slate-700 mb-0.5">Emergency Contact</p>
-                  <p className="text-xs text-slate-400 mb-4">Alternative contact person (e.g. supervisor, HR)</p>
+                  <p className="text-xs text-slate-500 mb-4">Alternative contact person (e.g. supervisor, HR)</p>
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Full Name" span>
                       <input type="text" value={form.emergencyContactName} onChange={set('emergencyContactName')} className={inp} placeholder="e.g. Alhaji Bah" />
@@ -502,20 +502,20 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
             <div className="flex gap-2">
               {tab !== 'personal' && (
                 <button type="button" onClick={() => setTab(tab === 'kin' ? 'license' : 'personal')}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
+                  className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
                   ← Back
                 </button>
               )}
               {tab !== 'kin' && (
                 <button type="button" onClick={() => setTab(tab === 'personal' ? 'license' : 'kin')}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
+                  className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
                   Next →
                 </button>
               )}
             </div>
             <div className="flex gap-2">
               <button type="button" onClick={onClose}
-                className="px-5 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
+                className="px-5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition">
                 Cancel
               </button>
               <button

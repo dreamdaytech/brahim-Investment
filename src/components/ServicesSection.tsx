@@ -57,8 +57,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
         {/* Header Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">LOGISTICS EXCELLENCE</span>
-          <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Comprehensive Services</h1>
-          <p className="mt-2 text-sm text-slate-500 leading-relaxed">
+          <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Comprehensive Services</h1>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">
             High-integrity fleet solutions for demanding upcountry and Freetown missions. Grounded on program integrity, direct OEM parts inventory, and defensively certified drivers.
           </p>
         </div>
@@ -70,8 +70,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
           <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between col-span-1 lg:col-span-2">
             <div className="p-8">
               <span className="text-[10px] uppercase tracking-widest text-indigo-600 font-mono font-bold">DEPLOYMENT CAPABILITY MODEL</span>
-              <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">Vehicle Rental &amp; Deployment</h3>
-              <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+              <h3 className="text-2xl font-black text-slate-950 mt-1 tracking-tight">Vehicle Rental &amp; Deployment</h3>
+              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
                 We manage a dedicated, fully insured fleet configured according to rigorous global standards. From independent research tours to corporate executive pools, our administrative dispatch handles everything from police clearance to toll payments flawlessly.
               </p>
 
@@ -99,15 +99,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
           </div>
 
           {/* Card 2: Tall Bento on Right - Professional Chauffeurs */}
-          <div className="bg-[#0f172a] text-slate-300 rounded-3xl p-8 border border-slate-800 shadow-sm flex flex-col justify-between">
+          <div className="bg-[#0f172a] text-slate-400 rounded-3xl p-8 border border-slate-800 shadow-sm flex flex-col justify-between">
             <div>
               <span className="text-indigo-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-1">DRIVER STANDARDS SEC-02</span>
               <h3 className="text-2xl font-black tracking-tight text-white">Professional Chauffeurs</h3>
-              <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+              <p className="text-xs text-slate-500 mt-3 leading-relaxed">
                 The driver is the paramount factor of route safety. We hire only vetted, highly communicative drivers who undergo biannual defensive handling coaching.
               </p>
 
-              <ul className="mt-8 space-y-4 text-xs text-slate-300">
+              <ul className="mt-8 space-y-4 text-xs text-slate-400">
                 <li className="flex items-start gap-2">
                   <div className="p-0.5 bg-indigo-600 text-white rounded-full mt-0.5 shrink-0">
                     <ShieldCheck size={11} />
@@ -145,23 +145,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
             <div className="p-8 md:w-3/5 flex flex-col justify-between">
               <div>
                 <span className="text-[10px] uppercase tracking-widest text-indigo-600 font-mono font-bold">TECHNICAL AND QUALITY CONTROL LAB</span>
-                <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">Technical Maintenance Hub &amp; Repairs</h3>
-                <p className="text-xs text-slate-500 mt-2.5 leading-relaxed">
+                <h3 className="text-2xl font-black text-slate-950 mt-1 tracking-tight">Technical Maintenance Hub &amp; Repairs</h3>
+                <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
                   Our private maintenance depot on Freetown Road is outfitted with professional diagnostic machinery. Because our fleet consists entirely of highly standardized Toyota utility bodies, we keep a pristine stock of OEM filters, heavy-duty shocks, clutch kits, and reinforced tires to guarantee immediate repairs without delays.
                 </p>
 
                 <div className="grid grid-cols-3 gap-4 mt-6 text-center border-t border-slate-100 pt-6">
                   <div>
-                    <span className="text-slate-900 font-black text-lg font-mono">100%</span>
-                    <span className="text-[9px] text-slate-400 block uppercase font-mono">OEM Parts Registry</span>
+                    <span className="text-slate-950 font-black text-lg font-mono">100%</span>
+                    <span className="text-[9px] text-slate-500 block uppercase font-mono">OEM Parts Registry</span>
                   </div>
                   <div className="border-x border-slate-200">
-                    <span className="text-slate-900 font-black text-lg font-mono">Every 5k</span>
-                    <span className="text-[9px] text-slate-400 block uppercase font-mono">KM Complete Vetting</span>
+                    <span className="text-slate-950 font-black text-lg font-mono">Every 5k</span>
+                    <span className="text-[9px] text-slate-500 block uppercase font-mono">KM Complete Vetting</span>
                   </div>
                   <div>
-                    <span className="text-slate-900 font-black text-lg font-mono">Certified</span>
-                    <span className="text-[9px] text-slate-400 block uppercase font-mono">Technical Mechanics</span>
+                    <span className="text-slate-950 font-black text-lg font-mono">Certified</span>
+                    <span className="text-[9px] text-slate-500 block uppercase font-mono">Technical Mechanics</span>
                   </div>
                 </div>
               </div>
@@ -190,8 +190,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
         {/* INTERACTIVE VALUE-ADD: COST ESTIMATOR */}
         <section className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm max-w-5xl mx-auto mb-12">
           <div className="text-center max-w-xl mx-auto mb-8">
-            <h3 className="text-2xl font-extrabold text-slate-900">Interactive Lease Cost Calculator</h3>
-            <p className="text-xs text-slate-500 mt-1">Configure your deployment variables to get a quick estimate of lease cost before completing your inquiry.</p>
+            <h3 className="text-2xl font-extrabold text-slate-950">Interactive Lease Cost Calculator</h3>
+            <p className="text-xs text-slate-600 mt-1">Configure your deployment variables to get a quick estimate of lease cost before completing your inquiry.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -227,7 +227,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
                   onChange={(e) => setCalcDays(parseInt(e.target.value))}
                   className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                 />
-                <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1 font-semibold">
+                <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-1 font-semibold">
                   <span>1 Day</span>
                   <span>10 Days</span>
                   <span>20 Days</span>
@@ -236,7 +236,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
               </div>
 
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-                <span className="text-[9px] font-mono font-extrabold text-slate-400 uppercase tracking-widest block mb-1">LOGISTICS PRESETS</span>
+                <span className="text-[9px] font-mono font-extrabold text-slate-500 uppercase tracking-widest block mb-1">LOGISTICS PRESETS</span>
                 
                 <label className="flex items-center gap-3 cursor-pointer text-xs select-none">
                   <input 
@@ -247,7 +247,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
                   />
                   <div>
                     <span className="font-semibold text-slate-800 block">Include Professional Chauffeur</span>
-                    <span className="text-[10px] text-slate-400 block leading-tight">+$30/day. Adds Red-Cross Certified, vetted driver coverage.</span>
+                    <span className="text-[10px] text-slate-500 block leading-tight">+$30/day. Adds Red-Cross Certified, vetted driver coverage.</span>
                   </div>
                 </label>
 
@@ -262,34 +262,34 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
                   />
                   <div>
                     <span className="font-semibold text-slate-800 block">Provincial Deployment Scope</span>
-                    <span className="text-[10px] text-slate-400 block leading-tight">+$45/day. Includes offroad tracking gear, preventative fluids reserve, and remote safety monitoring.</span>
+                    <span className="text-[10px] text-slate-500 block leading-tight">+$45/day. Includes offroad tracking gear, preventative fluids reserve, and remote safety monitoring.</span>
                   </div>
                 </label>
               </div>
             </div>
 
             {/* Calculations Estimate Display */}
-            <div className="bg-[#0f172a] text-slate-300 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-xl text-center md:text-left">
+            <div className="bg-[#0f172a] text-slate-400 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-xl text-center md:text-left">
               <span className="text-[10px] uppercase font-mono font-bold tracking-widest text-indigo-400 block mb-1">ITEMIZED DEPLOYMENT ESTIMATE</span>
               <h4 className="text-lg font-bold text-white tracking-tight">{selectedVehicle.name}</h4>
-              <p className="text-xs text-slate-400 mt-1">Configured for continuous operations under BIG Group safety standards.</p>
+              <p className="text-xs text-slate-500 mt-1">Configured for continuous operations under BIG Group safety standards.</p>
 
               <hr className="border-slate-800 my-4" />
 
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Unit base rental ({calcDays} Days x ${baseRate}):</span>
+                  <span className="text-slate-500">Unit base rental ({calcDays} Days x ${baseRate}):</span>
                   <span className="font-mono font-semibold">${baseRate * calcDays}</span>
                 </div>
                 {calcChauffeur && (
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Vetted driver surcharge ({calcDays} Days x $30):</span>
+                    <span className="text-slate-500">Vetted driver surcharge ({calcDays} Days x $30):</span>
                     <span className="font-mono font-semibold">${chauffeurRate * calcDays}</span>
                   </div>
                 )}
                 {calcProvincial && (
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Upcountry remote logistical premium ({calcDays} x $45):</span>
+                    <span className="text-slate-500">Upcountry remote logistical premium ({calcDays} x $45):</span>
                     <span className="font-mono font-semibold">${provincialRate * calcDays}</span>
                   </div>
                 )}
@@ -307,7 +307,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
                 <span className="text-sm font-bold text-white uppercase font-mono">ESTIMATED TOTAL</span>
                 <span className="text-3xl font-black text-indigo-400 font-mono">${totalCost}</span>
               </div>
-              <p className="text-[9px] text-slate-500 leading-tight block mt-2 text-center md:text-left">
+              <p className="text-[9px] text-slate-600 leading-tight block mt-2 text-center md:text-left">
                 *Surcharges exclude local GST. Formal business proposals are structured with exact dates, logistics clearances, and official corporate letterheads.
               </p>
 

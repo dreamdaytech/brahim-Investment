@@ -72,7 +72,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
           <div className="mb-8">
             <button
               onClick={() => setSelectedSpecVehicle(null)}
-              className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer group text-xs font-bold uppercase tracking-wider font-mono bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm"
+              className="flex items-center gap-2 text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer group text-xs font-bold uppercase tracking-wider font-mono bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm"
             >
               <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform text-indigo-600" />
               <span>Back to Fleet Registry</span>
@@ -99,7 +99,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-                    <span className="text-6xl font-black text-slate-300">{selectedSpecVehicle.name?.slice(0, 2)}</span>
+                    <span className="text-6xl font-black text-slate-400">{selectedSpecVehicle.name?.slice(0, 2)}</span>
                   </div>
                 )}
                 <span className="absolute top-6 left-6 bg-[#0f172a] text-indigo-400 text-xs uppercase font-mono font-bold px-3 py-1.5 rounded-lg border border-slate-800 shadow-lg">
@@ -115,7 +115,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                   transition={{ duration: 0.3, delay: 0.15 }}
                   className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm"
                 >
-                  <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest mb-4">Visual Media Profiles</h4>
+                  <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-widest mb-4">Visual Media Profiles</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {selectedSpecVehicle.gallery.map((imgUrl: string, idx: number) => (
                       <div key={idx} className="aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 relative group">
@@ -146,9 +146,9 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                   <span className="bg-emerald-50 text-emerald-700 text-[10px] font-mono font-bold px-2.5 py-1 rounded border border-emerald-100 uppercase tracking-widest">
                     Vetted Fleet Asset
                   </span>
-                  <h1 className="text-3xl font-black text-slate-900 tracking-tight mt-3 leading-tight">{selectedSpecVehicle.name}</h1>
+                  <h1 className="text-3xl font-black text-slate-950 tracking-tight mt-3 leading-tight">{selectedSpecVehicle.name}</h1>
                   {selectedSpecVehicle.description && (
-                    <p className="mt-4 text-xs md:text-sm text-slate-500 leading-relaxed font-medium">
+                    <p className="mt-4 text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
                       {selectedSpecVehicle.description}
                     </p>
                   )}
@@ -157,15 +157,15 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                 {/* Core characteristics */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <span className="text-slate-400 text-[10px] font-mono block uppercase">Transmission</span>
+                    <span className="text-slate-500 text-[10px] font-mono block uppercase">Transmission</span>
                     <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.transmission}</span>
                   </div>
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <span className="text-slate-400 text-[10px] font-mono block uppercase">Fuel Type</span>
+                    <span className="text-slate-500 text-[10px] font-mono block uppercase">Fuel Type</span>
                     <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.fuel}</span>
                   </div>
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <span className="text-slate-400 text-[10px] font-mono block uppercase">Seating Capacity</span>
+                    <span className="text-slate-500 text-[10px] font-mono block uppercase">Seating Capacity</span>
                     <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.seats} Adults</span>
                   </div>
                   <div className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50">
@@ -193,23 +193,23 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                 transition={{ duration: 0.3, delay: 0.2 }}
                 className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-5"
               >
-                <h3 className="text-base font-black text-slate-900 tracking-tight">Technical Specifications</h3>
+                <h3 className="text-base font-black text-slate-950 tracking-tight">Technical Specifications</h3>
                 
                 <div className="space-y-3 divide-y divide-slate-100 text-xs font-semibold">
                   <div className="flex justify-between py-2.5">
-                    <span className="text-slate-400 font-mono uppercase text-[10px]">Engine Capacity</span>
+                    <span className="text-slate-500 font-mono uppercase text-[10px]">Engine Capacity</span>
                     <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.engineSize || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between py-2.5">
-                    <span className="text-slate-400 font-mono uppercase text-[10px]">Drivetrain</span>
+                    <span className="text-slate-500 font-mono uppercase text-[10px]">Drivetrain</span>
                     <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.drivetrain || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between py-2.5">
-                    <span className="text-slate-400 font-mono uppercase text-[10px]">Ground Clearance</span>
+                    <span className="text-slate-500 font-mono uppercase text-[10px]">Ground Clearance</span>
                     <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.groundClearance || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between py-2.5">
-                    <span className="text-slate-400 font-mono uppercase text-[10px]">Fuel Capacity</span>
+                    <span className="text-slate-500 font-mono uppercase text-[10px]">Fuel Capacity</span>
                     <span className="text-slate-800 font-bold">{selectedSpecVehicle.detailedSpecs.fuelCapacity || 'N/A'}</span>
                   </div>
                 </div>
@@ -238,7 +238,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                   </div>
                   <ul className="space-y-3">
                     {selectedSpecVehicle.features.map((feature: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed font-medium">
+                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-400 leading-relaxed font-medium">
                         <CircleCheck size={14} className="text-emerald-400 shrink-0 mt-0.5" />
                         <span>{feature}</span>
                       </li>
@@ -261,8 +261,8 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">Sierra Leone Ready Fleet</span>
-          <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Our Premium 4WD Fleet</h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Our Premium 4WD Fleet</h1>
+          <p className="mt-2 text-sm text-slate-600">
             Uncompromising mechanical safety and peak structural capability. Fully customized with heavy-duty suspension and extra-clearance setups for regional terrain demands.
           </p>
         </div>
@@ -276,10 +276,10 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
             <h3 className="text-lg font-bold text-slate-200 tracking-tight flex items-center gap-2">
               Rigorous Preventative Maintenance Active
             </h3>
-            <p className="text-xs md:text-sm text-slate-400 mt-2 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-500 mt-2 leading-relaxed">
               Every driver shift and logistics deployment begins with a meticulous mechanical scan. Under direct oversight by our workshop director on Freetown Road, we inspect suspension pressure, tire tread depth, battery output, and fluids, ensuring absolute upcountry runtime and zero breakdowns.
             </p>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-[10px] text-slate-400 font-mono font-semibold">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-[10px] text-slate-500 font-mono font-semibold">
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Full Diagnostic Computer Scans</span>
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Dynamic Brake Thermal Analysis</span>
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Complete OEM Spares Registry</span>
@@ -296,7 +296,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
               className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 filterType === type
                   ? 'bg-indigo-600 text-white shadow-sm border border-indigo-600'
-                  : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 hover:text-slate-800'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-800'
               }`}
             >
               {type === 'All' ? 'All Vehicles' : `${type}s`}
@@ -322,7 +322,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                   />
                 ) : (
                   <div className="w-full h-full min-h-[220px] flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-                    <span className="text-4xl font-black text-slate-300">{vehicle.name.slice(0, 2)}</span>
+                    <span className="text-4xl font-black text-slate-400">{vehicle.name.slice(0, 2)}</span>
                   </div>
                 )}
                 <span className="absolute top-4 left-4 bg-[#0f172a] text-indigo-400 text-[10px] uppercase font-mono font-bold px-2.5 py-1 rounded shadow-sm border border-slate-800">
@@ -335,11 +335,11 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="bg-emerald-50 text-emerald-700 text-[10px] font-mono font-bold px-2 py-0.5 rounded border border-emerald-100 uppercase tracking-widest leading-none">Vetted Ready</span>
-                    <span className="text-slate-900 font-extrabold text-sm tracking-tight">${vehicle.pricePerDay}<span className="text-[10px] text-slate-400 font-normal ml-0.5">/day (est)</span></span>
+                    <span className="text-slate-950 font-extrabold text-sm tracking-tight">${vehicle.pricePerDay}<span className="text-[10px] text-slate-500 font-normal ml-0.5">/day (est)</span></span>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-slate-900 mt-2 tracking-tight leading-tight">{vehicle.name}</h3>
-                  <p className="text-xs text-slate-500 mt-2.5 leading-relaxed">{vehicle.description}</p>
+                  <h3 className="text-xl font-bold text-slate-950 mt-2 tracking-tight leading-tight">{vehicle.name}</h3>
+                  <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">{vehicle.description}</p>
 
                   {/* Highlights checklist */}
                   <div className="mt-4 space-y-2">

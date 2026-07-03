@@ -219,13 +219,13 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-500 hover:text-slate-900"
+            className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-600 hover:text-slate-950"
           >
             <ArrowLeft size={24} />
           </button>
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Dispatch Details</h2>
+              <h2 className="text-2xl font-black text-slate-950 tracking-tight">Dispatch Details</h2>
               {isCompleted ? (
                 <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-black uppercase rounded-lg border border-emerald-200 flex items-center gap-1">
                   <CheckCircle2 size={12} /> Completed
@@ -236,7 +236,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                 </span>
               )}
             </div>
-            <p className="text-slate-500 text-sm mt-1">Ref: {dispatch.id.slice(0, 8).toUpperCase()}</p>
+            <p className="text-slate-600 text-sm mt-1">Ref: {dispatch.id.slice(0, 8).toUpperCase()}</p>
           </div>
         </div>
 
@@ -270,7 +270,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <button
           onClick={() => setActiveTab('overview')}
           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-            activeTab === 'overview' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'overview' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
           }`}
         >
           <Navigation size={16} /> Overview
@@ -278,7 +278,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <button
           onClick={() => setActiveTab('trip')}
           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-            activeTab === 'trip' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'trip' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
           }`}
         >
           <Activity size={16} /> Trip Log
@@ -286,7 +286,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <button
           onClick={() => setActiveTab('fuel')}
           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-            activeTab === 'fuel' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'fuel' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
           }`}
         >
           <Fuel size={16} /> Fuel Details
@@ -309,71 +309,71 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
 
               {/* Driver */}
               <div className="col-span-2">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Driver</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Driver</p>
                 <div className="flex items-center gap-3">
                   {driver?.imgUrl ? (
                     <img src={driver.imgUrl} alt="" className="w-10 h-10 rounded-full border border-slate-200 object-cover shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                      <User size={18} className="text-slate-400" />
+                      <User size={18} className="text-slate-500" />
                     </div>
                   )}
                   <div>
-                    <p className="font-bold text-slate-900">{driver?.name || dispatch.driverId}</p>
-                    <p className="text-xs text-slate-500">{driver?.phone || 'No phone'}</p>
+                    <p className="font-bold text-slate-950">{driver?.name || dispatch.driverId}</p>
+                    <p className="text-xs text-slate-600">{driver?.phone || 'No phone'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Vehicle */}
               <div className="col-span-2">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Vehicle</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Vehicle</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-                    <Car size={18} className="text-slate-600" />
+                    <Car size={18} className="text-slate-700" />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-900">{vehicle?.makeModel || dispatch.vehicleId}</p>
-                    <p className="text-xs text-slate-500">{vehicle?.plateNumber}</p>
+                    <p className="font-bold text-slate-950">{vehicle?.makeModel || dispatch.vehicleId}</p>
+                    <p className="text-xs text-slate-600">{vehicle?.plateNumber}</p>
                   </div>
                 </div>
               </div>
 
               {/* Dispatched */}
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Dispatched</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Dispatched</p>
                 <p className="font-semibold text-slate-800 text-sm">{formatDate(dispatch.dispatchTime)}</p>
               </div>
 
               {/* Expected Return */}
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Expected Return</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Expected Return</p>
                 <p className="font-semibold text-slate-800 text-sm">{formatDateOnly(dispatch.expectedReturnDate)}</p>
               </div>
 
               {/* Odometer Out */}
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Odometer Out</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Odometer Out</p>
                 <p className="font-semibold text-slate-800 text-sm">{dispatch.odometerOut.toLocaleString()} km</p>
               </div>
 
               {/* Fuel Level Out */}
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Fuel Level Out</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Fuel Level Out</p>
                 <p className="font-semibold text-slate-800 text-sm">{dispatch.fuelLevelOut || '-'}</p>
               </div>
 
               {/* Corporate Account */}
               {dispatch.corporateAccountId && (
                 <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Corporate A/C</p>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Corporate A/C</p>
                   <p className="font-semibold text-slate-800 text-sm flex items-center gap-1"><Building2 size={12} className="text-indigo-400" /> {dispatch.corporateAccountId}</p>
                 </div>
               )}
 
               {/* Condition Out */}
               <div className="col-span-2 sm:col-span-3 lg:col-span-4">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Condition Out</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Condition Out</p>
                 <p className="font-medium text-slate-700 text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
                   {dispatch.conditionOut || 'No notes provided'}
                 </p>
@@ -384,28 +384,28 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
           {/* Completed Dispatch Details */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2">
-              <MapPin size={18} className={isCompleted ? 'text-emerald-600' : 'text-slate-400'} />
+              <MapPin size={18} className={isCompleted ? 'text-emerald-600' : 'text-slate-500'} />
               <h3 className="font-bold text-slate-800">Completed Dispatch Details</h3>
             </div>
             <div className="p-6">
               {isCompleted ? (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Returned At</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Returned At</p>
                     <p className="font-semibold text-slate-800 text-sm">{formatDate((dispatch as CompletedDispatch).completedAt)}</p>
                   </div>
                   {tripLog ? (
                     <>
                       <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Distance Traveled</p>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Distance Traveled</p>
                         <p className="font-semibold text-slate-800 text-sm">{tripLog.distanceTraveledKm.toLocaleString()} km</p>
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Fuel Consumed</p>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Fuel Consumed</p>
                         <p className="font-semibold text-slate-800 text-sm">{tripLog.fuelConsumedLiters} L</p>
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Odometer In</p>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Odometer In</p>
                         <p className="font-semibold text-slate-800 text-sm">{(dispatch.odometerOut + tripLog.distanceTraveledKm).toLocaleString()} km</p>
                       </div>
                     </>
@@ -417,10 +417,10 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                 </div>
               ) : (
                 <div className="flex items-center gap-4 py-2">
-                  <Clock size={36} className="text-slate-300 shrink-0" />
+                  <Clock size={36} className="text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-bold text-slate-500 text-base">Pending Return</p>
-                    <p className="text-sm text-slate-400 mt-0.5">Vehicle is currently active. Return data will appear here once the driver logs back in.</p>
+                    <p className="font-bold text-slate-600 text-base">Pending Return</p>
+                    <p className="text-sm text-slate-500 mt-0.5">Vehicle is currently active. Return data will appear here once the driver logs back in.</p>
                   </div>
                 </div>
               )}
@@ -438,7 +438,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
             <div className="px-6 py-4 border-b border-slate-100 bg-slate-50">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-2">
-                  <Activity size={18} className={isCompleted && tripLog ? 'text-rose-600' : 'text-slate-400'} />
+                  <Activity size={18} className={isCompleted && tripLog ? 'text-rose-600' : 'text-slate-500'} />
                   <h3 className="font-bold text-slate-800">Trip Log Details</h3>
                   {/* Current approval status badge */}
                   {tripLog?.approvalStatus && (
@@ -508,7 +508,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   >
                     Confirm Flag
                   </button>
-                  <button onClick={() => { setIsFlagging(false); setFlagNote(''); }} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-colors">
+                  <button onClick={() => { setIsFlagging(false); setFlagNote(''); }} className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-white rounded-lg transition-colors">
                     <X size={14} />
                   </button>
                 </div>
@@ -528,16 +528,16 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                       </div>
                     </div>
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Distance</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Distance</p>
                       <p className="text-sm font-bold text-slate-800">{tripLog.distanceTraveledKm.toLocaleString()} km</p>
                     </div>
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Fuel Consumed</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Fuel Consumed</p>
                       <p className="text-sm font-bold text-slate-800">{tripLog.fuelConsumedLiters} L</p>
                     </div>
                     {tripLog.district && (
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">District</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">District</p>
                         <p className="text-sm font-bold text-slate-800">{tripLog.district}</p>
                       </div>
                     )}
@@ -545,29 +545,29 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
 
                   {/* Safety Metric Tiles */}
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Safety & Compliance Metrics</p>
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Safety & Compliance Metrics</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div className="bg-rose-50/50 p-4 rounded-xl border border-rose-100 text-center">
                         <p className="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-1">Speeding</p>
                         <p className="text-2xl font-black text-slate-800">{tripLog.speedingEvents}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">events</p>
+                        <p className="text-xs text-slate-500 mt-0.5">events</p>
                       </div>
                       <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-100 text-center">
                         <p className="text-[10px] font-bold text-orange-500 uppercase tracking-wider mb-1">Harsh Braking</p>
                         <p className="text-2xl font-black text-slate-800">{tripLog.harshBraking}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">events</p>
+                        <p className="text-xs text-slate-500 mt-0.5">events</p>
                       </div>
                       <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-center">
                         <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1">Idling</p>
                         <p className="text-2xl font-black text-slate-800">{tripLog.idlingTimeHours}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">hours</p>
+                        <p className="text-xs text-slate-500 mt-0.5">hours</p>
                       </div>
                       <div className="bg-red-50/50 p-4 rounded-xl border border-red-100 text-center">
                         <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
                           <ShieldAlert size={10} /> Incidents
                         </p>
                         <p className="text-2xl font-black text-slate-800">{tripLog.incidents}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">reported</p>
+                        <p className="text-xs text-slate-500 mt-0.5">reported</p>
                       </div>
                     </div>
                   </div>
@@ -575,11 +575,11 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   {/* Additional Compliance & Logistics */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Fuel Issued</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Fuel Issued</p>
                       <p className="text-sm font-bold text-slate-800">{tripLog.fuelIssuedLiters || 0} L</p>
                     </div>
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Fuel Cost / L</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Fuel Cost / L</p>
                       <p className="text-sm font-bold text-slate-800">Le {(tripLog.fuelCostPerLiter || 0).toLocaleString()}</p>
                     </div>
                     <div className="bg-orange-50/50 p-3 rounded-xl border border-orange-100">
@@ -592,13 +592,13 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                     </div>
                     {tripLog.corporateAccountId && (
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Corporate A/C</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Corporate A/C</p>
                         <p className="text-sm font-bold text-slate-800 truncate" title={tripLog.corporateAccountId}>{tripLog.corporateAccountId}</p>
                       </div>
                     )}
                     {tripLog.projectCode && (
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Project Code</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Project Code</p>
                         <p className="text-sm font-bold text-slate-800">{tripLog.projectCode}</p>
                       </div>
                     )}
@@ -618,7 +618,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   {/* Trip Notes */}
                   {tripLog.notes && (
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Trip Notes</p>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Trip Notes</p>
                       <p className="text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100 italic leading-relaxed">
                         "{tripLog.notes}"
                       </p>
@@ -632,7 +632,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3">
                           <Briefcase size={16} className="text-indigo-500 shrink-0" />
                           <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Project Code</p>
+                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Project Code</p>
                             <p className="font-bold text-slate-800 text-sm mt-0.5">{tripLog.projectCode}</p>
                           </div>
                         </div>
@@ -643,14 +643,14 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                       }`}>
                         {tripLog.approvalStatus === 'Approved' && <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />}
                         {tripLog.approvalStatus === 'Flagged' && <AlertCircle size={16} className="text-red-600 shrink-0 mt-0.5" />}
-                        {(!tripLog.approvalStatus || tripLog.approvalStatus === 'Pending') && <Clock size={16} className="text-slate-400 shrink-0 mt-0.5" />}
+                        {(!tripLog.approvalStatus || tripLog.approvalStatus === 'Pending') && <Clock size={16} className="text-slate-500 shrink-0 mt-0.5" />}
                         <div className="min-w-0">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Approval Status</p>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Approval Status</p>
                           <p className={`font-bold text-sm mt-0.5 ${
                             tripLog.approvalStatus === 'Approved' ? 'text-emerald-700' :
-                            tripLog.approvalStatus === 'Flagged' ? 'text-red-700' : 'text-slate-600'
+                            tripLog.approvalStatus === 'Flagged' ? 'text-red-700' : 'text-slate-700'
                           }`}>{tripLog.approvalStatus || 'Pending'}</p>
-                          {tripLog.approvedBy && <p className="text-xs text-slate-500 mt-0.5">By: {tripLog.approvedBy} {tripLog.approvedAt ? `· ${formatDate(tripLog.approvedAt)}` : ''}</p>}
+                          {tripLog.approvedBy && <p className="text-xs text-slate-600 mt-0.5">By: {tripLog.approvedBy} {tripLog.approvedAt ? `· ${formatDate(tripLog.approvedAt)}` : ''}</p>}
                           {tripLog.approvalNotes && <p className="text-xs text-red-600 mt-0.5 italic">{tripLog.approvalNotes}</p>}
                         </div>
                       </div>
@@ -660,7 +660,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   {/* Trip Legs */}
                   {tripLog.legs && tripLog.legs.length > 0 && (
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
                         <Route size={12} /> Route Legs ({tripLog.legs.length})
                       </p>
                       <div className="space-y-1">
@@ -670,21 +670,21 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-800">
                                 <span className="truncate">{leg.departurePoint}</span>
-                                <ChevronRight size={12} className="text-slate-400 shrink-0" />
+                                <ChevronRight size={12} className="text-slate-500 shrink-0" />
                                 <span className="truncate">{leg.destinationPoint}</span>
                               </div>
-                              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1">
+                              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-1">
                                 {leg.date && leg.date !== tripLog.date && <span className="flex items-center gap-1"><Calendar size={10} />{formatDateOnly(leg.date)}</span>}
                                 {leg.departureTime && <span>{leg.departureTime} → {leg.arrivalTime}</span>}
                                 {leg.odometerStart !== undefined && <span className="font-mono">{leg.odometerStart.toLocaleString()} → {leg.odometerEnd.toLocaleString()} km ({Math.max(0, (leg.odometerEnd || 0) - (leg.odometerStart || 0)).toLocaleString()} km)</span>}
                               </div>
-                              {leg.purposeOfTrip && <p className="text-xs text-slate-500 italic mt-0.5">{leg.purposeOfTrip}</p>}
+                              {leg.purposeOfTrip && <p className="text-xs text-slate-600 italic mt-0.5">{leg.purposeOfTrip}</p>}
                             </div>
                           </div>
                         ))}
                       </div>
                       {/* Auto-calculated total from legs */}
-                      <div className="mt-2 text-xs text-slate-500 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
+                      <div className="mt-2 text-xs text-slate-600 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
                         Auto-calculated distance: <span className="font-bold text-indigo-700">
                           {tripLog.legs.reduce((sum, l) => sum + Math.max(0, (l.odometerEnd || 0) - (l.odometerStart || 0)), 0).toLocaleString()} km
                         </span> from {tripLog.legs.length} leg(s).
@@ -695,13 +695,13 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   {/* Passenger Manifest */}
                   {tripLog.passengers && tripLog.passengers.length > 0 && (
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
                         <Users size={12} /> Passengers ({tripLog.passengers.length})
                       </p>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {tripLog.passengers.map((pax: Passenger, i: number) => (
                           <div key={pax.id || i} className="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-100">
-                            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0">{i + 1}</div>
+                            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600 shrink-0">{i + 1}</div>
                             <span className="text-sm text-slate-700 font-medium truncate">{pax.name}</span>
                           </div>
                         ))}
@@ -711,10 +711,10 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                 </div>
               ) : (
                 <div className="flex items-center gap-4 py-2">
-                  <AlertCircle size={36} className="text-slate-300 shrink-0" />
+                  <AlertCircle size={36} className="text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-bold text-slate-500 text-base">Trip Log Pending</p>
-                    <p className="text-sm text-slate-400 mt-0.5">Safety metrics and trip data will appear here after the driver submits the return log.</p>
+                    <p className="font-bold text-slate-600 text-base">Trip Log Pending</p>
+                    <p className="text-sm text-slate-500 mt-0.5">Safety metrics and trip data will appear here after the driver submits the return log.</p>
                   </div>
                 </div>
               )}
@@ -733,7 +733,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
               {/* Fuel Summary Bar */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Stops</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Total Stops</p>
                   <p className="text-2xl font-black text-slate-800">{tripLog.fuelCollections.length}</p>
                 </div>
                 <div className="bg-white rounded-xl border border-blue-100 p-4 text-center shadow-sm bg-blue-50/30">
@@ -745,7 +745,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   <p className="text-xl font-black text-slate-800">Le {tripLog.fuelCollections.reduce((s, fc) => s + (fc.totalAmount || (fc.liters * fc.costPerLiter) || 0), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 </div>
                 <div className="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Partner Stops</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Partner Stops</p>
                   <p className="text-2xl font-black text-slate-800">{tripLog.fuelCollections.filter(fc => fc.isPartnerStation).length} / {tripLog.fuelCollections.length}</p>
                 </div>
               </div>
@@ -759,7 +759,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                 <div className="p-0">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
-                      <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+                      <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
                         <tr>
                           <th className="px-4 py-3 font-semibold">#</th>
                           <th className="px-4 py-3 font-semibold">Date & Time</th>
@@ -777,46 +777,46 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                       <tbody className="divide-y divide-slate-100">
                         {tripLog.fuelCollections.map((fc, i) => (
                           <tr key={i} className="hover:bg-slate-50/50">
-                            <td className="px-4 py-3 text-slate-400 text-xs font-bold">{i + 1}</td>
+                            <td className="px-4 py-3 text-slate-500 text-xs font-bold">{i + 1}</td>
                             <td className="px-4 py-3">
-                              <p className="font-medium text-slate-900 text-xs">{formatDateOnly(fc.date || tripLog.date)}</p>
-                              <p className="text-xs text-slate-500">{fc.time || '-'}</p>
+                              <p className="font-medium text-slate-950 text-xs">{formatDateOnly(fc.date || tripLog.date)}</p>
+                              <p className="text-xs text-slate-600">{fc.time || '-'}</p>
                             </td>
                             <td className="px-4 py-3">
-                              <p className="font-medium text-slate-900 flex items-center gap-1.5 text-sm">
+                              <p className="font-medium text-slate-950 flex items-center gap-1.5 text-sm">
                                 {fc.stationName}
                                 {fc.isPartnerStation && (
                                   <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase tracking-wider">Partner</span>
                                 )}
                               </p>
-                              <p className="text-xs text-slate-500">{fc.supplier || '-'}</p>
+                              <p className="text-xs text-slate-600">{fc.supplier || '-'}</p>
                               {fc.isPartnerStation === false && fc.nonPartnerReason && (
                                 <p className="text-[10px] text-amber-600 italic mt-0.5">⚠ {fc.nonPartnerReason}</p>
                               )}
                             </td>
                             <td className="px-4 py-3">
                               <p className="text-sm text-slate-700">{fc.location || '-'}</p>
-                              {fc.district && <p className="text-xs text-slate-500">{fc.district}</p>}
-                              {fc.region && <p className="text-xs text-slate-400">{fc.region}</p>}
+                              {fc.district && <p className="text-xs text-slate-600">{fc.district}</p>}
+                              {fc.region && <p className="text-xs text-slate-500">{fc.region}</p>}
                             </td>
                             <td className="px-4 py-3">
                               <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
                                 fc.fuelType === 'Diesel' ? 'bg-amber-100 text-amber-700' :
                                 fc.fuelType === 'Premium' ? 'bg-purple-100 text-purple-700' :
-                                fc.fuelType === 'Petrol' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                                fc.fuelType === 'Petrol' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
                               }`}>{fc.fuelType || '-'}</span>
                             </td>
-                            <td className="px-4 py-3 font-bold text-slate-900">{fc.liters} L</td>
+                            <td className="px-4 py-3 font-bold text-slate-950">{fc.liters} L</td>
                             <td className="px-4 py-3 text-slate-700">Le {(fc.costPerLiter || 0).toLocaleString()}</td>
                             <td className="px-4 py-3 font-bold text-emerald-700">
                               {fc.totalAmount
                                 ? `Le ${fc.totalAmount.toLocaleString()}`
                                 : (fc.liters && fc.costPerLiter ? `Le ${(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-')}
                             </td>
-                            <td className="px-4 py-3 text-slate-600 text-xs">{fc.paymentMethod || '-'}</td>
-                            <td className="px-4 py-3 text-slate-600 text-xs">{fc.receiptNumber || '-'}</td>
+                            <td className="px-4 py-3 text-slate-700 text-xs">{fc.paymentMethod || '-'}</td>
+                            <td className="px-4 py-3 text-slate-700 text-xs">{fc.receiptNumber || '-'}</td>
                             <td className="px-4 py-3 max-w-[160px]">
-                              <p className="text-xs text-slate-500 truncate" title={fc.remarks || '-'}>{fc.remarks || '-'}</p>
+                              <p className="text-xs text-slate-600 truncate" title={fc.remarks || '-'}>{fc.remarks || '-'}</p>
                             </td>
                           </tr>
                         ))}
@@ -829,11 +829,11 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
           ) : (
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2">
-                <Fuel size={18} className="text-slate-400" />
+                <Fuel size={18} className="text-slate-500" />
                 <h3 className="font-bold text-slate-800">Fuel Details</h3>
               </div>
-              <div className="p-12 text-center text-slate-500">
-                <Fuel size={48} className="mx-auto mb-4 text-slate-300 opacity-50" />
+              <div className="p-12 text-center text-slate-600">
+                <Fuel size={48} className="mx-auto mb-4 text-slate-400 opacity-50" />
                 <p className="font-bold">No Fuel Data</p>
                 <p className="text-sm mt-1">There are no fuel collections recorded for this trip.</p>
               </div>

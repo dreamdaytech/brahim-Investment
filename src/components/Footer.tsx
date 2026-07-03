@@ -8,7 +8,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
   return (
-    <footer className="bg-[#0f172a] text-slate-300 border-t border-slate-800">
+    <footer className="bg-[#0f172a] text-slate-400 border-t border-slate-800">
       {/* Top Value Accents */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-b border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex items-start space-x-4">
@@ -17,7 +17,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           </div>
           <div>
             <h4 className="font-semibold text-sm text-slate-200">24/7 Deployment Standard</h4>
-            <p className="text-xs text-slate-400 mt-1">Emergency dispatch desk and fast replacement cars ready in Freetown and upcountry centers.</p>
+            <p className="text-xs text-slate-500 mt-1">Emergency dispatch desk and fast replacement cars ready in Freetown and upcountry centers.</p>
           </div>
         </div>
         <div className="flex items-start space-x-4">
@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           </div>
           <div>
             <h4 className="font-semibold text-sm text-slate-200">Strict preventative routine</h4>
-            <p className="text-xs text-slate-400 mt-1">Every car is fully diagnostic scanned and mechanically re-checked prior to every single client deployment.</p>
+            <p className="text-xs text-slate-500 mt-1">Every car is fully diagnostic scanned and mechanically re-checked prior to every single client deployment.</p>
           </div>
         </div>
         <div className="flex items-start space-x-4">
@@ -35,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           </div>
           <div>
             <h4 className="font-semibold text-sm text-slate-200">Sierra Leone’s Prestigious Choice</h4>
-            <p className="text-xs text-slate-400 mt-1">First-choice operator for visiting high-profile diplomats, multinational banks, corporate heads of mission, and global NGOs.</p>
+            <p className="text-xs text-slate-500 mt-1">First-choice operator for visiting high-profile diplomats, multinational banks, corporate heads of mission, and global NGOs.</p>
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
               <span className="text-xs font-semibold text-indigo-400 ml-1">GROUP</span>
             </div>
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed font-sans">
+          <p className="text-xs text-slate-500 leading-relaxed font-sans">
             Sierra Leone's premiere vehicle leasing and driver management institution. Providing unparalleled 4WD power and high-class corporate logistics under strict accountability codes.
           </p>
           <div className="flex items-center space-x-2 pt-2">
@@ -64,8 +64,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Quick Links */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-300 border-l-2 border-indigo-500 pl-2 mb-4">Core Fleet</h3>
-          <ul className="space-y-2 text-xs text-slate-400 font-sans">
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-400 border-l-2 border-indigo-500 pl-2 mb-4">Core Fleet</h3>
+          <ul className="space-y-2 text-xs text-slate-500 font-sans">
             <li>
               <button onClick={() => setActiveTab('fleet')} className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
                 Toyota Land Cruiser Prado <ArrowUpRight size={10} className="opacity-60" />
@@ -91,8 +91,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Services Navigation */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-300 border-l-2 border-indigo-500 pl-2 mb-4">Logistics Services</h3>
-          <ul className="space-y-2 text-xs text-slate-400 font-sans">
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-400 border-l-2 border-indigo-500 pl-2 mb-4">Logistics Services</h3>
+          <ul className="space-y-2 text-xs text-slate-500 font-sans">
             <li>
               <button onClick={() => setActiveTab('services')} className="hover:text-white hover:underline transition-all cursor-pointer">
                 Long-term Corporate Fleet Leasing
@@ -118,8 +118,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Contacts */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-300 border-l-2 border-indigo-500 pl-2 mb-4">Contact Points</h3>
-          <ul className="space-y-3 text-xs text-slate-400 font-sans">
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-400 border-l-2 border-indigo-500 pl-2 mb-4">Contact Points</h3>
+          <ul className="space-y-3 text-xs text-slate-500 font-sans">
             <li className="flex items-start space-x-2">
               <MapPin size={14} className="text-indigo-400 mt-0.5 shrink-0" />
               <span>11 Freetown Road, Wilberforce, Freetown</span>
@@ -137,15 +137,15 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
       </div>
 
       {/* Extreme Bottom Bar */}
-      <div className="bg-[#090d16] py-4 text-center text-[10px] text-slate-500 font-sans border-t border-slate-950 px-4">
+      <div className="bg-[#090d16] py-4 text-center text-[10px] text-slate-600 font-sans border-t border-slate-950 px-4">
         <p className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
           <span>&copy; {new Date().getFullYear()} Brahim Investment Group (B.I.G Group SRL). All Rights Reserved.</span>
           <span className="flex items-center gap-3">
-            <span className="hover:text-slate-300 cursor-pointer">Terms of Rental</span>
+            <span className="hover:text-slate-400 cursor-pointer">Terms of Rental</span>
             <span>&bull;</span>
-            <span className="hover:text-slate-300 cursor-pointer">Maintenance Guarantee Policy</span>
+            <span className="hover:text-slate-400 cursor-pointer">Maintenance Guarantee Policy</span>
             <span>&bull;</span>
-            <span className="hover:text-slate-300 cursor-pointer">Missions Safety Code</span>
+            <span className="hover:text-slate-400 cursor-pointer">Missions Safety Code</span>
           </span>
         </p>
       </div>

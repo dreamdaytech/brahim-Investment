@@ -110,13 +110,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
   ).slice(0, 8) : [];
 
   return (
-    <div className="w-full bg-slate-50 min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-sans text-slate-900">
+    <div className="w-full bg-slate-50 min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-sans text-slate-950">
       
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[50vh]">
           <div className="flex flex-col items-center space-y-4">
             <span className="w-10 h-10 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></span>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Checking Security Clearance...</p>
+            <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Checking Security Clearance...</p>
           </div>
         </div>
       ) : !isAuthenticated ? (
@@ -133,8 +133,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
             <span className="text-[10px] font-mono font-bold tracking-widest text-[#855300] bg-amber-50 px-2 py-0.5 rounded uppercase">
               BIG GROUP SECURE PORT
             </span>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight mt-1">Staff Access Requested</h2>
-            <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+            <h2 className="text-2xl font-black text-slate-950 tracking-tight mt-1">Staff Access Requested</h2>
+            <p className="text-xs text-slate-600 mt-1 max-w-xs mx-auto">
               You are accessing the confidential dispatch log registry. Please sign in with your administrative credentials.
             </p>
           </div>
@@ -203,14 +203,14 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               {sidebarOpen && (
                 <div className="mt-4 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider whitespace-nowrap">Secure Channel SL-5</span>
+                  <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider whitespace-nowrap">Secure Channel SL-5</span>
                 </div>
               )}
             </div>
 
             {/* Navigation Links */}
             <nav className={`flex-1 overflow-y-auto py-4 space-y-1 transition-all duration-300 ${sidebarOpen ? 'px-3' : 'px-2'} custom-scrollbar`}>
-              {sidebarOpen && <p className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest px-3 mb-3">Overview</p>}
+              {sidebarOpen && <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest px-3 mb-3">Overview</p>}
               {[
                 { id: 'overview', label: 'Dashboard', icon: BarChart3, badge: null },
               ].map(item => {
@@ -226,10 +226,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                     } ${
                       isActive
                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-                        : 'text-slate-400 hover:text-white hover:bg-white/8'
+                        : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
-                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`} />
+                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
                     {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
                   </button>
@@ -237,7 +237,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               })}
 
               {sidebarOpen
-                ? <p className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest px-3 mt-5 mb-3">Operations</p>
+                ? <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest px-3 mt-5 mb-3">Operations</p>
                 : <div className="h-px bg-white/10 my-3 mx-1" />
               }
               {[
@@ -255,10 +255,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                     } ${
                       isActive
                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-                        : 'text-slate-400 hover:text-white hover:bg-white/8'
+                        : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
-                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`} />
+                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
                     {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
                   </button>
@@ -266,7 +266,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               })}
 
               {sidebarOpen
-                ? <p className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest px-3 mt-5 mb-3">Fleet Intelligence</p>
+                ? <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest px-3 mt-5 mb-3">Fleet Intelligence</p>
                 : <div className="h-px bg-white/10 my-3 mx-1" />
               }
               {[
@@ -290,10 +290,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                     } ${
                       isActive
                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-                        : 'text-slate-400 hover:text-white hover:bg-white/8'
+                        : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
-                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`} />
+                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
                     {sidebarOpen && item.badge && (
                       <span className="text-[10px] font-bold bg-amber-500 text-white px-1.5 py-0.5 rounded-full leading-none">{item.badge}</span>
@@ -313,7 +313,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               {/* Collapse / Expand Toggle */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className={`w-full flex items-center gap-2 mt-2 text-slate-500 hover:text-slate-300 hover:bg-white/8 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2 mt-2 text-slate-600 hover:text-slate-400 hover:bg-white/8 rounded-xl text-xs font-semibold transition-all ${
                   sidebarOpen ? 'px-3 py-2 justify-start' : 'p-2.5 justify-center'
                 }`}
                 title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
@@ -335,26 +335,26 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors"
                   title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
                 >
                   {sidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />}
                 </button>
                 <div>
-                  <h1 className="text-lg font-black text-slate-900">
+                  <h1 className="text-lg font-black text-slate-950">
                     {adminTab === 'overview' && 'Dashboard Overview'}
                     {adminTab === 'reservations' && 'Dispatch Reservations'}
                     {adminTab === 'clients' && 'Partners & Clients'}
                     {adminTab === 'performance' && 'Management'}
                     {adminTab === 'billing' && 'Billing & CRM'}
                   </h1>
-                  <p className="text-xs text-slate-500 font-mono">11 Freetown Road, Wilberforce • Live Channel SL-5</p>
+                  <p className="text-xs text-slate-600 font-mono">11 Freetown Road, Wilberforce • Live Channel SL-5</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 {/* #20 Global Search */}
                 <div className="relative hidden md:block">
-                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input
                     type="text"
                     placeholder="Search reservations..."
@@ -369,8 +369,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                       {globalResults.map(r => (
                         <button key={r.id} onMouseDown={() => { setAdminTab('reservations'); setSearchTerm(r.fullName); setGlobalSearch(''); }}
                           className="w-full px-4 py-3 text-left hover:bg-indigo-50 border-b border-slate-100 last:border-0">
-                          <div className="font-bold text-sm text-slate-900">{r.fullName}</div>
-                          <div className="text-xs text-slate-500">{r.organization} • {r.status} • {r.preferredVehicle}</div>
+                          <div className="font-bold text-sm text-slate-950">{r.fullName}</div>
+                          <div className="text-xs text-slate-600">{r.organization} • {r.status} • {r.preferredVehicle}</div>
                         </button>
                       ))}
                     </div>
@@ -396,19 +396,19 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                 
                 {/* Search Input bar */}
                 <div className="relative w-full md:w-96">
-                  <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
+                  <Search size={16} className="absolute left-3.5 top-3.5 text-slate-500" />
                   <input 
                     type="text" 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by client, organization, preferred vehicle..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs bg-white text-gray-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
+                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
                   />
                 </div>
 
                 {/* Filter class buttons */}
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400 uppercase font-mono font-bold flex items-center gap-1">
+                  <span className="text-xs text-slate-500 uppercase font-mono font-bold flex items-center gap-1">
                     <Filter size={12} /> Status:
                   </span>
                   {['All', 'Pending', 'Approved', 'Declined'].map((sts) => (
@@ -418,7 +418,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         filterStatus === sts 
                           ? 'bg-indigo-600 text-white' 
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                       }`}
                     >
                       {sts}
@@ -432,16 +432,16 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
                   <h3 className="font-extrabold tracking-tight text-slate-950">Logged Inquiries Queue ({filteredInquiries.length})</h3>
-                  <span className="text-[10px] text-slate-400 font-mono uppercase bg-white px-2.5 py-1 rounded border border-slate-200">DATABASE SYNC: ONLINE</span>
+                  <span className="text-[10px] text-slate-500 font-mono uppercase bg-white px-2.5 py-1 rounded border border-slate-200">DATABASE SYNC: ONLINE</span>
                 </div>
 
                 {filteredInquiries.length === 0 ? (
                   <div className="py-20 text-center space-y-3">
-                    <div className="text-slate-300 w-12 h-12 rounded-full flex items-center justify-center mx-auto bg-slate-50 border border-slate-200">
+                    <div className="text-slate-400 w-12 h-12 rounded-full flex items-center justify-center mx-auto bg-slate-50 border border-slate-200">
                       <Database size={24} />
                     </div>
                     <h4 className="text-sm font-bold text-slate-700">No matching inquiries found</h4>
-                    <p className="text-xs text-slate-400 max-w-xs mx-auto">Adjust search keys or submit a new quote via the Booking form.</p>
+                    <p className="text-xs text-slate-500 max-w-xs mx-auto">Adjust search keys or submit a new quote via the Booking form.</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-slate-100">
@@ -451,10 +451,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                         {/* Left block Info description */}
                         <div className="space-y-3 max-w-3xl">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-mono text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded border border-slate-200">
+                            <span className="font-mono text-sm font-bold bg-slate-100 text-slate-800 px-3 py-1 rounded border border-slate-200">
                               {item.id}
                             </span>
-                            <span className="text-[10px] text-gray-400 font-mono">Submitted: {item.createdAt}</span>
+                            <span className="text-xs text-slate-600 font-medium">Submitted: {item.createdAt}</span>
                             
                             {/* Status chip */}
                             {item.status === 'Approved' && (
@@ -474,26 +474,26 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                             )}
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5 text-xs">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm mt-2">
                             <div>
-                              <p className="text-gray-400 font-mono text-[9px] uppercase">Client / Organization Contact</p>
-                              <p className="font-extrabold text-slate-900 text-sm mt-0.5">{item.fullName}</p>
-                              <p className="text-gray-500 font-semibold">{item.organization}</p>
-                              <p className="text-gray-500 font-mono text-[11px] mt-0.5">{item.email} &bull; {item.phone}</p>
+                              <p className="text-slate-600 font-bold text-[11px] uppercase tracking-wider">Client / Organization Contact</p>
+                              <p className="font-black text-slate-950 text-base mt-1">{item.fullName}</p>
+                              <p className="text-slate-700 font-bold">{item.organization}</p>
+                              <p className="text-slate-700 font-medium text-xs mt-1">{item.email} &bull; {item.phone}</p>
                             </div>
                             
                             <div>
-                              <p className="text-gray-400 font-mono text-[9px] uppercase">Renting Spec Logistics</p>
-                              <p className="font-bold text-gray-800 text-sm mt-0.5">{item.preferredVehicle} ({item.vehiclesNeeded} Unit)</p>
-                              <p className="text-gray-600 font-medium">Service Class: {item.serviceType}</p>
-                              <p className="text-gray-400 font-mono text-[10px] mt-0.5">Route Range: {item.startDate} &rarr; {item.endDate}</p>
-                              <p className="text-gray-400 font-mono text-[10px]">Pickup: {item.pickupLocation}</p>
+                              <p className="text-slate-600 font-bold text-[11px] uppercase tracking-wider">Renting Spec Logistics</p>
+                              <p className="font-black text-slate-950 text-base mt-1">{item.preferredVehicle} ({item.vehiclesNeeded} Unit)</p>
+                              <p className="text-slate-700 font-bold">Service Class: {item.serviceType}</p>
+                              <p className="text-slate-700 font-medium text-xs mt-1">Route Range: {item.startDate} &rarr; {item.endDate}</p>
+                              <p className="text-slate-700 font-medium text-xs">Pickup: {item.pickupLocation}</p>
                             </div>
                           </div>
 
                           {item.specialRequirementsDet && (
-                            <div className="bg-slate-50 p-3 rounded-lg text-xs text-gray-600 border border-slate-200 font-sans leading-normal">
-                              <strong>Vetting Checklist Remarks:</strong> {item.specialRequirementsDet}
+                            <div className="bg-slate-50 p-4 rounded-xl text-sm text-slate-700 border border-slate-200 font-sans leading-relaxed mt-2">
+                              <strong className="text-slate-950 block mb-1">Vetting Checklist Remarks:</strong> {item.specialRequirementsDet}
                             </div>
                           )}
                         </div>
@@ -551,7 +551,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                             onClick={() => {
                               if (window.confirm('Delete this inquiry permanently?')) onDeleteInquiry(item.id);
                             }}
-                            className="px-3 py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-center"
+                            className="px-3 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-center"
                             title="Delete permanently"
                           >
                             Delete
@@ -672,10 +672,10 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
   const SortBtn = ({ col, label }: { col: typeof sortBy; label: string }) => (
     <button
       onClick={() => toggleSort(col)}
-      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${sortBy === col ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${sortBy === col ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
     >
       {label}
-      <ArrowUpDown size={11} className={sortBy === col ? 'text-indigo-200' : 'text-slate-400'} />
+      <ArrowUpDown size={11} className={sortBy === col ? 'text-indigo-200' : 'text-slate-500'} />
       {sortBy === col && <span className="text-[10px] font-mono">{sortDir === 'asc' ? '↑' : '↓'}</span>}
     </button>
   );
@@ -691,7 +691,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
           { label: 'Ongoing Projects', value: ongoingContracts, color: 'blue' },
         ].map(({ label, value, color }) => (
           <div key={label} className={`bg-white p-4 rounded-2xl border border-slate-200 shadow-sm`}>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
             <h3 className={`text-2xl font-black text-${color}-600 mt-1`}>{value}</h3>
           </div>
         ))}
@@ -702,7 +702,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
         {/* Row 1: Search + Add */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
             <input
               type="text"
               value={search}
@@ -711,7 +711,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
               className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all"
             />
             {search && (
-              <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700">
                 <X size={14} />
               </button>
             )}
@@ -727,8 +727,8 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
         {/* Row 2: Filter chips */}
         <div className="flex flex-wrap gap-3 items-center">
           <div className="flex items-center gap-1.5">
-            <SlidersHorizontal size={13} className="text-slate-400" />
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status</span>
+            <SlidersHorizontal size={13} className="text-slate-500" />
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</span>
           </div>
           {(['All', 'Ongoing', 'Pending', 'Completed'] as const).map(s => (
             <button
@@ -739,7 +739,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                   : s === 'Completed' ? 'bg-slate-500 text-white'
                   : s === 'Pending' ? 'bg-amber-500 text-white'
                   : 'bg-indigo-600 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             >
               {s === 'All' ? 'All Statuses' : s === 'Ongoing' ? '🟢 Ongoing' : s === 'Completed' ? '⚪ Completed' : '🟡 Pending'}
             </button>
@@ -748,8 +748,8 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
           <div className="w-px h-4 bg-slate-200 mx-1 hidden sm:block" />
 
           <div className="flex items-center gap-1.5">
-            <Users size={13} className="text-slate-400" />
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Type</span>
+            <Users size={13} className="text-slate-500" />
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Type</span>
           </div>
           {(['All', 'Partner', 'Non-Partner'] as const).map(p => (
             <button
@@ -759,7 +759,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 ? p === 'Partner' ? 'bg-emerald-600 text-white'
                   : p === 'Non-Partner' ? 'bg-red-500 text-white'
                   : 'bg-indigo-600 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             >
               {p === 'All' ? 'All Types' : p === 'Partner' ? '✓ Partner' : '✗ Non-Partner'}
             </button>
@@ -769,14 +769,14 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
         {/* Row 3: Sort controls + results count */}
         <div className="flex flex-wrap gap-2 items-center justify-between pt-1 border-t border-slate-100">
           <div className="flex items-center gap-2 flex-wrap">
-            <ArrowUpDown size={13} className="text-slate-400" />
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sort by</span>
+            <ArrowUpDown size={13} className="text-slate-500" />
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Sort by</span>
             <SortBtn col="name" label="Name" />
             <SortBtn col="status" label="Status" />
             <SortBtn col="contractEnd" label="Contract End" />
             <SortBtn col="added" label="Date Added" />
           </div>
-          <span className="text-xs text-slate-400 font-medium">
+          <span className="text-xs text-slate-500 font-medium">
             {filtered.length} of {clients.length} shown
           </span>
         </div>
@@ -784,7 +784,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
 
       {/* Results */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16 text-slate-400">
+        <div className="text-center py-16 text-slate-500">
           <Search size={32} className="mx-auto mb-3 opacity-40" />
           <p className="font-bold text-sm">No results found</p>
           <p className="text-xs mt-1">Try adjusting your search or filters</p>
@@ -810,7 +810,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                       </div>
                     )}
                     <div>
-                      <h4 className="font-black text-slate-900">{supplier.name}</h4>
+                      <h4 className="font-black text-slate-950">{supplier.name}</h4>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isPartner ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
                         {isPartner ? '✓ Partner Project' : '✗ Non-Partner'}
                       </span>
@@ -822,7 +822,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                         e.stopPropagation();
                         setOpenMenuId(openMenuId === supplier.id ? null : supplier.id);
                       }}
-                      className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
                     >
                       <MoreVertical size={18} />
                     </button>
@@ -832,13 +832,13 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                         <div className="absolute right-0 top-full mt-1 w-32 bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-100 py-1.5 z-50 overflow-hidden">
                           <button 
                             onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); setEditingClient(supplier); setIsViewing(true); setIsModalOpen(true); }}
-                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
                           >
                             <Eye size={13} /> View
                           </button>
                           <button 
                             onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); setEditingClient(supplier); setIsViewing(false); setIsModalOpen(true); }}
-                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
                           >
                             <PenTool size={13} /> Edit
                           </button>
@@ -858,15 +858,15 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                   </div>
                 </div>
                 <div className="px-5 py-4 space-y-2.5 text-xs">
-                  {supplier.contactPerson && <div className="flex items-center gap-2 text-slate-600"><User size={11} className="text-slate-400 shrink-0" />{supplier.contactPerson}</div>}
-                  {supplier.phone && <div className="flex items-center gap-2 text-slate-600"><Phone size={11} className="text-slate-400 shrink-0" />{supplier.phone}</div>}
-                  {supplier.email && <div className="flex items-center gap-2 text-slate-600"><Mail size={11} className="text-slate-400 shrink-0" />{supplier.email}</div>}
-                  {supplier.headOfficeAddress && <div className="flex items-center gap-2 text-slate-600"><MapPin size={11} className="text-slate-400 shrink-0" />{supplier.headOfficeAddress}{supplier.city ? `, ${supplier.city}` : ''}</div>}
-                  {supplier.accountNumber && <div className="flex items-center gap-2 text-slate-600"><CreditCard size={11} className="text-slate-400 shrink-0" /><span className="font-mono">{supplier.accountNumber}</span></div>}
+                  {supplier.contactPerson && <div className="flex items-center gap-2 text-slate-700"><User size={11} className="text-slate-500 shrink-0" />{supplier.contactPerson}</div>}
+                  {supplier.phone && <div className="flex items-center gap-2 text-slate-700"><Phone size={11} className="text-slate-500 shrink-0" />{supplier.phone}</div>}
+                  {supplier.email && <div className="flex items-center gap-2 text-slate-700"><Mail size={11} className="text-slate-500 shrink-0" />{supplier.email}</div>}
+                  {supplier.headOfficeAddress && <div className="flex items-center gap-2 text-slate-700"><MapPin size={11} className="text-slate-500 shrink-0" />{supplier.headOfficeAddress}{supplier.city ? `, ${supplier.city}` : ''}</div>}
+                  {supplier.accountNumber && <div className="flex items-center gap-2 text-slate-700"><CreditCard size={11} className="text-slate-500 shrink-0" /><span className="font-mono">{supplier.accountNumber}</span></div>}
                   {supplier.contractRef && (
                     <div className="flex items-center gap-2">
-                      <FileText size={11} className="text-slate-400 shrink-0" />
-                      <span className="text-slate-600 font-mono">{supplier.contractRef}</span>
+                      <FileText size={11} className="text-slate-500 shrink-0" />
+                      <span className="text-slate-700 font-mono">{supplier.contractRef}</span>
                       {supplier.contractEndDate && (
                         <span className={`ml-auto px-1.5 py-0.5 rounded font-bold text-[10px] ${isExpired ? 'bg-red-100 text-red-700' : isExpiringSoon ? 'bg-amber-100 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
                           {isExpired ? 'EXPIRED' : isExpiringSoon ? 'Expiring soon' : `Until ${supplier.contractEndDate}`}
@@ -875,12 +875,12 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                     </div>
                   )}
                   {supplier.creditLimit && (
-                    <div className="flex items-center gap-2 text-slate-600"><Activity size={11} className="text-slate-400 shrink-0" />Credit Limit: <span className="font-bold">Le {supplier.creditLimit.toLocaleString()}</span></div>
+                    <div className="flex items-center gap-2 text-slate-700"><Activity size={11} className="text-slate-500 shrink-0" />Credit Limit: <span className="font-bold">Le {supplier.creditLimit.toLocaleString()}</span></div>
                   )}
                   <div className="flex items-center gap-2 mt-1">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                       engagementStatus === 'Ongoing' ? 'bg-emerald-100 text-emerald-700' :
-                      engagementStatus === 'Completed' ? 'bg-slate-100 text-slate-500' :
+                      engagementStatus === 'Completed' ? 'bg-slate-100 text-slate-600' :
                       'bg-amber-100 text-amber-700'
                     }`}>
                       {engagementStatus === 'Ongoing' ? '🟢 Ongoing' : engagementStatus === 'Completed' ? '⚪ Completed' : '🟡 Pending'}
@@ -888,7 +888,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                   </div>
                 </div>
                 {supplier.notes && (
-                  <div className="px-5 py-3 border-t border-slate-100 text-[11px] text-slate-500 italic">{supplier.notes}</div>
+                  <div className="px-5 py-3 border-t border-slate-100 text-[11px] text-slate-600 italic">{supplier.notes}</div>
                 )}
               </div>
             );
@@ -976,8 +976,8 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                       <img src={logoPreview} alt="Logo Preview" className="w-full h-full object-cover" />
                     ) : (
                       <>
-                        <Camera size={24} className="text-slate-400 mb-1" />
-                        <span className="text-[10px] font-bold text-slate-400">Add Logo</span>
+                        <Camera size={24} className="text-slate-500 mb-1" />
+                        <span className="text-[10px] font-bold text-slate-500">Add Logo</span>
                       </>
                     )}
                     {!isViewing && (
@@ -993,25 +993,25 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 </div>
               </div>
               <div>
-                <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Basic Information</h4>
+                <h4 className="text-xs font-black text-slate-600 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Basic Information</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Project Name *</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Project Name *</label>
                     <input name="name" required defaultValue={editingClient?.name} placeholder="e.g. NP" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Short Code</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Short Code</label>
                     <input name="shortCode" defaultValue={editingClient?.shortCode} placeholder="e.g. NP" maxLength={5} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Partner Status *</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Partner Status *</label>
                     <select name="isPartner" defaultValue={editingClient?.isPartner !== undefined ? String(editingClient.isPartner) : 'true'} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none">
                       <option value="true">✅ Partner Project (Approved)</option>
                       <option value="false">✗ Non-Partner / Ad-hoc</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Engagement Status *</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Engagement Status *</label>
                     <select name="status" defaultValue={editingClient?.status || 'Ongoing'} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none">
                       <option value="Ongoing">🟢 Ongoing</option>
                       <option value="Pending">🟡 Pending</option>
@@ -1021,75 +1021,75 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 </div>
               </div>
               <div>
-                <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Contact Details</h4>
+                <h4 className="text-xs font-black text-slate-600 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Contact Details</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Contact Person</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Contact Person</label>
                     <input name="contactPerson" defaultValue={editingClient?.contactPerson} placeholder="e.g. Alhaji Koroma" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Phone</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Phone</label>
                     <input name="phone" defaultValue={editingClient?.phone} placeholder="+232 78 000 000" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Email</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Email</label>
                     <input name="email" type="email" defaultValue={editingClient?.email} placeholder="accounts@supplier.com" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Website</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Website</label>
                     <input name="website" defaultValue={editingClient?.website} placeholder="https://" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                 </div>
               </div>
               <div>
-                <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Address</h4>
+                <h4 className="text-xs font-black text-slate-600 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Address</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Head Office Address</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Head Office Address</label>
                     <input name="headOfficeAddress" defaultValue={editingClient?.headOfficeAddress} placeholder="Street address" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">City</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">City</label>
                     <input name="city" defaultValue={editingClient?.city} placeholder="Freetown" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Country</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Country</label>
                     <input name="country" defaultValue={editingClient?.country || 'Sierra Leone'} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                 </div>
               </div>
               <div>
-                <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Contract & Account</h4>
+                <h4 className="text-xs font-black text-slate-600 uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">Contract & Account</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Account Number</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Account Number</label>
                     <input name="accountNumber" defaultValue={editingClient?.accountNumber} placeholder="e.g. NP-BIG-001" className="w-full p-2 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Contract Reference</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Contract Reference</label>
                     <input name="contractRef" defaultValue={editingClient?.contractRef} placeholder="e.g. SLA/2024/NP/001" className="w-full p-2 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Contract Start</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Contract Start</label>
                     <input name="contractStartDate" type="date" defaultValue={editingClient?.contractStartDate} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Contract End</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Contract End</label>
                     <input name="contractEndDate" type="date" defaultValue={editingClient?.contractEndDate} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Credit Limit (Le)</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Credit Limit (Le)</label>
                     <input name="creditLimit" type="number" defaultValue={editingClient?.creditLimit} placeholder="e.g. 50000000" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
                   </div>
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Notes / Remarks</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Notes / Remarks</label>
                 <textarea name="notes" rows={3} defaultValue={editingClient?.notes} placeholder="Additional information..." className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none resize-none" />
               </div>
               </fieldset>
               <div className="flex gap-3 px-6 pb-6 border-t border-slate-100 pt-4">
-                <button type="button" onClick={() => { setIsModalOpen(false); setEditingClient(null); }} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50">{isViewing ? 'Close' : 'Cancel'}</button>
+                <button type="button" onClick={() => { setIsModalOpen(false); setEditingClient(null); }} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50">{isViewing ? 'Close' : 'Cancel'}</button>
                 {!isViewing && (
                   <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 shadow-sm disabled:opacity-70 flex items-center justify-center gap-2">
                     {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : (editingClient?.id ? 'Save Changes' : 'Add Project')}
@@ -1107,10 +1107,10 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle size={32} className="text-red-600" />
             </div>
-            <h3 className="text-lg font-black text-slate-900 mb-2">Delete Project?</h3>
-            <p className="text-sm text-slate-500 mb-6">Are you sure you want to delete "{clientToDelete.name}" permanently? This action cannot be undone.</p>
+            <h3 className="text-lg font-black text-slate-950 mb-2">Delete Project?</h3>
+            <p className="text-sm text-slate-600 mb-6">Are you sure you want to delete "{clientToDelete.name}" permanently? This action cannot be undone.</p>
             <div className="flex gap-3">
-              <button onClick={() => setClientToDelete(null)} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50">Cancel</button>
+              <button onClick={() => setClientToDelete(null)} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50">Cancel</button>
               <button onClick={() => { onDeleteClient(clientToDelete.id); setClientToDelete(null); }} className="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 shadow-sm">Yes, Delete</button>
             </div>
           </div>

@@ -16,8 +16,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE INSTITUTION</span>
-          <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
-          <p className="mt-2 text-sm text-slate-500 leading-relaxed">
+          <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">
             Registered and headquartered on 11 Freetown Road, Wilberforce, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
           </p>
         </div>
@@ -25,11 +25,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         {/* Narrative Split Column */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20 max-w-6xl mx-auto">
           <div className="space-y-5">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900">Our Legacy of Reliable Transit</h2>
-            <p className="text-xs md:text-sm text-slate-500 leading-relaxed">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-950">Our Legacy of Reliable Transit</h2>
+            <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
               Brahim Investment Group (BIG Group) was established to resolve the severe logistical challenges faced by international agencies operating in Sierra Leone. While others offer vehicles, we deliver complete operational security.
             </p>
-            <p className="text-xs md:text-sm text-slate-500 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
               Over the years, our programmatic mechanical safety procedures, vertical cost honesty, and dedicated driver wellness program have set a benchmark. We maintain full ownership of all fleet assets, ensuring that we never lease sub-standard vehicles from secondary contractors.
             </p>
 
@@ -56,11 +56,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         </div>
 
         {/* The Foundation of Our Service (Bento of Core Values) */}
-        <section className="bg-[#0f172a] text-slate-300 py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
+        <section className="bg-[#0f172a] text-slate-400 py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-indigo-400 text-xs font-mono font-bold tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">ADMINISTRATIVE CODES</span>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mt-3">The Foundation of Our Service</h2>
-            <p className="text-xs md:text-sm text-slate-400 mt-2 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-500 mt-2 leading-relaxed">
               These simple guidelines govern every driver we hire, every filter we cycle, and every dynamic quote proposal we submit.
             </p>
           </div>
@@ -75,7 +75,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
                   <span className="text-indigo-400 font-mono font-bold text-xs">0{idx+1}.</span>
                   <h4 className="font-bold text-base tracking-tight text-white">{val.title}</h4>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed font-sans">{val.description}</p>
+                <p className="text-xs text-slate-400 leading-relaxed font-sans">{val.description}</p>
               </div>
             ))}
           </div>
@@ -85,8 +85,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         <section className="max-w-4xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
           <div className="text-center max-w-xl mx-auto mb-10">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono">OPERATIONAL LEADERSHIP</span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1 tracking-tight">Leadership Excellence</h2>
-            <p className="text-xs text-slate-500 mt-1">Direct managerial accountability ensures your mission has support at the highest level.</p>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-950 mt-1 tracking-tight">Leadership Excellence</h2>
+            <p className="text-xs text-slate-600 mt-1">Direct managerial accountability ensures your mission has support at the highest level.</p>
           </div>
 
           <div className="flex flex-col md:flex-row gap-8 items-center">
@@ -108,17 +108,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
               <div>
                 <span className="text-indigo-600 text-[10px] font-mono font-bold uppercase tracking-wider block mb-0.5 font-semibold">HEAD OF DEPLOYMENT OPERATIONS</span>
                 <h3 className="text-xl md:text-2xl font-black text-[#0f172a] tracking-tight">Emmanuel A.H Kpakama</h3>
-                <p className="text-xs font-semibold text-slate-500">Head of Administration &amp; Logistics Operations, BIG Group</p>
+                <p className="text-xs font-semibold text-slate-600">Head of Administration &amp; Logistics Operations, BIG Group</p>
               </div>
 
-              <p className="text-xs md:text-sm text-slate-500 leading-relaxed">
+              <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
                 With over 12 coordination years resolving complex NGO logistics and high-end executive transport fleets across the Mano River Union, Emmanuel drives the operational excellence program at BIG Group. His absolute commitment remains directed at flawless diagnostic mechanical security, compliance with strict UN carrier criteria, and instant administrative responsiveness.
               </p>
 
-              <div className="flex flex-wrap gap-2 pt-2 text-[10px] text-slate-500 font-mono">
-                <span className="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">Defensive-Driving Assessor</span>
-                <span className="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">Missions Liaison Lead</span>
-                <span className="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200">12+ Yrs Vetted Experience</span>
+              <div className="flex flex-wrap gap-2 pt-2 text-[10px] text-slate-600 font-mono">
+                <span className="bg-slate-50 text-slate-700 px-2.5 py-1 rounded-full border border-slate-200">Defensive-Driving Assessor</span>
+                <span className="bg-slate-50 text-slate-700 px-2.5 py-1 rounded-full border border-slate-200">Missions Liaison Lead</span>
+                <span className="bg-slate-50 text-slate-700 px-2.5 py-1 rounded-full border border-slate-200">12+ Yrs Vetted Experience</span>
               </div>
             </div>
           </div>
