@@ -53,7 +53,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   const [phone, setPhone] = useState<string>('');
   
   const [serviceType, setServiceType] = useState<Inquiry['serviceType']>('Chauffeur Driven');
-  const [preferredVehicle, setPreferredVehicle] = useState<string>(selectedVehicleId || sourceVehicles[0].id);
+  const [preferredVehicle, setPreferredVehicle] = useState<string>(selectedVehicleId || '');
   const [vehiclesNeeded, setVehiclesNeeded] = useState<number>(1);
   
   const [startDate, setStartDate] = useState<string>('');
@@ -104,7 +104,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     return true;
   };
 
-  const currentVehicleObj = sourceVehicles.find(v => v.id === preferredVehicle) || sourceVehicles[0];
+  const currentVehicleObj = sourceVehicles.find(v => v.id === preferredVehicle);
 
   const handleNext = () => {
     if (validateStep(step)) {
@@ -135,7 +135,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       serviceType,
       startDate,
       endDate,
-      preferredVehicle: currentVehicleObj.name,
+      preferredVehicle: currentVehicleObj?.name || '',
       vehiclesNeeded,
       pickupLocation,
       dropoffLocation,
@@ -569,7 +569,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <span className="text-[8px] text-slate-500 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
                 </div>
 
-                {currentVehicleObj.imageUrl && (
+                {currentVehicleObj?.imageUrl ? (
                   <div className="flex justify-center py-2">
                     <img 
                       src={currentVehicleObj.imageUrl} 
@@ -577,13 +577,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       className="h-24 w-auto object-contain drop-shadow-md rounded-lg"
                     />
                   </div>
+                ) : (
+                  <div className="flex justify-center py-6 text-slate-300">
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400 border border-slate-200 px-4 py-2 rounded-xl border-dashed">No Vehicle Selected</span>
+                  </div>
                 )}
 
-                <div className="space-y-1 text-[11px]">
+                <div className="space-y-1 text-sm">
                   <p><strong>REPRESENTATIVE:</strong> {fullName || '---'}</p>
                   <p><strong>ORGANIZATION:</strong> {organization || '---'}</p>
                   <p><strong>SERVICE TYPE:</strong> {serviceType}</p>
-                  <p><strong>VEHICLE UNIT:</strong> {currentVehicleObj.name}</p>
+                  <p><strong>VEHICLE UNIT:</strong> {currentVehicleObj?.name || '---'}</p>
                   <p><strong>QUANTITY:</strong> {vehiclesNeeded} Unit(s)</p>
                   {startDate && <p><strong>DEPLOY DATE:</strong> {startDate}</p>}
                   {endDate && <p><strong>RETURN DATE:</strong> {endDate}</p>}

@@ -65,8 +65,8 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
 
   if (selectedSpecVehicle) {
     return (
-      <div className="w-full bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 font-sans">
-        <div className="max-w-6xl mx-auto">
+      <div className="w-full bg-slate-50 min-h-screen py-12 px-4 md:px-6 font-sans">
+        <div className="max-w-[96%] xl:max-w-[98%] 2xl:max-w-[1600px] mx-auto">
           
           {/* Breadcrumb Navigation */}
           <div className="mb-8">
@@ -255,8 +255,8 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
   }
 
   return (
-    <div className="w-full bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-7xl mx-auto">
+    <div className="w-full bg-slate-50 min-h-screen py-12 px-4 md:px-6 font-sans">
+      <div className="max-w-[96%] xl:max-w-[98%] 2xl:max-w-[1600px] mx-auto">
         
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-10">
@@ -305,7 +305,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
         </div>
 
         {/* Main Fleet Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 w-full">
           {filteredVehicles.map((vehicle) => (
             <div 
               key={vehicle.id} 
