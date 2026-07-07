@@ -67,14 +67,16 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
   const [photoPreview, setPhotoPreview] = useState<string>(editingDriver?.imgUrl || '');
   const [photoUploading, setPhotoUploading] = useState(false);
   const [pendingDocs, setPendingDocs] = useState<PendingDoc[]>([]);
-  const [existingDocs, setExistingDocs] = useState<DriverDocument[]>([]);
+  const [existingDocs, setExistingDocs] = useState<DriverDocument[]>(
+    editingDriver?.documents ?? []
+  );
   const [existingDocsLoading, setExistingDocsLoading] = useState(false);
   const [newDocLabel, setNewDocLabel] = useState('');
   const [newDocType, setNewDocType] = useState('license_front');
   const photoInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
 
-  // Load existing documents from DB when editing a driver
+  // Refresh documents from DB on open (catches any gap between join and current state)
   useEffect(() => {
     if (!editingDriver?.id) return;
     setExistingDocsLoading(true);

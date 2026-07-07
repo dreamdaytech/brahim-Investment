@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award } from 'lucide-react';
+import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye } from 'lucide-react';
 
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
@@ -1933,16 +1933,24 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
         {/* Documents Section */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <h3 className="text-lg font-black text-slate-950 mb-6 flex items-center gap-2">
-            <FileText className="text-indigo-600" size={20} />
-            Documents & Attachments
-          </h3>
-          
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-black text-slate-950 flex items-center gap-2">
+              <FileText className="text-indigo-600" size={20} />
+              Documents &amp; Attachments
+            </h3>
+            <button
+              onClick={() => { setEditingDriver(driver); setIsDriverModalOpen(true); }}
+              className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 px-3 py-1.5 rounded-xl transition"
+            >
+              <Upload size={12} /> Upload Document
+            </button>
+          </div>
+
           {(!driver.documents || driver.documents.length === 0) ? (
             <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
               <FileText className="mx-auto text-slate-400 mb-2" size={32} />
               <p className="text-slate-600 font-medium">No documents uploaded</p>
-              <button 
+              <button
                 onClick={() => { setEditingDriver(driver); setIsDriverModalOpen(true); }}
                 className="mt-2 text-sm text-indigo-600 font-bold hover:underline"
               >
@@ -1959,17 +1967,47 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     </div>
                     <div className="min-w-0">
                       <p className="font-semibold text-sm text-slate-950 truncate" title={doc.label}>{doc.label}</p>
-                      <p className="text-xs text-slate-600 uppercase">{doc.docType?.replace(/_/g, ' ')}</p>
+                      <p className="text-xs text-slate-500 uppercase tracking-wide">{doc.docType?.replace(/_/g, ' ')}</p>
                     </div>
                   </div>
-                  <a 
-                    href={doc.fileUrl} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                  >
-                    <Download size={18} />
-                  </a>
+                  {/* View + Delete actions */}
+                  <div className="flex items-center gap-1 shrink-0 ml-2">
+                    <a
+                      href={doc.fileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="View document"
+                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                    >
+                      <Eye size={16} />
+                    </a>
+                    <a
+                      href={doc.fileUrl}
+                      download
+                      title="Download document"
+                      className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                    >
+                      <Download size={16} />
+                    </a>
+                    <button
+                      title="Delete document"
+                      onClick={async () => {
+                        if (!window.confirm(`Delete "${doc.label}"? This cannot be undone.`)) return;
+                        const { error } = await supabase.from('driver_documents').delete().eq('id', doc.id);
+                        if (!error) {
+                          // Remove from driver state immediately
+                          _setDrivers(prev => prev.map(d =>
+                            d.id === driver.id
+                              ? { ...d, documents: (d.documents || []).filter(dd => dd.id !== doc.id) }
+                              : d
+                          ));
+                        }
+                      }}
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
