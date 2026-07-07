@@ -5028,6 +5028,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             }
 
             setIsDriverModalOpen(false);
+            return targetId;
           }}
         />
       )}

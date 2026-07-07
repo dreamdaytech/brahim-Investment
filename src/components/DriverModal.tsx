@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   User, Phone, Mail, MapPin, Calendar, CreditCard, FileText,
   HeartHandshake, Upload, X, CheckCircle2, AlertCircle, Camera, Loader2, Plus, Trash2, AlertTriangle
@@ -23,7 +23,7 @@ interface Props {
   editingDriver: Driver | null;
   allStatusLogs?: DriverStatusLog[];
   onClose: () => void;
-  onSave: (data: Partial<Driver>) => void;
+  onSave: (data: Partial<Driver>) => Promise<string>; // returns the assigned driver id
 }
 
 // ── Field helpers ──────────────────────────────────────────────────────────────
@@ -67,10 +67,36 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
   const [photoPreview, setPhotoPreview] = useState<string>(editingDriver?.imgUrl || '');
   const [photoUploading, setPhotoUploading] = useState(false);
   const [pendingDocs, setPendingDocs] = useState<PendingDoc[]>([]);
+  const [existingDocs, setExistingDocs] = useState<DriverDocument[]>([]);
+  const [existingDocsLoading, setExistingDocsLoading] = useState(false);
   const [newDocLabel, setNewDocLabel] = useState('');
   const [newDocType, setNewDocType] = useState('license_front');
   const photoInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
+
+  // Load existing documents from DB when editing a driver
+  useEffect(() => {
+    if (!editingDriver?.id) return;
+    setExistingDocsLoading(true);
+    supabase
+      .from('driver_documents')
+      .select('*')
+      .eq('driver_id', editingDriver.id)
+      .order('uploaded_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setExistingDocs(data.map((d: any) => ({
+            id: d.id,
+            driverId: d.driver_id,
+            docType: d.doc_type,
+            label: d.label,
+            fileUrl: d.file_url,
+            fileName: d.file_name,
+          })));
+        }
+        setExistingDocsLoading(false);
+      });
+  }, [editingDriver?.id]);
 
   // Compute suspension count for this driver from existing logs
   const suspensionCount = editingDriver?.id
@@ -128,7 +154,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
     }
   };
 
-  // ── Document queue ────────────────────────────────────────────────────────────
+  // ── Document queue ────────────────────────────────────────────────────────
   const handleDocSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !newDocLabel.trim()) return;
@@ -145,7 +171,13 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
 
   const removeDoc = (key: string) => setPendingDocs(prev => prev.filter(d => d.key !== key));
 
-  // ── Upload all pending docs ───────────────────────────────────────────────────
+  // ── Delete an already-saved document ─────────────────────────────────────
+  const deleteExistingDoc = async (docId: string) => {
+    await supabase.from('driver_documents').delete().eq('id', docId);
+    setExistingDocs(prev => prev.filter(d => d.id !== docId));
+  };
+
+  // ── Upload all pending docs ───────────────────────────────────────────────
   const uploadDocs = async (driverId: string) => {
     for (const doc of pendingDocs) {
       setPendingDocs(prev => prev.map(d => d.key === doc.key ? { ...d, status: 'uploading' } : d));
@@ -168,7 +200,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
     }
   };
 
-  // ── Submit ────────────────────────────────────────────────────────────────────
+  // ── Submit ────────────────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) { setTab('personal'); return; }
@@ -177,14 +209,12 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
     try {
       const imgUrl = await uploadPhoto();
       const data: Partial<Driver> = { ...form, imgUrl };
-      // If editing, upload docs immediately; if new, we need the id from onSave
-      // We call onSave first then upload docs if we have an id
-      if (editingDriver?.id) {
-        await uploadDocs(editingDriver.id);
+      // onSave returns the confirmed driver ID (existing or newly DB-generated)
+      const driverId = await onSave(data);
+      // Upload all queued documents using the real driver ID
+      if (pendingDocs.length > 0 && driverId) {
+        await uploadDocs(driverId);
       }
-      onSave(data);
-      // For new driver: docs will be uploaded with the temporary local id
-      // (will sync on next load). This is a best-effort approach.
     } finally {
       setSaving(false);
     }
@@ -392,14 +422,52 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                     <input ref={docInputRef} type="file" accept="image/*,.pdf,.doc,.docx" className="hidden" onChange={handleDocSelect} />
                   </div>
 
-                  {/* Pending documents list */}
-                  {pendingDocs.length === 0 ? (
+                {/* Existing saved documents */}
+                  {existingDocsLoading && (
+                    <div className="flex items-center gap-2 text-xs text-slate-500 py-2">
+                      <Loader2 size={13} className="animate-spin" /> Loading saved documents...
+                    </div>
+                  )}
+                  {!existingDocsLoading && existingDocs.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Previously Saved</p>
+                      <div className="space-y-2">
+                        {existingDocs.map(doc => (
+                          <div key={doc.id} className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                              {doc.fileUrl && (doc.fileUrl.endsWith('.jpg') || doc.fileUrl.endsWith('.jpeg') || doc.fileUrl.endsWith('.png') || doc.fileUrl.endsWith('.webp')) ? (
+                                <img src={doc.fileUrl} alt={doc.label} className="w-full h-full object-cover rounded-lg" />
+                              ) : (
+                                <FileText size={16} className="text-emerald-600" />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-bold text-slate-700 truncate">{doc.label}</p>
+                              <p className="text-[10px] text-slate-500 truncate">{doc.fileName ?? doc.docType}</p>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-emerald-100 rounded-lg text-emerald-600 hover:text-emerald-700 transition" title="View document">
+                                <CheckCircle2 size={13} />
+                              </a>
+                              <button type="button" onClick={() => deleteExistingDoc(doc.id!)} className="p-1.5 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition" title="Delete document">
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pending (new) documents to upload */}
+                  {pendingDocs.length === 0 && existingDocs.length === 0 && !existingDocsLoading ? (
                     <div className="flex flex-col items-center gap-2 py-8 border-2 border-dashed border-slate-200 rounded-2xl text-slate-500">
                       <FileText size={28} className="text-slate-400" />
                       <p className="text-xs">No documents attached yet</p>
                     </div>
-                  ) : (
+                  ) : pendingDocs.length > 0 ? (
                     <div className="space-y-2">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">New — Pending Upload</p>
                       {pendingDocs.map(doc => (
                         <div key={doc.key} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
                           {doc.previewUrl ? (
@@ -426,7 +494,8 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                         </div>
                       ))}
                     </div>
-                  )}
+                  ) : null}
+
                 </div>
               </div>
             )}
