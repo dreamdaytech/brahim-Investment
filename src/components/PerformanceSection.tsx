@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye } from 'lucide-react';
 
 import { 
@@ -13,6 +13,7 @@ import { DriverModal } from './DriverModal';
 import { DriverAuditModal } from './DriverAuditModal';
 import { DispatchDetailsView } from './DispatchDetailsView';
 import { VehicleDetailsView } from './VehicleDetailsView';
+import { VehicleModal } from './VehicleModal';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { FuelCity, FuelStation } from '../types';
@@ -5179,165 +5180,23 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         />
       )}
 
-      {/* Vehicle Modal */}
       {isVehicleModalOpen && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600 sticky top-0 z-10">
-              <div>
-                <h2 className="text-lg font-black text-white">
-                  {isVehicleReadOnly ? 'View Vehicle' : (editingVehicle ? 'Edit Vehicle' : 'Add Vehicle')}
-                </h2>
-                <p className="text-indigo-200 text-xs mt-0.5">
-                  {isVehicleReadOnly ? 'View detailed vehicle information.' : 'Register a new vehicle or update details.'}
-                </p>
-              </div>
-              <button onClick={() => setIsVehicleModalOpen(false)} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
-            </div>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const fd = new FormData(e.currentTarget);
-              const data: Partial<Vehicle> = {
-                makeModel: fd.get('makeModel') as string,
-                year: Number(fd.get('year')),
-                odometer: Number(fd.get('odometer')),
-                plateNumber: fd.get('plateNumber') as string,
-                insuranceExpiry: fd.get('insuranceExpiry') as string,
-                condition: fd.get('condition') as string,
-                isCompanyRegistered: fd.get('isCompanyRegistered') === 'true',
-                type: fd.get('type') as string,
-                status: fd.get('status') as any,
-                // Public Fleet fields
-                showOnFleet: fd.get('showOnFleet') === 'true',
-                vehicleCategory: fd.get('vehicleCategory') as string,
-                description: fd.get('description') as string,
-                pricePerDay: Number(fd.get('pricePerDay')) || 0,
-                fuelType: fd.get('fuelType') as string,
-                transmission: fd.get('transmission') as string,
-                seats: Number(fd.get('seats')) || 5,
-                engineLabel: fd.get('engineLabel') as string,
-                imageUrl: fd.get('imageUrl') as string,
-              };
-              if (editingVehicle?.id) {
-                setVehicles(prev => prev.map(v => v.id === editingVehicle.id ? { ...v, ...data } : v));
-              } else {
-                setVehicles(prev => [{ ...data, id: uuidv4() } as Vehicle, ...prev]);
+        <VehicleModal
+          editingVehicle={editingVehicle as Vehicle | null}
+          onClose={() => setIsVehicleModalOpen(false)}
+          onSave={(data) => {
+            if (editingVehicle?.id) {
+              setVehicles(prev => prev.map(v => v.id === editingVehicle.id ? { ...v, ...data } : v));
+              if (viewingVehicle?.id === editingVehicle.id) {
+                setViewingVehicle(prev => prev ? { ...prev, ...data } as Vehicle : null);
               }
-              setIsVehicleModalOpen(false);
-            }} className="p-6 space-y-4">
-              <fieldset disabled={isVehicleReadOnly}>
-                <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Make & Model</label>
-                  <input type="text" name="makeModel" required defaultValue={editingVehicle?.makeModel || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Year</label>
-                  <input type="number" name="year" required defaultValue={editingVehicle?.year || new Date().getFullYear()} className="w-full p-2 border border-slate-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Odometer (km)</label>
-                  <input type="number" name="odometer" required defaultValue={editingVehicle?.odometer || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">License Plate</label>
-                  <input type="text" name="plateNumber" required defaultValue={editingVehicle?.plateNumber || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Insurance Expiry</label>
-                  <input type="date" name="insuranceExpiry" required defaultValue={editingVehicle?.insuranceExpiry || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Condition</label>
-                  <select name="condition" required defaultValue={editingVehicle?.condition || 'Excellent'} className="w-full p-2 border border-slate-200 rounded-xl">
-                    <option value="Excellent">Excellent</option>
-                    <option value="Good">Good</option>
-                    <option value="Fair">Fair</option>
-                    <option value="Poor">Poor</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Company Registered?</label>
-                  <select name="isCompanyRegistered" required defaultValue={editingVehicle?.isCompanyRegistered !== false ? 'true' : 'false'} className="w-full p-2 border border-slate-200 rounded-xl">
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Type (SUV, Sedan)</label>
-                  <input type="text" name="type" required defaultValue={editingVehicle?.type || 'SUV'} className="w-full p-2 border border-slate-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Status</label>
-                  <select name="status" required defaultValue={editingVehicle?.status || 'Available'} className="w-full p-2 border border-slate-200 rounded-xl">
-                    <option value="Available">Available</option>
-                    <option value="Maintenance">Maintenance</option>
-                    <option value="Decommissioned">Decommissioned</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Marketing & Public Profile Section */}
-              <div className="mt-8 pt-6 border-t border-slate-200">
-                <h3 className="text-sm font-black text-slate-800 mb-4">Marketing & Public Profile</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Show on Public Fleet?</label>
-                    <select name="showOnFleet" required defaultValue={editingVehicle?.showOnFleet ? 'true' : 'false'} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 font-medium">
-                      <option value="true">Yes, show to public</option>
-                      <option value="false">No, hide from public</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle Category</label>
-                    <input type="text" name="vehicleCategory" defaultValue={editingVehicle?.vehicleCategory || editingVehicle?.type || ''} placeholder="e.g. SUV, Sedan, 4WD" className="w-full p-2 border border-slate-200 rounded-xl" />
-                  </div>
-                  <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Image URL</label>
-                    <input type="url" name="imageUrl" defaultValue={editingVehicle?.imageUrl || ''} placeholder="https://example.com/image.jpg" className="w-full p-2 border border-slate-200 rounded-xl" />
-                  </div>
-                  <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Short Description</label>
-                    <textarea name="description" rows={2} defaultValue={editingVehicle?.description || ''} placeholder="Luxurious and comfortable ride for long trips..." className="w-full p-2 border border-slate-200 rounded-xl"></textarea>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Price Per Day ($)</label>
-                    <input type="number" name="pricePerDay" defaultValue={editingVehicle?.pricePerDay || 0} min="0" step="0.01" className="w-full p-2 border border-slate-200 rounded-xl" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Seats</label>
-                    <input type="number" name="seats" defaultValue={editingVehicle?.seats || 5} min="1" className="w-full p-2 border border-slate-200 rounded-xl" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Fuel Type</label>
-                    <select name="fuelType" defaultValue={editingVehicle?.fuelType || 'Diesel'} className="w-full p-2 border border-slate-200 rounded-xl">
-                      <option value="Diesel">Diesel</option>
-                      <option value="Petrol">Petrol</option>
-                      <option value="Hybrid">Hybrid</option>
-                      <option value="EV">EV</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Transmission</label>
-                    <select name="transmission" defaultValue={editingVehicle?.transmission || 'Automatic'} className="w-full p-2 border border-slate-200 rounded-xl">
-                      <option value="Automatic">Automatic</option>
-                      <option value="Manual">Manual</option>
-                    </select>
-                  </div>
-                </div>
-                </div>
-              </fieldset>
-
-              {!isVehicleReadOnly && (
-                <div className="flex justify-end mt-4">
-                  <button type="submit" className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700">Save Vehicle</button>
-                </div>
-              )}
-            </form>
-          </div>
-        </div>
+            } else {
+              setVehicles(prev => [{ ...data, id: data.id || uuidv4() } as Vehicle, ...prev]);
+            }
+            setIsVehicleModalOpen(false);
+          }}
+        />
       )}
-
       {/* Delete Vehicle Confirmation */}
       {deletingVehicle && (
         <div className="fixed inset-0 bg-slate-900/60 z-[250] flex items-center justify-center p-4 animate-fade-in">
