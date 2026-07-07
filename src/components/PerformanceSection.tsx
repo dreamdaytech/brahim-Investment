@@ -476,7 +476,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   React.useEffect(() => {
     const fetchData = async () => {
       const [driversRes, vehiclesRes, dispatchesRes, maintenanceRes, tripLogsRes, scoresRes, statusLogsRes, completedDispRes, fuelCitiesRes, fuelStationsRes] = await Promise.all([
-        supabase.from('drivers').select('*'),
+        supabase.from('drivers').select('*, driver_documents(*)'),
         supabase.from('vehicles').select('*'),
         supabase.from('active_dispatches').select('*'),
         supabase.from('maintenance_records').select('*'),
@@ -516,6 +516,16 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           emergencyContactName: d.emergency_contact_name, emergencyContactPhone: d.emergency_contact_phone,
           statusLogs: driverLogs,
           suspensionCount,
+          documents: Array.isArray(d.driver_documents)
+            ? d.driver_documents.map((dd: any) => ({
+                id: dd.id,
+                driverId: dd.driver_id,
+                docType: dd.doc_type,
+                label: dd.label,
+                fileUrl: dd.file_url,
+                fileName: dd.file_name,
+              }))
+            : [],
         };
       }));
 
@@ -611,6 +621,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       'driver_status_logs',
       'fuel_cities',
       'fuel_stations',
+      'driver_documents',
     ];
     const realtimeChannels = realtimeTables.map(table =>
       supabase.channel(`perf:${table}`)
@@ -1940,15 +1951,15 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {driver.documents.map(doc => (
+              {driver.documents!.map(doc => (
                 <div key={doc.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-indigo-200 hover:shadow-sm transition-all group">
                   <div className="flex items-center gap-3 overflow-hidden">
                     <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg shrink-0">
                       <FileText size={20} />
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm text-slate-950 truncate" title={doc.fileName}>{doc.fileName}</p>
-                      <p className="text-xs text-slate-600 uppercase">{doc.documentType}</p>
+                      <p className="font-semibold text-sm text-slate-950 truncate" title={doc.label}>{doc.label}</p>
+                      <p className="text-xs text-slate-600 uppercase">{doc.docType?.replace(/_/g, ' ')}</p>
                     </div>
                   </div>
                   <a 
@@ -5027,7 +5038,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               });
             }
 
-            setIsDriverModalOpen(false);
+            // Note: modal is closed by DriverModal's onClose() after documents finish uploading
             return targetId;
           }}
         />

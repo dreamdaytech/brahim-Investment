@@ -215,6 +215,8 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
       if (pendingDocs.length > 0 && driverId) {
         await uploadDocs(driverId);
       }
+      // Close the modal only after everything (including doc uploads) has finished
+      onClose();
     } finally {
       setSaving(false);
     }
