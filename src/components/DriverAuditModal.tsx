@@ -19,6 +19,7 @@ export const DriverAuditModal: React.FC<Props> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ driverId: string; driverName: string; newStatus: string } | null>(null);
   
   // Calculate compliance for each driver
   const auditedDrivers = useMemo(() => {
@@ -52,9 +53,16 @@ export const DriverAuditModal: React.FC<Props> = ({
     d.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleStatusChange = async (driverId: string, newStatus: string) => {
-    if (!window.confirm(`Are you sure you want to change this driver's status to ${newStatus}?`)) return;
+  const handleStatusChange = (driverId: string, driverName: string, newStatus: string) => {
+    setConfirmAction({ driverId, driverName, newStatus });
+  };
+
+  const confirmStatusChange = async () => {
+    if (!confirmAction) return;
+    const { driverId, newStatus } = confirmAction;
+    
     setUpdatingId(driverId);
+    setConfirmAction(null);
     
     let reason = `Status updated via Compliance Audit to ${newStatus}`;
     if (newStatus === 'Suspended') reason = 'Suspended during Compliance Audit';
@@ -145,7 +153,7 @@ export const DriverAuditModal: React.FC<Props> = ({
                       <span className="text-xs font-medium text-slate-500">Status:</span>
                       <select
                         value={driver.status}
-                        onChange={(e) => handleStatusChange(driver.id, e.target.value)}
+                        onChange={(e) => handleStatusChange(driver.id, driver.name, e.target.value)}
                         disabled={updatingId === driver.id}
                         className={`text-sm font-bold rounded-lg border-slate-200 focus:ring-0 cursor-pointer ${
                           driver.status === 'Active' ? 'text-emerald-700 bg-emerald-50' :
@@ -183,6 +191,37 @@ export const DriverAuditModal: React.FC<Props> = ({
         </div>
         
       </div>
+
+      {/* Custom Confirmation Popup */}
+      {confirmAction && (
+        <div className="fixed inset-0 bg-slate-900/60 z-[60] flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-slide-up border border-slate-100">
+            <div className="p-6 text-center">
+              <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Change Driver Status</h3>
+              <p className="text-slate-500 text-sm">
+                Are you sure you want to change <span className="font-bold text-slate-700">{confirmAction.driverName}</span>'s status to <span className="font-bold text-slate-700">{confirmAction.newStatus}</span>?
+              </p>
+            </div>
+            <div className="flex bg-slate-50 p-4 gap-3 border-t border-slate-100">
+              <button
+                onClick={() => setConfirmAction(null)}
+                className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmStatusChange}
+                className="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm shadow-sm"
+              >
+                Confirm Update
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
