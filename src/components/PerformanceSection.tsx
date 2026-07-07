@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye } from 'lucide-react';
 
 import { 
@@ -692,7 +692,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         insurance_expiry: v.insuranceExpiry, condition: v.condition, is_company_registered: v.isCompanyRegistered,
         show_on_fleet: v.showOnFleet, vehicle_category: v.vehicleCategory, description: v.description,
         price_per_day: v.pricePerDay, features: v.features, fuel_type: v.fuelType, transmission: v.transmission,
-        seats: v.seats, engine_label: v.engineLabel, image_url: v.imageUrl, gallery_urls: v.galleryUrls, type: v.type
+        seats: v.seats, engine_label: v.engineLabel, image_url: v.imageUrl, gallery_urls: v.galleryUrls, vehicle_type: v.type,
+        spec_engine_size: v.specEngineSize, spec_drivetrain: v.specDrivetrain, spec_ground_clearance: v.specGroundClearance,
+        spec_fuel_capacity: v.specFuelCapacity, spec_best_for: v.specBestFor
       }));
       return next;
     });

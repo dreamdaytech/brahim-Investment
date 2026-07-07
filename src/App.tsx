@@ -191,7 +191,7 @@ const mapVehicleFromDB = (dbItem: any) => ({
   insuranceExpiry: dbItem.insurance_expiry,
   condition: dbItem.condition,
   isCompanyRegistered: dbItem.is_company_registered,
-  type: dbItem.type,
+  type: dbItem.vehicle_type,
   status: dbItem.status,
   imageUrl: dbItem.image_url,
   galleryUrls: dbItem.gallery_urls,
