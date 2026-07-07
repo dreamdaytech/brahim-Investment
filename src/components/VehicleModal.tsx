@@ -493,7 +493,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                   <div className="flex gap-4 items-start">
                     {primaryImagePreview ? (
                       <div className="relative group shrink-0">
-                        <img src={primaryImagePreview} alt="Primary" className="w-32 h-32 rounded-2xl object-cover border border-slate-200 shadow-sm" />
+                        <img src={primaryImagePreview} alt="Primary" className="w-32 h-32 rounded-2xl object-cover border border-slate-200 shadow-sm" referrerPolicy="no-referrer" />
                         {!readonly && (
                           <button type="button" onClick={() => { setPrimaryImageFile(null); setPrimaryImagePreview(null); }} className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition">
                             <X size={14} />
@@ -529,7 +529,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                   <div className="flex flex-wrap gap-4">
                     {galleryUrls.map((url, i) => (
                       <div key={`url-${i}`} className="relative group shrink-0">
-                        <img src={url} alt="Gallery" className="w-24 h-24 rounded-xl object-cover border border-slate-200 shadow-sm" />
+                        <img src={url} alt="Gallery" className="w-24 h-24 rounded-xl object-cover border border-slate-200 shadow-sm" referrerPolicy="no-referrer" />
                         {!readonly && (
                           <button type="button" onClick={() => setGalleryUrls(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition">
                             <X size={12} />
@@ -539,7 +539,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                     ))}
                     {galleryFiles.map((file, i) => (
                       <div key={`file-${i}`} className="relative group shrink-0">
-                        <img src={URL.createObjectURL(file)} alt="Gallery" className="w-24 h-24 rounded-xl object-cover border border-slate-200 shadow-sm" />
+                        <img src={URL.createObjectURL(file)} alt="Gallery" className="w-24 h-24 rounded-xl object-cover border border-slate-200 shadow-sm" referrerPolicy="no-referrer" />
                         {!readonly && (
                           <button type="button" onClick={() => setGalleryFiles(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition">
                             <X size={12} />
