@@ -22,8 +22,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   fleetVehicles
 }) => {
   // Use live DB vehicles if available, else fall back to hardcoded data
+  // Defensive filter: only show Available vehicles in the booking form
   const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
-    ? fleetVehicles.map(v => ({
+    ? fleetVehicles
+        .filter(v => !v.status || v.status === 'Available')
+        .map(v => ({
         id: v.id,
         name: v.makeModel,
         type: v.vehicleCategory || v.type || 'SUV',

@@ -414,7 +414,8 @@ export default function App() {
           <ServicesSection 
             setActiveTab={setActiveTab} 
             setSelectedVehicleId={setSelectedVehicleId} 
-            setEstimateDetails={setEstimateDetails} 
+            setEstimateDetails={setEstimateDetails}
+            fleetVehicles={fleetVehicles}
           />
         );
       case 'about':

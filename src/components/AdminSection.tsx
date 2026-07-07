@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { Inquiry } from '../types';
-import { VEHICLES } from '../data';
 import { Lock, FileText, CheckCircle, XCircle, Search, Sparkles, Filter, Database, TrendingUp, AlertCircle, ShieldEllipsis, ShieldCheck, LayoutDashboard, Users, Activity, CreditCard, LogOut, Menu, X, ChevronRight, ChevronLeft, BarChart3, PenTool, Trash2, Plus, User, Phone, Mail, MapPin, ArrowUpDown, SlidersHorizontal, ChevronDown, Navigation, Fuel, Car, Settings, MoreVertical, Eye, Camera, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PerformanceSection } from './PerformanceSection';

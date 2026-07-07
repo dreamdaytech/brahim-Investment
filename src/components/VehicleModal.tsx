@@ -202,7 +202,8 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
       let vehicleId = editingVehicle?.id;
       
       const fleetDbFields = {
-        show_on_fleet: fleetForm.showOnFleet,
+        // Auto-sync: if vehicle is not Available, hide from public fleet regardless of toggle
+        show_on_fleet: data.status === 'Available' ? fleetForm.showOnFleet : false,
         vehicle_category: fleetForm.vehicleCategory || null,
         description: fleetForm.description || null,
         price_per_day: fleetForm.pricePerDay || null,

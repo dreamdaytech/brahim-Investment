@@ -15,8 +15,11 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
   const [selectedSpecVehicle, setSelectedSpecVehicle] = useState<any | null>(null);
 
   // Use live DB vehicles if available, else fall back to hardcoded data
+  // Defensive filter: only show Available vehicles on public fleet page
   const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
-    ? fleetVehicles.map(v => ({
+    ? fleetVehicles
+        .filter(v => !v.status || v.status === 'Available')
+        .map(v => ({
         id: v.id,
         name: v.makeModel,
         type: v.vehicleCategory || v.type || 'SUV',

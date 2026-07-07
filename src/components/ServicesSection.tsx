@@ -8,20 +8,35 @@ interface ServicesSectionProps {
   setActiveTab: (tab: ActiveTab) => void;
   setSelectedVehicleId: (id: string) => void;
   setEstimateDetails: (details: { vehicleId: string; days: number; chauffeur: boolean; provincial: boolean; total: number }) => void;
+  fleetVehicles?: any[];
 }
 
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, setSelectedVehicleId, setEstimateDetails }) => {
+export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, setSelectedVehicleId, setEstimateDetails, fleetVehicles = [] }) => {
+  // Use live DB vehicles if available, fallback to static hardcoded list
+  const calcVehicles: Array<{ id: string; name: string; pricePerDay: number }> = (
+    fleetVehicles.length > 0
+      ? fleetVehicles
+          .filter(v => v.showOnFleet !== false && v.status === 'Available')
+          .map(v => ({ id: v.id, name: v.makeModel, pricePerDay: v.pricePerDay ?? 130 }))
+      : VEHICLES.map(v => ({ id: v.id, name: v.name, pricePerDay: v.pricePerDay }))
+  );
+
   // Interactive Calculator State
-  const [calcVehicleId, setCalcVehicleId] = useState<string>(VEHICLES[0].id);
+  const [calcVehicleId, setCalcVehicleId] = useState<string>(() => calcVehicles[0]?.id ?? VEHICLES[0].id);
   const [calcDays, setCalcDays] = useState<number>(5);
   const [calcChauffeur, setCalcChauffeur] = useState<boolean>(true);
   const [calcProvincial, setCalcProvincial] = useState<boolean>(false);
 
+  // Ensure selected vehicle is valid when the list updates (e.g. after DB load)
+  const validCalcVehicleId = calcVehicles.some(v => v.id === calcVehicleId)
+    ? calcVehicleId
+    : (calcVehicles[0]?.id ?? calcVehicleId);
+
   // Find vehicle details
-  const selectedVehicle = VEHICLES.find(v => v.id === calcVehicleId) || VEHICLES[0];
+  const selectedVehicle = calcVehicles.find(v => v.id === validCalcVehicleId) ?? calcVehicles[0] ?? VEHICLES[0];
 
   // Calculate pricing
-  const baseRate = selectedVehicle.pricePerDay;
+  const baseRate = selectedVehicle?.pricePerDay ?? 130;
   const chauffeurRate = 30; // 30 USD per day
   const provincialRate = 45; // 45 USD per day for provincial maintenance index
 
@@ -38,9 +53,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
 
   const handleApplyEstimate = () => {
     startTransition(() => {
-      setSelectedVehicleId(calcVehicleId);
+      setSelectedVehicleId(validCalcVehicleId);
       setEstimateDetails({
-        vehicleId: calcVehicleId,
+        vehicleId: validCalcVehicleId,
         days: calcDays,
         chauffeur: calcChauffeur,
         provincial: calcProvincial,
@@ -200,11 +215,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
               <div>
                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Preferred Vehicle Unit</label>
                 <select 
-                  value={calcVehicleId}
+                  value={validCalcVehicleId}
                   onChange={(e) => setCalcVehicleId(e.target.value)}
                   className="w-full p-3 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm cursor-pointer"
                 >
-                  {VEHICLES.map((v) => (
+                  {calcVehicles.map((v) => (
                     <option key={v.id} value={v.id}>{v.name} (${v.pricePerDay}/day)</option>
                   ))}
                 </select>

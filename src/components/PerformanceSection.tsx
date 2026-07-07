@@ -599,6 +599,30 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       }
     };
     fetchData();
+
+    // ── Real-time subscriptions: all admin tables update instantly across all devices
+    const realtimeTables = [
+      'drivers',
+      'vehicles',
+      'trip_logs',
+      'active_dispatches',
+      'maintenance_records',
+      'completed_dispatches',
+      'driver_status_logs',
+      'fuel_cities',
+      'fuel_stations',
+    ];
+    const realtimeChannels = realtimeTables.map(table =>
+      supabase.channel(`perf:${table}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table }, () => {
+          fetchData();
+        })
+        .subscribe()
+    );
+
+    return () => {
+      realtimeChannels.forEach(ch => supabase.removeChannel(ch));
+    };
   }, []);
 
   // Intercepting State Updates for Cloud Sync

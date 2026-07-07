@@ -209,8 +209,28 @@ export const DashboardOverview: React.FC = () => {
     };
 
     fetchAll();
-    return () => { cancelled = true; };
+
+    // ── Real-time subscriptions so the dashboard updates instantly across all devices
+    let channels: any[] = [];
+    import('../lib/supabase').then(({ supabase }) => {
+      const tables = ['vehicles', 'drivers', 'trip_logs', 'maintenance_records', 'active_dispatches'];
+      channels = tables.map(table =>
+        supabase.channel(`dashboard:${table}`)
+          .on('postgres_changes', { event: '*', schema: 'public', table }, () => {
+            if (!cancelled) fetchAll();
+          })
+          .subscribe()
+      );
+    });
+
+    return () => {
+      cancelled = true;
+      import('../lib/supabase').then(({ supabase }) => {
+        channels.forEach(ch => supabase.removeChannel(ch));
+      });
+    };
   }, []);
+
 
 
   // ── Skeleton shimmer helper
