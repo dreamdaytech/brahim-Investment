@@ -928,6 +928,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Partial<Vehicle> | null>(null);
+  const [isVehicleReadOnly, setIsVehicleReadOnly] = useState(false);
+  const [activeVehicleMenu, setActiveVehicleMenu] = useState<string | null>(null);
+  const [deletingVehicle, setDeletingVehicle] = useState<Vehicle | null>(null);
 
   const [selectedDriverScorecard, setSelectedDriverScorecard] = useState<string | null>(null);
 
@@ -2304,7 +2307,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <p className="text-slate-600 text-sm mt-1">Manage vehicles and asset status</p>
           </div>
           <button 
-            onClick={() => { setEditingVehicle(null); setIsVehicleModalOpen(true); }}
+            onClick={() => { setEditingVehicle(null); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
             className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
           >
             <Plus size={16} /> Add Vehicle
@@ -2392,13 +2395,40 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => { setEditingVehicle(vehicle); setIsVehicleModalOpen(true); }} className="text-indigo-600 hover:text-indigo-800 p-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors"><PenTool size={14} /></button>
-                      <button onClick={() => {
-                        if (window.confirm(`Are you sure you want to delete ${vehicle.makeModel} (${vehicle.plateNumber})?`)) {
-                          setVehicles(prev => prev.filter(v => v.id !== vehicle.id));
-                        }
-                      }} className="text-red-600 hover:text-red-800 p-1.5 bg-red-50 hover:bg-red-100 rounded-md transition-colors"><AlertTriangle size={14} /></button>
+                    <div className="relative inline-block text-left">
+                      <button 
+                        onClick={() => setActiveVehicleMenu(activeVehicleMenu === vehicle.id ? null : vehicle.id)}
+                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+                      >
+                        <MoreVertical size={16} />
+                      </button>
+                      
+                      {activeVehicleMenu === vehicle.id && (
+                        <>
+                          <div className="fixed inset-0 z-40" onClick={() => setActiveVehicleMenu(null)}></div>
+                          <div className="absolute right-0 mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 overflow-hidden">
+                            <button 
+                              onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(true); setIsVehicleModalOpen(true); }}
+                              className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                            >
+                              <Eye size={14} /> View
+                            </button>
+                            <button 
+                              onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
+                              className="w-full text-left px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 flex items-center gap-2"
+                            >
+                              <PenTool size={14} /> Edit
+                            </button>
+                            <div className="h-px bg-slate-100 my-1"></div>
+                            <button 
+                              onClick={() => { setActiveVehicleMenu(null); setDeletingVehicle(vehicle as Vehicle); }}
+                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 font-medium"
+                            >
+                              <Trash2 size={14} /> Delete
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -5138,8 +5168,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600 sticky top-0 z-10">
               <div>
-                <h2 className="text-lg font-black text-white">{editingVehicle ? 'Edit Vehicle' : 'Add Vehicle'}</h2>
-                <p className="text-indigo-200 text-xs mt-0.5">Register a new vehicle or update details.</p>
+                <h2 className="text-lg font-black text-white">
+                  {isVehicleReadOnly ? 'View Vehicle' : (editingVehicle ? 'Edit Vehicle' : 'Add Vehicle')}
+                </h2>
+                <p className="text-indigo-200 text-xs mt-0.5">
+                  {isVehicleReadOnly ? 'View detailed vehicle information.' : 'Register a new vehicle or update details.'}
+                </p>
               </div>
               <button onClick={() => setIsVehicleModalOpen(false)} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
             </div>
@@ -5174,7 +5208,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               }
               setIsVehicleModalOpen(false);
             }} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <fieldset disabled={isVehicleReadOnly}>
+                <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Make & Model</label>
                   <input type="text" name="makeModel" required defaultValue={editingVehicle?.makeModel || ''} className="w-full p-2 border border-slate-200 rounded-xl" />
@@ -5273,12 +5308,49 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     </select>
                   </div>
                 </div>
-              </div>
+                </div>
+              </fieldset>
 
-              <div className="flex justify-end mt-4">
-                <button type="submit" className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700">Save Vehicle</button>
-              </div>
+              {!isVehicleReadOnly && (
+                <div className="flex justify-end mt-4">
+                  <button type="submit" className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700">Save Vehicle</button>
+                </div>
+              )}
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Vehicle Confirmation */}
+      {deletingVehicle && (
+        <div className="fixed inset-0 bg-slate-900/60 z-[250] flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-slide-up border border-slate-100">
+            <div className="p-6 text-center">
+              <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Delete Vehicle</h3>
+              <p className="text-slate-500 text-sm">
+                Are you sure you want to delete the <span className="font-bold text-slate-700">{deletingVehicle.makeModel}</span> ({deletingVehicle.plateNumber})? This action cannot be undone.
+              </p>
+            </div>
+            <div className="flex bg-slate-50 p-4 gap-3 border-t border-slate-100">
+              <button
+                onClick={() => setDeletingVehicle(null)}
+                className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setVehicles(prev => prev.filter(v => v.id !== deletingVehicle.id));
+                  setDeletingVehicle(null);
+                }}
+                className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors text-sm shadow-sm"
+              >
+                Confirm Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
