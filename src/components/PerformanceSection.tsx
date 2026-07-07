@@ -10,6 +10,7 @@ import { supabase } from '../lib/supabase';
 import { handleSupabaseSync } from '../lib/syncHelpers';
 import { v4 as uuidv4 } from 'uuid';
 import { DriverModal } from './DriverModal';
+import { DriverAuditModal } from './DriverAuditModal';
 import { DispatchDetailsView } from './DispatchDetailsView';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -411,6 +412,32 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   // Document Dropdowns
   const [activeDocDropdown, setActiveDocDropdown] = useState<string | null>(null);
   const [headerDocDropdownOpen, setHeaderDocDropdownOpen] = useState(false);
+  
+  // Audit Modal
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const handleAuditStatusUpdate = async (driverId: string, newStatus: string, reason: string) => {
+    const { error } = await supabase.from('drivers').update({ status: newStatus }).eq('id', driverId);
+    if (error) {
+      alert(`Error updating driver status: ${error.message}`);
+      return;
+    }
+    
+    // Create status log
+    await supabase.from('driver_status_logs').insert({
+      driver_id: driverId,
+      status: newStatus,
+      reason: reason
+    });
+
+    // Update local state
+    setDrivers(prev => prev.map(d => 
+      d.id === driverId 
+        ? { ...d, status: newStatus, statusReason: reason } 
+        : d
+    ));
+    
+    // Refresh active logs if possible (just forcing a reload by calling loadInitialData would work but it might be heavy. local update is usually enough)
+  };
 
   // Fuel Module Filters
   const [fuelSearchQuery, setFuelSearchQuery] = useState('');
@@ -1640,26 +1667,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         </div>
         <div className="flex items-center gap-2">
           <button 
-            onClick={() => {
-              const now = new Date();
-              let suspended = 0, warned = 0;
-              setDrivers(prev => prev.map(d => {
-                if (d.status === 'Suspended') return d;
-                const scoreData = driverScores.find(ds => ds.driver.id === d.id);
-                // Suspend: expired license OR score < 40 with real trips
-                if (new Date(d.licenseExpiry) < now || (scoreData && scoreData.score < 40 && scoreData.trips > 0)) {
-                  suspended++;
-                  return { ...d, status: 'Suspended', statusReason: scoreData?.score < 40 ? `Auto-suspended: score ${scoreData.score}/100` : 'License expired' };
-                }
-                // #15 Warn: score 40-59
-                if (d.status === 'Active' && scoreData && scoreData.score >= 40 && scoreData.score < 60 && scoreData.trips > 0) {
-                  warned++;
-                  return { ...d, status: 'Warning', statusReason: `Auto-flagged: low score ${scoreData.score}/100` };
-                }
-                return d;
-              }));
-              alert(`Audit complete!\n• ${suspended} driver(s) suspended\n• ${warned} driver(s) flagged to Warning`);
-            }}
+            onClick={() => setIsAuditModalOpen(true)}
             className="flex items-center gap-2 text-sm font-bold text-amber-700 bg-amber-50 border border-amber-200 px-4 py-2 rounded-xl hover:bg-amber-100 transition-colors shadow-sm"
           >
             <ShieldAlert size={16} /> Audit Compliance
@@ -6086,6 +6094,18 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         </div>
       )}
 
+      {isAuditModalOpen && (
+        <DriverAuditModal
+          drivers={drivers}
+          driverScores={driverScores}
+          onClose={() => setIsAuditModalOpen(false)}
+          onUpdateStatus={handleAuditStatusUpdate}
+          onEditProfile={(d) => {
+            setEditingDriver(d);
+            setIsDriverModalOpen(true);
+          }}
+        />
+      )}
     </div>
   );
 };
