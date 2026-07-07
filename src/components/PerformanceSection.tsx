@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { DriverModal } from './DriverModal';
 import { DriverAuditModal } from './DriverAuditModal';
 import { DispatchDetailsView } from './DispatchDetailsView';
+import { VehicleDetailsView } from './VehicleDetailsView';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { FuelCity, FuelStation } from '../types';
@@ -931,6 +932,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   const [isVehicleReadOnly, setIsVehicleReadOnly] = useState(false);
   const [activeVehicleMenu, setActiveVehicleMenu] = useState<string | null>(null);
   const [deletingVehicle, setDeletingVehicle] = useState<Vehicle | null>(null);
+  const [viewingVehicle, setViewingVehicle] = useState<Vehicle | null>(null);
 
   const [selectedDriverScorecard, setSelectedDriverScorecard] = useState<string | null>(null);
 
@@ -2299,6 +2301,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   };
 
   const renderVehicles = () => {
+    // Full-page vehicle detail view
+    if (viewingVehicle) {
+      return (
+        <VehicleDetailsView
+          vehicle={viewingVehicle}
+          onBack={() => setViewingVehicle(null)}
+          onEdit={() => {
+            setEditingVehicle(viewingVehicle);
+            setIsVehicleReadOnly(false);
+            setIsVehicleModalOpen(true);
+          }}
+        />
+      );
+    }
+
     return (
       <div className="space-y-6 animate-fade-in">
         <div className="flex justify-between items-center mb-6">
@@ -2408,7 +2425,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           <div className="fixed inset-0 z-40" onClick={() => setActiveVehicleMenu(null)}></div>
                           <div className="absolute right-0 mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 overflow-hidden">
                             <button 
-                              onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(true); setIsVehicleModalOpen(true); }}
+                              onClick={() => { setActiveVehicleMenu(null); setViewingVehicle(vehicle as Vehicle); }}
                               className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
                             >
                               <Eye size={14} /> View
