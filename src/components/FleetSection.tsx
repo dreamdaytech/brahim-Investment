@@ -3,14 +3,15 @@ import { ActiveTab } from '../types';
 import { VEHICLES } from '../data';
 import { ShieldAlert, Info, Fuel, Users, CircleCheck, X, ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 
 interface FleetSectionProps {
-  setActiveTab: (tab: ActiveTab) => void;
   setSelectedVehicleId: (id: string) => void;
   fleetVehicles?: any[];
 }
 
-export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSelectedVehicleId, fleetVehicles }) => {
+export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId, fleetVehicles }) => {
+  const navigate = useNavigate();
   const [filterType, setFilterType] = useState<string>('All');
   const [selectedSpecVehicle, setSelectedSpecVehicle] = useState<any | null>(null);
 
@@ -62,7 +63,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setActiveTab, setSel
   const handleInquire = (vehicleId: string) => {
     startTransition(() => {
       setSelectedVehicleId(vehicleId);
-      setActiveTab('contact');
+      navigate('/contact');
     });
   };
 

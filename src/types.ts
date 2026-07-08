@@ -1,3 +1,5 @@
+export type ActiveTab = 'home' | 'fleet' | 'services' | 'contact' | 'admin' | string;
+
 export interface Vehicle {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export interface Vehicle {
   features: string[];
   imageUrl?: string;
   galleryUrls?: string[];
+  documents?: { name: string; url: string }[];
   seats: number;
   engine: string;
   pricePerDay: number;
@@ -65,7 +68,7 @@ export interface ClientItem {
   createdAt?: string;
 }
 
-export type ActiveTab = 'home' | 'fleet' | 'services' | 'about' | 'contact' | 'admin' | 'team' | 'clients' | 'performance';
+
 
 export interface FuelCity {
   id: string;

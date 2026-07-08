@@ -1,12 +1,9 @@
 import React from 'react';
 import { ActiveTab } from '../types';
 import { Shield, Phone, Mail, MapPin, ArrowUpRight, Calendar, Clock, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-interface FooterProps {
-  setActiveTab: (tab: ActiveTab) => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
+export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#0f172a] text-slate-400 border-t border-slate-800">
       {/* Top Value Accents */}
@@ -67,24 +64,24 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-400 border-l-2 border-indigo-500 pl-2 mb-4">Core Fleet</h3>
           <ul className="space-y-2 text-xs text-slate-500 font-sans">
             <li>
-              <button onClick={() => setActiveTab('fleet')} className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
+              <Link to="/fleet" className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
                 Toyota Land Cruiser Prado <ArrowUpRight size={10} className="opacity-60" />
-              </button>
+              </Link>
             </li>
             <li>
-              <button onClick={() => setActiveTab('fleet')} className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
+              <Link to="/fleet" className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
                 Toyota Land Cruiser V8 <ArrowUpRight size={10} className="opacity-60" />
-              </button>
+              </Link>
             </li>
             <li>
-              <button onClick={() => setActiveTab('fleet')} className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
+              <Link to="/fleet" className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
                 Toyota 4Runner SR5 <ArrowUpRight size={10} className="opacity-60" />
-              </button>
+              </Link>
             </li>
             <li>
-              <button onClick={() => setActiveTab('fleet')} className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
+              <Link to="/fleet" className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
                 Toyota Hilux Double Cabin <ArrowUpRight size={10} className="opacity-60" />
-              </button>
+              </Link>
             </li>
           </ul>
         </div>
@@ -94,24 +91,24 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-400 border-l-2 border-indigo-500 pl-2 mb-4">Logistics Services</h3>
           <ul className="space-y-2 text-xs text-slate-500 font-sans">
             <li>
-              <button onClick={() => setActiveTab('services')} className="hover:text-white hover:underline transition-all cursor-pointer">
+              <Link to="/services" className="hover:text-white hover:underline transition-all cursor-pointer">
                 Long-term Corporate Fleet Leasing
-              </button>
+              </Link>
             </li>
             <li>
-              <button onClick={() => setActiveTab('services')} className="hover:text-white hover:underline transition-all cursor-pointer">
+              <Link to="/services" className="hover:text-white hover:underline transition-all cursor-pointer">
                 Armed/Vetted Executive Escort & Driver Hire
-              </button>
+              </Link>
             </li>
             <li>
-              <button onClick={() => setActiveTab('services')} className="hover:text-white hover:underline transition-all cursor-pointer">
+              <Link to="/services" className="hover:text-white hover:underline transition-all cursor-pointer">
                 Provincial Offroad Deployment Logistics
-              </button>
+              </Link>
             </li>
             <li>
-              <button onClick={() => setActiveTab('services')} className="hover:text-white hover:underline transition-all cursor-pointer">
+              <Link to="/services" className="hover:text-white hover:underline transition-all cursor-pointer">
                 Diagnostic & Scheduled Mechanical Support
-              </button>
+              </Link>
             </li>
           </ul>
         </div>

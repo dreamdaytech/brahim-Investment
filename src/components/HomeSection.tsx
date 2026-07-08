@@ -3,14 +3,16 @@ import { ActiveTab, Vehicle } from '../types';
 import { VEHICLES, CORE_SERVICES, PARTNER_LOGOS } from '../data';
 import { Shield, ShieldCheck, CheckCircle2, Truck, Users, Settings, Wrench, ArrowRight, Star, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 
 interface HomeSectionProps {
-  setActiveTab: (tab: ActiveTab) => void;
   setSelectedVehicleId: (id: string) => void;
   fleetVehicles?: any[];
+  clients?: any[];
 }
 
-export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelectedVehicleId, fleetVehicles }) => {
+export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, fleetVehicles, clients = [] }) => {
+  const navigate = useNavigate();
   // Use live DB vehicles if available, else fall back to hardcoded data
   const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
     ? fleetVehicles.map(v => ({
@@ -34,7 +36,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
   const handleQuickBook = (vehicleId: string) => {
     startTransition(() => {
       setSelectedVehicleId(vehicleId);
-      setActiveTab('contact');
+      navigate('/contact');
     });
   };
 
@@ -84,14 +86,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
           {/* Quick CTA Actions */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <button
-              onClick={() => setActiveTab('contact')}
+              onClick={() => navigate('/contact')}
               className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:shadow-md hover:bg-indigo-700 transition-all text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer group"
             >
               <span>Book Your Vehicle</span>
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button
-              onClick={() => setActiveTab('fleet')}
+              onClick={() => navigate('/fleet')}
               className="px-8 py-4 bg-transparent text-white border-2 border-slate-400 font-semibold rounded-lg hover:bg-white/10 transition-all text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Explore SUV Fleet</span>
@@ -105,16 +107,33 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
       <section className="bg-white py-8 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-xs uppercase tracking-widest text-slate-500 font-bold font-mono">Trusted by International Partners</p>
-          <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4 items-center justify-center opacity-90 font-serif">
-            {PARTNER_LOGOS.map((partner, idx) => (
-              <div 
-                key={idx} 
-                className="bg-slate-50 px-4 py-2.5 rounded-lg border border-slate-200 shadow-sm flex flex-col items-center justify-center min-w-[140px] text-center"
-              >
-                <span className="font-extrabold text-[#0f172a] text-sm tracking-tight">{partner.name}</span>
-                <span className="text-[9px] font-bold text-indigo-600 font-mono uppercase mt-0.5">{partner.label}</span>
-              </div>
-            ))}
+          <div className="mt-8 relative overflow-hidden whitespace-nowrap w-full">
+            {/* Gradient masks for smooth fade in/out at edges */}
+            <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+            
+            <motion.div
+              className="flex w-max gap-8 items-center"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
+            >
+              {[...(clients.filter(c => c.isPartner !== false).length > 0 ? clients.filter(c => c.isPartner !== false) : PARTNER_LOGOS), ...(clients.filter(c => c.isPartner !== false).length > 0 ? clients.filter(c => c.isPartner !== false) : PARTNER_LOGOS)].map((partner, idx) => (
+                <div 
+                  key={`${partner.id || partner.name}-${idx}`} 
+                  className="bg-slate-50 px-6 py-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center min-w-[180px] h-[100px] text-center shrink-0"
+                >
+                  {partner.logoUrl ? (
+                    <img src={partner.logoUrl} alt={partner.name} className="h-8 object-contain mb-2 max-w-[120px]" />
+                  ) : (
+                    <div className="h-8 w-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold mb-2 shadow-inner">
+                      {partner.name.charAt(0)}
+                    </div>
+                  )}
+                  <span className="font-extrabold text-[#0f172a] text-sm tracking-tight truncate w-full">{partner.name}</span>
+                  {(partner.shortCode || partner.label) && <span className="text-[9px] font-bold text-indigo-600 font-mono uppercase mt-0.5 truncate w-full">{partner.shortCode || partner.label}</span>}
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
@@ -219,7 +238,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
             <h2 className="text-3xl font-extrabold text-[#0f172a] tracking-tight mt-2">Our Premium Ready 4WD Fleet</h2>
           </div>
           <button 
-            onClick={() => setActiveTab('fleet')}
+            onClick={() => navigate('/fleet')}
             className="text-sm font-semibold text-indigo-600 hover:text-indigo-500 transition-all flex items-center gap-1 mt-4 md:mt-0 cursor-pointer hover:underline"
           >
             <span>View Full Rent Options</span>
@@ -327,7 +346,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveTab, setSelec
               </p>
             </div>
             <button
-              onClick={() => setActiveTab('contact')}
+              onClick={() => navigate('/contact')}
               className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all text-xs tracking-wider uppercase shrink-0 cursor-pointer"
             >
               Request Custom Quote Proposal

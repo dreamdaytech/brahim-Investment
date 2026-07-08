@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActiveTab, Vehicle, Inquiry } from '../types';
+import { Vehicle, Inquiry } from '../types';
 import { VEHICLES } from '../data';
 import { Phone, Mail, MapPin, Send, Calendar, CheckSquare, Sparkles, Building, Briefcase, Plus, Minus, ArrowRight, ShieldAlert, BadgeCheck, ChevronDown, Search } from 'lucide-react';
 import { motion } from 'motion/react';

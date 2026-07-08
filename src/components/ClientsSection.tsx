@@ -1,14 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, RefreshCw, ArrowLeft, ShieldCheck } from 'lucide-react';
-import { ActiveTab, ClientItem } from '../types';
+import { ClientItem } from '../types';
 
 interface ClientsSectionProps {
-  setActiveTab: (tab: ActiveTab) => void;
   clients: ClientItem[];
 }
 
-export const ClientsSection: React.FC<ClientsSectionProps> = ({ setActiveTab, clients }) => {
+export const ClientsSection: React.FC<ClientsSectionProps> = ({ clients }) => {
   const [filter, setFilter] = useState<'All' | 'Ongoing' | 'Completed'>('All');
 
   // Helper to generate initials

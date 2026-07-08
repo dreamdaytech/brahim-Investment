@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { ActiveTab } from '../types';
+
 import { Phone, Mail, MapPin, Menu, X, Shield, Lock, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { NavLink, useNavigate, useLocation, Link } from 'react-router-dom';
 
 interface HeaderProps {
-  activeTab: ActiveTab;
-  setActiveTab: (tab: ActiveTab) => void;
-  onOpenAdmin: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenAdmin }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [adminUser, setAdminUser] = useState<any>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   React.useEffect(() => {
     import('../lib/supabase').then(({ supabase }) => {
@@ -27,13 +28,13 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
     });
   }, []);
 
-  const navItems: { id: ActiveTab; label: string }[] = [
-    { id: 'home', label: 'Home' },
-    { id: 'fleet', label: 'Our Fleet' },
-    { id: 'services', label: 'Services' },
-    { id: 'about', label: 'About Us' },
-    { id: 'clients', label: 'Partners' },
-    { id: 'contact', label: 'Book Now' }
+  const navItems: { id: string; label: string; path: string }[] = [
+    { id: 'home', label: 'Home', path: '/' },
+    { id: 'fleet', label: 'Our Fleet', path: '/fleet' },
+    { id: 'services', label: 'Services', path: '/services' },
+    { id: 'about', label: 'About Us', path: '/about' },
+    { id: 'clients', label: 'Partners', path: '/clients' },
+    { id: 'contact', label: 'Book Now', path: '/contact' }
   ];
 
   return (
@@ -86,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                       <button 
                         onClick={() => {
                           setDropdownOpen(false);
-                          onOpenAdmin();
+                          navigate('/admin');
                           setTimeout(() => window.dispatchEvent(new CustomEvent('open-admin-overview')), 50);
                         }}
                         className="w-full text-left px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
@@ -96,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                       <button 
                         onClick={() => {
                           setDropdownOpen(false);
-                          onOpenAdmin();
+                          navigate('/admin');
                           setTimeout(() => window.dispatchEvent(new CustomEvent('open-admin-profile')), 50);
                         }}
                         className="w-full text-left px-3 py-2 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
@@ -119,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             </div>
           ) : (
             <button 
-              onClick={onOpenAdmin}
+              onClick={() => navigate('/admin')}
               className="flex items-center space-x-1 text-xs text-slate-500 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
             >
               <Lock size={12} />
@@ -132,8 +133,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
       {/* Main Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
         {/* LOGO */}
-        <div 
-          onClick={() => setActiveTab('home')} 
+        <Link 
+          to="/" 
           className="flex items-center space-x-3 cursor-pointer select-none group"
         >
           <div className="bg-indigo-600 p-2 rounded flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
@@ -146,19 +147,17 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
             </div>
             <p className="text-[10px] tracking-widest text-slate-600 font-mono -mt-1">BRAHIM INVESTMENT GROUP</p>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-1 lg:space-x-2">
           {navItems.map((item) => {
-            const isActive = activeTab === item.id || (item.id === 'about' && activeTab === 'team');
+            const isActive = location.pathname === item.path || (item.id === 'about' && location.pathname === '/team');
             return (
-              <button
+              <NavLink
                 key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setMobileMenuOpen(false);
-                }}
+                to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                   isActive 
                     ? 'bg-indigo-600 text-white shadow-sm font-semibold' 
@@ -166,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                 }`}
               >
                 {item.label}
-              </button>
+              </NavLink>
             );
           })}
         </nav>
@@ -174,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
         {/* Mobile menu trigger */}
         <div className="flex md:hidden items-center space-x-3">
           <button
-            onClick={onOpenAdmin}
+            onClick={() => navigate('/admin')}
             className="p-1.5 text-slate-500 hover:text-indigo-400 transition-colors"
             title="Admin Logs"
           >
@@ -194,14 +193,12 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#131a2c] border-t border-slate-800 px-4 pt-2 pb-6 space-y-2 shadow-2xl animate-fade-in">
           {navItems.map((item) => {
-            const isActive = activeTab === item.id || (item.id === 'about' && activeTab === 'team');
+            const isActive = location.pathname === item.path || (item.id === 'about' && location.pathname === '/team');
             return (
-              <button
+              <NavLink
                 key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setMobileMenuOpen(false);
-                }}
+                to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`w-full text-left px-4 py-3 rounded-md text-base font-semibold block transition-colors ${
                   isActive 
                     ? 'bg-indigo-600 text-white font-bold' 
@@ -209,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, onOpenA
                 }`}
               >
                 {item.label}
-              </button>
+              </NavLink>
             );
           })}
           

@@ -2,13 +2,10 @@ import React from 'react';
 import { VALUES } from '../data';
 import { Target, Award, ShieldClose, ShieldAlert, Star, Compass, UserCheck, HeartHandshake, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ActiveTab } from '../types';
+import { useNavigate } from 'react-router-dom';
 
-interface AboutSectionProps {
-  setActiveTab: (tab: ActiveTab) => void;
-}
-
-export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
+export const AboutSection: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -93,10 +90,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
             {/* Biography Image */}
             <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-sm border-2 border-slate-200 shrink-0 relative bg-slate-50">
               <img 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD0rRkKRJq6SJSWHt5e2RTejG8waUb1dMXWYvbUZ0qfKw92gYlTZTIFp4PiwiCU1fMON0sb5tt8WZo4InDfo8nxr8vhz0SrUUqlwGo56Ng1XLHv0wEXtsSrSLXIKcEn_cD65CEPs792IXXlQ2mSdJ7E-fPd5XvF9RSqje2fBfS9iIYJGmKbBeDapJF6gn5C8xrJH_qQtk4dzX-2K8xhDZvnLj5HKjqU8xHP5-jO-ANuEATjn-7IDKC-PNIj34irvRQrzQEJHeP8O4" 
+                src="/images/emmanuel.jpg" 
                 alt="Emmanuel A.H Kpakama - Head of Administration & Logistics Operations" 
                 className="w-full h-full object-cover scale-[1.01]"
-                referrerPolicy="no-referrer"
               />
               <div className="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-md py-1 rounded text-center border border-white/5">
                 <span className="text-[9px] text-[#818cf8] font-mono font-bold uppercase">Workshop Oversight Director</span>
@@ -127,7 +123,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ setActiveTab }) => {
         {/* Team Subpage Link block */}
         <div className="mt-16 text-center">
           <button
-            onClick={() => setActiveTab('team')}
+            onClick={() => navigate('/team')}
             className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm cursor-pointer"
           >
             Meet the Full Team

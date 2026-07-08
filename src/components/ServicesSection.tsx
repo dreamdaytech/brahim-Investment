@@ -3,15 +3,16 @@ import { ActiveTab, Vehicle } from '../types';
 import { VEHICLES } from '../data';
 import { Truck, ShieldCheck, Wrench, Users, Calendar, ArrowRight, DollarSign, HelpCircle, FileText } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 
 interface ServicesSectionProps {
-  setActiveTab: (tab: ActiveTab) => void;
   setSelectedVehicleId: (id: string) => void;
   setEstimateDetails: (details: { vehicleId: string; days: number; chauffeur: boolean; provincial: boolean; total: number }) => void;
   fleetVehicles?: any[];
 }
 
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, setSelectedVehicleId, setEstimateDetails, fleetVehicles = [] }) => {
+export const ServicesSection: React.FC<ServicesSectionProps> = ({ setSelectedVehicleId, setEstimateDetails, fleetVehicles = [] }) => {
+  const navigate = useNavigate();
   // Use live DB vehicles if available, fallback to static hardcoded list
   const calcVehicles: Array<{ id: string; name: string; pricePerDay: number }> = (
     fleetVehicles.length > 0
@@ -61,7 +62,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setActiveTab, 
         provincial: calcProvincial,
         total: totalCost
       });
-      setActiveTab('contact');
+      navigate('/contact');
     });
   };
 

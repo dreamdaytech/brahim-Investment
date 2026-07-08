@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { User, Phone, Mail, Camera, Save, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
-export const AdminProfile: React.FC = () => {
+export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUserRole }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [email, setEmail] = useState('');
@@ -13,6 +13,8 @@ export const AdminProfile: React.FC = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [password, setPassword] = useState('');
+  const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -34,6 +36,23 @@ export const AdminProfile: React.FC = () => {
       const file = e.target.files[0];
       setAvatarFile(file);
       setAvatarUrl(URL.createObjectURL(file));
+    }
+  };
+
+  
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password || password.length < 6) {
+      setPasswordMessage({ type: 'error', text: 'Password must be at least 6 characters.' });
+      return;
+    }
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      setPasswordMessage({ type: 'success', text: 'Password updated successfully!' });
+      setPassword('');
+    } catch (err: any) {
+      setPasswordMessage({ type: 'error', text: err.message || 'Failed to update password.' });
     }
   };
 
@@ -217,6 +236,44 @@ export const AdminProfile: React.FC = () => {
           </div>
 
         </form>
+      
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mt-8">
+          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <ShieldCheck className="text-indigo-600" />
+            Security
+          </h2>
+
+          <form onSubmit={handleUpdatePassword} className="max-w-md space-y-5">
+            {passwordMessage && (
+              <div className={`p-4 rounded-xl text-sm flex items-center gap-2 ${passwordMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                <AlertCircle size={16} />
+                {passwordMessage.text}
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                New Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                minLength={6}
+                placeholder="Enter new password"
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-shadow text-sm"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={!password || password.length < 6}
+              className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-colors disabled:opacity-50"
+            >
+              Update Password
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

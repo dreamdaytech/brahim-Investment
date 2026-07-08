@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye } from 'lucide-react';
+import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye, LayoutGrid, List } from 'lucide-react';
 
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
@@ -448,6 +448,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   const [fuelSupplierFilter, setFuelSupplierFilter] = useState('all');
   const [fuelPaymentFilter, setFuelPaymentFilter] = useState('all');
   const [fuelFuelTypeFilter, setFuelFuelTypeFilter] = useState('all');
+  const [fuelViewMode, setFuelViewMode] = useState<'grid' | 'list'>('list');
   const [fuelPartnerFilter, setFuelPartnerFilter] = useState<string>('all');
   const [fuelCityFilter, setFuelCityFilter] = useState('all');
   const [fuelDateFrom, setFuelDateFrom] = useState('');
@@ -631,6 +632,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           fuelLevelOut: cd.fuel_level_out || '',
           conditionOut: cd.condition_out || '',
           corporateAccountId: cd.corporate_account_id,
+          projectId: cd.project_id,
           expectedReturnDate: cd.expected_return_date || '',
           completedAt: cd.completed_at,
           tripLogId: cd.trip_log_id,
@@ -875,6 +877,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   
   const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
   const [editingDispatch, setEditingDispatch] = useState<Partial<ActiveDispatch | CompletedDispatch> | null>(null);
+  const [dispatchBillingMode, setDispatchBillingMode] = useState<'project' | 'corporate'>('project');
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
   const [editingMaintenance, setEditingMaintenance] = useState<Partial<MaintenanceRecord> | null>(null);
   const [viewingMaintenance, setViewingMaintenance] = useState<MaintenanceRecord | null>(null);
@@ -884,6 +887,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   const [maintSortBy, setMaintSortBy] = useState<'date_desc' | 'date_asc' | 'cost_desc' | 'cost_asc'>('date_desc');
   const [maintDateFrom, setMaintDateFrom] = useState('');
   const [maintDateTo, setMaintDateTo] = useState('');
+  const [maintViewMode, setMaintViewMode] = useState<'grid' | 'list'>('list');
 
   // Maintenance computed values (must live at component level – hooks can't be inside renderX functions)
   const filteredMaintenanceRecords = useMemo(() => {
@@ -3541,6 +3545,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
           {/* Summary row + Export */}
           <div className="px-5 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-4 text-xs text-slate-600">
+            <div className="flex bg-slate-200/50 p-0.5 rounded-lg mr-2 border border-slate-200">
+              <button onClick={() => setFuelViewMode('grid')} className={`p-1 rounded flex items-center justify-center transition-colors ${fuelViewMode === 'grid' ? 'bg-white text-indigo-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={14} /></button>
+              <button onClick={() => setFuelViewMode('list')} className={`p-1 rounded flex items-center justify-center transition-colors ${fuelViewMode === 'list' ? 'bg-white text-indigo-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`} title="List View"><List size={14} /></button>
+            </div>
             <span><span className="font-bold text-slate-700">{filteredTx.length}</span> transactions</span>
             <span><span className="font-bold text-indigo-600">{filteredLiters.toFixed(0)} L</span> total</span>
             <span><span className="font-bold text-slate-700">Le {filteredCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> cost</span>
@@ -3568,6 +3576,67 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </div>
 
           {/* ── Transaction Table ── */}
+          {fuelViewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+              {pagedTx.map(fc => {
+                const _driver = drivers.find(d => d.id === fc.driverId);
+                const _vehicle = vehicles.find(v => v.id === fc.vehicleId);
+                const _isNonPartner = fc.isPartnerStation === false;
+                return (
+                  <div key={fc.id} className={`bg-white rounded-2xl border flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all ${_isNonPartner ? 'border-red-200' : 'border-slate-200'}`}>
+                    <div className={`p-4 border-b flex justify-between items-start gap-2 ${_isNonPartner ? 'bg-red-50/50 border-red-100' : 'bg-slate-50/50 border-slate-100'}`}>
+                      <div className="flex flex-col min-w-0">
+                        <h4 className="font-bold text-slate-900 truncate text-sm">{fc.stationName}</h4>
+                        <p className="text-xs text-slate-500 truncate">{fc.location || 'Unknown location'}</p>
+                      </div>
+                      {_isNonPartner ? (
+                        <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-red-100 text-red-700 border border-red-200"><AlertTriangle size={10} /> Non-Partner</span>
+                      ) : (
+                        <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><CheckCircle2 size={10} /> Partner</span>
+                      )}
+                    </div>
+                    <div className="p-4 flex-1 space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div><p className="font-bold text-slate-900 text-sm">{fc.date}</p><p className="text-xs text-slate-500">{fc.time}</p></div>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${supplierColors[fc.supplier || ''] || 'bg-slate-100 text-slate-700'} text-white`}>{fc.supplier || '—'}</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Driver</p>
+                          <div className="flex items-center gap-1.5">
+                            {_driver?.imgUrl ? <img src={_driver.imgUrl} alt="" className="w-5 h-5 rounded-full object-cover" /> : <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center"><User size={10} className="text-slate-500" /></div>}
+                            <span className="font-bold text-slate-700 text-xs truncate">{_driver?.name || '—'}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Vehicle</p>
+                          <div className="text-xs font-bold text-slate-700 truncate">{_vehicle?.makeModel || '—'}</div>
+                          <div className="text-[10px] text-slate-500 font-mono truncate">{_vehicle?.plateNumber}</div>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-100 pt-3">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-xs font-bold text-slate-600">{fc.liters.toFixed(1)} L</span>
+                          <span className="text-xs font-mono text-slate-500">@ Le {fc.costPerLiter.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          {fc.fuelType ? (<span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${fc.fuelType === 'Diesel' ? 'bg-amber-50 text-amber-700 border border-amber-200' : fc.fuelType === 'Premium' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>{fc.fuelType}</span>) : <span className="text-[10px] text-slate-400">N/A</span>}
+                          <span className="font-black text-slate-900 text-base">Le {(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${paymentBadge(fc.paymentMethod)}`}>{fc.paymentMethod || '—'}</span>
+                      <span className="font-mono text-[10px] text-slate-500 truncate ml-2">#{fc.receiptNumber || '—'}</span>
+                    </div>
+                  </div>
+                );
+              })}
+              {pagedTx.length === 0 && (
+                <div className="col-span-full py-12 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-200 border-dashed"><Fuel size={32} className="mx-auto mb-3 text-slate-300" /><p className="text-sm">No transactions match your filters.</p></div>
+              )}
+            </div>
+          ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead className="bg-slate-50 text-slate-500 font-mono text-[10px] uppercase tracking-wider border-b border-slate-100">
@@ -3652,6 +3721,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </tbody>
             </table>
           </div>
+          )}
 
           {/* Pagination */}
           {totalPages > 1 && (
@@ -3774,13 +3844,16 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             tripLog={tripLog}
             driver={driver}
             vehicle={vehicle}
+            clients={clients}
             onBack={() => setSelectedDispatchDetailsId(null)}
             onEdit={() => {
               if (activeD) {
                 setEditingDispatch(activeD);
+                setDispatchBillingMode(activeD.corporateAccountId ? 'corporate' : 'project');
                 setIsDispatchModalOpen(true);
               } else if (completedD) {
                 setEditingDispatch(completedD);
+                setDispatchBillingMode(completedD.corporateAccountId ? 'corporate' : 'project');
                 setIsDispatchModalOpen(true);
               }
             }}
@@ -3910,7 +3983,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <p className="text-slate-600 text-sm mt-1">Manage active dispatches and view completed archives</p>
           </div>
           <button 
-            onClick={() => { setEditingDispatch(null); setIsDispatchModalOpen(true); }}
+            onClick={() => { setEditingDispatch(null); setDispatchBillingMode('project'); setIsDispatchModalOpen(true); }}
             className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
           >
             <Navigation size={16} /> Dispatch Vehicle
@@ -3963,18 +4036,26 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 onClick={() => {
                   const isAct = dispatchSubTab === 'active';
                   const dataToExport = isAct ? filteredActive : filteredCompleted;
-                  const headers = ['Driver', 'Vehicle', 'Project', 'Client', 'Status', 'Date Out', 'Expected Return'];
+                  const headers = ['Ref ID', 'Status', 'Driver', 'Vehicle', 'Client (Project)', 'Corporate Account', 'Dispatch Date', 'Expected Return', 'Odometer Out', 'Fuel Out', 'Condition Out', 'Completed At'];
                   const rows = dataToExport.map(d => {
                     const driver = drivers.find(dr => dr.id === d.driverId);
                     const vehicle = vehicles.find(v => v.id === d.vehicleId);
+                    const project = clients?.find(c => c.id === d.projectId)?.name || '-';
+                    const client = mockAccounts?.find(ca => ca.id === d.corporateAccountId)?.name || '-';
+                    const isComp = 'completedAt' in d;
                     return [
+                      d.id.slice(0, 8).toUpperCase(),
+                      isComp ? 'Completed' : 'Active',
                       driver?.name || d.driverId,
                       vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : d.vehicleId,
-                      d.projectCode || '-',
-                      d.clientName || '-',
-                      d.status,
-                      d.dateOut,
-                      d.expectedReturnDate
+                      project,
+                      client,
+                      d.dispatchTime ? new Date(d.dispatchTime).toLocaleString() : '-',
+                      d.expectedReturnDate ? new Date(d.expectedReturnDate).toLocaleDateString() : '-',
+                      d.odometerOut.toString(),
+                      d.fuelLevelOut || '-',
+                      `"${(d.conditionOut || '').replace(/"/g, '""')}"`,
+                      isComp ? new Date((d as CompletedDispatch).completedAt).toLocaleString() : '-'
                     ];
                   });
                   const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
@@ -4000,18 +4081,25 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   doc.setFontSize(9); doc.setTextColor(100, 100, 120);
                   doc.text(`Generated on: ${today}`, 14, 22);
 
-                  const headers = ['Driver', 'Vehicle', 'Project', 'Client', 'Status', 'Date Out', 'Expected Return'];
+                  const headers = ['Ref', 'Status', 'Driver', 'Vehicle', 'Client(Project)', 'Corp Account', 'Dispatch Date', 'Return Date', 'Odo Out', 'Fuel Out', 'Completed At'];
                   const rows = dataToExport.map(d => {
                     const driver = drivers.find(dr => dr.id === d.driverId);
                     const vehicle = vehicles.find(v => v.id === d.vehicleId);
+                    const project = clients?.find(c => c.id === d.projectId)?.name || '-';
+                    const client = mockAccounts?.find(ca => ca.id === d.corporateAccountId)?.name || '-';
+                    const isComp = 'completedAt' in d;
                     return [
+                      d.id.slice(0, 8).toUpperCase(),
+                      isComp ? 'Completed' : 'Active',
                       driver?.name || d.driverId,
                       vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : d.vehicleId,
-                      d.projectCode || '-',
-                      d.clientName || '-',
-                      d.status,
-                      d.dateOut,
-                      d.expectedReturnDate
+                      project,
+                      client,
+                      d.dispatchTime ? new Date(d.dispatchTime).toLocaleDateString() : '-',
+                      d.expectedReturnDate ? new Date(d.expectedReturnDate).toLocaleDateString() : '-',
+                      d.odometerOut.toString(),
+                      d.fuelLevelOut || '-',
+                      isComp ? new Date((d as CompletedDispatch).completedAt).toLocaleDateString() : '-'
                     ];
                   });
 
@@ -4019,7 +4107,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     head: [headers],
                     body: rows,
                     startY: 28,
-                    styles: { fontSize: 8, cellPadding: 2 },
+                    styles: { fontSize: 7, cellPadding: 2 },
                     headStyles: { fillColor: isAct ? [79, 70, 229] : [16, 185, 129], textColor: 255 },
                     alternateRowStyles: { fillColor: [248, 250, 252] },
                   });
@@ -4382,12 +4470,65 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </button>
         </div>
         <div className="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-100">
-          <span>Showing <span className="font-bold text-slate-700">{filteredMaintenanceRecords.length}</span> records</span>
+          <div className="flex items-center gap-3">
+            <div className="flex bg-slate-200/50 p-0.5 rounded-lg border border-slate-200">
+              <button onClick={() => setMaintViewMode('grid')} className={`p-1 rounded flex items-center justify-center transition-colors ${maintViewMode === 'grid' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={13} /></button>
+              <button onClick={() => setMaintViewMode('list')} className={`p-1 rounded flex items-center justify-center transition-colors ${maintViewMode === 'list' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`} title="List View"><List size={13} /></button>
+            </div>
+            <span>Showing <span className="font-bold text-slate-700">{filteredMaintenanceRecords.length}</span> records</span>
+          </div>
           <span>Total Filtered Cost: <span className="font-bold text-indigo-600">Le {totalFilteredCost.toLocaleString()}</span></span>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
+        {maintViewMode === 'grid' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+            {paginatedMaintenanceRecords.map((record) => {
+              const _mv = vehicles.find(v => v.id === record.vehicleId);
+              const _md = drivers.find(d => d.id === record.driverId);
+              const statusColor = record.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : record.status === 'Scheduled' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+              const headerBg = record.status === 'Completed' ? 'bg-emerald-50/60 border-emerald-100' : record.status === 'Scheduled' ? 'bg-blue-50/60 border-blue-100' : 'bg-amber-50/60 border-amber-100';
+              return (
+                <div key={record.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden">
+                  <div className={`p-4 border-b flex justify-between items-start gap-2 ${headerBg}`}>
+                    <div className="min-w-0">
+                      <p className="font-black text-slate-900 truncate text-sm">{_mv?.makeModel || '—'}</p>
+                      <p className="text-[10px] text-slate-500 font-mono">{_mv?.plateNumber}</p>
+                    </div>
+                    <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border ${statusColor}`}>{record.status}</span>
+                  </div>
+                  <div className="p-4 flex-1 space-y-3">
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div><p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">Start</p><p className="font-semibold text-slate-700">{record.startDate}</p></div>
+                      <div><p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">Return</p><p className="font-semibold text-slate-700">{record.completionDate || '—'}</p></div>
+                    </div>
+                    {_md && (
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Driver</p>
+                        <div className="flex items-center gap-2">
+                          {_md.imgUrl ? <img src={_md.imgUrl} alt="" className="w-5 h-5 rounded-full object-cover" /> : <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center"><User size={10} className="text-slate-500" /></div>}
+                          <span className="text-xs font-bold text-slate-700 truncate">{_md.name}</span>
+                        </div>
+                      </div>
+                    )}
+                    {record.issuesFound && (<div><p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">Issues</p><p className="text-xs text-slate-600 line-clamp-2">{record.issuesFound}</p></div>)}
+                  </div>
+                  <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                    <span className="font-black text-slate-900 text-sm">Le {record.cost.toLocaleString()}</span>
+                    <div className="flex gap-1">
+                      <button onClick={() => setViewingMaintenance(record)} className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors" title="View"><Eye size={13} /></button>
+                      <button onClick={() => { setEditingMaintenance(record); setIsMaintenanceModalOpen(true); }} className="p-1.5 text-indigo-500 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit"><PenTool size={13} /></button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {paginatedMaintenanceRecords.length === 0 && (
+              <div className="col-span-full py-12 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-200 border-dashed"><PenTool size={32} className="mx-auto mb-3 text-slate-300" /><p className="text-sm">No maintenance records match your filters.</p></div>
+            )}
+          </div>
+        ) : (
         <div>
           <table className="w-full text-left text-sm whitespace-nowrap">
           <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
@@ -4464,6 +4605,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </tbody>
         </table>
         </div>
+        )}
         {totalMaintPages > 1 && (
           <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
             <span className="text-xs text-slate-600 font-medium">Page {clampedMaintPage} of {totalMaintPages}</span>
@@ -4578,6 +4720,28 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               };
               if (editingLog?.id) {
                 setLogs(prev => prev.map(l => l.id === editingLog.id ? { ...l, ...data } : l));
+                
+                // Sync project change back to the dispatch if linked
+                if (data.dispatchId && data.projectCode !== undefined) {
+                  // Try to update in completed_dispatches first (most likely scenario for a trip log edit)
+                  setCompletedDispatches(prev => {
+                    if (prev.some(d => d.originalDispatchId === data.dispatchId || d.id === data.dispatchId)) {
+                      supabase.from('completed_dispatches').update({ project_id: data.projectCode })
+                        .or(`original_dispatch_id.eq.${data.dispatchId},id.eq.${data.dispatchId}`).then();
+                      return prev.map(d => (d.originalDispatchId === data.dispatchId || d.id === data.dispatchId) ? { ...d, projectId: data.projectCode } : d);
+                    }
+                    return prev;
+                  });
+                  // Also try active_dispatches just in case
+                  setActiveDispatches(prev => {
+                    if (prev.some(d => d.id === data.dispatchId)) {
+                      supabase.from('active_dispatches').update({ project_id: data.projectCode })
+                        .eq('id', data.dispatchId).then();
+                      return prev.map(d => d.id === data.dispatchId ? { ...d, projectId: data.projectCode } : d);
+                    }
+                    return prev;
+                  });
+                }
               } else {
                 setLogs(prev => [{ ...data, id: tripId } as TripLog, ...prev]);
               }
@@ -4628,6 +4792,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   fuel_level_out: archived.fuelLevelOut,
                   condition_out: archived.conditionOut,
                   corporate_account_id: archived.corporateAccountId,
+                  project_id: archived.projectId,
                   expected_return_date: archived.expectedReturnDate,
                   trip_log_id: tripId,
                 }).then(({ error }) => {
@@ -5345,7 +5510,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
               <button onClick={() => { setIsDispatchModalOpen(false); setEditingDispatch(null); }} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
             </div>
-            <form onSubmit={(e) => {
+            <form key={editingDispatch?.id || 'new'} onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
               const driverId = fd.get('driverId') as string;
@@ -5393,6 +5558,19 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     project_id: data.projectId,
                     expected_return_date: data.expectedReturnDate,
                   }).eq('id', editingDispatch.id).then();
+                  
+                  // Also update the linked trip log's project code if it exists
+                  const compDispatch = editingDispatch as CompletedDispatch;
+                  setLogs(prev => {
+                    const linkedLog = prev.find(l => l.id === compDispatch.tripLogId || l.dispatchId === compDispatch.id || l.dispatchId === compDispatch.originalDispatchId);
+                    if (linkedLog && linkedLog.projectCode !== data.projectId) {
+                      supabase.from('trip_logs').update({
+                        project_code: data.projectId
+                      }).eq('id', linkedLog.id).then();
+                      return prev.map(l => l.id === linkedLog.id ? { ...l, projectCode: data.projectId } : l);
+                    }
+                    return prev;
+                  });
                 } else {
                   setActiveDispatches(prev => prev.map(d => d.id === editingDispatch.id ? { ...d, ...data } as ActiveDispatch : d));
                   supabase.from('active_dispatches').update({
@@ -5410,6 +5588,21 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 setActiveDispatches(prev => [data as ActiveDispatch, ...prev]);
                 // Ensure active status changes
                 setVehicles(prev => prev.map(v => v.id === data.vehicleId ? { ...v, status: 'Active Dispatch' } : v));
+                // Persist to DB
+                supabase.from('active_dispatches').insert({
+                  id: data.id,
+                  driver_id: data.driverId,
+                  vehicle_id: data.vehicleId,
+                  dispatch_time: data.dispatchTime,
+                  odometer_out: data.odometerOut,
+                  fuel_level_out: data.fuelLevelOut,
+                  condition_out: data.conditionOut,
+                  corporate_account_id: data.corporateAccountId,
+                  project_id: data.projectId,
+                  expected_return_date: data.expectedReturnDate,
+                }).then(({ error }) => {
+                  if (error) console.warn('[Dispatch Insert] Failed:', error.message);
+                });
               }
               setIsDispatchModalOpen(false);
               setEditingDispatch(null);
@@ -5418,7 +5611,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver</label>
                 <select name="driverId" defaultValue={editingDispatch?.driverId || ''} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Driver</option>
-                  {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                  {drivers.filter(d => {
+                    const isActiveElsewhere = activeDispatches.some(ad => ad.driverId === d.id && ad.id !== editingDispatch?.id);
+                    return !isActiveElsewhere || d.id === editingDispatch?.driverId;
+                  }).map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                 </select>
               </div>
               <div>
@@ -5429,12 +5625,59 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
 
-              <div className="col-span-2">
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Project</label>
-                <select name="projectId" defaultValue={editingDispatch?.projectId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
-                  <option value="">None / Internal</option>
-                  {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
+              {/* ── Billing Section ──────────────────────────────── */}
+              <div className="col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    Billing
+                  </label>
+                  {/* Toggle */}
+                  <div className="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 gap-0.5 text-xs font-bold">
+                    <button
+                      type="button"
+                      onClick={() => setDispatchBillingMode('project')}
+                      className={`px-3 py-1 rounded-md transition-all ${dispatchBillingMode === 'project' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Bill to Client / Project
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDispatchBillingMode('corporate')}
+                      className={`px-3 py-1 rounded-md transition-all ${dispatchBillingMode === 'corporate' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Separate Corporate A/C
+                    </button>
+                  </div>
+                </div>
+
+                {/* Client / Project selector — always visible */}
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Client / Project</label>
+                  <select name="projectId" defaultValue={editingDispatch?.projectId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-300 text-sm">
+                    <option value="">None / Internal</option>
+                    {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                  {dispatchBillingMode === 'project' && (
+                    <p className="text-[10px] text-indigo-500 mt-1 font-medium">✓ Billing will be assigned to the selected client / project above.</p>
+                  )}
+                </div>
+
+                {/* Corporate A/C — only shown when mode is 'corporate' */}
+                {dispatchBillingMode === 'corporate' && (
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Corporate Account</label>
+                    <select name="corporateAccountId" defaultValue={editingDispatch?.corporateAccountId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-300 text-sm">
+                      <option value="">Select Corporate Account</option>
+                      {mockAccounts.map((a: any) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                    </select>
+                    <p className="text-[10px] text-amber-600 mt-1 font-medium">⚠ Billing will be routed to this corporate account instead of the client/project.</p>
+                  </div>
+                )}
+                {/* Hidden input to clear corporateAccountId when mode is project */}
+                {dispatchBillingMode === 'project' && (
+                  <input type="hidden" name="corporateAccountId" value="" />
+                )}
               </div>
 
               <div>

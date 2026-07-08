@@ -12,6 +12,7 @@ import { AdminSection } from './components/AdminSection';
 import { TeamSection } from './components/TeamSection';
 import { ClientsSection } from './components/ClientsSection';
 import { motion, AnimatePresence } from 'motion/react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 // Seeding Initial Inquiries for outstanding presentation
 const DEFAULT_INQUIRIES: Inquiry[] = [
@@ -195,6 +196,7 @@ const mapVehicleFromDB = (dbItem: any) => ({
   status: dbItem.status,
   imageUrl: dbItem.image_url,
   galleryUrls: dbItem.gallery_urls,
+  documents: dbItem.documents || [],
   showOnFleet: dbItem.show_on_fleet,
   vehicleCategory: dbItem.vehicle_category,
   description: dbItem.description,
@@ -212,19 +214,10 @@ const mapVehicleFromDB = (dbItem: any) => ({
 });
 
 export default function App() {
-  const [activeTab, setActiveTabVar] = useState<ActiveTab>(() => {
-    return (sessionStorage.getItem('mainActiveTab') as ActiveTab) || 'home';
-  });
-  const [isPending, startTransition] = useTransition();
-
-  const setActiveTab = (tab: ActiveTab) => {
-    sessionStorage.setItem('mainActiveTab', tab);
-    startTransition(() => {
-      setActiveTabVar(tab);
-    });
-  };
-
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>('');
+  const location = useLocation();
+
+
   const [estimateDetails, setEstimateDetails] = useState<{ vehicleId: string; days: number; chauffeur: boolean; provincial: boolean; total: number } | null>(null);
 
   const [inquiries, setInquiries] = useState<Inquiry[]>(() => {
@@ -236,6 +229,10 @@ export default function App() {
     return saved ? JSON.parse(saved) : DEFAULT_CLIENTS;
   });
   const [fleetVehicles, setFleetVehicles] = useState<any[]>([]);
+  const [teamMembers, setTeamMembers] = useState<any[]>(() => {
+    const saved = localStorage.getItem('big_group_team_cache');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Connect to Supabase and listen for changes
   useEffect(() => {
@@ -279,6 +276,24 @@ export default function App() {
       if (vehiclesData) {
         setFleetVehicles(vehiclesData.map(mapVehicleFromDB));
       }
+
+      // Team Members
+      const { data: teamData, error: teamErr } = await supabase
+        .from('team_members')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+      if (teamErr) console.error('Error fetching team members:', teamErr);
+      if (teamData) {
+        const mapped = teamData.map((m: any) => ({
+          id: m.id, name: m.name, role: m.role, bio: m.bio,
+          dedicatedRole: m.dedicated_role, languages: m.languages,
+          phone: m.phone, email: m.email, skills: m.skills || [],
+          imageUrl: m.image_url, displayOrder: m.display_order, isActive: m.is_active,
+        }));
+        setTeamMembers(mapped);
+        localStorage.setItem('big_group_team_cache', JSON.stringify(mapped));
+      }
     };
 
     fetchInitialData();
@@ -319,10 +334,27 @@ export default function App() {
       })
       .subscribe();
 
+    const teamChannel = supabase.channel('public:team_members')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'team_members' }, async () => {
+        const { data } = await supabase.from('team_members').select('*').eq('is_active', true).order('display_order', { ascending: true });
+        if (data) {
+          const mapped = data.map((m: any) => ({
+            id: m.id, name: m.name, role: m.role, bio: m.bio,
+            dedicatedRole: m.dedicated_role, languages: m.languages,
+            phone: m.phone, email: m.email, skills: m.skills || [],
+            imageUrl: m.image_url, displayOrder: m.display_order, isActive: m.is_active,
+          }));
+          setTeamMembers(mapped);
+          localStorage.setItem('big_group_team_cache', JSON.stringify(mapped));
+        }
+      })
+      .subscribe();
+
     return () => {
       supabase.removeChannel(inquiriesChannel);
       supabase.removeChannel(clientsChannel);
       supabase.removeChannel(vehiclesChannel);
+      supabase.removeChannel(teamChannel);
     };
   }, []);
 
@@ -391,102 +423,78 @@ export default function App() {
     setEstimateDetails(null);
   };
 
-  const renderActiveSection = () => {
-    switch (activeTab) {
-      case 'home':
-        return (
-          <HomeSection 
-            setActiveTab={setActiveTab} 
-            setSelectedVehicleId={setSelectedVehicleId} 
-            fleetVehicles={fleetVehicles}
-          />
-        );
-      case 'fleet':
-        return (
-          <FleetSection 
-            setActiveTab={setActiveTab} 
-            setSelectedVehicleId={setSelectedVehicleId}
-            fleetVehicles={fleetVehicles}
-          />
-        );
-      case 'services':
-        return (
-          <ServicesSection 
-            setActiveTab={setActiveTab} 
-            setSelectedVehicleId={setSelectedVehicleId} 
-            setEstimateDetails={setEstimateDetails}
-            fleetVehicles={fleetVehicles}
-          />
-        );
-      case 'about':
-        return <AboutSection setActiveTab={setActiveTab} />;
-      case 'team':
-        return <TeamSection setActiveTab={setActiveTab} />;
-      case 'clients':
-        return <ClientsSection setActiveTab={setActiveTab} clients={clients} />;
-      case 'contact':
-        return (
-          <ContactSection 
-            selectedVehicleId={selectedVehicleId} 
-            setSelectedVehicleId={setSelectedVehicleId}
-            estimateDetails={estimateDetails}
-            clearEstimateDetails={handleClearEstimate}
-            onAddInquiry={handleAddInquiry}
-            fleetVehicles={fleetVehicles}
-          />
-        );
-      case 'admin':
-        return (
-          <AdminSection 
-            inquiries={inquiries}
-            onUpdateStatus={handleUpdateStatus}
-            onDeleteInquiry={handleDeleteInquiry}
-            clients={clients}
-            onAddClient={handleAddClient}
-            onUpdateClient={handleUpdateClient}
-            onDeleteClient={handleDeleteClient}
-          />
-        );
-      default:
-        return <HomeSection setActiveTab={setActiveTab} setSelectedVehicleId={setSelectedVehicleId} />;
-    }
+  const mapTeamToDB = (m: any) => ({
+    ...(m.id ? { id: m.id } : {}),
+    name: m.name,
+    role: m.role,
+    bio: m.bio || null,
+    dedicated_role: m.dedicatedRole || null,
+    languages: m.languages || null,
+    phone: m.phone || null,
+    email: m.email || null,
+    skills: m.skills || [],
+    image_url: m.imageUrl || null,
+    display_order: m.displayOrder ?? 0,
+    is_active: m.isActive !== false,
+  });
+
+  const handleAddTeamMember = async (member: any) => {
+    try {
+      const { error } = await supabase.from('team_members').insert([mapTeamToDB(member)]);
+      if (error) console.error('Error adding team member:', error);
+    } catch (e) { console.error(e); }
   };
+
+  const handleUpdateTeamMember = async (id: string, member: any) => {
+    try {
+      const { error } = await supabase.from('team_members').update(mapTeamToDB(member)).eq('id', id);
+      if (error) console.error('Error updating team member:', error);
+    } catch (e) { console.error(e); }
+  };
+
+  const handleDeleteTeamMember = async (id: string) => {
+    try {
+      const { error } = await supabase.from('team_members').delete().eq('id', id);
+      if (error) console.error('Error deleting team member:', error);
+    } catch (e) { console.error(e); }
+  };
+
+  const renderRoutes = () => (
+    <Routes>
+      <Route path="/" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={clients} />} />
+      <Route path="/fleet" element={<FleetSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} />} />
+      <Route path="/services" element={<ServicesSection setSelectedVehicleId={setSelectedVehicleId} setEstimateDetails={setEstimateDetails} fleetVehicles={fleetVehicles} />} />
+      <Route path="/about" element={<AboutSection />} />
+      <Route path="/team" element={<TeamSection teamMembers={teamMembers} />} />
+      <Route path="/clients" element={<ClientsSection clients={clients} />} />
+      <Route path="/contact" element={<ContactSection selectedVehicleId={selectedVehicleId} setSelectedVehicleId={setSelectedVehicleId} estimateDetails={estimateDetails} clearEstimateDetails={handleClearEstimate} onAddInquiry={handleAddInquiry} fleetVehicles={fleetVehicles} />} />
+      <Route path="/admin" element={<AdminSection inquiries={inquiries} onUpdateStatus={handleUpdateStatus} onDeleteInquiry={handleDeleteInquiry} clients={clients} onAddClient={handleAddClient} onUpdateClient={handleUpdateClient} onDeleteClient={handleDeleteClient} teamMembers={teamMembers} onAddTeamMember={handleAddTeamMember} onUpdateTeamMember={handleUpdateTeamMember} onDeleteTeamMember={handleDeleteTeamMember} />} />
+      <Route path="*" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={clients} />} />
+    </Routes>
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f7f9fb] text-slate-950 selection:bg-indigo-600 selection:text-white antialiased">
       {/* Dynamic sticky header */}
-      <Header 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        onOpenAdmin={() => setActiveTab('admin')} 
-      />
+      <Header />
 
       {/* Main active sections manager layout */}
       <main className="flex-grow">
-        {isPending ? (
-          <div className="w-full h-96 flex items-center justify-center bg-[#f7f9fb]">
-            <div className="flex flex-col items-center space-y-3">
-              <span className="w-12 h-12 rounded-full border-4 border-[#131b2e] border-t-transparent animate-spin"></span>
-              <span className="text-xs font-mono font-bold text-slate-600 uppercase tracking-widest">Compiling Dispatch Port...</span>
-            </div>
-          </div>
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.15 }}
-            >
-              {renderActiveSection()}
-            </motion.div>
-          </AnimatePresence>
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+          >
+            {renderRoutes()}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Corporate values and copyright bottom board */}
-      <Footer setActiveTab={setActiveTab} />
+      <Footer />
     </div>
   );
 }

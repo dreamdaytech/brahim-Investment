@@ -1,92 +1,97 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, ShieldCheck, Wrench, MessageSquare, MapPin, Phone, Mail, Globe, Briefcase, X } from 'lucide-react';
-import { ActiveTab } from '../types';
+import { useNavigate } from 'react-router-dom';
 
-interface TeamSectionProps {
-  setActiveTab: (tab: ActiveTab) => void;
-}
-
-
-const TEAM_MEMBERS = [
+const TEAM_MEMBERS_FALLBACK = [
   {
+    id: 'local-1',
     name: 'Emmanuel A.H Kpakama',
     role: 'Head of Admin and Logistics',
     dedicatedRole: 'Primary point of contact for Helen Keller Intl – receives orders, manages scheduling, resolves issues',
     languages: 'English and local languages',
     phone: '+23234692208 / +23275868682',
     email: 'Bigroupsl2010@gmail.com',
-    bio: 'Results-driven Fleet Management Administrator with over 10 years of comprehensive experience directing large-scale fleet operations, fuel management, procurement, and administrative functions across the logistics and construction sectors. Adept at building and implementing fleet management systems, controlling operational costs, ensuring vehicle compliance, and leading cross-functional teams. Combines strong analytical capability with hands-on operational expertise to drive efficiency, reduce downtime, and align fleet performance with strategic organisational goals. Recognised for exceptional leadership, meticulous attention to detail, and a consistent track record of delivering measurable improvements in fleet utilisation and cost reduction.',
+    bio: 'Results-driven Fleet Management Administrator with over 10 years of comprehensive experience directing large-scale fleet operations, fuel management, procurement, and administrative functions across the logistics and construction sectors. Adept at building and implementing fleet management systems, controlling operational costs, ensuring vehicle compliance, and leading cross-functional teams.',
     skills: ['Defensive-Driving Assessor', 'Missions Liaison Lead', '10+ Yrs Experience'],
-    icon: <ShieldCheck className="w-5 h-5 text-indigo-600" />,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDD0rRkKRJq6SJSWHt5e2RTejG8waUb1dMXWYvbUZ0qfKw92gYlTZTIFp4PiwiCU1fMON0sb5tt8WZo4InDfo8nxr8vhz0SrUUqlwGo56Ng1XLHv0wEXtsSrSLXIKcEn_cD65CEPs792IXXlQ2mSdJ7E-fPd5XvF9RSqje2fBfS9iIYJGmKbBeDapJF6gn5C8xrJH_qQtk4dzX-2K8xhDZvnLj5HKjqU8xHP5-jO-ANuEATjn-7IDKC-PNIj34irvRQrzQEJHeP8O4'
+    imageUrl: '/images/emmanuel.jpg'
   },
   {
+    id: 'local-2',
     name: 'Mamadu Sara Bah',
     role: 'Head of Finance, Accounting and Compliance',
     bio: 'Oversees financial operations, compliance reporting for international partnerships, and strict auditing protocols across all logistics deployments.',
     skills: ['Corporate Auditing', 'International Compliance', 'Financial Operations'],
-    icon: <ShieldCheck className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?q=80&w=400&auto=format&fit=crop'
   },
   {
+    id: 'local-3',
     name: 'Fatima Jaward Jalloh',
     role: 'Finance and Fuel Controller',
     bio: 'Manages fuel distribution networks, expense tracking, and cost optimizations for deep-upcountry deployments and fleet operations.',
     skills: ['Resource Optimization', 'Fuel Audit Protocols', 'Cost Tracking'],
-    icon: <MessageSquare className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop'
   },
   {
+    id: 'local-4',
     name: 'Philip Hebron',
     role: 'Fleet and Facility Coordinator',
     bio: 'Oversees daily fleet movements, dispatch schedules, and the maintenance of operational facilities for real-time responsiveness.',
     skills: ['Dispatch Logistics', 'Facility Administration', 'Asset Allocation'],
-    icon: <MapPin className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'
   },
   {
+    id: 'local-5',
     name: 'Hawa Bangura',
     role: 'Procurement, Finance and Logistics Assistant',
     bio: 'Supports cross-functional coordination, acquiring vital deployment materials safely, and ensuring smooth billing pipelines.',
     skills: ['Procurement Pipeline', 'Invoice Processing', 'Supply Chain Liaison'],
-    icon: <MessageSquare className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop'
   },
   {
+    id: 'local-6',
     name: 'Bailor Barrie',
     role: 'Maintenance Supervisor',
     bio: 'Specialized in mechanical safety protocols and deep diagnostic vetting before heavy-duty upcountry deployments.',
     skills: ['Advanced Diagnostics', 'Preventative Care', 'Rapid Recovery'],
-    icon: <Wrench className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=400&auto=format&fit=crop'
   },
   {
+    id: 'local-7',
     name: 'Abdul Mustapha',
     role: 'Maintenance Supervisor',
     bio: 'Conducts strict point-by-point inspections after every deployment to ensure 0% tolerance for failure on our SUV fleets.',
     skills: ['Heavy Machinery Recovery', 'Engine Systems', 'Field Support'],
-    icon: <Wrench className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?q=80&w=400&auto=format&fit=crop'
   },
   {
+    id: 'local-8',
     name: 'Osman Kamara (OTK)',
     role: 'Monitoring and Evaluation Supervisor',
     bio: 'Responsible for long-term fleet tracking, driver KPI auditing, and ensuring rigorous mechanical compliance standards are met.',
     skills: ['Performance Auditing', 'GPS Analytics', 'Compliance Metrics'],
-    icon: <ShieldCheck className="w-5 h-5 text-indigo-600" />,
-    image: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=400&auto=format&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=400&auto=format&fit=crop'
   }
 ];
 
-export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
+interface TeamSectionProps {
+  teamMembers?: any[];
+}
+
+export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) => {
+  const navigate = useNavigate();
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
 
-  // Helper to truncate text
-  const truncateBio = (text: string, maxLength: number = 100) => {
+  // Use live DB data if available, else fallback to hardcoded
+  const members = teamMembers.length > 0 ? teamMembers : TEAM_MEMBERS_FALLBACK;
+
+  const truncateBio = (text: string, maxLength: number = 140) => {
+    if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
+
+  const getInitial = (name: string) => name?.charAt(0)?.toUpperCase() || '?';
 
   return (
     <div className="w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans min-h-screen relative">
@@ -95,7 +100,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
         {/* Navigation & Header */}
         <div className="mb-12">
           <button
-            onClick={() => setActiveTab('about')}
+            onClick={() => navigate('/about')}
             className="group flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors mb-6 cursor-pointer"
           >
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -113,24 +118,29 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
 
         {/* Team Grid */}
         <div className="space-y-8">
-          {TEAM_MEMBERS.map((member, idx) => (
+          {members.map((member, idx) => (
             <motion.div 
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: idx * 0.1 }}
-              key={idx}
+              transition={{ duration: 0.3, delay: idx * 0.08 }}
+              key={member.id || idx}
               className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center"
             >
               {/* Profile Image */}
               <div className="w-32 h-32 md:w-48 md:h-48 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-100 bg-slate-50 relative">
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="w-full h-full object-cover" 
-                  referrerPolicy="no-referrer"
-                />
+                {(member.imageUrl || member.image) ? (
+                  <img 
+                    src={member.imageUrl || member.image} 
+                    alt={member.name} 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-indigo-50">
+                    <span className="text-4xl font-black text-indigo-600">{getInitial(member.name)}</span>
+                  </div>
+                )}
                 <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-lg shadow-sm">
-                  {member.icon}
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
                 </div>
               </div>
 
@@ -142,12 +152,12 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                 </div>
                 
                 <p className="text-sm text-slate-600 leading-relaxed max-w-3xl">
-                  {truncateBio(member.bio, 120)}
+                  {truncateBio(member.bio || '', 140)}
                 </p>
 
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap gap-2 pt-2">
-                    {member.skills.slice(0, 2).map((skill: string, sIdx: number) => (
+                    {(member.skills || []).slice(0, 2).map((skill: string, sIdx: number) => (
                       <span 
                         key={sIdx}
                         className="bg-slate-50 text-slate-700 px-3 py-1 rounded-lg border border-slate-200 text-xs font-mono font-medium"
@@ -155,7 +165,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                         {skill}
                       </span>
                     ))}
-                    {member.skills.length > 2 && (
+                    {(member.skills || []).length > 2 && (
                       <span className="bg-slate-50 text-slate-500 px-3 py-1 rounded-lg border border-slate-200 text-xs font-mono font-medium">
                         +{member.skills.length - 2} more
                       </span>
@@ -206,14 +216,19 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ setActiveTab }) => {
                 <div className="p-6 md:p-10 flex flex-col md:flex-row gap-8">
                   {/* Modal Image */}
                   <div className="w-32 h-32 md:w-48 md:h-48 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-100 bg-slate-50 relative mt-2 md:mt-0">
-                    <img 
-                      src={selectedMember.image} 
-                      alt={selectedMember.name} 
-                      className="w-full h-full object-cover" 
-                      referrerPolicy="no-referrer"
-                    />
+                    {(selectedMember.imageUrl || selectedMember.image) ? (
+                      <img 
+                        src={selectedMember.imageUrl || selectedMember.image} 
+                        alt={selectedMember.name} 
+                        className="w-full h-full object-cover" 
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-indigo-50">
+                        <span className="text-5xl font-black text-indigo-600">{getInitial(selectedMember.name)}</span>
+                      </div>
+                    )}
                     <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-lg shadow-sm">
-                      {selectedMember.icon}
+                      <ShieldCheck className="w-4 h-4 text-indigo-600" />
                     </div>
                   </div>
 

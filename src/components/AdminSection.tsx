@@ -6,7 +6,10 @@ import { PerformanceSection } from './PerformanceSection';
 import { CorporateBilling } from './CorporateBilling';
 import { AdminProfile } from './AdminProfile';
 import { DashboardOverview } from './DashboardOverview';
+import { AccessControlView } from './AccessControlView';
 import { supabase } from '../lib/supabase';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface AdminSectionProps {
   inquiries: Inquiry[];
@@ -16,9 +19,13 @@ interface AdminSectionProps {
   onAddClient: (client: any) => void;
   onUpdateClient: (id: string, client: any) => void;
   onDeleteClient: (id: string) => void;
+  teamMembers?: any[];
+  onAddTeamMember?: (member: any) => void;
+  onUpdateTeamMember?: (id: string, member: any) => void;
+  onDeleteTeamMember?: (id: string) => void;
 }
 
-export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateStatus, onDeleteInquiry, clients, onAddClient, onUpdateClient, onDeleteClient }) => {
+export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateStatus, onDeleteInquiry, clients, onAddClient, onUpdateClient, onDeleteClient, teamMembers = [], onAddTeamMember, onUpdateTeamMember, onDeleteTeamMember }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [email, setEmail] = useState<string>('');
@@ -27,22 +34,44 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   
   // Filtering & Searches States
-  const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'profile'>('overview');
+  const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'profile' | 'access'>('overview');
+  const [userRole, setUserRole] = useState<string>('super_admin');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('All');
   // #20 Global search state
   const [globalSearch, setGlobalSearch] = useState<string>('');
   const [showGlobalResults, setShowGlobalResults] = useState(false);
 
-  React.useEffect(() => {
+    React.useEffect(() => {
     import('../lib/supabase').then(({ supabase }) => {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setIsAuthenticated(!!session);
+      const checkAuth = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: roleData } = await supabase.from('user_roles').select('role, is_active').eq('id', session.user.id).single();
+          if (roleData) {
+            if (!roleData.is_active) {
+              await supabase.auth.signOut();
+              setAuthError('Your account has been suspended.');
+              setIsAuthenticated(false);
+            } else {
+              setUserRole(roleData.role);
+              setIsAuthenticated(true);
+            }
+          } else {
+            // Fallback for existing admin before migration
+            setUserRole('super_admin');
+            setIsAuthenticated(true);
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
         setIsLoading(false);
-      });
+      };
+      
+      checkAuth();
 
       const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        setIsAuthenticated(!!session);
+        checkAuth();
       });
 
       return () => subscription.unsubscribe();
@@ -212,7 +241,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
               {sidebarOpen && <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest px-3 mb-3">Overview</p>}
               {[
                 { id: 'overview', label: 'Dashboard', icon: BarChart3, badge: null },
-              ].map(item => {
+              ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
                 const Icon = item.icon;
                 const isActive = adminTab === item.id;
                 return (
@@ -240,8 +269,9 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                 : <div className="h-px bg-white/10 my-3 mx-1" />
               }
               {[
-                { id: 'clients', label: 'Partners & Clients', icon: Users, badge: null },
-              ].map(item => {
+                { id: 'clients', label: 'Partners & Clients', icon: Users, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+                { id: 'team', label: 'Operational Team', icon: Users, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+              ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
                 const Icon = item.icon;
                 const isActive = adminTab === item.id;
                 return (
@@ -269,14 +299,14 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                 : <div className="h-px bg-white/10 my-3 mx-1" />
               }
               {[
-                { id: 'reservations', label: 'Reservations', icon: LayoutDashboard, badge: pendingInquiries > 0 ? pendingInquiries : null },
-                { id: 'performance', label: 'Management', icon: Activity, badge: null },
-                { id: 'dispatch_management', label: 'Dispatch', icon: Navigation, badge: null },
-                { id: 'drivers', label: 'Drivers', icon: User, badge: null },
-                { id: 'vehicles', label: 'Vehicles', icon: Car, badge: null },
-                { id: 'fuel', label: 'Fuel', icon: Fuel, badge: null },
-                { id: 'billing', label: 'Billing & CRM', icon: CreditCard, badge: null },
-              ].map(item => {
+                { id: 'reservations', label: 'Reservations', icon: LayoutDashboard, badge: pendingInquiries > 0 ? pendingInquiries : null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
+                { id: 'performance', label: 'Management', icon: Activity, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
+                { id: 'dispatch_management', label: 'Dispatch', icon: Navigation, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+                { id: 'drivers', label: 'Drivers', icon: User, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+                { id: 'vehicles', label: 'Vehicles', icon: Car, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+                { id: 'fuel', label: 'Fuel', icon: Fuel, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+                { id: 'billing', label: 'Billing & CRM', icon: CreditCard, badge: null, roles: ['super_admin', 'admin', 'finance'] },
+              ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
                 const Icon = item.icon;
                 const isActive = adminTab === item.id;
                 return (
@@ -300,6 +330,36 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                     {!sidebarOpen && item.badge && (
                       <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full"></span>
                     )}
+                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
+                  </button>
+                );
+              })}
+
+              {sidebarOpen
+                ? <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest px-3 mt-5 mb-3">Admin Controls</p>
+                : <div className="h-px bg-white/10 my-3 mx-1" />
+              }
+              {[
+                { id: 'profile', label: 'Profile & Security', icon: Settings, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
+                { id: 'access', label: 'Access Control', icon: ShieldCheck, badge: null, roles: ['super_admin'] }
+              ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
+                const Icon = item.icon;
+                const isActive = adminTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    title={!sidebarOpen ? item.label : undefined}
+                    onClick={() => setAdminTab(item.id as any)}
+                    className={`w-full flex items-center gap-3 rounded-xl text-sm font-semibold transition-all group relative ${
+                      sidebarOpen ? 'px-3 py-2.5' : 'p-2.5 justify-center'
+                    } ${
+                      isActive
+                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                        : 'text-slate-500 hover:text-white hover:bg-white/8'
+                    }`}
+                  >
+                    <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
+                    {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
                     {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
                   </button>
                 );
@@ -344,6 +404,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
                     {adminTab === 'overview' && 'Dashboard Overview'}
                     {adminTab === 'reservations' && 'Dispatch Reservations'}
                     {adminTab === 'clients' && 'Partners & Clients'}
+                    {adminTab === 'team' && 'Operational Team'}
                     {adminTab === 'performance' && 'Management'}
                     {adminTab === 'billing' && 'Billing & CRM'}
                   </h1>
@@ -565,6 +626,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
             </>
           ) : adminTab === 'clients' ? (
             <ClientsAdminView clients={clients} onAddClient={onAddClient} onUpdateClient={onUpdateClient} onDeleteClient={onDeleteClient} />
+          ) : adminTab === 'team' ? (
+            <TeamAdminView
+              teamMembers={teamMembers}
+              onAdd={onAddTeamMember || (() => {})}
+              onUpdate={onUpdateTeamMember || (() => {})}
+              onDelete={onDeleteTeamMember || (() => {})}
+            />
           ) : adminTab === 'performance' ? (
             <PerformanceSection clients={clients} />
           ) : adminTab === 'dispatch_management' ? (
@@ -577,9 +645,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
             <PerformanceSection clients={clients} defaultTab="fuel" />
           ) : adminTab === 'billing' ? (
             <CorporateBilling />
+          ) : adminTab === 'access' ? (
+            <AccessControlView currentUserRole={userRole} />
           ) : adminTab === 'profile' ? (
             <div className="p-4 sm:p-6 lg:p-8">
-              <AdminProfile />
+              <AdminProfile currentUserRole={userRole} />
             </div>
           ) : null}
 
@@ -715,12 +785,62 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
               </button>
             )}
           </div>
-          <button
-            onClick={() => { setIsViewing(false); setEditingClient({}); setIsModalOpen(true); }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shrink-0 shadow-sm"
-          >
-            <Plus size={15} /> Add Project
-          </button>
+          <div className="flex gap-2 shrink-0">
+            <button
+              onClick={() => {
+                const headers = ['Name', 'Short Code', 'Partner Status', 'Contact Person', 'Phone', 'Email', 'City', 'Contract Start', 'Contract End', 'Status'];
+                const rows = filtered.map(c => [
+                  c.name, c.shortCode || '-', c.isPartner ? 'Partner' : 'Non-Partner', c.contactPerson || '-', c.phone || '-', c.email || '-', c.city || '-', c.contractStartDate || '-', c.contractEndDate || '-', c.status || 'Ongoing'
+                ]);
+                const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url;
+                a.download = `partners-clients-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click(); URL.revokeObjectURL(url);
+              }}
+              className="flex items-center gap-2 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
+              title="Export to CSV"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+            <button
+              onClick={() => {
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                doc.setFontSize(16); doc.setTextColor(30, 30, 90);
+                doc.text(`BIG Group - Partners & Clients`, 14, 16);
+                doc.setFontSize(9); doc.setTextColor(100, 100, 120);
+                doc.text(`Generated on: ${today}`, 14, 22);
+
+                const headers = ['Name', 'Short Code', 'Type', 'Contact', 'Phone', 'Email', 'City', 'Start', 'End', 'Status'];
+                const rows = filtered.map(c => [
+                  c.name, c.shortCode || '-', c.isPartner ? 'Partner' : 'Non-Partner', c.contactPerson || '-', c.phone || '-', c.email || '-', c.city || '-', c.contractStartDate || '-', c.contractEndDate || '-', c.status || 'Ongoing'
+                ]);
+
+                autoTable(doc, {
+                  head: [headers],
+                  body: rows,
+                  startY: 28,
+                  styles: { fontSize: 8, cellPadding: 2 },
+                  headStyles: { fillColor: [79, 70, 229], textColor: 255 },
+                  alternateRowStyles: { fillColor: [248, 250, 252] },
+                });
+
+                doc.save(`partners-clients-${new Date().toISOString().split('T')[0]}.pdf`);
+              }}
+              className="flex items-center gap-2 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
+              title="Export to PDF"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </button>
+            <button
+              onClick={() => { setIsViewing(false); setEditingClient({}); setIsModalOpen(true); }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+            >
+              <Plus size={15} /> Add Project
+            </button>
+          </div>
         </div>
 
         {/* Row 2: Filter chips */}
@@ -1115,6 +1235,342 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+// ── Team Admin View ──────────────────────────────────────────────────────────
+const TeamAdminView: React.FC<{
+  teamMembers: any[];
+  onAdd: (m: any) => void;
+  onUpdate: (id: string, m: any) => void;
+  onDelete: (id: string) => void;
+}> = ({ teamMembers, onAdd, onUpdate, onDelete }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editing, setEditing] = useState<any | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<any | null>(null);
+  const [search, setSearch] = useState('');
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const filtered = teamMembers.filter(m =>
+    m.name?.toLowerCase().includes(search.toLowerCase()) ||
+    m.role?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const openAdd = () => { setEditing({ name:'', role:'', bio:'', dedicatedRole:'', languages:'', phone:'', email:'', skills:[], imageUrl:'', displayOrder: teamMembers.length + 1, isActive: true }); setPhotoPreview(''); setPhotoFile(null); setIsModalOpen(true); };
+  const openEdit = (m: any) => { setEditing({ ...m }); setPhotoPreview(m.imageUrl || ''); setPhotoFile(null); setIsModalOpen(true); };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const f = e.target.files[0];
+      setPhotoFile(f);
+      setPhotoPreview(URL.createObjectURL(f));
+      setEditing((prev: any) => ({ ...prev, imageUrl: URL.createObjectURL(f) }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editing?.name || !editing?.role) return;
+    setIsSubmitting(true);
+    try {
+      let imageUrl = editing.imageUrl || '';
+      // Upload photo to Supabase storage if a new file selected
+      if (photoFile) {
+        const { data: storageData, error: storageErr } = await supabase.storage
+          .from('team-photos')
+          .upload(`${Date.now()}-${photoFile.name}`, photoFile, { upsert: true });
+        if (!storageErr && storageData) {
+          const { data: urlData } = supabase.storage.from('team-photos').getPublicUrl(storageData.path);
+          imageUrl = urlData.publicUrl;
+        }
+      }
+      const payload = { ...editing, imageUrl, skills: typeof editing.skills === 'string' ? editing.skills.split(',').map((s: string) => s.trim()).filter(Boolean) : editing.skills || [] };
+      if (editing.id) {
+        onUpdate(editing.id, payload);
+      } else {
+        onAdd(payload);
+      }
+      setIsModalOpen(false);
+      setEditing(null);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getInitial = (name: string) => name?.charAt(0)?.toUpperCase() || '?';
+
+  return (
+    <div className="space-y-5">
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {[
+          { label: 'Total Team Members', value: teamMembers.length, color: 'indigo' },
+          { label: 'Active Members', value: teamMembers.filter(m => m.isActive !== false).length, color: 'emerald' },
+          { label: 'With Photo', value: teamMembers.filter(m => m.imageUrl).length, color: 'blue' },
+        ].map(({ label, value, color }) => (
+          <div key={label} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
+            <h3 className={`text-2xl font-black text-${color}-600 mt-1`}>{value}</h3>
+          </div>
+        ))}
+      </div>
+
+      {/* Toolbar */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search by name or role…"
+              className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all"
+            />
+          </div>
+          <button
+            onClick={openAdd}
+            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shrink-0"
+          >
+            <Plus size={15} /> Add Member
+          </button>
+        </div>
+      </div>
+
+      {/* Members List */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        {filtered.length === 0 ? (
+          <div className="py-20 text-center">
+            <Users size={32} className="mx-auto text-slate-300 mb-3" />
+            <p className="text-slate-500 font-semibold">No team members found</p>
+            <p className="text-slate-400 text-sm mt-1">Add your first team member using the button above</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {filtered.map((member) => (
+              <div key={member.id} className="p-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
+                {/* Avatar */}
+                <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-slate-200 bg-slate-50">
+                  {member.imageUrl ? (
+                    <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-indigo-50">
+                      <span className="text-xl font-black text-indigo-600">{getInitial(member.name)}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-slate-900 text-sm truncate">{member.name}</p>
+                  <p className="text-xs text-indigo-600 font-semibold truncate">{member.role}</p>
+                  {member.skills?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {member.skills.slice(0, 3).map((s: string, i: number) => (
+                        <span key={i} className="text-[9px] font-mono font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{s}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Order badge */}
+                <div className="text-xs font-bold text-slate-400 font-mono shrink-0">#{member.displayOrder}</div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => openEdit(member)}
+                    className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                    title="Edit"
+                  >
+                    <PenTool size={15} />
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(member)}
+                    className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Add/Edit Modal */}
+      {isModalOpen && editing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-slate-200 z-10">
+            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+              <h2 className="text-lg font-black text-slate-900">{editing.id ? 'Edit Team Member' : 'Add Team Member'}</h2>
+              <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-lg text-slate-500"><X size={18} /></button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-6 space-y-5">
+              {/* Photo upload */}
+              <div className="flex items-center gap-5">
+                <div
+                  className="w-20 h-20 rounded-xl border-2 border-dashed border-slate-300 overflow-hidden cursor-pointer bg-slate-50 hover:border-indigo-400 transition-colors shrink-0 flex items-center justify-center"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {photoPreview ? (
+                    <img src={photoPreview} alt="preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center p-2">
+                      <Camera size={20} className="mx-auto text-slate-400" />
+                      <p className="text-[9px] text-slate-400 mt-1">Upload</p>
+                    </div>
+                  )}
+                </div>
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                <div className="flex-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Photo URL (or upload above)</label>
+                  <input
+                    type="text"
+                    value={editing.imageUrl || ''}
+                    onChange={e => { setEditing((p: any) => ({ ...p, imageUrl: e.target.value })); setPhotoPreview(e.target.value); }}
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Name + Role */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+                  <input required type="text" value={editing.name || ''} onChange={e => setEditing((p: any) => ({ ...p, name: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="e.g. Emmanuel A.H Kpakama" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Role / Title *</label>
+                  <input required type="text" value={editing.role || ''} onChange={e => setEditing((p: any) => ({ ...p, role: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="e.g. Head of Admin and Logistics" />
+                </div>
+              </div>
+
+              {/* Bio */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Biography</label>
+                <textarea rows={4} value={editing.bio || ''} onChange={e => setEditing((p: any) => ({ ...p, bio: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none resize-none" placeholder="Professional background and experience…" />
+              </div>
+
+              {/* Dedicated Role */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Dedicated Role / Mission Note</label>
+                <input type="text" value={editing.dedicatedRole || ''} onChange={e => setEditing((p: any) => ({ ...p, dedicatedRole: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="e.g. Point of contact for Helen Keller Intl…" />
+              </div>
+
+              {/* Phone + Email */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Phone</label>
+                  <input type="text" value={editing.phone || ''} onChange={e => setEditing((p: any) => ({ ...p, phone: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="+232…" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                  <input type="email" value={editing.email || ''} onChange={e => setEditing((p: any) => ({ ...p, email: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="team@biggroup.com" />
+                </div>
+              </div>
+
+              {/* Languages + Order */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Languages</label>
+                  <input type="text" value={editing.languages || ''} onChange={e => setEditing((p: any) => ({ ...p, languages: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="English, Krio…" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Display Order</label>
+                  <input type="number" min={1} value={editing.displayOrder ?? 1} onChange={e => setEditing((p: any) => ({ ...p, displayOrder: parseInt(e.target.value) || 1 }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                </div>
+              </div>
+
+              {/* Skills */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Skills / Expertise (comma-separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(editing.skills) ? editing.skills.join(', ') : editing.skills || ''}
+                  onChange={e => setEditing((p: any) => ({ ...p, skills: e.target.value }))}
+                  className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  placeholder="Fleet Management, Compliance, Leadership…"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+                  {isSubmitting ? <><Loader2 size={15} className="animate-spin" /> Saving…</> : (editing.id ? 'Save Changes' : 'Add Member')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm Modal — animated */}
+      <AnimatePresence>
+        {confirmDelete && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+              onClick={() => setConfirmDelete(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: 'spring', bounce: 0.25, duration: 0.35 }}
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 overflow-hidden z-10"
+            >
+              {/* Red top accent bar */}
+              <div className="h-1.5 w-full bg-gradient-to-r from-red-500 to-rose-600" />
+              <div className="p-6">
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="w-11 h-11 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center shrink-0">
+                    <Trash2 size={20} className="text-red-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 leading-snug">Remove Team Member?</h3>
+                    <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                      You are about to permanently remove{' '}
+                      <span className="font-bold text-slate-800">{confirmDelete.name}</span>{' '}
+                      from the operational team. This action cannot be undone.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setConfirmDelete(null)}
+                    className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => { onDelete(confirmDelete.id); setConfirmDelete(null); }}
+                    className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Trash2 size={14} /> Yes, Remove
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Clock, Car, User, Fuel, AlertTriangle, MapPin, CheckCircle2, Navigation, Activity, ShieldAlert, AlertCircle, Route, Users, Briefcase, ChevronRight, PenTool, Trash2, Download, Building2, Calendar, ThumbsUp, Flag, X } from 'lucide-react';
+import { ArrowLeft, Clock, Car, User, Fuel, AlertTriangle, MapPin, CheckCircle2, Navigation, Activity, ShieldAlert, AlertCircle, Route, Users, Briefcase, ChevronRight, PenTool, Trash2, Download, Building2, Calendar, ThumbsUp, Flag, X, MoreVertical } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ActiveDispatch, CompletedDispatch, TripLog, TripLeg, Passenger, Driver, Vehicle } from './PerformanceSection';
@@ -9,6 +9,7 @@ interface DispatchDetailsViewProps {
   tripLog?: TripLog;
   driver?: Driver;
   vehicle?: Vehicle;
+  clients?: { id: string; name: string }[];
   onBack: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -18,10 +19,11 @@ interface DispatchDetailsViewProps {
   onFlag?: (logId: string, note: string) => void;
 }
 
-export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispatch, tripLog, driver, vehicle, onBack, onEdit, onDelete, onReturn, onEditTripLog, onApprove, onFlag }) => {
+export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispatch, tripLog, driver, vehicle, clients = [], onBack, onEdit, onDelete, onReturn, onEditTripLog, onApprove, onFlag }) => {
   const [activeTab, setActiveTab] = React.useState<'overview' | 'trip' | 'fuel'>('overview');
   const [isFlagging, setIsFlagging] = React.useState(false);
   const [flagNote, setFlagNote] = React.useState('');
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const isCompleted = 'completedAt' in dispatch;
 
   const formatDate = (dateStr?: string) => {
@@ -43,12 +45,13 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
   };
 
   const exportDispatchPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const pageW = 297;
     const compDispatch = dispatch as CompletedDispatch;
 
     // ── Header ──────────────────────────────────────────
     doc.setFillColor(79, 70, 229);
-    doc.rect(0, 0, 210, 30, 'F');
+    doc.rect(0, 0, pageW, 30, 'F');
     doc.setFontSize(18);
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
@@ -75,7 +78,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
       ],
       theme: 'grid',
       styles: { fontSize: 9, cellPadding: 3 },
-      columnStyles: { 0: { fontStyle: 'bold', cellWidth: 38, fillColor: [245, 247, 255] }, 2: { fontStyle: 'bold', cellWidth: 38, fillColor: [245, 247, 255] } },
+      columnStyles: { 0: { fontStyle: 'bold', cellWidth: 45, fillColor: [245, 247, 255] }, 2: { fontStyle: 'bold', cellWidth: 45, fillColor: [245, 247, 255] } },
     });
 
     // ── Section 2: Trip Log & Safety Metrics ────────────
@@ -110,7 +113,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         doc.setFontSize(9);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(90, 90, 110);
-        const noteLines = doc.splitTextToSize(`Notes: "${tripLog.notes}"`, 182);
+        const noteLines = doc.splitTextToSize(`Notes: "${tripLog.notes}"`, pageW - 28);
         doc.text(noteLines, 14, currentY);
         currentY += noteLines.length * 5;
       }
@@ -242,26 +245,53 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          {isCompleted && (
-            <button onClick={exportDispatchPDF} className="flex items-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-sm font-bold rounded-xl transition-colors border border-indigo-100">
-              <Download size={16} /> Export PDF
-            </button>
-          )}
-          {onEdit && (
-            <button onClick={onEdit} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors">
-              <PenTool size={16} /> Edit
-            </button>
-          )}
-          {onDelete && (
-            <button onClick={onDelete} className="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-bold rounded-xl transition-colors">
-              <Trash2 size={16} /> Delete
-            </button>
-          )}
           {onReturn && (
             <button onClick={onReturn} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm">
               <CheckCircle2 size={16} /> Return & Log
             </button>
           )}
+
+          {/* Three dots menu */}
+          <div className="relative">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors border border-slate-200"
+            >
+              <MoreVertical size={20} />
+            </button>
+            
+            {isMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)} />
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50 animate-fade-in origin-top-right">
+                  {isCompleted && (
+                    <button
+                      onClick={() => { exportDispatchPDF(); setIsMenuOpen(false); }}
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors flex items-center gap-2"
+                    >
+                      <Download size={16} /> Export PDF
+                    </button>
+                  )}
+                  {onEdit && (
+                    <button
+                      onClick={() => { onEdit(); setIsMenuOpen(false); }}
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2"
+                    >
+                      <PenTool size={16} /> Edit
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      onClick={() => { onDelete(); setIsMenuOpen(false); }}
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
+                    >
+                      <Trash2 size={16} /> Delete
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -364,12 +394,24 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
               </div>
 
               {/* Corporate Account */}
-              {dispatch.corporateAccountId && (
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Corporate A/C</p>
-                  <p className="font-semibold text-slate-800 text-sm flex items-center gap-1"><Building2 size={12} className="text-indigo-400" /> {dispatch.corporateAccountId}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Corporate A/C</p>
+                <p className="font-semibold text-slate-800 text-sm flex items-center gap-1">
+                  <Building2 size={12} className="text-indigo-400" /> 
+                  {dispatch.corporateAccountId || <span className="text-slate-400 font-normal">Not assigned</span>}
+                </p>
+              </div>
+
+              {/* Project */}
+              <div>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Project</p>
+                <p className="font-semibold text-slate-800 text-sm flex items-center gap-1">
+                  <Briefcase size={12} className="text-indigo-400" /> 
+                  {dispatch.projectId
+                    ? (clients.find(c => c.id === dispatch.projectId)?.name ?? dispatch.projectId)
+                    : <span className="text-slate-400 font-normal">Not assigned</span>}
+                </p>
+              </div>
 
               {/* Condition Out */}
               <div className="col-span-2 sm:col-span-3 lg:col-span-4">
