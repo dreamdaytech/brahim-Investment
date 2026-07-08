@@ -12,26 +12,25 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 interface AdminSectionProps {
-  inquiries: Inquiry[];
-  onUpdateStatus: (id: string, status: Inquiry['status']) => void;
-  onDeleteInquiry: (id: string) => void;
-  clients: any[];
-  onAddClient: (client: any) => void;
-  onUpdateClient: (id: string, client: any) => void;
-  onDeleteClient: (id: string) => void;
+  // SECURITY: inquiries and clients are now fetched internally behind authentication
+  // Only team member management is passed from App (used by public /team page too)
   teamMembers?: any[];
   onAddTeamMember?: (member: any) => void;
   onUpdateTeamMember?: (id: string, member: any) => void;
   onDeleteTeamMember?: (id: string) => void;
 }
 
-export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateStatus, onDeleteInquiry, clients, onAddClient, onUpdateClient, onDeleteClient, teamMembers = [], onAddTeamMember, onUpdateTeamMember, onDeleteTeamMember }) => {
+export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], onAddTeamMember, onUpdateTeamMember, onDeleteTeamMember }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [authError, setAuthError] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+
+  // SECURITY: Admin-only data fetched here, behind authentication
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [clients, setClients] = useState<any[]>([]);
   
   // Filtering & Searches States
   const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'profile' | 'access'>('overview');
@@ -51,16 +50,17 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
           if (roleData) {
             if (!roleData.is_active) {
               await supabase.auth.signOut();
-              setAuthError('Your account has been suspended.');
+              setAuthError('Your account has been suspended. Please contact your administrator.');
               setIsAuthenticated(false);
             } else {
               setUserRole(roleData.role);
               setIsAuthenticated(true);
             }
           } else {
-            // Fallback for existing admin before migration
-            setUserRole('super_admin');
-            setIsAuthenticated(true);
+            // No role row found — deny access completely (security hardening)
+            await supabase.auth.signOut();
+            setAuthError('Access denied. Your account has not been provisioned with platform access. Please contact the administrator.');
+            setIsAuthenticated(false);
           }
         } else {
           setIsAuthenticated(false);
@@ -79,46 +79,91 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ inquiries, onUpdateS
 
     const handleOpenProfile = () => setAdminTab('profile');
     const handleOpenOverview = () => setAdminTab('overview');
-    
     window.addEventListener('open-admin-profile', handleOpenProfile);
     window.addEventListener('open-admin-overview', handleOpenOverview);
-    
     return () => {
       window.removeEventListener('open-admin-profile', handleOpenProfile);
       window.removeEventListener('open-admin-overview', handleOpenOverview);
     };
   }, []);
 
+  // Fetch admin-only data after authentication (CRIT-1 fix)
+  React.useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const mapInquiryFromDB = (dbItem) => ({
+      id: dbItem.id,
+      fullName: dbItem.fullname || dbItem.fullName,
+      organization: dbItem.organization,
+      email: dbItem.email,
+      phone: dbItem.phone,
+      serviceType: dbItem.servicetype || dbItem.serviceType,
+      startDate: dbItem.startdate || dbItem.startDate,
+      endDate: dbItem.enddate || dbItem.endDate,
+      preferredVehicle: dbItem.preferredvehicle || dbItem.preferredVehicle,
+      vehiclesNeeded: dbItem.vehiclesneeded || dbItem.vehiclesNeeded,
+      pickupLocation: dbItem.pickuplocation || dbItem.pickupLocation,
+      dropoffLocation: dbItem.dropofflocation || dbItem.dropoffLocation,
+      specialRequirementsDet: dbItem.specialrequirementsdet || dbItem.specialRequirementsDet,
+      status: dbItem.status,
+      createdAt: dbItem.createdat || dbItem.createdAt
+    });
+
+    const fetchAdminData = async () => {
+      const { data: inqData } = await supabase.from('inquiries').select('*');
+      if (inqData) setInquiries(inqData.map(mapInquiryFromDB));
+      const { data: clientsData } = await supabase.from('clients').select('*');
+      if (clientsData) setClients(clientsData);
+    };
+    fetchAdminData();
+
+    const inqCh = supabase.channel('admin:inq').on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, async () => {
+      const { data } = await supabase.from('inquiries').select('*');
+      if (data) setInquiries(data.map(mapInquiryFromDB));
+    }).subscribe();
+    const cliCh = supabase.channel('admin:cli').on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, async () => {
+      const { data } = await supabase.from('clients').select('*');
+      if (data) setClients(data);
+    }).subscribe();
+    return () => { supabase.removeChannel(inqCh); supabase.removeChannel(cliCh); };
+  }, [isAuthenticated]);
+
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
     setIsLoading(true);
-
-    const { supabase } = await import('../lib/supabase');
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setAuthError(error.message);
-    }
+    const { supabase: sb } = await import('../lib/supabase');
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) setAuthError(error.message);
     setIsLoading(false);
   };
 
   const handleSignOut = async () => {
-    const { supabase } = await import('../lib/supabase');
-    await supabase.auth.signOut();
+    const { supabase: sb } = await import('../lib/supabase');
+    await sb.auth.signOut();
+    // CRIT-2: Clear all sensitive cached data from localStorage on sign-out
+    localStorage.removeItem('big_group_inquiries_cache');
+    localStorage.removeItem('big_group_clients_cache');
+    localStorage.removeItem('big_group_team_cache');
+    setInquiries([]);
+    setClients([]);
   };
 
+  const onUpdateStatus = async (id: string, status: any) => { await supabase.from('inquiries').update({ status }).eq('id', id); };
+  const onDeleteInquiry = async (id: string) => {
+    if (window.confirm("Are you sure you want to permanently delete this inquiry?"))
+      await supabase.from('inquiries').delete().eq('id', id);
+  };
+  const onAddClient = async (newClient: any) => { await supabase.from('clients').insert([newClient]); };
+  const onUpdateClient = async (id: string, updateData: any) => { await supabase.from('clients').update(updateData).eq('id', id); };
+  const onDeleteClient = async (id: string) => { await supabase.from('clients').delete().eq('id', id); };
+
   const filteredInquiries = inquiries.filter(item => {
-    const matchesSearch = 
-      item.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch =
+      item.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.preferredVehicle.toLowerCase().includes(searchTerm.toLowerCase());
-    
     const matchesStatus = filterStatus === 'All' ? true : item.status === filterStatus;
-    
     return matchesSearch && matchesStatus;
   });
 

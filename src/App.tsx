@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
-import { ActiveTab, Vehicle, Inquiry, ClientItem } from './types';
+import { Inquiry } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { HomeSection } from './components/HomeSection';
@@ -14,99 +14,12 @@ import { ClientsSection } from './components/ClientsSection';
 import { motion, AnimatePresence } from 'motion/react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 
-// Seeding Initial Inquiries for outstanding presentation
-const DEFAULT_INQUIRIES: Inquiry[] = [
-  {
-    id: 'BIG-4829',
-    fullName: 'Dr. Sarah Jenkins',
-    organization: 'World Health Organization (WHO)',
-    email: 's.jenkins@who.int',
-    phone: '+232 76 554 332',
-    serviceType: 'Chauffeur Driven',
-    startDate: '2026-07-01',
-    endDate: '2026-07-15',
-    preferredVehicle: 'Toyota Land Cruiser Prado',
-    vehiclesNeeded: 3,
-    pickupLocation: 'Freetown Wilkinson Road Compound',
-    dropoffLocation: 'Freetown Wilkinson Road Compound',
-    specialRequirementsDet: '[Travel Scope: Upcountry Provinces, Fuel: Client Top-up] High field urgency. Requires satellite communications pre-configured on all units.',
-    status: 'Approved',
-    createdAt: '06/22/2026, 09:12 AM'
-  },
-  {
-    id: 'BIG-8921',
-    fullName: 'Ambassador Hans-Dieter',
-    organization: 'European Union delegation to SL',
-    email: 'h.dieter@eeas.europa.eu',
-    phone: '+232 30 112 233',
-    serviceType: 'Chauffeur Driven',
-    startDate: '2026-07-10',
-    endDate: '2026-07-14',
-    preferredVehicle: 'Toyota Land Cruiser V8 (Series 200)',
-    vehiclesNeeded: 2,
-    pickupLocation: 'Lungi Airport Main Terminal',
-    dropoffLocation: 'Radisson Blu Mammy Yoko, Freetown',
-    specialRequirementsDet: '[Travel Scope: Freetown Only, Fuel: Pre-paid fuel card] Dignitary protocols apply. Defensive drivers with diplomatic clearance preferred.',
-    status: 'Pending',
-    createdAt: '06/22/2026, 11:45 AM'
-  },
-  {
-    id: 'BIG-3029',
-    fullName: 'Marcus Vance',
-    organization: 'USAID Freetown',
-    email: 'mvance@usaid.gov',
-    phone: '+232 88 120 440',
-    serviceType: 'Self-Drive Fleet',
-    startDate: '2026-07-05',
-    endDate: '2026-07-12',
-    preferredVehicle: 'Toyota 4Runner SR5 Premium',
-    vehiclesNeeded: 1,
-    pickupLocation: 'Freetown Wilkinson Road Compound',
-    dropoffLocation: 'Freetown Wilkinson Road Compound',
-    specialRequirementsDet: '[Travel Scope: Freetown Only, Fuel: Client Top-up] Standard field team visit.',
-    status: 'Pending',
-    createdAt: '06/22/2026, 12:05 PM'
-  }
-];
+// SECURITY NOTE: Admin-only seed data (inquiries, clients) has been moved into
+// AdminSection.tsx which is protected behind Supabase authentication.
+// Only public-facing data (fleet vehicles, team member public profiles) is
+// loaded here in App.tsx.
 
-const DEFAULT_CLIENTS = [
-  { id: 'client-1', name: 'JHPIEGO', service: 'Vehicle Rental Service Within Freetown and the Provinces', status: 'Ongoing' },
-  { id: 'client-2', name: 'Amref Health Africa', service: 'Vehicle Rental Service Within Freetown And the Provinces', status: 'Ongoing' },
-  { id: 'client-3', name: 'Qcell SL Limited', service: 'Vehicle Rental Service Within Freetown And the Provinces', status: 'Ongoing' },
-  { id: 'client-4', name: 'Clinton Health Access Initiative (CHAI)', service: 'Vehicle Rental Within Freetown And the Provinces', status: 'Ongoing' },
-  { id: 'client-5', name: 'Alpenglow', service: 'Vehicle Rental Service Within Freetown and the Provinces', status: 'Ongoing' },
-  { id: 'client-6', name: 'Partners in Health (PIH)', service: 'Vehicle Rental Service Within Freetown And The Provinces', status: 'Completed' },
-  { id: 'client-7', name: 'ABT Associate Vector Link', service: 'Vehicle Rental Service to The Provinces, Including Trucks And Business', status: 'Ongoing' },
-  { id: 'client-8', name: 'Integrated Health Project Administration Unit (IHPAU)', service: 'Vehicle Rental Service to The Provinces', status: 'Ongoing' },
-  { id: 'client-9', name: 'Alhuda International Foundation', service: 'Vehicle Rental Service Within Freetown and the Provinces', status: 'Ongoing' },
-  { id: 'client-10', name: 'Ministry of Health and Sanitation (MOHS)', service: 'Vehicle Rental Service to The Provinces', status: 'Completed' },
-  { id: 'client-11', name: 'UNFPA', service: 'Vehicle Rental Service to The Provinces', status: 'Ongoing as and when needed basis' },
-  { id: 'client-12', name: 'Bintassco SL Limited', service: 'Vehicle Rental Service Within Freetown And the Provinces', status: 'Ongoing' },
-  { id: 'client-13', name: 'Aggreko International', service: 'Vehicle Rental Service in Freetown', status: 'Completed and Project Closed' },
-  { id: 'client-14', name: 'Team & Team Ngo', service: 'Vehicle Rental Service Within Freetown and the Provinces', status: 'Completed and Project Closed' },
-  { id: 'client-15', name: 'Brunnenbau Conrad Sl Ltd', service: 'Vehicle Rental Service Within Freetown And the Provinces', status: 'Ongoing' },
-  { id: 'client-16', name: 'Mas Company SL Ltd', service: 'Vehicle Rental Service Within Freetown', status: 'Ongoing' }
-];
-
-// Mappers
-const mapInquiryFromDB = (dbItem: any): Inquiry => ({
-  id: dbItem.id,
-  fullName: dbItem.fullname || dbItem.fullName,
-  organization: dbItem.organization,
-  email: dbItem.email,
-  phone: dbItem.phone,
-  serviceType: dbItem.servicetype || dbItem.serviceType,
-  startDate: dbItem.startdate || dbItem.startDate,
-  endDate: dbItem.enddate || dbItem.endDate,
-  preferredVehicle: dbItem.preferredvehicle || dbItem.preferredVehicle,
-  vehiclesNeeded: dbItem.vehiclesneeded || dbItem.vehiclesNeeded,
-  pickupLocation: dbItem.pickuplocation || dbItem.pickupLocation,
-  dropoffLocation: dbItem.dropofflocation || dbItem.dropoffLocation,
-  specialRequirementsDet: dbItem.specialrequirementsdet || dbItem.specialRequirementsDet,
-  status: dbItem.status,
-  createdAt: dbItem.createdat || dbItem.createdAt
-});
-
+// mapInquiryToDB is used by the public contact form submission
 const mapInquiryToDB = (uiItem: Partial<Inquiry>): any => {
   const mapped: any = {};
   if (uiItem.id !== undefined) mapped.id = uiItem.id;
@@ -124,62 +37,6 @@ const mapInquiryToDB = (uiItem: Partial<Inquiry>): any => {
   if (uiItem.specialRequirementsDet !== undefined) mapped.specialrequirementsdet = uiItem.specialRequirementsDet;
   if (uiItem.status !== undefined) mapped.status = uiItem.status;
   if (uiItem.createdAt !== undefined) mapped.createdat = uiItem.createdAt;
-  return mapped;
-};
-
-const mapClientFromDB = (dbItem: any): ClientItem => ({
-  id: dbItem.id,
-  name: dbItem.name,
-  service: dbItem.service,
-  status: dbItem.status,
-  isDraft: dbItem.isdraft ?? dbItem.isDraft,
-  shortCode: dbItem.short_code ?? dbItem.shortCode,
-  isPartner: dbItem.is_partner ?? dbItem.isPartner,
-  contactPerson: dbItem.contact_person ?? dbItem.contactPerson,
-  phone: dbItem.phone,
-  email: dbItem.email,
-  website: dbItem.website,
-  headOfficeAddress: dbItem.head_office_address ?? dbItem.headOfficeAddress,
-  city: dbItem.city,
-  country: dbItem.country,
-  accountNumber: dbItem.account_number ?? dbItem.accountNumber,
-  contractRef: dbItem.contract_ref ?? dbItem.contractRef,
-  contractStartDate: dbItem.contract_start_date ?? dbItem.contractStartDate,
-  contractEndDate: dbItem.contract_end_date ?? dbItem.contractEndDate,
-  creditLimit: dbItem.credit_limit !== undefined && dbItem.credit_limit !== null ? Number(dbItem.credit_limit) : dbItem.creditLimit,
-  totalPurchases: dbItem.total_purchases !== undefined && dbItem.total_purchases !== null ? Number(dbItem.total_purchases) : dbItem.totalPurchases,
-  totalVolume: dbItem.total_volume !== undefined && dbItem.total_volume !== null ? Number(dbItem.total_volume) : dbItem.totalVolume,
-  notes: dbItem.notes,
-  logoUrl: dbItem.logoUrl,
-  createdAt: dbItem.created_at ?? dbItem.createdAt
-});
-
-const mapClientToDB = (uiItem: Partial<ClientItem>): any => {
-  const mapped: any = {};
-  if (uiItem.id !== undefined) mapped.id = uiItem.id;
-  if (uiItem.name !== undefined) mapped.name = uiItem.name;
-  if (uiItem.service !== undefined) mapped.service = uiItem.service;
-  if (uiItem.status !== undefined) mapped.status = uiItem.status;
-  if (uiItem.isDraft !== undefined) mapped.isdraft = uiItem.isDraft;
-  if (uiItem.shortCode !== undefined) mapped.short_code = uiItem.shortCode;
-  if (uiItem.isPartner !== undefined) mapped.is_partner = uiItem.isPartner;
-  if (uiItem.contactPerson !== undefined) mapped.contact_person = uiItem.contactPerson;
-  if (uiItem.phone !== undefined) mapped.phone = uiItem.phone;
-  if (uiItem.email !== undefined) mapped.email = uiItem.email;
-  if (uiItem.website !== undefined) mapped.website = uiItem.website;
-  if (uiItem.headOfficeAddress !== undefined) mapped.head_office_address = uiItem.headOfficeAddress;
-  if (uiItem.city !== undefined) mapped.city = uiItem.city;
-  if (uiItem.country !== undefined) mapped.country = uiItem.country;
-  if (uiItem.accountNumber !== undefined) mapped.account_number = uiItem.accountNumber;
-  if (uiItem.contractRef !== undefined) mapped.contract_ref = uiItem.contractRef;
-  if (uiItem.contractStartDate !== undefined) mapped.contract_start_date = uiItem.contractStartDate;
-  if (uiItem.contractEndDate !== undefined) mapped.contract_end_date = uiItem.contractEndDate;
-  if (uiItem.creditLimit !== undefined) mapped.credit_limit = uiItem.creditLimit;
-  if (uiItem.totalPurchases !== undefined) mapped.total_purchases = uiItem.totalPurchases;
-  if (uiItem.totalVolume !== undefined) mapped.total_volume = uiItem.totalVolume;
-  if (uiItem.notes !== undefined) mapped.notes = uiItem.notes;
-  if (uiItem.logoUrl !== undefined) mapped.logoUrl = uiItem.logoUrl;
-  if (uiItem.createdAt !== undefined) mapped.created_at = uiItem.createdAt;
   return mapped;
 };
 
@@ -220,112 +77,52 @@ export default function App() {
 
   const [estimateDetails, setEstimateDetails] = useState<{ vehicleId: string; days: number; chauffeur: boolean; provincial: boolean; total: number } | null>(null);
 
-  const [inquiries, setInquiries] = useState<Inquiry[]>(() => {
-    const saved = localStorage.getItem('big_group_inquiries_cache');
-    return saved ? JSON.parse(saved) : DEFAULT_INQUIRIES;
-  });
-  const [clients, setClients] = useState<ClientItem[]>(() => {
-    const saved = localStorage.getItem('big_group_clients_cache');
-    return saved ? JSON.parse(saved) : DEFAULT_CLIENTS;
-  });
+  // SECURITY: inquiries and clients are admin-only data — fetched inside AdminSection behind auth.
+  // Only public data is held here.
   const [fleetVehicles, setFleetVehicles] = useState<any[]>([]);
-  const [teamMembers, setTeamMembers] = useState<any[]>(() => {
-    const saved = localStorage.getItem('big_group_team_cache');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
 
-  // Connect to Supabase and listen for changes
+  // Connect to Supabase and listen for PUBLIC data changes only
   useEffect(() => {
-    const fetchInitialData = async () => {
-      // Inquiries
-      const { data: inquiriesData, error: inqErr } = await supabase.from('inquiries').select('*');
-      if (inqErr) console.error("Error fetching inquiries:", inqErr);
-      if (inquiriesData && inquiriesData.length > 0) {
-        const mapped = inquiriesData.map(mapInquiryFromDB);
-        setInquiries(mapped);
-        localStorage.setItem('big_group_inquiries_cache', JSON.stringify(mapped));
-      } else if (!inqErr) {
-        // Seed database if empty
-        const { error: seedErr } = await supabase.from('inquiries').insert(DEFAULT_INQUIRIES.map(mapInquiryToDB));
-        if (!seedErr) {
-          setInquiries(DEFAULT_INQUIRIES);
-        }
-      }
-
-      // Clients
-      const { data: clientsData, error: cliErr } = await supabase.from('clients').select('*');
-      if (cliErr) console.error("Error fetching clients:", cliErr);
-      if (clientsData && clientsData.length > 0) {
-        const mapped = clientsData.map(mapClientFromDB);
-        setClients(mapped);
-        localStorage.setItem('big_group_clients_cache', JSON.stringify(mapped));
-      } else if (!cliErr) {
-        // Seed database if empty
-        const { error: seedErr2 } = await supabase.from('clients').insert(DEFAULT_CLIENTS.map(mapClientToDB));
-        if (!seedErr2) {
-          setClients(DEFAULT_CLIENTS);
-        }
-      }
-
-      // Fleet vehicles (public page)
+    // SECURITY: Only public data is fetched here. Admin-only data (inquiries,
+    // clients) is fetched inside AdminSection.tsx behind authentication.
+    const fetchPublicData = async () => {
+      // Fleet vehicles (public pages: home, fleet, services, contact)
       const { data: vehiclesData } = await supabase
         .from('vehicles')
-        .select('*')
+        .select('id, make_model, year, vehicle_type, status, show_on_fleet, image_url, gallery_urls, vehicle_category, description, price_per_day, features, fuel_type, transmission, seats, engine_label, spec_engine_size, spec_drivetrain, spec_ground_clearance, spec_fuel_capacity, spec_best_for')
         .eq('show_on_fleet', true)
         .eq('status', 'Available');
       if (vehiclesData) {
         setFleetVehicles(vehiclesData.map(mapVehicleFromDB));
       }
 
-      // Team Members
-      const { data: teamData, error: teamErr } = await supabase
+      // Team Members (public /team page — only non-sensitive public profile fields)
+      const { data: teamData } = await supabase
         .from('team_members')
-        .select('*')
+        .select('id, name, role, bio, dedicated_role, languages, skills, image_url, display_order, is_active')
         .eq('is_active', true)
         .order('display_order', { ascending: true });
-      if (teamErr) console.error('Error fetching team members:', teamErr);
       if (teamData) {
         const mapped = teamData.map((m: any) => ({
           id: m.id, name: m.name, role: m.role, bio: m.bio,
           dedicatedRole: m.dedicated_role, languages: m.languages,
-          phone: m.phone, email: m.email, skills: m.skills || [],
+          skills: m.skills || [],
           imageUrl: m.image_url, displayOrder: m.display_order, isActive: m.is_active,
+          // SECURITY: phone and email intentionally excluded from public fetch
         }));
         setTeamMembers(mapped);
-        localStorage.setItem('big_group_team_cache', JSON.stringify(mapped));
       }
     };
 
-    fetchInitialData();
+    fetchPublicData();
 
-    // Subscribe to realtime changes
-    const inquiriesChannel = supabase.channel('public:inquiries')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, async () => {
-        const { data } = await supabase.from('inquiries').select('*');
-        if (data) {
-          const mapped = data.map(mapInquiryFromDB);
-          setInquiries(mapped);
-          localStorage.setItem('big_group_inquiries_cache', JSON.stringify(mapped));
-        }
-      })
-      .subscribe();
-
-    const clientsChannel = supabase.channel('public:clients')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, async () => {
-        const { data } = await supabase.from('clients').select('*');
-        if (data) {
-          const mapped = data.map(mapClientFromDB);
-          setClients(mapped);
-          localStorage.setItem('big_group_clients_cache', JSON.stringify(mapped));
-        }
-      })
-      .subscribe();
-
+    // Only subscribe to vehicle changes for real-time fleet page updates
     const vehiclesChannel = supabase.channel('public:vehicles')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'vehicles' }, async () => {
         const { data: vehiclesData } = await supabase
           .from('vehicles')
-          .select('*')
+          .select('id, make_model, year, vehicle_type, status, show_on_fleet, image_url, gallery_urls, vehicle_category, description, price_per_day, features, fuel_type, transmission, seats, engine_label, spec_engine_size, spec_drivetrain, spec_ground_clearance, spec_fuel_capacity, spec_best_for')
           .eq('show_on_fleet', true)
           .eq('status', 'Available');
         if (vehiclesData) {
@@ -334,88 +131,23 @@ export default function App() {
       })
       .subscribe();
 
-    const teamChannel = supabase.channel('public:team_members')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'team_members' }, async () => {
-        const { data } = await supabase.from('team_members').select('*').eq('is_active', true).order('display_order', { ascending: true });
-        if (data) {
-          const mapped = data.map((m: any) => ({
-            id: m.id, name: m.name, role: m.role, bio: m.bio,
-            dedicatedRole: m.dedicated_role, languages: m.languages,
-            phone: m.phone, email: m.email, skills: m.skills || [],
-            imageUrl: m.image_url, displayOrder: m.display_order, isActive: m.is_active,
-          }));
-          setTeamMembers(mapped);
-          localStorage.setItem('big_group_team_cache', JSON.stringify(mapped));
-        }
-      })
-      .subscribe();
-
     return () => {
-      supabase.removeChannel(inquiriesChannel);
-      supabase.removeChannel(clientsChannel);
       supabase.removeChannel(vehiclesChannel);
-      supabase.removeChannel(teamChannel);
     };
   }, []);
 
-  // Administration State modifications
-  const handleUpdateStatus = async (id: string, status: Inquiry['status']) => {
-    try {
-      await supabase.from('inquiries').update({ status }).eq('id', id);
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
-
-  const handleDeleteInquiry = async (id: string) => {
-    if (window.confirm("Are you sure you want to permanently delete this logged inquiry from active dispatch logs?")) {
-      try {
-        await supabase.from('inquiries').delete().eq('id', id);
-      } catch (error) {
-        console.error("Error deleting inquiry:", error);
-      }
-    }
-  };
-
+  // SECURITY: handleAddInquiry is kept here as it's called from the PUBLIC contact form.
+  // All other admin-only data handlers (update/delete inquiries, clients CRUD) have been
+  // moved into AdminSection.tsx behind authentication.
   const handleAddInquiry = async (newInquiry: Inquiry): Promise<{success: boolean, error?: string}> => {
     try {
       const { error } = await supabase.from('inquiries').insert([mapInquiryToDB(newInquiry)]);
       if (error) {
-        console.error("Error adding inquiry:", error);
         return { success: false, error: error.message || JSON.stringify(error) };
       }
-      
-      // Update local state immediately so it appears in the dashboard without requiring a refresh
-      setInquiries(prev => [newInquiry, ...prev]);
-      
       return { success: true };
     } catch (error: any) {
-      console.error("Exception adding inquiry:", error);
       return { success: false, error: error.message || 'Unknown error occurred' };
-    }
-  };
-
-  const handleAddClient = async (newClient: ClientItem) => {
-    try {
-      await supabase.from('clients').insert([mapClientToDB(newClient)]);
-    } catch (error) {
-      console.error("Error adding client:", error);
-    }
-  };
-
-  const handleUpdateClient = async (id: string, updateData: Partial<ClientItem>) => {
-    try {
-      await supabase.from('clients').update(mapClientToDB(updateData)).eq('id', id);
-    } catch (error) {
-      console.error("Error updating client:", error);
-    }
-  };
-
-  const handleDeleteClient = async (id: string) => {
-    try {
-      await supabase.from('clients').delete().eq('id', id);
-    } catch (error) {
-      console.error("Error deleting client:", error);
     }
   };
 
@@ -461,15 +193,16 @@ export default function App() {
 
   const renderRoutes = () => (
     <Routes>
-      <Route path="/" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={clients} />} />
+      <Route path="/" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={[]} />} />
       <Route path="/fleet" element={<FleetSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} />} />
       <Route path="/services" element={<ServicesSection setSelectedVehicleId={setSelectedVehicleId} setEstimateDetails={setEstimateDetails} fleetVehicles={fleetVehicles} />} />
       <Route path="/about" element={<AboutSection />} />
       <Route path="/team" element={<TeamSection teamMembers={teamMembers} />} />
-      <Route path="/clients" element={<ClientsSection clients={clients} />} />
+      <Route path="/clients" element={<ClientsSection clients={[]} />} />
       <Route path="/contact" element={<ContactSection selectedVehicleId={selectedVehicleId} setSelectedVehicleId={setSelectedVehicleId} estimateDetails={estimateDetails} clearEstimateDetails={handleClearEstimate} onAddInquiry={handleAddInquiry} fleetVehicles={fleetVehicles} />} />
-      <Route path="/admin" element={<AdminSection inquiries={inquiries} onUpdateStatus={handleUpdateStatus} onDeleteInquiry={handleDeleteInquiry} clients={clients} onAddClient={handleAddClient} onUpdateClient={handleUpdateClient} onDeleteClient={handleDeleteClient} teamMembers={teamMembers} onAddTeamMember={handleAddTeamMember} onUpdateTeamMember={handleUpdateTeamMember} onDeleteTeamMember={handleDeleteTeamMember} />} />
-      <Route path="*" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={clients} />} />
+      {/* SECURITY: AdminSection now fetches its own data internally behind authentication */}
+      <Route path="/admin" element={<AdminSection teamMembers={teamMembers} onAddTeamMember={handleAddTeamMember} onUpdateTeamMember={handleUpdateTeamMember} onDeleteTeamMember={handleDeleteTeamMember} />} />
+      <Route path="*" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={[]} />} />
     </Routes>
   );
 
