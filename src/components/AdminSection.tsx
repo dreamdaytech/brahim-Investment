@@ -109,11 +109,35 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       createdAt: dbItem.createdat || dbItem.createdAt
     });
 
+    const mapClientFromDB = (dbItem: any) => ({
+      id: dbItem.id,
+      name: dbItem.name,
+      service: dbItem.service,
+      logoUrl: dbItem.logoUrl || dbItem.logourl,
+      shortCode: dbItem.short_code || dbItem.shortCode,
+      isPartner: dbItem.is_partner !== undefined ? dbItem.is_partner : dbItem.isPartner,
+      contactPerson: dbItem.contact_person || dbItem.contactPerson,
+      phone: dbItem.phone,
+      email: dbItem.email,
+      website: dbItem.website,
+      headOfficeAddress: dbItem.head_office_address || dbItem.headOfficeAddress,
+      city: dbItem.city,
+      country: dbItem.country,
+      accountNumber: dbItem.account_number || dbItem.accountNumber,
+      contractRef: dbItem.contract_ref || dbItem.contractRef,
+      contractStartDate: dbItem.contract_start_date || dbItem.contractStartDate,
+      contractEndDate: dbItem.contract_end_date || dbItem.contractEndDate,
+      creditLimit: dbItem.credit_limit || dbItem.creditLimit,
+      notes: dbItem.notes,
+      status: dbItem.status,
+      createdAt: dbItem.created_at || dbItem.createdAt
+    });
+
     const fetchAdminData = async () => {
       const { data: inqData } = await supabase.from('inquiries').select('*');
       if (inqData) setInquiries(inqData.map(mapInquiryFromDB));
       const { data: clientsData } = await supabase.from('clients').select('*');
-      if (clientsData) setClients(clientsData);
+      if (clientsData) setClients(clientsData.map(mapClientFromDB));
     };
     fetchAdminData();
 
@@ -123,7 +147,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
     }).subscribe();
     const cliCh = supabase.channel('admin:cli').on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, async () => {
       const { data } = await supabase.from('clients').select('*');
-      if (data) setClients(data);
+      if (data) setClients(data.map(mapClientFromDB));
     }).subscribe();
     return () => { supabase.removeChannel(inqCh); supabase.removeChannel(cliCh); };
   }, [isAuthenticated]);
@@ -154,9 +178,18 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
     if (window.confirm("Are you sure you want to permanently delete this inquiry?"))
       await supabase.from('inquiries').delete().eq('id', id);
   };
-  const onAddClient = async (newClient: any) => { await supabase.from('clients').insert([newClient]); };
-  const onUpdateClient = async (id: string, updateData: any) => { await supabase.from('clients').update(updateData).eq('id', id); };
-  const onDeleteClient = async (id: string) => { await supabase.from('clients').delete().eq('id', id); };
+  const onAddClient = async (newClient: any) => { 
+    const { error } = await supabase.from('clients').insert([newClient]); 
+    if (error) { console.error('Add Client Error:', error); throw error; }
+  };
+  const onUpdateClient = async (id: string, updateData: any) => { 
+    const { error } = await supabase.from('clients').update(updateData).eq('id', id); 
+    if (error) { console.error('Update Client Error:', error); throw error; }
+  };
+  const onDeleteClient = async (id: string) => { 
+    const { error } = await supabase.from('clients').delete().eq('id', id); 
+    if (error) { console.error('Delete Client Error:', error); throw error; }
+  };
 
   const filteredInquiries = inquiries.filter(item => {
     const matchesSearch =
@@ -1105,32 +1138,37 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 name: g('name') || '',
                 service: g('service') || editingClient?.service,
                 logoUrl: finalLogoUrl,
-                shortCode: g('shortCode'),
-                isPartner: fd.get('isPartner') === 'true',
-                contactPerson: g('contactPerson'),
+                short_code: g('shortCode'),
+                is_partner: fd.get('isPartner') === 'true',
+                contact_person: g('contactPerson'),
                 phone: g('phone'),
                 email: g('email'),
                 website: g('website'),
-                headOfficeAddress: g('headOfficeAddress'),
+                head_office_address: g('headOfficeAddress'),
                 city: g('city'),
                 country: g('country'),
-                accountNumber: g('accountNumber'),
-                contractRef: g('contractRef'),
-                contractStartDate: g('contractStartDate'),
-                contractEndDate: g('contractEndDate'),
-                creditLimit: fd.get('creditLimit') ? Number(fd.get('creditLimit')) : undefined,
+                account_number: g('accountNumber'),
+                contract_ref: g('contractRef'),
+                contract_start_date: g('contractStartDate'),
+                contract_end_date: g('contractEndDate'),
+                credit_limit: fd.get('creditLimit') ? Number(fd.get('creditLimit')) : undefined,
                 notes: g('notes'),
                 status: fd.get('status') as string,
-                createdAt: editingClient?.createdAt || new Date().toISOString(),
+                created_at: editingClient?.createdAt || new Date().toISOString(),
               };
-              if (editingClient?.id) {
-                onUpdateClient(saved.id, saved);
-              } else {
-                onAddClient(saved);
+              try {
+                if (editingClient?.id) {
+                  await onUpdateClient(saved.id, saved);
+                } else {
+                  await onAddClient(saved);
+                }
+                setIsModalOpen(false);
+                setEditingClient(null);
+              } catch (err: any) {
+                alert(`Error saving partner: ${err.message || 'Unknown error'}`);
+              } finally {
+                setIsSubmitting(false);
               }
-              setIsSubmitting(false);
-              setIsModalOpen(false);
-              setEditingClient(null);
             }}>
               <fieldset disabled={isViewing || isSubmitting} className="p-6 space-y-5 disabled:opacity-80">
               <div className="flex justify-center mb-6">

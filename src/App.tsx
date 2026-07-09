@@ -126,7 +126,7 @@ export default function App() {
           status: c.status,
           isDraft: c.is_draft,
           shortCode: c.short_code,
-          logoUrl: c.logo_url
+          logoUrl: c.logoUrl || c.logourl
         }));
         setClients(mappedClients);
       }
