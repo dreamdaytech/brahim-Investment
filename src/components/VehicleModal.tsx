@@ -249,6 +249,9 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
       }
 
       // ── STEP 2: Single DB write (insert or update) WITH images already included ──
+      // Helper: convert empty strings to null for Postgres typed columns (dates, numbers)
+      const nullOrVal = (v: any) => (v === '' || v === undefined) ? null : v;
+
       const imageFields = {
         image_url: newImageUrl,
         gallery_urls: newGalleryUrls,
@@ -260,8 +263,8 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
           make_model: data.makeModel,
           year: data.year,
           odometer: data.odometer,
-          plate_number: data.plateNumber,
-          insurance_expiry: data.insuranceExpiry,
+          plate_number: nullOrVal(data.plateNumber),
+          insurance_expiry: nullOrVal(data.insuranceExpiry),
           condition: data.condition,
           is_company_registered: data.isCompanyRegistered,
           vehicle_type: data.type,
@@ -277,8 +280,8 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
           make_model: data.makeModel,
           year: data.year,
           odometer: data.odometer,
-          plate_number: data.plateNumber,
-          insurance_expiry: data.insuranceExpiry,
+          plate_number: nullOrVal(data.plateNumber),
+          insurance_expiry: nullOrVal(data.insuranceExpiry),
           condition: data.condition,
           is_company_registered: data.isCompanyRegistered,
           vehicle_type: data.type,
