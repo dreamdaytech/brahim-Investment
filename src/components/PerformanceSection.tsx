@@ -2451,7 +2451,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         {vehicle.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="relative inline-block text-left">
                         <button 
                           onClick={() => setActiveVehicleMenu(activeVehicleMenu === vehicle.id ? null : vehicle.id)}
