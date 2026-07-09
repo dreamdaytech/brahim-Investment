@@ -31,6 +31,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
   // SECURITY: Admin-only data fetched here, behind authentication
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [clients, setClients] = useState<any[]>([]);
+  const [adminTeamMembers, setAdminTeamMembers] = useState<any[]>([]);
   
   // Filtering & Searches States
   const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'profile' | 'access'>('overview');
@@ -133,11 +134,21 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       createdAt: dbItem.created_at || dbItem.createdAt
     });
 
+    const mapTeamFromDB = (m: any) => ({
+      id: m.id, name: m.name, role: m.role, bio: m.bio,
+      dedicatedRole: m.dedicated_role, languages: m.languages,
+      phone: m.phone, email: m.email,
+      skills: m.skills || [],
+      imageUrl: m.image_url, displayOrder: m.display_order, isActive: m.is_active
+    });
+
     const fetchAdminData = async () => {
       const { data: inqData } = await supabase.from('inquiries').select('*');
       if (inqData) setInquiries(inqData.map(mapInquiryFromDB));
       const { data: clientsData } = await supabase.from('clients').select('*');
       if (clientsData) setClients(clientsData.map(mapClientFromDB));
+      const { data: teamData } = await supabase.from('team_members').select('*').order('display_order', { ascending: true });
+      if (teamData) setAdminTeamMembers(teamData.map(mapTeamFromDB));
     };
     fetchAdminData();
 
@@ -149,7 +160,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       const { data } = await supabase.from('clients').select('*');
       if (data) setClients(data.map(mapClientFromDB));
     }).subscribe();
-    return () => { supabase.removeChannel(inqCh); supabase.removeChannel(cliCh); };
+    const teamCh = supabase.channel('admin:team').on('postgres_changes', { event: '*', schema: 'public', table: 'team_members' }, async () => {
+      const { data } = await supabase.from('team_members').select('*').order('display_order', { ascending: true });
+      if (data) setAdminTeamMembers(data.map(mapTeamFromDB));
+    }).subscribe();
+    return () => { supabase.removeChannel(inqCh); supabase.removeChannel(cliCh); supabase.removeChannel(teamCh); };
   }, [isAuthenticated]);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
@@ -706,7 +721,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
             <ClientsAdminView clients={clients} onAddClient={onAddClient} onUpdateClient={onUpdateClient} onDeleteClient={onDeleteClient} />
           ) : adminTab === 'team' ? (
             <TeamAdminView
-              teamMembers={teamMembers}
+              teamMembers={adminTeamMembers}
               onAdd={onAddTeamMember || (() => {})}
               onUpdate={onUpdateTeamMember || (() => {})}
               onDelete={onDeleteTeamMember || (() => {})}
@@ -1364,21 +1379,28 @@ const TeamAdminView: React.FC<{
       // Upload photo to Supabase storage if a new file selected
       if (photoFile) {
         const { data: storageData, error: storageErr } = await supabase.storage
-          .from('team-photos')
-          .upload(`${Date.now()}-${photoFile.name}`, photoFile, { upsert: true });
-        if (!storageErr && storageData) {
-          const { data: urlData } = supabase.storage.from('team-photos').getPublicUrl(storageData.path);
+          .from('driver-assets')
+          .upload(`team_photo_${Date.now()}_${photoFile.name.replace(/\s+/g, '_')}`, photoFile, { upsert: true });
+        
+        if (storageErr) {
+          throw new Error(`Failed to upload photo: ${storageErr.message}`);
+        }
+        
+        if (storageData) {
+          const { data: urlData } = supabase.storage.from('driver-assets').getPublicUrl(storageData.path);
           imageUrl = urlData.publicUrl;
         }
       }
       const payload = { ...editing, imageUrl, skills: typeof editing.skills === 'string' ? editing.skills.split(',').map((s: string) => s.trim()).filter(Boolean) : editing.skills || [] };
       if (editing.id) {
-        onUpdate(editing.id, payload);
+        await onUpdate(editing.id, payload);
       } else {
-        onAdd(payload);
+        await onAdd(payload);
       }
       setIsModalOpen(false);
       setEditing(null);
+    } catch (err: any) {
+      alert(`Error saving team member: ${err.message || 'Unknown error'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -1498,31 +1520,28 @@ const TeamAdminView: React.FC<{
 
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               {/* Photo upload */}
-              <div className="flex items-center gap-5">
+              <div className="flex flex-col items-center gap-3">
                 <div
-                  className="w-20 h-20 rounded-xl border-2 border-dashed border-slate-300 overflow-hidden cursor-pointer bg-slate-50 hover:border-blue-400 transition-colors shrink-0 flex items-center justify-center"
+                  className="w-36 h-36 rounded-2xl border-2 border-dashed border-slate-300 overflow-hidden cursor-pointer bg-slate-50 hover:border-blue-400 transition-colors flex items-center justify-center"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {photoPreview ? (
                     <img src={photoPreview} alt="preview" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="text-center p-2">
-                      <Camera size={20} className="mx-auto text-slate-400" />
-                      <p className="text-[9px] text-slate-400 mt-1">Upload</p>
+                    <div className="text-center p-4">
+                      <Camera size={32} className="mx-auto text-slate-400" />
+                      <p className="text-xs text-slate-400 mt-2 font-medium">Click to upload photo</p>
                     </div>
                   )}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-xs text-blue-600 font-semibold hover:underline"
+                >
+                  {photoPreview ? 'Change Photo' : 'Upload Photo'}
+                </button>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                <div className="flex-1">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Photo URL (or upload above)</label>
-                  <input
-                    type="text"
-                    value={editing.imageUrl || ''}
-                    onChange={e => { setEditing((p: any) => ({ ...p, imageUrl: e.target.value })); setPhotoPreview(e.target.value); }}
-                    placeholder="https://..."
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                  />
-                </div>
               </div>
 
               {/* Name + Role */}

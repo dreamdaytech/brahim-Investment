@@ -187,20 +187,9 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
         year: Number(form.year), 
         odometer: Number(form.odometer) 
       };
-      
-      // We rely on PerformanceSection's onSave to insert/update the vehicle and return its ID,
-      // But wait! onSave in PerformanceSection doesn't return the ID because it's void!
-      // In PerformanceSection we will update onSave to handle the async supabase insert 
-      // and return the inserted Vehicle so we can upload docs.
-      
-      // Temporary workaround: pass the pending documents to onSave, and let PerformanceSection upload them.
-      // Or we can just run the onSave callback.
-      // Let's pass the docs via an extended property so PerformanceSection can handle uploading if it needs to, 
-      // or we handle saving the Vehicle directly here!
-      // Actually, since we want to upload docs here, we should probably handle saving to `vehicles` table directly here.
-      
+
       let vehicleId = editingVehicle?.id;
-      
+
       const fleetDbFields = {
         // Auto-sync: if vehicle is not Available, hide from public fleet regardless of toggle
         show_on_fleet: data.status === 'Available' ? fleetForm.showOnFleet : false,
@@ -219,8 +208,54 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
         spec_best_for: fleetForm.specBestFor || null,
       };
 
+      // ── STEP 1: Upload images FIRST using a temp path if new vehicle ──────────
+      // We use a temp UUID so we can upload before we have the vehicleId.
+      // After insert we rename/update the path reference via the public URL (no rename needed,
+      // URL is already stored in DB). For existing vehicles we have the ID already.
+      const uploadBucket = 'driver-assets';
+      const tempPrefix = vehicleId || `temp_${Date.now()}`;
+
+      let newImageUrl: string | null = editingVehicle?.imageUrl || null;
+      let newGalleryUrls = [...galleryUrls];
+
+      if (primaryImageFile) {
+        const ext = primaryImageFile.name.split('.').pop();
+        const path = `vehicle_img_${tempPrefix}_primary_${Date.now()}.${ext}`;
+        const { data: upData, error: upErr } = await supabase.storage
+          .from(uploadBucket)
+          .upload(path, primaryImageFile, { upsert: true });
+        if (upErr) {
+          throw new Error(`Primary image upload failed: ${upErr.message}`);
+        }
+        if (upData) {
+          const { data: urlData } = supabase.storage.from(uploadBucket).getPublicUrl(upData.path);
+          newImageUrl = urlData.publicUrl;
+        }
+      }
+
+      for (let i = 0; i < galleryFiles.length; i++) {
+        const file = galleryFiles[i];
+        const ext = file.name.split('.').pop();
+        const path = `vehicle_img_${tempPrefix}_gallery_${Date.now()}_${i}.${ext}`;
+        const { data: upData, error: upErr } = await supabase.storage
+          .from(uploadBucket)
+          .upload(path, file, { upsert: true });
+        if (upErr) {
+          console.error(`Gallery image ${i} upload failed:`, upErr.message);
+        } else if (upData) {
+          const { data: urlData } = supabase.storage.from(uploadBucket).getPublicUrl(upData.path);
+          newGalleryUrls.push(urlData.publicUrl);
+        }
+      }
+
+      // ── STEP 2: Single DB write (insert or update) WITH images already included ──
+      const imageFields = {
+        image_url: newImageUrl,
+        gallery_urls: newGalleryUrls,
+      };
+
       if (vehicleId) {
-        // Edit existing
+        // Edit existing — one update with everything including images
         const { error } = await supabase.from('vehicles').update({
           make_model: data.makeModel,
           year: data.year,
@@ -232,11 +267,12 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
           vehicle_type: data.type,
           status: data.status,
           ...fleetDbFields,
+          ...imageFields,
         }).eq('id', vehicleId);
-        
-        if (error) console.error("Error updating vehicle", error);
+
+        if (error) throw new Error(`Failed to update vehicle: ${error.message}`);
       } else {
-        // Insert new
+        // Insert new — one insert with everything including images
         const { data: inserted, error } = await supabase.from('vehicles').insert({
           make_model: data.makeModel,
           year: data.year,
@@ -248,56 +284,30 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
           vehicle_type: data.type,
           status: data.status,
           ...fleetDbFields,
+          ...imageFields,
         }).select().single();
-        
+
         if (error) {
-          console.error("Error inserting vehicle", error);
-        } else if (inserted) {
+          throw new Error(`Failed to insert vehicle: ${error.message}`);
+        }
+        if (inserted) {
           vehicleId = inserted.id;
           data.id = inserted.id;
         }
       }
-      
+
+      data.imageUrl = newImageUrl || undefined;
+      data.galleryUrls = newGalleryUrls;
+
+      // ── STEP 3: Upload documents (after we have vehicleId) ────────────────────
       if (vehicleId) {
-        let newImageUrl = primaryImagePreview && !primaryImageFile ? editingVehicle?.imageUrl : null;
-        let newGalleryUrls = [...galleryUrls];
-
-        if (primaryImageFile) {
-          const ext = primaryImageFile.name.split('.').pop();
-          const path = `vehicle-images/${vehicleId}/primary-${Date.now()}.${ext}`;
-          const { error } = await supabase.storage.from('vehicle-documents').upload(path, primaryImageFile, { upsert: true });
-          if (!error) {
-            const { data } = supabase.storage.from('vehicle-documents').getPublicUrl(path);
-            newImageUrl = data.publicUrl;
-          }
-        }
-
-        for (let i = 0; i < galleryFiles.length; i++) {
-          const file = galleryFiles[i];
-          const ext = file.name.split('.').pop();
-          const path = `vehicle-images/${vehicleId}/gallery-${Date.now()}-${i}.${ext}`;
-          const { error } = await supabase.storage.from('vehicle-documents').upload(path, file, { upsert: true });
-          if (!error) {
-            const { data } = supabase.storage.from('vehicle-documents').getPublicUrl(path);
-            newGalleryUrls.push(data.publicUrl);
-          }
-        }
-
-        if (primaryImageFile || galleryFiles.length > 0 || newImageUrl !== editingVehicle?.imageUrl || newGalleryUrls.length !== (editingVehicle?.galleryUrls?.length || 0)) {
-          await supabase.from('vehicles').update({
-            image_url: newImageUrl,
-            gallery_urls: newGalleryUrls
-          }).eq('id', vehicleId);
-          data.imageUrl = newImageUrl || undefined;
-          data.galleryUrls = newGalleryUrls;
-        }
-
         await uploadDocs(vehicleId);
       }
-      
+
       onSave(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert(`Error saving vehicle: ${err.message || 'Unknown error'}`);
     } finally {
       setSaving(false);
     }

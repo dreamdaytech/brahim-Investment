@@ -5352,13 +5352,16 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           editingVehicle={editingVehicle as Vehicle | null}
           onClose={() => setIsVehicleModalOpen(false)}
           onSave={(data) => {
+            // VehicleModal handles all Supabase inserts/updates directly.
+            // Use _setVehicles here to update LOCAL STATE ONLY — no secondary sync.
             if (editingVehicle?.id) {
-              setVehicles(prev => prev.map(v => v.id === editingVehicle.id ? { ...v, ...data } : v));
+              _setVehicles(prev => prev.map(v => v.id === editingVehicle.id ? { ...v, ...data } : v));
               if (viewingVehicle?.id === editingVehicle.id) {
                 setViewingVehicle(prev => prev ? { ...prev, ...data } as Vehicle : null);
               }
             } else {
-              setVehicles(prev => [{ ...data, id: data.id || uuidv4() } as Vehicle, ...prev]);
+              // New vehicle: VehicleModal already inserted it and put the real ID in data.id
+              _setVehicles(prev => [{ ...data, id: data.id! } as Vehicle, ...prev]);
             }
             setIsVehicleModalOpen(false);
           }}

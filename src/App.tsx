@@ -188,24 +188,18 @@ export default function App() {
   });
 
   const handleAddTeamMember = async (member: any) => {
-    try {
-      const { error } = await supabase.from('team_members').insert([mapTeamToDB(member)]);
-      if (error) console.error('Error adding team member:', error);
-    } catch (e) { console.error(e); }
+    const { error } = await supabase.from('team_members').insert([mapTeamToDB(member)]);
+    if (error) { console.error('Error adding team member:', error); throw error; }
   };
 
   const handleUpdateTeamMember = async (id: string, member: any) => {
-    try {
-      const { error } = await supabase.from('team_members').update(mapTeamToDB(member)).eq('id', id);
-      if (error) console.error('Error updating team member:', error);
-    } catch (e) { console.error(e); }
+    const { error } = await supabase.from('team_members').update(mapTeamToDB(member)).eq('id', id);
+    if (error) { console.error('Error updating team member:', error); throw error; }
   };
 
   const handleDeleteTeamMember = async (id: string) => {
-    try {
-      const { error } = await supabase.from('team_members').delete().eq('id', id);
-      if (error) console.error('Error deleting team member:', error);
-    } catch (e) { console.error(e); }
+    const { error } = await supabase.from('team_members').delete().eq('id', id);
+    if (error) { console.error('Error deleting team member:', error); throw error; }
   };
 
   const renderRoutes = () => (
