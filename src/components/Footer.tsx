@@ -123,11 +123,11 @@ export const Footer: React.FC = () => {
             </li>
             <li className="flex items-center space-x-2">
               <Phone size={14} className="text-blue-400 shrink-0" />
-              <span>+232 79 121 013 / +232 30 133 574</span>
+              <span>+232 34 692208 / +232 76 268296 / +232 79 121013</span>
             </li>
             <li className="flex items-center space-x-2">
               <Mail size={14} className="text-blue-400 shrink-0" />
-              <span>bossbahonly@gmail.com</span>
+              <span>bigroupsl2010@gmail.com</span>
             </li>
           </ul>
         </div>

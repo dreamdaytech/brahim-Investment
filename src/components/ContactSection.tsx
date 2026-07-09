@@ -627,15 +627,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <Phone size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
-                    <span className="text-white font-semibold block">+232 79 121 013</span>
-                    <span className="text-white font-semibold block">+232 30 133 574</span>
+                    <span className="text-white font-semibold block">+232 34 692208</span>
+                    <span className="text-white font-semibold block">+232 76 268296</span>
+                    <span className="text-white font-semibold block">+232 79 121013</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Mail size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">Corporate Mail</span>
-                    <span className="text-white font-semibold block">bossbahonly@gmail.com</span>
+                    <span className="text-white font-semibold block">bigroupsl2010@gmail.com</span>
                   </div>
                 </div>
               </div>

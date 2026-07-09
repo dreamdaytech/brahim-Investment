@@ -44,11 +44,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
         <div className="flex items-center space-x-6">
           <span className="flex items-center space-x-1">
             <Phone size={13} className="text-blue-500" />
-            <span>+232 79 121 013 / +232 30 133 574</span>
+            <span>+232 34 692208 / +232 76 268296 / +232 79 121013</span>
           </span>
           <span className="flex items-center space-x-1">
             <Mail size={13} className="text-blue-500" />
-            <span>bossbahonly@gmail.com</span>
+            <span>bigroupsl2010@gmail.com</span>
           </span>
           <span className="flex items-center space-x-1">
             <MapPin size={13} className="text-blue-500" />
@@ -251,8 +251,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           })}
           
           <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-100 space-y-2">
-            <p className="flex items-center gap-2"><Phone size={12} className="text-blue-400" /> +232 79 121 013 / +232 30 133 574</p>
-            <p className="flex items-center gap-2"><Mail size={12} className="text-blue-400" /> bossbahonly@gmail.com</p>
+            <p className="flex items-center gap-2"><Phone size={12} className="text-blue-400" /> +232 34 692208 / +232 76 268296 / +232 79 121013</p>
+            <p className="flex items-center gap-2"><Mail size={12} className="text-blue-400" /> bigroupsl2010@gmail.com</p>
             <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 11 Freetown Road, Wilberforce, Freetown</p>
           </div>
         </div>
