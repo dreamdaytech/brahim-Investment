@@ -823,6 +823,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
   const [vehicleSearchQuery, setVehicleSearchQuery] = useState('');
   const [vehicleFilterStatus, setVehicleFilterStatus] = useState('All');
   const [vehicleSortConfig, setVehicleSortConfig] = useState<{ key: keyof Vehicle, direction: 'asc' | 'desc' }>({ key: 'makeModel', direction: 'asc' });
+  const [vehicleViewMode, setVehicleViewMode] = useState<'list' | 'grid'>('list');
 
   // Dashboard Aggregates
   const filteredLogs = useMemo(() => {
@@ -2349,7 +2350,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <select 
               value={vehicleFilterStatus}
               onChange={e => setVehicleFilterStatus(e.target.value)}
@@ -2360,113 +2361,243 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <option value="Maintenance">Maintenance</option>
               <option value="Decommissioned">Decommissioned</option>
             </select>
+            
+            <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1 shadow-sm shrink-0">
+              <button
+                onClick={() => setVehicleViewMode('list')}
+                title="List View"
+                className={`flex items-center justify-center p-1.5 rounded-lg transition-all ${
+                  vehicleViewMode === 'list'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+                }`}
+              >
+                <List size={16} />
+              </button>
+              <button
+                onClick={() => setVehicleViewMode('grid')}
+                title="Grid View"
+                className={`flex items-center justify-center p-1.5 rounded-lg transition-all ${
+                  vehicleViewMode === 'grid'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+                }`}
+              >
+                <LayoutGrid size={16} />
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-          <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
-              <tr>
-                <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'makeModel', direction: prev.key === 'makeModel' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
-                  Make & Model <ArrowUpDown size={12} className="inline ml-1" />
-                </th>
-                <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'year', direction: prev.key === 'year' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
-                  Year <ArrowUpDown size={12} className="inline ml-1" />
-                </th>
-                <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'odometer', direction: prev.key === 'odometer' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
-                  Odometer <ArrowUpDown size={12} className="inline ml-1" />
-                </th>
-                <th className="px-6 py-4 font-semibold">License Plate</th>
-                <th className="px-6 py-4 font-semibold">Ins. Expiry</th>
-                <th className="px-6 py-4 font-semibold">Condition</th>
-                <th className="px-6 py-4 font-semibold text-center">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {sortedAndFilteredVehicles.map(vehicle => (
-                <tr key={vehicle.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-slate-950 flex items-center gap-3">
-                    <div className="p-2 bg-slate-100 rounded-lg text-slate-600"><Car size={16} /></div>
-                    <div className="flex flex-col">
-                      <span>{vehicle.makeModel}</span>
-                      <span className="text-xs text-slate-500 font-normal">{vehicle.isCompanyRegistered ? 'Company Owned' : 'External'}</span>
+        {vehicleViewMode === 'list' ? (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
+                <tr>
+                  <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'makeModel', direction: prev.key === 'makeModel' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
+                    Make & Model <ArrowUpDown size={12} className="inline ml-1" />
+                  </th>
+                  <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'year', direction: prev.key === 'year' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
+                    Year <ArrowUpDown size={12} className="inline ml-1" />
+                  </th>
+                  <th className="px-6 py-4 font-semibold cursor-pointer hover:bg-slate-100" onClick={() => setVehicleSortConfig(prev => ({ key: 'odometer', direction: prev.key === 'odometer' && prev.direction === 'asc' ? 'desc' : 'asc' }))}>
+                    Odometer <ArrowUpDown size={12} className="inline ml-1" />
+                  </th>
+                  <th className="px-6 py-4 font-semibold">License Plate</th>
+                  <th className="px-6 py-4 font-semibold">Ins. Expiry</th>
+                  <th className="px-6 py-4 font-semibold">Condition</th>
+                  <th className="px-6 py-4 font-semibold text-center">Status</th>
+                  <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {sortedAndFilteredVehicles.map(vehicle => (
+                  <tr key={vehicle.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-slate-950 flex items-center gap-3">
+                      <div className="w-10 h-10 shrink-0 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200">
+                        {vehicle.imageUrl ? (
+                          <img src={vehicle.imageUrl} alt={vehicle.makeModel} className="w-full h-full object-cover" />
+                        ) : (
+                          <Car size={16} className="text-slate-400" />
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <span>{vehicle.makeModel}</span>
+                        <span className="text-xs text-slate-500 font-normal">{vehicle.isCompanyRegistered ? 'Company Owned' : 'External'}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-slate-700">{vehicle.year}</td>
+                    <td className="px-6 py-4 text-slate-700">{(vehicle.odometer || 0).toLocaleString()} km</td>
+                    <td className="px-6 py-4 text-slate-700 font-mono">{vehicle.plateNumber}</td>
+                    <td className="px-6 py-4">
+                      {(() => {
+                        const insExpired = vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date();
+                        const insExpiringSoon = !insExpired && vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+                        return (
+                          <div className={`flex items-center gap-1.5 text-xs font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
+                            {insExpired ? <AlertTriangle size={12} /> : insExpiringSoon ? <Clock size={12} /> : null}
+                            {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : 'N/A'}
+                          </div>
+                        );
+                      })()}
+                    </td>
+                    <td className="px-6 py-4 text-slate-700">{vehicle.condition}</td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                        vehicle.status === 'Available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                        vehicle.status === 'Maintenance' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                        'bg-slate-100 text-slate-700 border border-slate-200'
+                      }`}>
+                        {vehicle.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="relative inline-block text-left">
+                        <button 
+                          onClick={() => setActiveVehicleMenu(activeVehicleMenu === vehicle.id ? null : vehicle.id)}
+                          className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+                        >
+                          <MoreVertical size={16} />
+                        </button>
+                        
+                        {activeVehicleMenu === vehicle.id && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setActiveVehicleMenu(null)}></div>
+                            <div className="absolute right-0 mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 overflow-hidden">
+                              <button 
+                                onClick={() => { setActiveVehicleMenu(null); setViewingVehicle(vehicle as Vehicle); }}
+                                className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                              >
+                                <Eye size={14} /> View
+                              </button>
+                              <button 
+                                onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
+                                className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center gap-2"
+                              >
+                                <PenTool size={14} /> Edit
+                              </button>
+                              <div className="h-px bg-slate-100 my-1"></div>
+                              <button 
+                                onClick={() => { setActiveVehicleMenu(null); setDeletingVehicle(vehicle as Vehicle); }}
+                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 font-medium"
+                              >
+                                <Trash2 size={14} /> Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {sortedAndFilteredVehicles.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-8 text-center text-slate-600">
+                      No vehicles match your search.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {sortedAndFilteredVehicles.map(vehicle => {
+              const insExpired = vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date();
+              const insExpiringSoon = !insExpired && vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+              return (
+                <div key={vehicle.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col group cursor-pointer" onClick={() => setViewingVehicle(vehicle as Vehicle)}>
+                  <div className="relative h-48 bg-slate-100">
+                    {vehicle.imageUrl ? (
+                      <img src={vehicle.imageUrl} alt={vehicle.makeModel} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-slate-300">
+                        <Car size={32} className="mb-2" />
+                        <span className="text-xs font-medium uppercase tracking-wider font-mono">No Image</span>
+                      </div>
+                    )}
+                    <div className="absolute top-3 left-3">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm backdrop-blur-md ${
+                        vehicle.status === 'Available' ? 'bg-emerald-500/90 text-white' :
+                        vehicle.status === 'Maintenance' ? 'bg-amber-500/90 text-white' :
+                        'bg-slate-800/90 text-white'
+                      }`}>
+                        {vehicle.status}
+                      </span>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-slate-700">{vehicle.year}</td>
-                  <td className="px-6 py-4 text-slate-700">{(vehicle.odometer || 0).toLocaleString()} km</td>
-                  <td className="px-6 py-4 text-slate-700 font-mono">{vehicle.plateNumber}</td>
-                  <td className="px-6 py-4">
-                    {(() => {
-                      const insExpired = vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date();
-                      const insExpiringSoon = !insExpired && vehicle.insuranceExpiry && new Date(vehicle.insuranceExpiry) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
-                      return (
-                        <div className={`flex items-center gap-1.5 text-xs font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
-                          {insExpired ? <AlertTriangle size={12} /> : insExpiringSoon ? <Clock size={12} /> : null}
+                    <div className="absolute top-3 right-3" onClick={e => e.stopPropagation()}>
+                      <div className="relative inline-block text-left">
+                        <button 
+                          onClick={() => setActiveVehicleMenu(activeVehicleMenu === vehicle.id ? null : vehicle.id)}
+                          className="p-1.5 text-slate-700 bg-white/90 hover:bg-white rounded-md shadow-sm transition-colors backdrop-blur-md"
+                        >
+                          <MoreVertical size={16} />
+                        </button>
+                        
+                        {activeVehicleMenu === vehicle.id && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setActiveVehicleMenu(null)}></div>
+                            <div className="absolute right-0 mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 overflow-hidden">
+                              <button 
+                                onClick={() => { setActiveVehicleMenu(null); setViewingVehicle(vehicle as Vehicle); }}
+                                className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                              >
+                                <Eye size={14} /> View
+                              </button>
+                              <button 
+                                onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
+                                className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center gap-2"
+                              >
+                                <PenTool size={14} /> Edit
+                              </button>
+                              <div className="h-px bg-slate-100 my-1"></div>
+                              <button 
+                                onClick={() => { setActiveVehicleMenu(null); setDeletingVehicle(vehicle as Vehicle); }}
+                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 font-medium"
+                              >
+                                <Trash2 size={14} /> Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div>
+                        <h3 className="font-black text-slate-950 text-lg leading-tight tracking-tight">{vehicle.makeModel}</h3>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-slate-500 font-mono font-medium">{vehicle.plateNumber}</span>
+                          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                          <span className="text-xs text-slate-500 font-medium">{vehicle.year}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="block text-[10px] uppercase font-mono font-bold text-slate-400 mb-1">Odometer</span>
+                        <span className="font-semibold text-slate-700">{(vehicle.odometer || 0).toLocaleString()} km</span>
+                      </div>
+                      <div>
+                        <span className="block text-[10px] uppercase font-mono font-bold text-slate-400 mb-1">Condition</span>
+                        <span className="font-semibold text-slate-700">{vehicle.condition}</span>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="block text-[10px] uppercase font-mono font-bold text-slate-400 mb-1">Ins. Expiry</span>
+                        <div className={`flex items-center gap-1.5 font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
+                          {insExpired ? <AlertTriangle size={14} /> : insExpiringSoon ? <Clock size={14} /> : null}
                           {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : 'N/A'}
                         </div>
-                      );
-                    })()}
-                  </td>
-                  <td className="px-6 py-4 text-slate-700">{vehicle.condition}</td>
-                  <td className="px-6 py-4 text-center">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                      vehicle.status === 'Available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                      vehicle.status === 'Maintenance' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                      'bg-slate-100 text-slate-700 border border-slate-200'
-                    }`}>
-                      {vehicle.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="relative inline-block text-left">
-                      <button 
-                        onClick={() => setActiveVehicleMenu(activeVehicleMenu === vehicle.id ? null : vehicle.id)}
-                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
-                      >
-                        <MoreVertical size={16} />
-                      </button>
-                      
-                      {activeVehicleMenu === vehicle.id && (
-                        <>
-                          <div className="fixed inset-0 z-40" onClick={() => setActiveVehicleMenu(null)}></div>
-                          <div className="absolute right-0 mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 overflow-hidden">
-                            <button 
-                              onClick={() => { setActiveVehicleMenu(null); setViewingVehicle(vehicle as Vehicle); }}
-                              className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
-                            >
-                              <Eye size={14} /> View
-                            </button>
-                            <button 
-                              onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
-                              className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center gap-2"
-                            >
-                              <PenTool size={14} /> Edit
-                            </button>
-                            <div className="h-px bg-slate-100 my-1"></div>
-                            <button 
-                              onClick={() => { setActiveVehicleMenu(null); setDeletingVehicle(vehicle as Vehicle); }}
-                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 font-medium"
-                            >
-                              <Trash2 size={14} /> Delete
-                            </button>
-                          </div>
-                        </>
-                      )}
+                      </div>
                     </div>
-                  </td>
-                </tr>
-              ))}
-              {sortedAndFilteredVehicles.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="px-6 py-8 text-center text-slate-600">
-                    No vehicles match your search.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   };
