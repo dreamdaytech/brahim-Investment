@@ -178,7 +178,11 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
   // ── Submit ────────────────────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.makeModel.trim()) { setTab('details'); return; }
+    if (!form.makeModel.trim() || !form.year || form.odometer === '' || !form.plateNumber.trim() || !form.insuranceExpiry.trim()) {
+      alert("Please update all required fields (*).");
+      setTab('details');
+      return;
+    }
     
     setSaving(true);
     try {
