@@ -388,8 +388,9 @@ const generateMockLogs = (): TripLog[] => {
 
 export const initialLogs = generateMockLogs();
 
-export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = [] }) => {
+export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string }> = ({ clients = [], defaultTab }) => {
   const [activeTab, _setActiveTab] = useState<'dashboard' | 'dispatch' | 'maintenance' | 'logs' | 'drivers' | 'driver_details' | 'vehicles' | 'leaderboard' | 'fuel'>(() => {
+    if (defaultTab) return defaultTab as any;
     const saved = sessionStorage.getItem('adminActiveTab');
     if (saved === 'scoring') return 'leaderboard';
     return (saved as any) || 'dashboard';
@@ -399,6 +400,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     sessionStorage.setItem('adminActiveTab', tab);
     _setActiveTab(tab);
   };
+
+  React.useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab as any);
+    }
+  }, [defaultTab]);
   
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
   const [dispatchSubTab, setDispatchSubTab] = useState<'active' | 'completed' | 'logs'>('active');
