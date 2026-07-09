@@ -38,8 +38,8 @@ const Field: React.FC<{
   </div>
 );
 
-const inp = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition bg-white";
-const sel = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none transition bg-white";
+const inp = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition bg-white";
+const sel = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition bg-white";
 
 // ── Tab pill ───────────────────────────────────────────────────────────────────
 const TabPill: React.FC<{
@@ -50,7 +50,7 @@ const TabPill: React.FC<{
     onClick={onClick}
     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
       active
-        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
+        ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
     }`}
   >
@@ -317,21 +317,21 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
 
         {/* ── Header ── */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-indigo-600 shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-blue-600 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-indigo-500/50 border border-indigo-400 flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 rounded-full bg-blue-500/50 border border-blue-400 flex items-center justify-center shadow-sm">
               <Car size={18} className="text-white" />
             </div>
             <div>
               <h2 className="text-lg font-black text-white">
                 {readonly ? 'Vehicle Details' : (editingVehicle ? 'Edit Vehicle' : 'Add New Vehicle')}
               </h2>
-              <p className="text-xs text-indigo-200 mt-0.5">
+              <p className="text-xs text-blue-200 mt-0.5">
                 {readonly ? 'View vehicle information and documents' : 'Register a vehicle and manage documents'}
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors">
+          <button onClick={onClose} className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -396,7 +396,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                         checked={form.isCompanyRegistered} 
                         onChange={(e) => setForm(prev => ({...prev, isCompanyRegistered: e.target.checked}))}
                         disabled={readonly}
-                        className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-slate-300 disabled:opacity-70"
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-slate-300 disabled:opacity-70"
                       />
                       <span className="text-sm font-semibold text-slate-700">Vehicle is registered under company name</span>
                     </label>
@@ -406,14 +406,14 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                 <h3 className="text-sm font-bold text-slate-800 mb-4">Specifications & Public Fleet Details</h3>
                 <div className="space-y-5">
                 {/* Toggle */}
-                <div className="flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-2xl border border-blue-100">
                   <div>
                     <p className="font-black text-slate-800 text-sm">Show on Public Fleet Page</p>
                     <p className="text-xs text-slate-600 mt-0.5">When enabled, this vehicle will appear on the 'Our Fleet' public page</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked={fleetForm.showOnFleet} onChange={setFleet('showOnFleet')} className="sr-only peer" />
-                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                   </label>
                 </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -508,7 +508,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                     
                     {!readonly && (
                       <div className="flex-1">
-                        <label className="flex items-center justify-center gap-2 px-4 py-3 bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-xl cursor-pointer hover:bg-indigo-100 transition-colors w-max text-sm font-bold mt-2">
+                        <label className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-50 text-blue-700 border border-blue-100 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors w-max text-sm font-bold mt-2">
                           <Upload size={16} /> Select Primary Image
                           <input type="file" accept="image/*" className="hidden" onChange={(e) => {
                             if (e.target.files?.[0]) {
@@ -580,8 +580,8 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                         
                         return (
                           <div key={doc.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                            <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center shrink-0">
-                              <ShieldCheck size={18} className="text-indigo-600" />
+                            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                              <ShieldCheck size={18} className="text-blue-600" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-bold text-slate-700 truncate">{doc.label}</p>
@@ -598,7 +598,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                                 )}
                               </div>
                             </div>
-                            <a href={doc.fileUrl} target="_blank" rel="noreferrer" className="px-3 py-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
+                            <a href={doc.fileUrl} target="_blank" rel="noreferrer" className="px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                               View
                             </a>
                           </div>
@@ -649,7 +649,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                         type="button"
                         disabled={!newDocLabel.trim()}
                         onClick={() => docInputRef.current?.click()}
-                        className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 px-3 py-2.5 rounded-xl transition disabled:opacity-40"
+                        className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-2.5 rounded-xl transition disabled:opacity-40"
                       >
                         <Plus size={14} /> Attach File
                       </button>
@@ -679,7 +679,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                             </p>
                           </div>
                           <div className="shrink-0">
-                            {doc.status === 'uploading' && <Loader2 size={14} className="animate-spin text-indigo-400" />}
+                            {doc.status === 'uploading' && <Loader2 size={14} className="animate-spin text-blue-400" />}
                             {doc.status === 'done' && <CheckCircle2 size={14} className="text-emerald-500" />}
                             {doc.status === 'error' && <AlertCircle size={14} className="text-red-400" />}
                             {doc.status === 'pending' && (
@@ -735,7 +735,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                   <button
                     type="submit"
                     disabled={saving || !form.makeModel}
-                    className="flex items-center gap-2 px-6 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-md shadow-indigo-200 disabled:opacity-50"
+                    className="flex items-center gap-2 px-6 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-md shadow-blue-200 disabled:opacity-50"
                   >
                     {saving ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
                     {saving ? 'Saving...' : (editingVehicle ? 'Update Vehicle' : 'Save Vehicle')}

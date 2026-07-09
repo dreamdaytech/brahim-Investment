@@ -24,7 +24,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ clients }) => {
   // Helper to generate a background gradient class based on index
   const getAvatarGradient = (idx: number) => {
     const gradients = [
-      'from-indigo-500 to-purple-500',
+      'from-blue-500 to-purple-500',
       'from-blue-500 to-cyan-500',
       'from-emerald-400 to-teal-500',
       'from-rose-400 to-red-500',
@@ -53,7 +53,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ clients }) => {
         <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           {/* Use header button for back if accessed as subpage, otherwise just regular header */}
           <div className="max-w-2xl">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">RECOGNIZED LOGISTICS PARTNERS</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 px-3 py-1 rounded">RECOGNIZED LOGISTICS PARTNERS</span>
             <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-4">Proven Operational Record</h1>
             <p className="mt-4 text-sm md:text-base text-slate-600 leading-relaxed">
               We exclusively support organizations requiring uncompromising fleet standards, including high-availability diplomatic missions, international health programs, and corporate deployments across rigorous terrain.
@@ -111,7 +111,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ clients }) => {
                     <h3 className="text-lg font-black text-slate-950 tracking-tight leading-tight flex-1">{client.name}</h3>
                   </div>
                   
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed border-l-2 border-indigo-100 pl-3">
+                  <p className="text-xs text-slate-600 font-medium leading-relaxed border-l-2 border-blue-100 pl-3">
                     {client.service}
                   </p>
                 </div>
@@ -141,14 +141,14 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ clients }) => {
           className="mt-16 bg-[#0f172a] rounded-3xl p-8 border border-slate-800 shadow-xl text-center md:text-left flex flex-col md:flex-row items-center gap-8 justify-between"
         >
           <div className="max-w-xl">
-            <span className="text-indigo-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-2">VETTED EXCELLENCE</span>
+            <span className="text-blue-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-2">VETTED EXCELLENCE</span>
             <h3 className="text-2xl font-black tracking-tight text-white">Trust In Official Deployments</h3>
             <p className="text-xs md:text-sm text-slate-200 mt-3 leading-relaxed">
               B.I.G Group's continuous operational record highlights our capacity for long-term fleet stability, proactive mechanical resolution, and seamless compliance with international non-profit security demands.
             </p>
           </div>
           <div className="shrink-0 flex gap-4">
-            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-indigo-400">
+            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-blue-400">
               <ShieldCheck size={28} />
             </div>
           </div>

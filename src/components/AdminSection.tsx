@@ -188,7 +188,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[50vh]">
           <div className="flex flex-col items-center space-y-4">
-            <span className="w-10 h-10 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></span>
+            <span className="w-10 h-10 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></span>
             <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Checking Security Clearance...</p>
           </div>
         </div>
@@ -196,9 +196,9 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
         // LOCK SCREEN SIGN-IN GATES
         <div className="max-w-md mx-auto mt-20 mb-32 bg-white rounded-3xl border border-slate-200 shadow-sm p-8 text-center relative overflow-hidden">
           {/* Accent border */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-indigo-600"></div>
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-blue-600"></div>
 
-          <div className="w-16 h-16 bg-[#0f172a] text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-800 shadow-sm">
+          <div className="w-16 h-16 bg-[#0f172a] text-blue-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-800 shadow-sm">
             <Lock size={28} />
           </div>
 
@@ -220,7 +220,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Admin Email Address"
-                className="w-full p-4 border border-slate-200 focus:ring-2 focus:ring-indigo-600 focus:outline-none rounded-xl text-sm font-medium"
+                className="w-full p-4 border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:outline-none rounded-xl text-sm font-medium"
               />
             </div>
             <div>
@@ -230,7 +230,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full p-4 border border-slate-200 focus:ring-2 focus:ring-indigo-600 focus:outline-none rounded-xl text-sm font-medium"
+                className="w-full p-4 border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:outline-none rounded-xl text-sm font-medium"
               />
             </div>
 
@@ -244,7 +244,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
             <button 
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold rounded-xl text-xs uppercase tracking-wider transition-colors shadow-sm cursor-pointer flex justify-center items-center gap-2"
+              className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded-xl text-xs uppercase tracking-wider transition-colors shadow-sm cursor-pointer flex justify-center items-center gap-2"
             >
               {isLoading ? 'Authenticating...' : 'Authorize Administrative Access'}
             </button>
@@ -263,12 +263,12 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
             {/* Sidebar Brand */}
             <div className={`border-b border-white/10 transition-all duration-300 ${sidebarOpen ? 'px-6 py-6' : 'px-3 py-5'}`}>
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center shrink-0">
-                  <ShieldCheck size={18} className="text-indigo-400" />
+                <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center shrink-0">
+                  <ShieldCheck size={18} className="text-blue-400" />
                 </div>
                 {sidebarOpen && (
                   <div className="overflow-hidden">
-                    <p className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-widest whitespace-nowrap">BIG Group</p>
+                    <p className="text-xs font-mono font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap">BIG Group</p>
                     <p className="text-sm font-black text-white leading-tight whitespace-nowrap">Ops Registry</p>
                   </div>
                 )}
@@ -298,13 +298,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                       sidebarOpen ? 'px-3 py-2.5' : 'p-2.5 justify-center'
                     } ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
                         : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
                     <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
-                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
+                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-blue-300" />}
                   </button>
                 );
               })}
@@ -328,13 +328,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                       sidebarOpen ? 'px-3 py-2.5' : 'p-2.5 justify-center'
                     } ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
                         : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
                     <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
-                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
+                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-blue-300" />}
                   </button>
                 );
               })}
@@ -363,7 +363,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                       sidebarOpen ? 'px-3 py-2.5' : 'p-2.5 justify-center'
                     } ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
                         : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
@@ -375,7 +375,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     {!sidebarOpen && item.badge && (
                       <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full"></span>
                     )}
-                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
+                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-blue-300" />}
                   </button>
                 );
               })}
@@ -399,13 +399,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                       sidebarOpen ? 'px-3 py-2.5' : 'p-2.5 justify-center'
                     } ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
                         : 'text-slate-500 hover:text-white hover:bg-white/8'
                     }`}
                   >
                     <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-400'}`} />
                     {sidebarOpen && <span className="flex-1 text-left whitespace-nowrap">{item.label}</span>}
-                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-indigo-300" />}
+                    {sidebarOpen && isActive && <ChevronRight size={14} className="text-blue-300" />}
                   </button>
                 );
               })}
@@ -467,13 +467,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     onChange={e => { setGlobalSearch(e.target.value); setShowGlobalResults(true); }}
                     onBlur={() => setTimeout(() => setShowGlobalResults(false), 200)}
                     onFocus={() => setShowGlobalResults(true)}
-                    className="pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 w-56 transition-all focus:w-72"
+                    className="pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 w-56 transition-all focus:w-72"
                   />
                   {showGlobalResults && globalResults.length > 0 && (
                     <div className="absolute top-full mt-2 left-0 w-80 bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden">
                       {globalResults.map(r => (
                         <button key={r.id} onMouseDown={() => { setAdminTab('reservations'); setSearchTerm(r.fullName); setGlobalSearch(''); }}
-                          className="w-full px-4 py-3 text-left hover:bg-indigo-50 border-b border-slate-100 last:border-0">
+                          className="w-full px-4 py-3 text-left hover:bg-blue-50 border-b border-slate-100 last:border-0">
                           <div className="font-bold text-sm text-slate-950">{r.fullName}</div>
                           <div className="text-xs text-slate-600">{r.organization} • {r.status} • {r.preferredVehicle}</div>
                         </button>
@@ -507,7 +507,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by client, organization, preferred vehicle..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
+                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm"
                   />
                 </div>
 
@@ -522,7 +522,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                       onClick={() => setFilterStatus(sts)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         filterStatus === sts 
-                          ? 'bg-indigo-600 text-white' 
+                          ? 'bg-blue-600 text-white' 
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                       }`}
                     >
@@ -637,7 +637,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                                 // Navigate to dispatch tab inside PerformanceSection
                                 setTimeout(() => sessionStorage.setItem('adminActiveTab', 'dispatch'), 100);
                               }}
-                              className="flex-1 lg:flex-none px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center flex items-center gap-1.5 justify-center"
+                              className="flex-1 lg:flex-none px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-[11px] uppercase rounded-lg transition-colors cursor-pointer text-center flex items-center gap-1.5 justify-center"
                             >
                               <ChevronRight size={13} /> Log Dispatch
                             </button>
@@ -786,10 +786,10 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
   const SortBtn = ({ col, label }: { col: typeof sortBy; label: string }) => (
     <button
       onClick={() => toggleSort(col)}
-      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${sortBy === col ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${sortBy === col ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
     >
       {label}
-      <ArrowUpDown size={11} className={sortBy === col ? 'text-indigo-200' : 'text-slate-500'} />
+      <ArrowUpDown size={11} className={sortBy === col ? 'text-blue-200' : 'text-slate-500'} />
       {sortBy === col && <span className="text-[10px] font-mono">{sortDir === 'asc' ? '↑' : '↓'}</span>}
     </button>
   );
@@ -799,7 +799,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
       {/* Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total Partners & Clients', value: clients.length, color: 'indigo' },
+          { label: 'Total Partners & Clients', value: clients.length, color: 'blue' },
           { label: 'Partner Projects', value: clients.filter(s => s.isPartner !== false).length, color: 'emerald' },
           { label: 'Non-Partner', value: clients.filter(s => s.isPartner === false).length, color: 'amber' },
           { label: 'Ongoing Projects', value: ongoingContracts, color: 'blue' },
@@ -822,7 +822,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search by name, contact, email, city, contract ref…"
-              className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700">
@@ -881,7 +881,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
             </button>
             <button
               onClick={() => { setIsViewing(false); setEditingClient({}); setIsModalOpen(true); }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
             >
               <Plus size={15} /> Add Project
             </button>
@@ -902,7 +902,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 ? s === 'Ongoing' ? 'bg-emerald-600 text-white'
                   : s === 'Completed' ? 'bg-slate-500 text-white'
                   : s === 'Pending' ? 'bg-amber-500 text-white'
-                  : 'bg-indigo-600 text-white'
+                  : 'bg-blue-600 text-white'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             >
               {s === 'All' ? 'All Statuses' : s === 'Ongoing' ? '🟢 Ongoing' : s === 'Completed' ? '⚪ Completed' : '🟡 Pending'}
@@ -922,7 +922,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterPartner === p
                 ? p === 'Partner' ? 'bg-emerald-600 text-white'
                   : p === 'Non-Partner' ? 'bg-red-500 text-white'
-                  : 'bg-indigo-600 text-white'
+                  : 'bg-blue-600 text-white'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             >
               {p === 'All' ? 'All Types' : p === 'Partner' ? '✓ Partner' : '✗ Non-Partner'}
@@ -952,7 +952,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
           <Search size={32} className="mx-auto mb-3 opacity-40" />
           <p className="font-bold text-sm">No results found</p>
           <p className="text-xs mt-1">Try adjusting your search or filters</p>
-          <button onClick={() => { setSearch(''); setFilterStatus('All'); setFilterPartner('All'); }} className="mt-4 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-colors">Clear all filters</button>
+          <button onClick={() => { setSearch(''); setFilterStatus('All'); setFilterPartner('All'); }} className="mt-4 px-4 py-2 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">Clear all filters</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -964,12 +964,12 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
 
             return (
               <div key={supplier.id} className={`bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all ${isExpired ? 'border-red-200' : isExpiringSoon ? 'border-amber-200' : 'border-slate-200'}`}>
-                <div className={`px-5 py-4 flex items-center justify-between rounded-t-2xl ${isPartner ? 'bg-indigo-50' : 'bg-slate-50'}`}>
+                <div className={`px-5 py-4 flex items-center justify-between rounded-t-2xl ${isPartner ? 'bg-blue-50' : 'bg-slate-50'}`}>
                   <div className="flex items-center gap-3">
                     {supplier.logoUrl ? (
                       <img src={supplier.logoUrl} alt={supplier.name} className="w-10 h-10 rounded-xl object-cover bg-white border border-slate-200" />
                     ) : (
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${isPartner ? 'bg-indigo-600 text-white' : 'bg-slate-400 text-white'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${isPartner ? 'bg-blue-600 text-white' : 'bg-slate-400 text-white'}`}>
                         {supplier.shortCode || supplier.name.slice(0, 2).toUpperCase()}
                       </div>
                     )}
@@ -986,7 +986,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                         e.stopPropagation();
                         setOpenMenuId(openMenuId === supplier.id ? null : supplier.id);
                       }}
-                      className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                     >
                       <MoreVertical size={18} />
                     </button>
@@ -996,13 +996,13 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                         <div className="absolute right-0 top-full mt-1 w-32 bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-100 py-1.5 z-50 overflow-hidden">
                           <button 
                             onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); setEditingClient(supplier); setIsViewing(true); setIsModalOpen(true); }}
-                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 hover:text-blue-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
                           >
                             <Eye size={13} /> View
                           </button>
                           <button 
                             onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); setEditingClient(supplier); setIsViewing(false); setIsModalOpen(true); }}
-                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
+                            className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 hover:text-blue-600 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
                           >
                             <PenTool size={13} /> Edit
                           </button>
@@ -1063,9 +1063,9 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-indigo-600 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-blue-600 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
               <h3 className="text-lg font-black text-white">{isViewing ? 'View Partner / Project' : editingClient?.id ? 'Edit Partner / Project' : 'Add Partner / Project'}</h3>
-              <button onClick={() => { setIsModalOpen(false); setEditingClient(null); }} className="text-indigo-200 hover:text-white"><X size={20} /></button>
+              <button onClick={() => { setIsModalOpen(false); setEditingClient(null); }} className="text-blue-200 hover:text-white"><X size={20} /></button>
             </div>
             <form onSubmit={async e => {
               e.preventDefault();
@@ -1161,22 +1161,22 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-xs font-bold text-slate-700 mb-1">Project Name *</label>
-                    <input name="name" required defaultValue={editingClient?.name} placeholder="e.g. NP" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="name" required defaultValue={editingClient?.name} placeholder="e.g. NP" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Short Code</label>
-                    <input name="shortCode" defaultValue={editingClient?.shortCode} placeholder="e.g. NP" maxLength={5} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="shortCode" defaultValue={editingClient?.shortCode} placeholder="e.g. NP" maxLength={5} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Partner Status *</label>
-                    <select name="isPartner" defaultValue={editingClient?.isPartner !== undefined ? String(editingClient.isPartner) : 'true'} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                    <select name="isPartner" defaultValue={editingClient?.isPartner !== undefined ? String(editingClient.isPartner) : 'true'} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none">
                       <option value="true">✅ Partner Project (Approved)</option>
                       <option value="false">✗ Non-Partner / Ad-hoc</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Engagement Status *</label>
-                    <select name="status" defaultValue={editingClient?.status || 'Ongoing'} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                    <select name="status" defaultValue={editingClient?.status || 'Ongoing'} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none">
                       <option value="Ongoing">🟢 Ongoing</option>
                       <option value="Pending">🟡 Pending</option>
                       <option value="Completed">⚪ Completed</option>
@@ -1189,19 +1189,19 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
                     <label className="block text-xs font-bold text-slate-700 mb-1">Contact Person</label>
-                    <input name="contactPerson" defaultValue={editingClient?.contactPerson} placeholder="e.g. Alhaji Koroma" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="contactPerson" defaultValue={editingClient?.contactPerson} placeholder="e.g. Alhaji Koroma" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Phone</label>
-                    <input name="phone" defaultValue={editingClient?.phone} placeholder="+232 78 000 000" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="phone" defaultValue={editingClient?.phone} placeholder="+232 78 000 000" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Email</label>
-                    <input name="email" type="email" defaultValue={editingClient?.email} placeholder="accounts@supplier.com" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="email" type="email" defaultValue={editingClient?.email} placeholder="accounts@supplier.com" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-xs font-bold text-slate-700 mb-1">Website</label>
-                    <input name="website" defaultValue={editingClient?.website} placeholder="https://" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="website" defaultValue={editingClient?.website} placeholder="https://" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                 </div>
               </div>
@@ -1210,15 +1210,15 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
                     <label className="block text-xs font-bold text-slate-700 mb-1">Head Office Address</label>
-                    <input name="headOfficeAddress" defaultValue={editingClient?.headOfficeAddress} placeholder="Street address" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="headOfficeAddress" defaultValue={editingClient?.headOfficeAddress} placeholder="Street address" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">City</label>
-                    <input name="city" defaultValue={editingClient?.city} placeholder="Freetown" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="city" defaultValue={editingClient?.city} placeholder="Freetown" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Country</label>
-                    <input name="country" defaultValue={editingClient?.country || 'Sierra Leone'} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="country" defaultValue={editingClient?.country || 'Sierra Leone'} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                 </div>
               </div>
@@ -1227,35 +1227,35 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Account Number</label>
-                    <input name="accountNumber" defaultValue={editingClient?.accountNumber} placeholder="e.g. NP-BIG-001" className="w-full p-2 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="accountNumber" defaultValue={editingClient?.accountNumber} placeholder="e.g. NP-BIG-001" className="w-full p-2 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Contract Reference</label>
-                    <input name="contractRef" defaultValue={editingClient?.contractRef} placeholder="e.g. SLA/2024/NP/001" className="w-full p-2 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="contractRef" defaultValue={editingClient?.contractRef} placeholder="e.g. SLA/2024/NP/001" className="w-full p-2 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Contract Start</label>
-                    <input name="contractStartDate" type="date" defaultValue={editingClient?.contractStartDate} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="contractStartDate" type="date" defaultValue={editingClient?.contractStartDate} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Contract End</label>
-                    <input name="contractEndDate" type="date" defaultValue={editingClient?.contractEndDate} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="contractEndDate" type="date" defaultValue={editingClient?.contractEndDate} className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-xs font-bold text-slate-700 mb-1">Credit Limit (Le)</label>
-                    <input name="creditLimit" type="number" defaultValue={editingClient?.creditLimit} placeholder="e.g. 50000000" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                    <input name="creditLimit" type="number" defaultValue={editingClient?.creditLimit} placeholder="e.g. 50000000" className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                   </div>
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Notes / Remarks</label>
-                <textarea name="notes" rows={3} defaultValue={editingClient?.notes} placeholder="Additional information..." className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none resize-none" />
+                <textarea name="notes" rows={3} defaultValue={editingClient?.notes} placeholder="Additional information..." className="w-full p-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none resize-none" />
               </div>
               </fieldset>
               <div className="flex gap-3 px-6 pb-6 border-t border-slate-100 pt-4">
                 <button type="button" onClick={() => { setIsModalOpen(false); setEditingClient(null); }} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50">{isViewing ? 'Close' : 'Cancel'}</button>
                 {!isViewing && (
-                  <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 shadow-sm disabled:opacity-70 flex items-center justify-center gap-2">
+                  <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 shadow-sm disabled:opacity-70 flex items-center justify-center gap-2">
                     {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : (editingClient?.id ? 'Save Changes' : 'Add Project')}
                   </button>
                 )}
@@ -1353,7 +1353,7 @@ const TeamAdminView: React.FC<{
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {[
-          { label: 'Total Team Members', value: teamMembers.length, color: 'indigo' },
+          { label: 'Total Team Members', value: teamMembers.length, color: 'blue' },
           { label: 'Active Members', value: teamMembers.filter(m => m.isActive !== false).length, color: 'emerald' },
           { label: 'With Photo', value: teamMembers.filter(m => m.imageUrl).length, color: 'blue' },
         ].map(({ label, value, color }) => (
@@ -1374,12 +1374,12 @@ const TeamAdminView: React.FC<{
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search by name or role…"
-              className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
             />
           </div>
           <button
             onClick={openAdd}
-            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shrink-0"
+            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shrink-0"
           >
             <Plus size={15} /> Add Member
           </button>
@@ -1403,8 +1403,8 @@ const TeamAdminView: React.FC<{
                   {member.imageUrl ? (
                     <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-indigo-50">
-                      <span className="text-xl font-black text-indigo-600">{getInitial(member.name)}</span>
+                    <div className="w-full h-full flex items-center justify-center bg-blue-50">
+                      <span className="text-xl font-black text-blue-600">{getInitial(member.name)}</span>
                     </div>
                   )}
                 </div>
@@ -1412,7 +1412,7 @@ const TeamAdminView: React.FC<{
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-slate-900 text-sm truncate">{member.name}</p>
-                  <p className="text-xs text-indigo-600 font-semibold truncate">{member.role}</p>
+                  <p className="text-xs text-blue-600 font-semibold truncate">{member.role}</p>
                   {member.skills?.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-1">
                       {member.skills.slice(0, 3).map((s: string, i: number) => (
@@ -1429,7 +1429,7 @@ const TeamAdminView: React.FC<{
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => openEdit(member)}
-                    className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                     title="Edit"
                   >
                     <PenTool size={15} />
@@ -1462,7 +1462,7 @@ const TeamAdminView: React.FC<{
               {/* Photo upload */}
               <div className="flex items-center gap-5">
                 <div
-                  className="w-20 h-20 rounded-xl border-2 border-dashed border-slate-300 overflow-hidden cursor-pointer bg-slate-50 hover:border-indigo-400 transition-colors shrink-0 flex items-center justify-center"
+                  className="w-20 h-20 rounded-xl border-2 border-dashed border-slate-300 overflow-hidden cursor-pointer bg-slate-50 hover:border-blue-400 transition-colors shrink-0 flex items-center justify-center"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {photoPreview ? (
@@ -1482,7 +1482,7 @@ const TeamAdminView: React.FC<{
                     value={editing.imageUrl || ''}
                     onChange={e => { setEditing((p: any) => ({ ...p, imageUrl: e.target.value })); setPhotoPreview(e.target.value); }}
                     placeholder="https://..."
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -1491,35 +1491,35 @@ const TeamAdminView: React.FC<{
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
-                  <input required type="text" value={editing.name || ''} onChange={e => setEditing((p: any) => ({ ...p, name: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="e.g. Emmanuel A.H Kpakama" />
+                  <input required type="text" value={editing.name || ''} onChange={e => setEditing((p: any) => ({ ...p, name: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="e.g. Emmanuel A.H Kpakama" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Role / Title *</label>
-                  <input required type="text" value={editing.role || ''} onChange={e => setEditing((p: any) => ({ ...p, role: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="e.g. Head of Admin and Logistics" />
+                  <input required type="text" value={editing.role || ''} onChange={e => setEditing((p: any) => ({ ...p, role: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="e.g. Head of Admin and Logistics" />
                 </div>
               </div>
 
               {/* Bio */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Biography</label>
-                <textarea rows={4} value={editing.bio || ''} onChange={e => setEditing((p: any) => ({ ...p, bio: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none resize-none" placeholder="Professional background and experience…" />
+                <textarea rows={4} value={editing.bio || ''} onChange={e => setEditing((p: any) => ({ ...p, bio: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none resize-none" placeholder="Professional background and experience…" />
               </div>
 
               {/* Dedicated Role */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Dedicated Role / Mission Note</label>
-                <input type="text" value={editing.dedicatedRole || ''} onChange={e => setEditing((p: any) => ({ ...p, dedicatedRole: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="e.g. Point of contact for Helen Keller Intl…" />
+                <input type="text" value={editing.dedicatedRole || ''} onChange={e => setEditing((p: any) => ({ ...p, dedicatedRole: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="e.g. Point of contact for Helen Keller Intl…" />
               </div>
 
               {/* Phone + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Phone</label>
-                  <input type="text" value={editing.phone || ''} onChange={e => setEditing((p: any) => ({ ...p, phone: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="+232…" />
+                  <input type="text" value={editing.phone || ''} onChange={e => setEditing((p: any) => ({ ...p, phone: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="+232…" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Email</label>
-                  <input type="email" value={editing.email || ''} onChange={e => setEditing((p: any) => ({ ...p, email: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="team@biggroup.com" />
+                  <input type="email" value={editing.email || ''} onChange={e => setEditing((p: any) => ({ ...p, email: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="team@biggroup.com" />
                 </div>
               </div>
 
@@ -1527,11 +1527,11 @@ const TeamAdminView: React.FC<{
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Languages</label>
-                  <input type="text" value={editing.languages || ''} onChange={e => setEditing((p: any) => ({ ...p, languages: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" placeholder="English, Krio…" />
+                  <input type="text" value={editing.languages || ''} onChange={e => setEditing((p: any) => ({ ...p, languages: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="English, Krio…" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Display Order</label>
-                  <input type="number" min={1} value={editing.displayOrder ?? 1} onChange={e => setEditing((p: any) => ({ ...p, displayOrder: parseInt(e.target.value) || 1 }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none" />
+                  <input type="number" min={1} value={editing.displayOrder ?? 1} onChange={e => setEditing((p: any) => ({ ...p, displayOrder: parseInt(e.target.value) || 1 }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                 </div>
               </div>
 
@@ -1542,14 +1542,14 @@ const TeamAdminView: React.FC<{
                   type="text"
                   value={Array.isArray(editing.skills) ? editing.skills.join(', ') : editing.skills || ''}
                   onChange={e => setEditing((p: any) => ({ ...p, skills: e.target.value }))}
-                  className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   placeholder="Fleet Management, Compliance, Leadership…"
                 />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">Cancel</button>
-                <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+                <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
                   {isSubmitting ? <><Loader2 size={15} className="animate-spin" /> Saving…</> : (editing.id ? 'Save Changes' : 'Add Member')}
                 </button>
               </div>

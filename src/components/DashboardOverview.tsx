@@ -380,7 +380,7 @@ export const DashboardOverview: React.FC = () => {
 
       {/* ── Row 1 KPIs ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Total Fleet" value={data.totalVehicles} sub={`${data.availableVehicles} available`} icon={<Car size={20} className="text-indigo-600" />} iconBg="bg-indigo-50 border-indigo-100" valueColor="text-indigo-600" />
+        <KpiCard label="Total Fleet" value={data.totalVehicles} sub={`${data.availableVehicles} available`} icon={<Car size={20} className="text-blue-600" />} iconBg="bg-blue-50 border-blue-100" valueColor="text-blue-600" />
         <KpiCard label="Active Drivers" value={data.activeDrivers} sub={`of ${data.totalDrivers} total`} icon={<Users size={20} className="text-emerald-600" />} iconBg="bg-emerald-50 border-emerald-100" valueColor="text-emerald-600" />
         <KpiCard label="Total Distance" value={`${data.totalDistance.toLocaleString()} km`} sub="all recorded trips" icon={<Navigation size={20} className="text-blue-600" />} iconBg="bg-blue-50 border-blue-100" valueColor="text-blue-600" />
         <KpiCard label="Avg Fuel Eff." value={`${data.avgFuelEfficiency} km/L`} sub="fleet average" icon={<Fuel size={20} className="text-amber-600" />} iconBg="bg-amber-50 border-amber-100" valueColor="text-amber-600" />
@@ -396,7 +396,7 @@ export const DashboardOverview: React.FC = () => {
 
       {/* ── Utilisation Bars ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <UtilBar label="Fleet Availability Rate" value={fleetUtilRate} sub={`${data.availableVehicles} of ${data.totalVehicles} vehicles available`} color="text-indigo-600" barClass="bg-gradient-to-r from-indigo-500 to-violet-500" />
+        <UtilBar label="Fleet Availability Rate" value={fleetUtilRate} sub={`${data.availableVehicles} of ${data.totalVehicles} vehicles available`} color="text-blue-600" barClass="bg-gradient-to-r from-blue-500 to-violet-500" />
         <UtilBar label="Driver Readiness Rate" value={driverReadyRate} sub={`${data.activeDrivers} active of ${data.totalDrivers} total`} color="text-emerald-600" barClass="bg-gradient-to-r from-emerald-400 to-teal-500" />
       </div>
 
@@ -516,10 +516,10 @@ export const DashboardOverview: React.FC = () => {
       {/* ── Driver Status Summary ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 text-center">
-          <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3">
-            <Users size={20} className="text-indigo-600" />
+          <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto mb-3">
+            <Users size={20} className="text-blue-600" />
           </div>
-          <p className="text-3xl font-black text-indigo-600">{data.activeDrivers}</p>
+          <p className="text-3xl font-black text-blue-600">{data.activeDrivers}</p>
           <p className="text-xs font-bold text-slate-600 uppercase font-mono mt-1">Active Drivers</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 text-center">
@@ -557,8 +557,8 @@ export const DashboardOverview: React.FC = () => {
                 {d.img ? (
                   <img src={d.img} alt={d.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-slate-100 shrink-0" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
-                    <Users size={14} className="text-indigo-400" />
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                    <Users size={14} className="text-blue-400" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">

@@ -1134,7 +1134,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               onClick={() => setTimeframe(t as any)}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 timeframe === t 
-                  ? 'bg-white text-indigo-600 shadow-sm' 
+                  ? 'bg-white text-blue-600 shadow-sm' 
                   : 'text-slate-600 hover:text-slate-700'
               }`}
             >
@@ -1181,7 +1181,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         </div>
 
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-start gap-4 hover:shadow-md transition-shadow">
-          <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+          <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
             <Fuel size={24} />
           </div>
           <div>
@@ -1404,14 +1404,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               placeholder="Search date, driver, or vehicle..." 
               value={logSearchQuery}
               onChange={(e) => setLogSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
             />
           </div>
           <button 
             onClick={() => setLogFiltersOpen(!logFiltersOpen)}
-            className={`px-4 py-2 rounded-xl text-sm font-bold border transition-colors flex items-center gap-2 ${logFiltersOpen ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+            className={`px-4 py-2 rounded-xl text-sm font-bold border transition-colors flex items-center gap-2 ${logFiltersOpen ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
           >
-            <Filter size={16} /> Filters { (logFilterDriver !== 'All' || logFilterVehicle !== 'All' || logDateFrom || logDateTo) && <div className="w-2 h-2 rounded-full bg-indigo-500"></div> }
+            <Filter size={16} /> Filters { (logFilterDriver !== 'All' || logFilterVehicle !== 'All' || logDateFrom || logDateTo) && <div className="w-2 h-2 rounded-full bg-blue-500"></div> }
           </button>
         </div>
         
@@ -1422,7 +1422,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <select 
                 value={logFilterDriver}
                 onChange={(e) => setLogFilterDriver(e.target.value)}
-                className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white cursor-pointer"
+                className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white cursor-pointer"
               >
                 <option value="All">All Drivers</option>
                 {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
@@ -1433,7 +1433,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <select 
                 value={logFilterVehicle}
                 onChange={(e) => setLogFilterVehicle(e.target.value)}
-                className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white cursor-pointer"
+                className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white cursor-pointer"
               >
                 <option value="All">All Vehicles</option>
                 {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
@@ -1441,11 +1441,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">From Date</label>
-              <input type="date" value={logDateFrom} onChange={e => setLogDateFrom(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
+              <input type="date" value={logDateFrom} onChange={e => setLogDateFrom(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">To Date</label>
-              <input type="date" value={logDateTo} onChange={e => setLogDateTo(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
+              <input type="date" value={logDateTo} onChange={e => setLogDateTo(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white" />
             </div>
           </div>
         )}
@@ -1457,25 +1457,25 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider select-none">
               <tr>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('date')}>
-                  <div className="flex items-center gap-1">Date <ArrowUpDown size={12} className={logSortConfig.key === 'date' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex items-center gap-1">Date <ArrowUpDown size={12} className={logSortConfig.key === 'date' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('driverId')}>
-                  <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={logSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={logSortConfig.key === 'driverId' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('vehicleId')}>
-                  <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={logSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={logSortConfig.key === 'vehicleId' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('distanceTraveledKm')}>
-                  <div className="flex items-center gap-1">Distance <ArrowUpDown size={12} className={logSortConfig.key === 'distanceTraveledKm' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex items-center gap-1">Distance <ArrowUpDown size={12} className={logSortConfig.key === 'distanceTraveledKm' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('fuelConsumedLiters')}>
-                  <div className="flex items-center gap-1">Fuel Used <ArrowUpDown size={12} className={logSortConfig.key === 'fuelConsumedLiters' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex items-center gap-1">Fuel Used <ArrowUpDown size={12} className={logSortConfig.key === 'fuelConsumedLiters' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors" onClick={() => handleLogSort('fuelIssuedLiters')}>
-                  <div className="flex items-center gap-1">Fuel Issued <ArrowUpDown size={12} className={logSortConfig.key === 'fuelIssuedLiters' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex items-center gap-1">Fuel Issued <ArrowUpDown size={12} className={logSortConfig.key === 'fuelIssuedLiters' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold cursor-pointer hover:text-slate-800 transition-colors text-center" onClick={() => handleLogSort('incidents')}>
-                  <div className="flex justify-center items-center gap-1">Incidents <ArrowUpDown size={12} className={logSortConfig.key === 'incidents' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                  <div className="flex justify-center items-center gap-1">Incidents <ArrowUpDown size={12} className={logSortConfig.key === 'incidents' ? 'text-blue-500' : 'text-slate-400'} /></div>
                 </th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -1590,7 +1590,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                 }}
                                 className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left"
                               >
-                                <PenTool size={14} className="text-indigo-500" /> Edit Log
+                                <PenTool size={14} className="text-blue-500" /> Edit Log
                               </button>
                               
                               <button
@@ -1686,7 +1686,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </button>
           <button 
             onClick={() => { setEditingDriver(null); setIsDriverModalOpen(true); }}
-            className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+            className="flex items-center gap-2 text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
           >
             <Plus size={16} /> Add Driver
           </button>
@@ -1709,7 +1709,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                    onClick={() => { setSelectedDriverId(driver.id); setActiveTab('driver_details'); }}
                    className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group overflow-hidden cursor-pointer">
                 {/* Card header with photo */}
-                <div className="relative bg-gradient-to-br from-slate-50 to-indigo-50/30 px-5 pt-5 pb-4 flex items-center gap-4">
+                <div className="relative bg-gradient-to-br from-slate-50 to-blue-50/30 px-5 pt-5 pb-4 flex items-center gap-4">
                   <div className="relative shrink-0">
                     <img
                       src={driver.imgUrl || `https://i.pravatar.cc/150?u=${driver.id}`}
@@ -1731,7 +1731,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   {/* Action buttons */}
                   <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={(e) => { e.stopPropagation(); setEditingDriver(driver); setIsDriverModalOpen(true); }}
-                      className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-indigo-50 hover:border-indigo-200 text-slate-600 hover:text-indigo-600 rounded-lg transition-all">
+                      className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-blue-50 hover:border-blue-200 text-slate-600 hover:text-blue-600 rounded-lg transition-all">
                       <PenTool size={12}/>
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); setDrivers(prev => prev.filter(d => d.id !== driver.id)); }}
@@ -1784,7 +1784,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       </span>
                     )}
                     {driver.documents && driver.documents.length > 0 && (
-                      <span className="flex items-center gap-1 text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg">
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">
                         📎 {driver.documents.length} Doc{driver.documents.length !== 1 ? 's' : ''}
                       </span>
                     )}
@@ -1805,7 +1805,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200">
           <AlertCircle size={48} className="text-slate-400 mb-4" />
           <h3 className="text-lg font-bold text-slate-950">Driver Not Found</h3>
-          <button onClick={() => setActiveTab('drivers')} className="mt-4 text-indigo-600 font-bold hover:underline">
+          <button onClick={() => setActiveTab('drivers')} className="mt-4 text-blue-600 font-bold hover:underline">
             Return to Drivers
           </button>
         </div>
@@ -1833,7 +1833,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </div>
           <button 
             onClick={() => { setEditingDriver(driver); setIsDriverModalOpen(true); }}
-            className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+            className="flex items-center gap-2 text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
           >
             <PenTool size={16} /> Edit Profile
           </button>
@@ -1841,7 +1841,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
         {/* Profile Header Card */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative">
-          <div className="h-32 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+          <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600"></div>
           <div className="px-8 pb-8">
             <div className="relative flex justify-between items-end -mt-16 mb-6 gap-4 overflow-hidden">
               <div className="flex items-end gap-6 min-w-0">
@@ -1959,7 +1959,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-black text-slate-950 flex items-center gap-2">
-              <FileText className="text-indigo-600" size={20} />
+              <FileText className="text-blue-600" size={20} />
               Documents &amp; Attachments
             </h3>
             
@@ -1967,7 +1967,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <div className="relative z-20">
               <button
                 onClick={() => setHeaderDocDropdownOpen(!headerDocDropdownOpen)}
-                className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition"
+                className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition"
               >
                 <MoreVertical size={20} />
               </button>
@@ -1980,7 +1980,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       setEditingDriver(driver); 
                       setIsDriverModalOpen(true); 
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors text-left"
                   >
                     <Upload size={16} /> Upload Document
                   </button>
@@ -2003,7 +2003,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <p className="text-slate-600 font-medium">No documents uploaded</p>
               <button
                 onClick={() => { setEditingDriver(driver); setIsDriverModalOpen(true); }}
-                className="mt-2 text-sm text-indigo-600 font-bold hover:underline"
+                className="mt-2 text-sm text-blue-600 font-bold hover:underline"
               >
                 Upload documents
               </button>
@@ -2011,9 +2011,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {driver.documents!.map(doc => (
-                <div key={doc.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-indigo-200 hover:shadow-sm transition-all group">
+                <div key={doc.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-200 hover:shadow-sm transition-all group">
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg shrink-0">
+                    <div className="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0">
                       <FileText size={20} />
                     </div>
                     <div className="min-w-0">
@@ -2025,7 +2025,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   <div className="relative z-20 shrink-0 ml-2">
                     <button
                       onClick={() => setActiveDocDropdown(activeDocDropdown === doc.id ? null : doc.id)}
-                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                     >
                       <MoreVertical size={16} />
                     </button>
@@ -2037,7 +2037,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           target="_blank"
                           rel="noreferrer"
                           onClick={() => setActiveDocDropdown(null)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
                         >
                           <Eye size={16} /> View
                         </a>
@@ -2045,7 +2045,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           href={doc.fileUrl}
                           download
                           onClick={() => setActiveDocDropdown(null)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
                         >
                           <Download size={16} /> Download
                         </a>
@@ -2080,7 +2080,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-black text-slate-950 flex items-center gap-2">
-              <Shield className="text-indigo-600" size={20} />
+              <Shield className="text-blue-600" size={20} />
               Status History
             </h3>
             <div className="flex items-center gap-3">
@@ -2092,7 +2092,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               )}
               <button
                 onClick={() => { setEditingDriver(driver); setIsDriverModalOpen(true); }}
-                className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 px-3 py-1.5 rounded-xl transition"
+                className="flex items-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-1.5 rounded-xl transition"
               >
                 <PenTool size={12} /> Update Status
               </button>
@@ -2186,7 +2186,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       </div>
 
                       {/* Card */}
-                      <div className={`flex-1 ${c.bg} border ${c.border} rounded-xl p-4 transition-all ${ idx === 0 ? 'ring-1 ring-offset-1 ring-indigo-200' : '' } ${isEditingThis ? 'ring-2 ring-indigo-400 ring-offset-1' : ''}`}>
+                      <div className={`flex-1 ${c.bg} border ${c.border} rounded-xl p-4 transition-all ${ idx === 0 ? 'ring-1 ring-offset-1 ring-blue-200' : '' } ${isEditingThis ? 'ring-2 ring-blue-400 ring-offset-1' : ''}`}>
 
                         {isEditingThis ? (
                           /* ── EDIT MODE ─────────────────────────────────────────────────── */
@@ -2196,7 +2196,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               <select
                                 value={editingLogForm.status}
                                 onChange={e => setEditingLogForm(f => ({ ...f, status: e.target.value }))}
-                                className="flex-1 text-xs font-bold p-1.5 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                                className="flex-1 text-xs font-bold p-1.5 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
                               >
                                 <option value="Active">Active</option>
                                 <option value="Warning">Warning</option>
@@ -2210,7 +2210,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               <textarea
                                 value={editingLogForm.reason}
                                 onChange={e => setEditingLogForm(f => ({ ...f, reason: e.target.value }))}
-                                className="flex-1 text-xs p-2 border border-slate-300 rounded-lg bg-white resize-none min-h-[64px] focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                                className="flex-1 text-xs p-2 border border-slate-300 rounded-lg bg-white resize-none min-h-[64px] focus:ring-2 focus:ring-blue-400 focus:outline-none"
                                 placeholder="Describe the reason for this status..."
                               />
                             </div>
@@ -2223,7 +2223,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               </button>
                               <button
                                 onClick={handleSaveLog}
-                                className="px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition flex items-center gap-1"
+                                className="px-3 py-1.5 text-xs font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition flex items-center gap-1"
                               >
                                 <CheckCircle2 size={12} /> Save Changes
                               </button>
@@ -2260,7 +2260,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                   {log.status}
                                 </span>
                                 {idx === 0 && (
-                                  <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">Latest</span>
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-blue-500 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">Latest</span>
                                 )}
                                 <span className="text-xs text-slate-500">{formattedDate} · {formattedTime}</span>
                               </div>
@@ -2269,7 +2269,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                                 <button
                                   onClick={() => { setEditingLogId(log.id); setEditingLogForm({ status: log.status, reason: log.reason || '' }); setDeletingLogId(null); }}
                                   title="Edit this entry"
-                                  className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                  className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                 >
                                   <PenTool size={13} />
                                 </button>
@@ -2332,7 +2332,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </div>
           <button 
             onClick={() => { setEditingVehicle(null); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
-            className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+            className="flex items-center gap-2 text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
           >
             <Plus size={16} /> Add Vehicle
           </button>
@@ -2346,14 +2346,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               placeholder="Search by Make/Model or Plate..." 
               value={vehicleSearchQuery}
               onChange={e => setVehicleSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
           <div className="flex gap-4">
             <select 
               value={vehicleFilterStatus}
               onChange={e => setVehicleFilterStatus(e.target.value)}
-              className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="All">All Statuses</option>
               <option value="Available">Available</option>
@@ -2439,7 +2439,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                             </button>
                             <button 
                               onClick={() => { setActiveVehicleMenu(null); setEditingVehicle(vehicle); setIsVehicleReadOnly(false); setIsVehicleModalOpen(true); }}
-                              className="w-full text-left px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 flex items-center gap-2"
+                              className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center gap-2"
                             >
                               <PenTool size={14} /> Edit
                             </button>
@@ -2559,8 +2559,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     const SortIcon = ({ field }: { field: typeof leaderboardSortField }) => {
       if (leaderboardSortField !== field) return <ArrowUpDown size={12} className="inline-block ml-1 opacity-20" />;
       return leaderboardSortDirection === 'asc' 
-        ? <ChevronUp size={14} className="inline-block ml-1 text-indigo-500" />
-        : <ChevronDown size={14} className="inline-block ml-1 text-indigo-500" />;
+        ? <ChevronUp size={14} className="inline-block ml-1 text-blue-500" />
+        : <ChevronDown size={14} className="inline-block ml-1 text-blue-500" />;
     };
 
     // Filter and Sort Data
@@ -2606,7 +2606,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <h2 className="text-2xl font-black text-slate-950 tracking-tight">Driver Performance &amp; Awards</h2>
           <p className="text-slate-600 text-sm mt-1">
             Live metrics from{' '}
-            <span className="font-bold text-indigo-600">{leaderboardLogs.length} trip logs</span>
+            <span className="font-bold text-blue-600">{leaderboardLogs.length} trip logs</span>
             {' '}— scoring period: <span className="font-bold text-slate-700">{leaderboardPeriodType === 'Rolling' ? 'Last 30 Days' : leaderboardPeriodValue}</span>
           </p>
         </div>
@@ -2652,7 +2652,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               else if (type === 'Year') setLeaderboardPeriodValue(new Date().getFullYear().toString());
               else if (type === 'All Time') setLeaderboardPeriodValue('All Time');
             }}
-            className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+            className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           >
             <option value="Rolling">Rolling Window</option>
             <option value="Month">Specific Month</option>
@@ -2664,7 +2664,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <select
               value={leaderboardPeriodValue}
               onChange={e => setLeaderboardPeriodValue(e.target.value)}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             >
               {last24Months.map(m => (
                 <option key={m} value={m}>{m}</option>
@@ -2676,7 +2676,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <select
               value={leaderboardPeriodValue}
               onChange={e => setLeaderboardPeriodValue(e.target.value)}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             >
               {[0, 1, 2].map(offset => {
                 const y = (new Date().getFullYear() - offset).toString();
@@ -2693,7 +2693,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             placeholder="Search drivers by name..."
             value={leaderboardSearch}
             onChange={e => setLeaderboardSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           />
         </div>
         <div className="shrink-0 flex items-center gap-2">
@@ -2701,7 +2701,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <select 
             value={leaderboardStatus} 
             onChange={e => setLeaderboardStatus(e.target.value as any)}
-            className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+            className="border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           >
             <option value="all">All Drivers</option>
             <option value="eligible">Award Eligible Only</option>
@@ -2723,25 +2723,25 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
               <tr>
                 <th className="px-4 py-4 font-semibold w-14 text-center">Rank</th>
-                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('name')}>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('name')}>
                   Driver <SortIcon field="name" />
                 </th>
-                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('score')}>
+                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('score')}>
                   Score <SortIcon field="score" />
                 </th>
-                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('trips')}>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('trips')}>
                   Trips <SortIcon field="trips" />
                 </th>
-                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('distance')}>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('distance')}>
                   Distance <SortIcon field="distance" />
                 </th>
-                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('efficiency')}>
+                <th className="px-4 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('efficiency')}>
                   Efficiency <SortIcon field="efficiency" />
                 </th>
-                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('incidents')}>
+                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('incidents')}>
                   Incidents <SortIcon field="incidents" />
                 </th>
-                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-indigo-600 transition-colors select-none" onClick={() => handleSort('variance')}>
+                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('variance')}>
                   Variance <SortIcon field="variance" />
                 </th>
                 <th className="px-4 py-4 font-semibold text-center">Award Status</th>
@@ -2835,7 +2835,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           title="Issue Award"
                         ><Gift size={14} /></button>
                         <button onClick={() => setSelectedDriverScorecard(ds.driver.id)}
-                          className="text-sm font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                          className="text-sm font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors">
                           Scorecard
                         </button>
                       </div>
@@ -3330,7 +3330,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
     const maxSupplierLiters = Math.max(...fuelBySupplier.map(x => x.liters), 1);
     const maxCityLiters = Math.max(...fuelByCity.map(x => x.liters), 1);
 
-    const supplierColors: Record<string, string> = { NP: 'bg-indigo-500', Malado: 'bg-emerald-500', TotalEnergies: 'bg-amber-500', Other: 'bg-slate-400' };
+    const supplierColors: Record<string, string> = { NP: 'bg-blue-500', Malado: 'bg-emerald-500', TotalEnergies: 'bg-amber-500', Other: 'bg-slate-400' };
     const paymentBadge = (pm?: string) => {
       if (pm === 'Fuel Card') return 'bg-blue-50 text-blue-700 border border-blue-200';
       if (pm === 'Voucher') return 'bg-purple-50 text-purple-700 border border-purple-200';
@@ -3353,7 +3353,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <button
                   key={tab}
                   onClick={() => setFuelSubTab(tab)}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all capitalize ${fuelSubTab === tab ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-600 hover:text-slate-700'}`}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all capitalize ${fuelSubTab === tab ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-600 hover:text-slate-700'}`}
                 >
                   {tab === 'overview' ? '📊 Overview' : tab === 'fuel' ? '⛽ Fuel Logs' : '⚙️ Settings'}
                 </button>
@@ -3393,14 +3393,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         {/* ── KPI Cards ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Total Litres', value: `${totalFuelLiters.toFixed(0)} L`, icon: Fuel, color: 'indigo' },
+            { label: 'Total Litres', value: `${totalFuelLiters.toFixed(0)} L`, icon: Fuel, color: 'blue' },
             { label: 'Total Cost', value: `Le ${totalFuelCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, icon: TrendingDown, color: 'emerald' },
             { label: 'Transactions', value: allFuelCollections.length.toString(), icon: FileText, color: 'amber' },
             { label: 'Avg Efficiency', value: `${avgEffKm} km/L`, icon: TrendingUp, color: 'blue' },
             { label: 'Partner Station L', value: `${partnerLiters.toFixed(0)} L`, icon: CheckCircle2, color: 'emerald' },
             { label: 'Non-Partner L', value: `${nonPartnerLiters.toFixed(0)} L`, icon: AlertTriangle, color: 'red' },
             { label: 'Mobile Money L', value: `${mmLiters.toFixed(0)} L`, icon: ShieldAlert, color: 'amber' },
-            { label: 'Trips With Fuel', value: tripsCompleted.toString(), icon: Navigation, color: 'indigo' },
+            { label: 'Trips With Fuel', value: tripsCompleted.toString(), icon: Navigation, color: 'blue' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 hover:shadow-md transition-shadow">
               <div className={`w-10 h-10 bg-${color}-50 text-${color}-600 rounded-xl flex items-center justify-center shrink-0`}>
@@ -3446,7 +3446,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <span className="text-slate-600 shrink-0 ml-2">{liters.toFixed(0)} L</span>
                   </div>
                   <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-indigo-400 rounded-full" style={{ width: `${(liters / maxBarLiters) * 100}%` }} />
+                    <div className="h-full bg-blue-400 rounded-full" style={{ width: `${(liters / maxBarLiters) * 100}%` }} />
                   </div>
                 </div>
               ))}
@@ -3489,11 +3489,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   placeholder="Search driver, station, or city..."
                   value={fuelSearchQuery}
                   onChange={e => { setFuelSearchQuery(e.target.value); setFuelPage(0); }}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 />
               </div>
               <div className="flex flex-wrap gap-2 items-center">
-                <select value={fuelSortBy} onChange={e => { setFuelSortBy(e.target.value as any); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                <select value={fuelSortBy} onChange={e => { setFuelSortBy(e.target.value as any); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                   <option value="date_desc">Newest First</option>
                   <option value="date_asc">Oldest First</option>
                   <option value="liters_desc">Highest Litres</option>
@@ -3501,39 +3501,39 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   <option value="cost_desc">Highest Cost</option>
                   <option value="cost_asc">Lowest Cost</option>
                 </select>
-              <select value={fuelDriverFilter} onChange={e => { setFuelDriverFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <select value={fuelDriverFilter} onChange={e => { setFuelDriverFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="all">All Drivers</option>
                 {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
-              <select value={fuelSupplierFilter} onChange={e => { setFuelSupplierFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <select value={fuelSupplierFilter} onChange={e => { setFuelSupplierFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="all">All Projects</option>
                 {[...new Set(allFuelCollections.map(f => f.supplier || 'Unknown'))].map(s => <option key={s} value={s}>{s}</option>)}
               </select>
-              <select value={fuelPaymentFilter} onChange={e => { setFuelPaymentFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <select value={fuelPaymentFilter} onChange={e => { setFuelPaymentFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="all">All Payments</option>
                 <option value="Fuel Card">Fuel Card</option>
                 <option value="Voucher">Voucher</option>
                 <option value="Mobile Money">Mobile Money</option>
                 <option value="Cash">Cash</option>
               </select>
-              <select value={fuelFuelTypeFilter} onChange={e => { setFuelFuelTypeFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <select value={fuelFuelTypeFilter} onChange={e => { setFuelFuelTypeFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="all">All Fuel Types</option>
                 <option value="Petrol">⛽ Petrol</option>
                 <option value="Diesel">🟡 Diesel</option>
                 <option value="Premium">💜 Premium</option>
               </select>
-              <select value={fuelPartnerFilter} onChange={e => { setFuelPartnerFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <select value={fuelPartnerFilter} onChange={e => { setFuelPartnerFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="all">All Stations</option>
                 {[...new Set(allFuelCollections.map(f => f.stationName).filter(Boolean))].sort().map(s => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
-              <select value={fuelCityFilter} onChange={e => { setFuelCityFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <select value={fuelCityFilter} onChange={e => { setFuelCityFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="all">All Cities</option>
                 {[...new Set(allFuelCollections.map(f => f.location).filter(Boolean))].sort().map(c => <option key={c} value={c}>{c}</option>)}
               </select>
-              <input type="date" value={fuelDateFrom} onChange={e => { setFuelDateFrom(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" title="From date" />
-              <input type="date" value={fuelDateTo} onChange={e => { setFuelDateTo(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" title="To date" />
+              <input type="date" value={fuelDateFrom} onChange={e => { setFuelDateFrom(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" title="From date" />
+              <input type="date" value={fuelDateTo} onChange={e => { setFuelDateTo(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" title="To date" />
               {(fuelSearchQuery || fuelSortBy !== 'date_desc' || fuelDriverFilter !== 'all' || fuelSupplierFilter !== 'all' || fuelPaymentFilter !== 'all' || fuelFuelTypeFilter !== 'all' || fuelPartnerFilter !== 'all' || fuelCityFilter !== 'all' || fuelDateFrom || fuelDateTo) && (
                 <button onClick={() => { setFuelSearchQuery(''); setFuelSortBy('date_desc'); setFuelDriverFilter('all'); setFuelSupplierFilter('all'); setFuelPaymentFilter('all'); setFuelFuelTypeFilter('all'); setFuelPartnerFilter('all'); setFuelCityFilter('all'); setFuelDateFrom(''); setFuelDateTo(''); setFuelPage(0); }} className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-xl hover:bg-red-100">
                   Clear
@@ -3546,11 +3546,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           {/* Summary row + Export */}
           <div className="px-5 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-4 text-xs text-slate-600">
             <div className="flex bg-slate-200/50 p-0.5 rounded-lg mr-2 border border-slate-200">
-              <button onClick={() => setFuelViewMode('grid')} className={`p-1 rounded flex items-center justify-center transition-colors ${fuelViewMode === 'grid' ? 'bg-white text-indigo-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={14} /></button>
-              <button onClick={() => setFuelViewMode('list')} className={`p-1 rounded flex items-center justify-center transition-colors ${fuelViewMode === 'list' ? 'bg-white text-indigo-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`} title="List View"><List size={14} /></button>
+              <button onClick={() => setFuelViewMode('grid')} className={`p-1 rounded flex items-center justify-center transition-colors ${fuelViewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={14} /></button>
+              <button onClick={() => setFuelViewMode('list')} className={`p-1 rounded flex items-center justify-center transition-colors ${fuelViewMode === 'list' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`} title="List View"><List size={14} /></button>
             </div>
             <span><span className="font-bold text-slate-700">{filteredTx.length}</span> transactions</span>
-            <span><span className="font-bold text-indigo-600">{filteredLiters.toFixed(0)} L</span> total</span>
+            <span><span className="font-bold text-blue-600">{filteredLiters.toFixed(0)} L</span> total</span>
             <span><span className="font-bold text-slate-700">Le {filteredCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> cost</span>
             <div className="ml-auto flex items-center">
               <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">Export:</span>
@@ -3695,7 +3695,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${ fc.fuelType === 'Diesel' ? 'bg-amber-50 text-amber-700 border border-amber-200' : fc.fuelType === 'Premium' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-green-50 text-green-700 border border-green-200' }`}>{fc.fuelType}</span>
                         ) : '—'}
                       </td>
-                      <td className="px-5 py-3 font-bold text-indigo-700">{fc.liters.toFixed(1)} L</td>
+                      <td className="px-5 py-3 font-bold text-blue-700">{fc.liters.toFixed(1)} L</td>
                       <td className="px-5 py-3 text-slate-600 font-mono">Le {fc.costPerLiter.toFixed(2)}</td>
                       <td className="px-5 py-3 font-bold text-slate-800">Le {(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                       <td className="px-5 py-3">
@@ -3744,10 +3744,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[500px]">
                 <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                   <div className="flex items-center gap-2">
-                    <MapPin size={18} className="text-indigo-600" />
+                    <MapPin size={18} className="text-blue-600" />
                     <h3 className="font-bold text-slate-800">Cities / Locations</h3>
                   </div>
-                  <button onClick={() => { setEditingCity({}); setIsCityModalOpen(true); }} className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition-colors">
+                  <button onClick={() => { setEditingCity({}); setIsCityModalOpen(true); }} className="flex items-center gap-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition-colors">
                     <Plus size={14} /> Add City
                   </button>
                 </div>
@@ -3762,7 +3762,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                           {city.region && <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{city.region}</p>}
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => { setEditingCity(city); setIsCityModalOpen(true); }} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                          <button onClick={() => { setEditingCity(city); setIsCityModalOpen(true); }} className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                             <PenTool size={14} />
                           </button>
                           <button onClick={() => handleDeleteCity(city.id)} className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
@@ -3805,7 +3805,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => { setEditingStation(station); setIsStationModalOpen(true); }} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                            <button onClick={() => { setEditingStation(station); setIsStationModalOpen(true); }} className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                               <PenTool size={14} />
                             </button>
                             <button onClick={() => handleDeleteStation(station.id)} className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
@@ -3984,7 +3984,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           </div>
           <button 
             onClick={() => { setEditingDispatch(null); setDispatchBillingMode('project'); setIsDispatchModalOpen(true); }}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
           >
             <Navigation size={16} /> Dispatch Vehicle
           </button>
@@ -3994,7 +3994,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <button
             onClick={() => setDispatchSubTab('active')}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-              dispatchSubTab === 'active' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
+              dispatchSubTab === 'active' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
             }`}
           >
             <Navigation size={16} /> Active Dispatches
@@ -4010,7 +4010,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <button
             onClick={() => setDispatchSubTab('logs')}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-              dispatchSubTab === 'logs' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
+              dispatchSubTab === 'logs' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
             }`}
           >
             <FileText size={16} /> Trip Logs
@@ -4028,7 +4028,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 placeholder="Search date, driver, or vehicle..." 
                 value={dispatchSearchQuery}
                 onChange={(e) => setDispatchSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -4121,9 +4121,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </button>
               <button 
                 onClick={() => setDispatchFiltersOpen(!dispatchFiltersOpen)}
-                className={`px-4 py-2 rounded-xl text-sm font-bold border transition-colors flex items-center gap-2 ${dispatchFiltersOpen ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                className={`px-4 py-2 rounded-xl text-sm font-bold border transition-colors flex items-center gap-2 ${dispatchFiltersOpen ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
               >
-                <Filter size={16} /> Filters { (dispatchFilterDriver !== 'All' || dispatchFilterVehicle !== 'All' || dispatchDateFrom || dispatchDateTo || dispatchFilter !== 'all') && <div className="w-2 h-2 rounded-full bg-indigo-500"></div> }
+                <Filter size={16} /> Filters { (dispatchFilterDriver !== 'All' || dispatchFilterVehicle !== 'All' || dispatchDateFrom || dispatchDateTo || dispatchFilter !== 'all') && <div className="w-2 h-2 rounded-full bg-blue-500"></div> }
               </button>
             </div>
           </div>
@@ -4136,7 +4136,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <select 
                   value={dispatchFilter}
                   onChange={(e) => setDispatchFilter(e.target.value as any)}
-                  className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white cursor-pointer"
+                  className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white cursor-pointer"
                 >
                   <option value="all">All Dispatches</option>
                   <option value="overdue">Overdue Only</option>
@@ -4148,7 +4148,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <select 
                   value={dispatchFilterDriver}
                   onChange={(e) => setDispatchFilterDriver(e.target.value)}
-                  className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white cursor-pointer"
+                  className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white cursor-pointer"
                 >
                   <option value="All">All Drivers</option>
                   {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
@@ -4159,7 +4159,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <select 
                   value={dispatchFilterVehicle}
                   onChange={(e) => setDispatchFilterVehicle(e.target.value)}
-                  className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white cursor-pointer"
+                  className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white cursor-pointer"
                 >
                   <option value="All">All Vehicles</option>
                   {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
@@ -4167,11 +4167,11 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">From Date</label>
-                <input type="date" value={dispatchDateFrom} onChange={e => setDispatchDateFrom(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
+                <input type="date" value={dispatchDateFrom} onChange={e => setDispatchDateFrom(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">To Date</label>
-                <input type="date" value={dispatchDateTo} onChange={e => setDispatchDateTo(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-white" />
+                <input type="date" value={dispatchDateTo} onChange={e => setDispatchDateTo(e.target.value)} className="px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white" />
               </div>
             </div>
           )}
@@ -4184,7 +4184,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
             {filteredActive.length === 0 ? (
               <div className="p-12 text-center text-slate-600">
-                <CheckCircle2 size={48} className="mx-auto mb-4 text-indigo-500 opacity-50" />
+                <CheckCircle2 size={48} className="mx-auto mb-4 text-blue-500 opacity-50" />
                 <p className="font-bold">No Active Dispatches Found</p>
                 <p className="text-sm mt-1">Try adjusting your filters.</p>
               </div>
@@ -4193,20 +4193,20 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <table className="w-full text-left text-sm block md:table">
                 <thead className="hidden md:table-header-group bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
                   <tr>
-                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('dispatchTime')}>
-                      <div className="flex items-center gap-1">Dispatch Time <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('dispatchTime')}>
+                      <div className="flex items-center gap-1">Dispatch Time <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-blue-500' : 'text-slate-400'} /></div>
                     </th>
-                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('driverId')}>
-                      <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('driverId')}>
+                      <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-blue-500' : 'text-slate-400'} /></div>
                     </th>
-                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('vehicleId')}>
-                      <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('vehicleId')}>
+                      <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-blue-500' : 'text-slate-400'} /></div>
                     </th>
-                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('odometerOut')}>
-                      <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('odometerOut')}>
+                      <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-blue-500' : 'text-slate-400'} /></div>
                     </th>
-                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('expectedReturnDate')}>
-                      <div className="flex items-center gap-1">Expected Return <ArrowUpDown size={12} className={dispatchSortConfig.key === 'expectedReturnDate' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                    <th className="px-6 py-4 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('expectedReturnDate')}>
+                      <div className="flex items-center gap-1">Expected Return <ArrowUpDown size={12} className={dispatchSortConfig.key === 'expectedReturnDate' ? 'text-blue-500' : 'text-slate-400'} /></div>
                     </th>
                   </tr>
                 </thead>
@@ -4278,20 +4278,20 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   <table className="w-full text-left text-sm block md:table">
                     <thead className="hidden md:table-header-group bg-slate-50 text-slate-600 border-b border-slate-200 font-mono text-[10px] uppercase tracking-wider">
                       <tr>
-                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('dispatchTime')}>
-                          <div className="flex items-center gap-1">Returned At <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('dispatchTime')}>
+                          <div className="flex items-center gap-1">Returned At <ArrowUpDown size={12} className={dispatchSortConfig.key === 'dispatchTime' ? 'text-blue-500' : 'text-slate-400'} /></div>
                         </th>
-                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('driverId')}>
-                          <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('driverId')}>
+                          <div className="flex items-center gap-1">Driver <ArrowUpDown size={12} className={dispatchSortConfig.key === 'driverId' ? 'text-blue-500' : 'text-slate-400'} /></div>
                         </th>
-                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('vehicleId')}>
-                          <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('vehicleId')}>
+                          <div className="flex items-center gap-1">Vehicle <ArrowUpDown size={12} className={dispatchSortConfig.key === 'vehicleId' ? 'text-blue-500' : 'text-slate-400'} /></div>
                         </th>
-                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('odometerOut')}>
-                          <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('odometerOut')}>
+                          <div className="flex items-center gap-1">Odo Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'odometerOut' ? 'text-blue-500' : 'text-slate-400'} /></div>
                         </th>
-                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => handleDispatchSort('fuelLevelOut')}>
-                          <div className="flex items-center gap-1">Fuel Level Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'fuelLevelOut' ? 'text-indigo-500' : 'text-slate-400'} /></div>
+                        <th className="px-6 py-3 font-semibold cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleDispatchSort('fuelLevelOut')}>
+                          <div className="flex items-center gap-1">Fuel Level Out <ArrowUpDown size={12} className={dispatchSortConfig.key === 'fuelLevelOut' ? 'text-blue-500' : 'text-slate-400'} /></div>
                         </th>
                       </tr>
                     </thead>
@@ -4418,7 +4418,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               setEditingMaintenance({ startDate: new Date().toISOString().split('T')[0], status: 'In Progress' });
               setIsMaintenanceModalOpen(true);
             }}
-            className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap"
+            className="flex items-center gap-2 text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors shadow-sm whitespace-nowrap"
           >
             <PenTool size={16} /> Record Maintenance
           </button>
@@ -4435,24 +4435,24 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               placeholder="Search by vehicle or issue..."
               value={maintSearchQuery}
               onChange={e => setMaintSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
             />
           </div>
           <div className="flex flex-wrap gap-2 items-center">
-            <select value={maintStatusFilter} onChange={e => setMaintStatusFilter(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <select value={maintStatusFilter} onChange={e => setMaintStatusFilter(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
               <option value="all">All Statuses</option>
               <option value="In Progress">In Progress</option>
               <option value="Completed">Completed</option>
               <option value="Scheduled">Scheduled</option>
             </select>
-            <select value={maintSortBy} onChange={e => setMaintSortBy(e.target.value as any)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <select value={maintSortBy} onChange={e => setMaintSortBy(e.target.value as any)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
               <option value="date_desc">Newest First</option>
               <option value="date_asc">Oldest First</option>
               <option value="cost_desc">Highest Cost</option>
               <option value="cost_asc">Lowest Cost</option>
             </select>
-            <input type="date" value={maintDateFrom} onChange={e => setMaintDateFrom(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" title="From date" />
-            <input type="date" value={maintDateTo} onChange={e => setMaintDateTo(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400" title="To date" />
+            <input type="date" value={maintDateFrom} onChange={e => setMaintDateFrom(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" title="From date" />
+            <input type="date" value={maintDateTo} onChange={e => setMaintDateTo(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" title="To date" />
             
             {(maintSearchQuery || maintStatusFilter !== 'all' || maintSortBy !== 'date_desc' || maintDateFrom || maintDateTo) && (
               <button onClick={() => { setMaintSearchQuery(''); setMaintStatusFilter('all'); setMaintSortBy('date_desc'); setMaintDateFrom(''); setMaintDateTo(''); }} className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-xl hover:bg-red-100">
@@ -4472,12 +4472,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
         <div className="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-100">
           <div className="flex items-center gap-3">
             <div className="flex bg-slate-200/50 p-0.5 rounded-lg border border-slate-200">
-              <button onClick={() => setMaintViewMode('grid')} className={`p-1 rounded flex items-center justify-center transition-colors ${maintViewMode === 'grid' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={13} /></button>
-              <button onClick={() => setMaintViewMode('list')} className={`p-1 rounded flex items-center justify-center transition-colors ${maintViewMode === 'list' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`} title="List View"><List size={13} /></button>
+              <button onClick={() => setMaintViewMode('grid')} className={`p-1 rounded flex items-center justify-center transition-colors ${maintViewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`} title="Grid View"><LayoutGrid size={13} /></button>
+              <button onClick={() => setMaintViewMode('list')} className={`p-1 rounded flex items-center justify-center transition-colors ${maintViewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`} title="List View"><List size={13} /></button>
             </div>
             <span>Showing <span className="font-bold text-slate-700">{filteredMaintenanceRecords.length}</span> records</span>
           </div>
-          <span>Total Filtered Cost: <span className="font-bold text-indigo-600">Le {totalFilteredCost.toLocaleString()}</span></span>
+          <span>Total Filtered Cost: <span className="font-bold text-blue-600">Le {totalFilteredCost.toLocaleString()}</span></span>
         </div>
       </div>
 
@@ -4518,7 +4518,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <span className="font-black text-slate-900 text-sm">Le {record.cost.toLocaleString()}</span>
                     <div className="flex gap-1">
                       <button onClick={() => setViewingMaintenance(record)} className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors" title="View"><Eye size={13} /></button>
-                      <button onClick={() => { setEditingMaintenance(record); setIsMaintenanceModalOpen(true); }} className="p-1.5 text-indigo-500 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit"><PenTool size={13} /></button>
+                      <button onClick={() => { setEditingMaintenance(record); setIsMaintenanceModalOpen(true); }} className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><PenTool size={13} /></button>
                     </div>
                   </div>
                 </div>
@@ -4584,7 +4584,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                               <FileText size={14} className="text-slate-600" /> View Record
                             </button>
                             <button onClick={() => { setActiveMaintenanceMenu(null); setEditingMaintenance(record); setIsMaintenanceModalOpen(true); }} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
-                              <PenTool size={14} className="text-indigo-500" /> Edit Record
+                              <PenTool size={14} className="text-blue-500" /> Edit Record
                             </button>
                             {record.status === 'In Progress' && (
                               <button onClick={() => { setActiveMaintenanceMenu(null); setMaintenanceRecords(prev => prev.map(m => m.id === record.id ? { ...m, status: 'Completed', completionDate: new Date().toISOString().split('T')[0] } : m)); setVehicles(prev => prev.map(v => v.id === record.vehicleId ? { ...v, status: 'Available' } : v)); }} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
@@ -4656,7 +4656,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 isActive 
-                  ? 'bg-white text-indigo-600 shadow-sm' 
+                  ? 'bg-white text-blue-600 shadow-sm' 
                   : 'text-slate-600 hover:text-slate-700 hover:bg-slate-200/50'
               }`}
             >
@@ -4681,12 +4681,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       {isLogModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600 sticky top-0 z-10">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-blue-600 sticky top-0 z-10">
               <div>
                 <h2 className="text-lg font-black text-white">{editingLog ? 'Edit Trip Log' : 'Record Trip Log'}</h2>
-                <p className="text-indigo-200 text-xs mt-0.5">Enter trip details, distance, and performance metrics.</p>
+                <p className="text-blue-200 text-xs mt-0.5">Enter trip details, distance, and performance metrics.</p>
               </div>
-              <button onClick={() => setIsLogModalOpen(false)} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
+              <button onClick={() => setIsLogModalOpen(false)} className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
             </div>
             <form onSubmit={(e) => {
               e.preventDefault();
@@ -4864,17 +4864,17 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   <div className="cursor-pointer flex items-center gap-2 select-none" onClick={() => setIsFuelTransactionsExpanded(!isFuelTransactionsExpanded)}>
                     {isFuelTransactionsExpanded ? <ChevronDown size={18} className="text-slate-500" /> : <ChevronRight size={18} className="text-slate-500" />}
                     <div>
-                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Fuel size={14} className="text-indigo-500" /> Fuel Transactions</h3>
+                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Fuel size={14} className="text-blue-500" /> Fuel Transactions</h3>
                       <p className="text-[10px] text-slate-500 mt-0.5">Record every fuel stop as a separate entry.</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {editingFuelCollections.length > 0 && (
-                      <div className="text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">
+                      <div className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
                         Total: {editingFuelCollections.reduce((sum, fc) => sum + (Number(fc.liters) || 0), 0).toFixed(1)} L
                       </div>
                     )}
-                    <button type="button" onClick={() => { setEditingFuelCollections(prev => [...prev, { id: `new-${Date.now()}`, stationName: '', supplier: 'NP', isPartnerStation: true, location: '', liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card', date: editingLog?.date || new Date().toISOString().split('T')[0] }]); setIsFuelTransactionsExpanded(true); }} className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 flex items-center gap-1">
+                    <button type="button" onClick={() => { setEditingFuelCollections(prev => [...prev, { id: `new-${Date.now()}`, stationName: '', supplier: 'NP', isPartnerStation: true, location: '', liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card', date: editingLog?.date || new Date().toISOString().split('T')[0] }]); setIsFuelTransactionsExpanded(true); }} className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 flex items-center gap-1">
                       <Plus size={12} /> Add Fuel Stop
                     </button>
                   </div>
@@ -4889,7 +4889,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       <div className="flex items-center justify-between mb-1 cursor-pointer select-none" onClick={() => setMinimizedFuelStops(prev => ({ ...prev, [fc.id || i]: !prev[fc.id || i] }))}>
                         <div className="flex items-center gap-2">
                            {isMin ? <ChevronRight size={14} className="text-slate-500" /> : <ChevronDown size={14} className="text-slate-500" />}
-                           <span className="text-[10px] font-black text-indigo-600 uppercase tracking-wider">Stop {i + 1} {fc.stationName ? `- ${fc.stationName}` : ''}</span>
+                           <span className="text-[10px] font-black text-blue-600 uppercase tracking-wider">Stop {i + 1} {fc.stationName ? `- ${fc.stationName}` : ''}</span>
                         </div>
                         <button type="button" onClick={(e) => { 
                           e.stopPropagation(); 
@@ -5001,7 +5001,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         <div className="flex flex-col justify-end">
                           <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer mt-1">
-                            <input type="checkbox" checked={fc.isPartnerStation !== false} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], isPartnerStation: e.target.checked }; return n; })} className="w-4 h-4 rounded text-indigo-600" />
+                            <input type="checkbox" checked={fc.isPartnerStation !== false} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], isPartnerStation: e.target.checked }; return n; })} className="w-4 h-4 rounded text-blue-600" />
                             Partner Station
                           </label>
                         </div>
@@ -5019,9 +5019,9 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                         </div>
                         {/* Total display */}
                         {fc.liters && fc.costPerLiter && (
-                          <div className="col-span-2 bg-indigo-50 border border-indigo-100 rounded-lg p-2 flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-indigo-600 uppercase">Total Cost</span>
-                            <span className="font-black text-indigo-700 text-sm">Le {(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                          <div className="col-span-2 bg-blue-50 border border-blue-100 rounded-lg p-2 flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-blue-600 uppercase">Total Cost</span>
+                            <span className="font-black text-blue-700 text-sm">Le {(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                           </div>
                         )}
                       </div>
@@ -5069,7 +5069,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
 
               <div className="col-span-2">
                 <label className="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer">
-                  <input type="checkbox" name="maintenanceIssuesLogged" value="true" defaultChecked={editingLog?.maintenanceIssuesLogged} className="w-4 h-4 rounded text-indigo-600" />
+                  <input type="checkbox" name="maintenanceIssuesLogged" value="true" defaultChecked={editingLog?.maintenanceIssuesLogged} className="w-4 h-4 rounded text-blue-600" />
                   Vehicle breakdown or maintenance issue logged on this trip
                 </label>
               </div>
@@ -5092,7 +5092,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   <div className="cursor-pointer flex items-center gap-2 select-none" onClick={() => setIsTripLegsExpanded(!isTripLegsExpanded)}>
                     {isTripLegsExpanded ? <ChevronDown size={18} className="text-slate-500" /> : <ChevronRight size={18} className="text-slate-500" />}
                     <div>
-                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Navigation size={14} className="text-indigo-500" /> Trip Legs (Route Log)</h3>
+                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Navigation size={14} className="text-blue-500" /> Trip Legs (Route Log)</h3>
                       <p className="text-[10px] text-slate-500 mt-0.5">Record each stop with departure, destination, times, and odometer.</p>
                     </div>
                   </div>
@@ -5111,7 +5111,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       }]);
                       setIsTripLegsExpanded(true);
                     }}
-                    className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 flex items-center gap-1"
+                    className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 flex items-center gap-1"
                   >
                     <Plus size={12} /> Add Leg
                   </button>
@@ -5131,7 +5131,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                       <div className="flex justify-between items-center cursor-pointer select-none" onClick={() => setMinimizedTripLegs(prev => ({ ...prev, [leg.id || i]: !prev[leg.id || i] }))}>
                         <div className="flex items-center gap-2">
                            {isMin ? <ChevronRight size={14} className="text-slate-500" /> : <ChevronDown size={14} className="text-slate-500" />}
-                           <span className="text-[10px] font-black text-indigo-600 uppercase tracking-wider">Leg {i + 1} {leg.departurePoint && leg.destinationPoint ? `- ${leg.departurePoint} to ${leg.destinationPoint}` : ''}</span>
+                           <span className="text-[10px] font-black text-blue-600 uppercase tracking-wider">Leg {i + 1} {leg.departurePoint && leg.destinationPoint ? `- ${leg.departurePoint} to ${leg.destinationPoint}` : ''}</span>
                         </div>
                         <button type="button" onClick={(e) => {
                           e.stopPropagation();
@@ -5207,8 +5207,8 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </div>
 
                 {editingTripLegs.length > 0 && (
-                  <div className="mt-2 text-xs text-slate-600 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
-                    Auto-calculated distance: <span className="font-bold text-indigo-700">
+                  <div className="mt-2 text-xs text-slate-600 bg-blue-50 p-2 rounded-lg border border-blue-100">
+                    Auto-calculated distance: <span className="font-bold text-blue-700">
                       {editingTripLegs.reduce((sum, l) => sum + Math.max(0, (l.odometerEnd || 0) - (l.odometerStart || 0)), 0).toLocaleString()} km
                     </span> from {editingTripLegs.length} leg(s).
                   </div>
@@ -5221,13 +5221,13 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
                 <div className="flex justify-between items-center mb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Users size={14} className="text-indigo-500" /> Passenger Manifest</h3>
+                    <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Users size={14} className="text-blue-500" /> Passenger Manifest</h3>
                     <p className="text-[10px] text-slate-500 mt-0.5">Record all passengers travelling on this trip for accountability.</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setEditingPassengers(prev => [...prev, { id: `pax-${Date.now()}`, name: '' }])}
-                    className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 flex items-center gap-1"
+                    className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 flex items-center gap-1"
                   >
                     <Plus size={12} /> Add Passenger
                   </button>
@@ -5257,7 +5257,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               </div>
 
               <div className="col-span-2 flex justify-end mt-4">
-                <button type="submit" className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700">Save Log</button>
+                <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700">Save Log</button>
               </div>
             </form>
           </div>
@@ -5407,23 +5407,23 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
               
               return (
                 <div>
-                  <div className="p-6 border-b border-slate-100 flex justify-between items-start bg-indigo-600 text-white rounded-t-2xl relative overflow-hidden">
+                  <div className="p-6 border-b border-slate-100 flex justify-between items-start bg-blue-600 text-white rounded-t-2xl relative overflow-hidden">
                     <div className="relative z-10 flex gap-4 items-center">
-                      <img src={ds.driver.imgUrl} alt={ds.driver.name} className="w-16 h-16 rounded-full border-4 border-indigo-400" />
+                      <img src={ds.driver.imgUrl} alt={ds.driver.name} className="w-16 h-16 rounded-full border-4 border-blue-400" />
                       <div>
                         <h2 className="text-2xl font-black">{ds.driver.name}</h2>
                         <div className="flex gap-2 mt-1">
-                          <span className="text-xs font-bold uppercase tracking-wider bg-indigo-500 px-2 py-1 rounded-md">{ds.driver.status}</span>
+                          <span className="text-xs font-bold uppercase tracking-wider bg-blue-500 px-2 py-1 rounded-md">{ds.driver.status}</span>
                           <span className="text-xs font-bold uppercase tracking-wider bg-amber-500 px-2 py-1 rounded-md flex items-center gap-1"><Trophy size={12} /> {ds.driver.awards?.length || 0} Awards</span>
                         </div>
                       </div>
                     </div>
                     <div className="relative z-10 text-right">
                       <div className="text-4xl font-black">{ds.score}</div>
-                      <div className="text-xs font-bold uppercase tracking-wider text-indigo-200">Performance Score</div>
+                      <div className="text-xs font-bold uppercase tracking-wider text-blue-200">Performance Score</div>
                     </div>
                     {/* Background decoration */}
-                    <Trophy className="absolute -right-4 -bottom-4 text-indigo-500 opacity-20" size={120} />
+                    <Trophy className="absolute -right-4 -bottom-4 text-blue-500 opacity-20" size={120} />
                   </div>
                   
                   <div className="p-6 space-y-6">
@@ -5503,12 +5503,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       {isDispatchModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600 sticky top-0 z-10">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-blue-600 sticky top-0 z-10">
               <div>
                 <h2 className="text-lg font-black text-white">{editingDispatch ? 'Edit Dispatch' : 'Digital Dispatch Checklist'}</h2>
-                <p className="text-indigo-200 text-xs mt-0.5">Assign or manage a driver and vehicle for dispatch.</p>
+                <p className="text-blue-200 text-xs mt-0.5">Assign or manage a driver and vehicle for dispatch.</p>
               </div>
-              <button onClick={() => { setIsDispatchModalOpen(false); setEditingDispatch(null); }} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
+              <button onClick={() => { setIsDispatchModalOpen(false); setEditingDispatch(null); }} className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
             </div>
             <form key={editingDispatch?.id || 'new'} onSubmit={(e) => {
               e.preventDefault();
@@ -5637,14 +5637,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <button
                       type="button"
                       onClick={() => setDispatchBillingMode('project')}
-                      className={`px-3 py-1 rounded-md transition-all ${dispatchBillingMode === 'project' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      className={`px-3 py-1 rounded-md transition-all ${dispatchBillingMode === 'project' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                     >
                       Bill to Client / Project
                     </button>
                     <button
                       type="button"
                       onClick={() => setDispatchBillingMode('corporate')}
-                      className={`px-3 py-1 rounded-md transition-all ${dispatchBillingMode === 'corporate' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      className={`px-3 py-1 rounded-md transition-all ${dispatchBillingMode === 'corporate' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                     >
                       Separate Corporate A/C
                     </button>
@@ -5654,12 +5654,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 {/* Client / Project selector — always visible */}
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Client / Project</label>
-                  <select name="projectId" defaultValue={editingDispatch?.projectId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-300 text-sm">
+                  <select name="projectId" defaultValue={editingDispatch?.projectId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-300 text-sm">
                     <option value="">None / Internal</option>
                     {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                   {dispatchBillingMode === 'project' && (
-                    <p className="text-[10px] text-indigo-500 mt-1 font-medium">✓ Billing will be assigned to the selected client / project above.</p>
+                    <p className="text-[10px] text-blue-500 mt-1 font-medium">✓ Billing will be assigned to the selected client / project above.</p>
                   )}
                 </div>
 
@@ -5667,7 +5667,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 {dispatchBillingMode === 'corporate' && (
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Corporate Account</label>
-                    <select name="corporateAccountId" defaultValue={editingDispatch?.corporateAccountId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-300 text-sm">
+                    <select name="corporateAccountId" defaultValue={editingDispatch?.corporateAccountId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-300 text-sm">
                       <option value="">Select Corporate Account</option>
                       {mockAccounts.map((a: any) => <option key={a.id} value={a.id}>{a.name}</option>)}
                     </select>
@@ -5718,7 +5718,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                   className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div className="col-span-2 flex justify-end mt-4">
-                <button type="submit" className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-sm hover:bg-indigo-700">Confirm & Dispatch</button>
+                <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-bold rounded-xl shadow-sm hover:bg-blue-700">Confirm & Dispatch</button>
               </div>
             </form>
           </div>
@@ -5728,7 +5728,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
       {isMaintenanceModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600 sticky top-0 z-10">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-blue-600 sticky top-0 z-10">
               <div>
                 <h2 className="text-lg font-black text-white">Record Vehicle Maintenance</h2>
                 {maintenanceFromTripLog ? (
@@ -5736,10 +5736,10 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                     <AlertTriangle size={11} /> Linked from trip log - vehicle pre-filled
                   </p>
                 ) : (
-                  <p className="text-indigo-200 text-xs mt-0.5">Log maintenance records and repair costs.</p>
+                  <p className="text-blue-200 text-xs mt-0.5">Log maintenance records and repair costs.</p>
                 )}
               </div>
-              <button type="button" onClick={() => { setIsMaintenanceModalOpen(false); setMaintenanceFromTripLog(null); }} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"><X size={18}/></button>
+              <button type="button" onClick={() => { setIsMaintenanceModalOpen(false); setMaintenanceFromTripLog(null); }} className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors"><X size={18}/></button>
             </div>
             <form onSubmit={(e) => {
               e.preventDefault();
@@ -5834,7 +5834,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 <input type="number" name="cost" required defaultValue={editingMaintenance?.cost} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white" />
               </div>
               <div className="col-span-2 flex justify-end mt-4">
-                <button type="submit" className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-sm hover:bg-indigo-700">Save Record</button>
+                <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-bold rounded-xl shadow-sm hover:bg-blue-700">Save Record</button>
               </div>
             </form>
           </div>
@@ -6238,14 +6238,14 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <form onSubmit={handleSaveCity} className="p-5 space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">City Name</label>
-                <input type="text" value={editingCity.name || ''} onChange={e => setEditingCity({ ...editingCity, name: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400" required placeholder="e.g. Freetown" />
+                <input type="text" value={editingCity.name || ''} onChange={e => setEditingCity({ ...editingCity, name: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-400" required placeholder="e.g. Freetown" />
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Region (Optional)</label>
-                <input type="text" value={editingCity.region || ''} onChange={e => setEditingCity({ ...editingCity, region: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400" placeholder="e.g. Western Area" />
+                <input type="text" value={editingCity.region || ''} onChange={e => setEditingCity({ ...editingCity, region: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-400" placeholder="e.g. Western Area" />
               </div>
               <div className="flex justify-end pt-2">
-                <button type="submit" className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-sm hover:bg-indigo-700 transition-colors">Save City</button>
+                <button type="submit" className="px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl shadow-sm hover:bg-blue-700 transition-colors">Save City</button>
               </div>
             </form>
           </div>
@@ -6263,12 +6263,12 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
             <form onSubmit={handleSaveStation} className="p-5 space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Station Name</label>
-                <input type="text" value={editingStation.name || ''} onChange={e => setEditingStation({ ...editingStation, name: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400" required placeholder="e.g. NP Main Street" />
+                <input type="text" value={editingStation.name || ''} onChange={e => setEditingStation({ ...editingStation, name: e.target.value })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-400" required placeholder="e.g. NP Main Street" />
               </div>
 
               <div>
                 <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Supplier Brand</label>
-                <select value={editingStation.supplier || ''} onChange={e => setEditingStation({ ...editingStation, supplier: e.target.value || undefined })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-400">
+                <select value={editingStation.supplier || ''} onChange={e => setEditingStation({ ...editingStation, supplier: e.target.value || undefined })} className="w-full p-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-400">
                   <option value="">None / Other</option>
                   <option value="NP">NP</option>
                   <option value="TotalEnergies">TotalEnergies</option>
@@ -6276,7 +6276,7 @@ export const PerformanceSection: React.FC<{ clients?: any[] }> = ({ clients = []
                 </select>
               </div>
               <div className="flex items-center gap-3 py-2">
-                <input type="checkbox" id="isPartnerCheck" checked={!!editingStation.is_partner} onChange={e => setEditingStation({ ...editingStation, is_partner: e.target.checked })} className="w-5 h-5 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500" />
+                <input type="checkbox" id="isPartnerCheck" checked={!!editingStation.is_partner} onChange={e => setEditingStation({ ...editingStation, is_partner: e.target.checked })} className="w-5 h-5 rounded text-blue-600 border-slate-300 focus:ring-blue-500" />
                 <label htmlFor="isPartnerCheck" className="text-sm font-medium text-slate-700">Official Partner Station</label>
               </div>
               <div className="flex justify-end pt-2">

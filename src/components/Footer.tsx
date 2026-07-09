@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
       {/* Top Value Accents */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-b border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex items-start space-x-4">
-          <div className="p-2.5 bg-slate-800 rounded-lg text-indigo-400 border border-slate-700">
+          <div className="p-2.5 bg-slate-800 rounded-lg text-blue-400 border border-slate-700">
             <Clock size={20} />
           </div>
           <div>
@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         <div className="flex items-start space-x-4">
-          <div className="p-2.5 bg-slate-800 rounded-lg text-indigo-400 border border-slate-700">
+          <div className="p-2.5 bg-slate-800 rounded-lg text-blue-400 border border-slate-700">
             <Shield size={20} />
           </div>
           <div>
@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         <div className="flex items-start space-x-4">
-          <div className="p-2.5 bg-slate-800 rounded-lg text-indigo-400 border border-slate-700">
+          <div className="p-2.5 bg-slate-800 rounded-lg text-blue-400 border border-slate-700">
             <Award size={20} />
           </div>
           <div>
@@ -42,12 +42,12 @@ export const Footer: React.FC = () => {
         {/* Brand Column */}
         <div className="space-y-4">
           <div className="flex items-center space-x-3">
-            <div className="bg-indigo-600 p-1.5 rounded text-white font-black">
+            <div className="bg-blue-600 p-1.5 rounded text-white font-black">
               <Shield size={18} />
             </div>
             <div>
               <span className="text-lg font-black tracking-wide">B.I.G</span>
-              <span className="text-xs font-semibold text-indigo-400 ml-1">GROUP</span>
+              <span className="text-xs font-semibold text-blue-400 ml-1">GROUP</span>
             </div>
           </div>
           <p className="text-xs text-slate-100 leading-relaxed font-sans">
@@ -61,7 +61,7 @@ export const Footer: React.FC = () => {
 
         {/* Quick Links */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-white border-l-2 border-indigo-500 pl-2 mb-4">Core Fleet</h3>
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-white border-l-2 border-blue-500 pl-2 mb-4">Core Fleet</h3>
           <ul className="space-y-2 text-xs text-slate-100 font-sans">
             <li>
               <Link to="/fleet" className="hover:text-white hover:underline transition-all flex items-center gap-1 cursor-pointer">
@@ -88,7 +88,7 @@ export const Footer: React.FC = () => {
 
         {/* Services Navigation */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-white border-l-2 border-indigo-500 pl-2 mb-4">Logistics Services</h3>
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-white border-l-2 border-blue-500 pl-2 mb-4">Logistics Services</h3>
           <ul className="space-y-2 text-xs text-slate-100 font-sans">
             <li>
               <Link to="/services" className="hover:text-white hover:underline transition-all cursor-pointer">
@@ -115,18 +115,18 @@ export const Footer: React.FC = () => {
 
         {/* Contacts */}
         <div>
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-white border-l-2 border-indigo-500 pl-2 mb-4">Contact Points</h3>
+          <h3 className="font-semibold text-xs tracking-wider uppercase text-white border-l-2 border-blue-500 pl-2 mb-4">Contact Points</h3>
           <ul className="space-y-3 text-xs text-slate-100 font-sans">
             <li className="flex items-start space-x-2">
-              <MapPin size={14} className="text-indigo-400 mt-0.5 shrink-0" />
+              <MapPin size={14} className="text-blue-400 mt-0.5 shrink-0" />
               <span>11 Freetown Road, Wilberforce, Freetown</span>
             </li>
             <li className="flex items-center space-x-2">
-              <Phone size={14} className="text-indigo-400 shrink-0" />
+              <Phone size={14} className="text-blue-400 shrink-0" />
               <span>+232 79 121 013 / +232 30 133 574</span>
             </li>
             <li className="flex items-center space-x-2">
-              <Mail size={14} className="text-indigo-400 shrink-0" />
+              <Mail size={14} className="text-blue-400 shrink-0" />
               <span>bossbahonly@gmail.com</span>
             </li>
           </ul>

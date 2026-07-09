@@ -60,6 +60,22 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
   const vehicleTypes = ['All', ...Array.from(new Set(sourceVehicles.map(v => v.type)))];
   const filteredVehicles = filterType === 'All' ? sourceVehicles : sourceVehicles.filter(v => v.type === filterType);
 
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
   const handleInquire = (vehicleId: string) => {
     startTransition(() => {
       setSelectedVehicleId(vehicleId);
@@ -76,9 +92,9 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
           <div className="mb-8">
             <button
               onClick={() => setSelectedSpecVehicle(null)}
-              className="flex items-center gap-2 text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer group text-xs font-bold uppercase tracking-wider font-mono bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm"
+              className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors cursor-pointer group text-xs font-bold uppercase tracking-wider font-mono bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm"
             >
-              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform text-indigo-600" />
+              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform text-blue-600" />
               <span>Back to Fleet Registry</span>
             </button>
           </div>
@@ -106,7 +122,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                     <span className="text-6xl font-black text-slate-400">{selectedSpecVehicle.name?.slice(0, 2)}</span>
                   </div>
                 )}
-                <span className="absolute top-6 left-6 bg-[#0f172a] text-indigo-400 text-xs uppercase font-mono font-bold px-3 py-1.5 rounded-lg border border-slate-800 shadow-lg">
+                <span className="absolute top-6 left-6 bg-[#0f172a] text-blue-400 text-xs uppercase font-mono font-bold px-3 py-1.5 rounded-lg border border-slate-800 shadow-lg">
                   {selectedSpecVehicle.type}
                 </span>
               </motion.div>
@@ -172,9 +188,9 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                     <span className="text-slate-500 text-[10px] font-mono block uppercase">Seating Capacity</span>
                     <span className="font-extrabold text-slate-800 text-sm mt-0.5 block">{selectedSpecVehicle.seats} Adults</span>
                   </div>
-                  <div className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50">
-                    <span className="text-indigo-500 text-[10px] font-mono block uppercase">Daily Rate (Est)</span>
-                    <span className="font-extrabold text-indigo-700 text-sm mt-0.5 block">${selectedSpecVehicle.pricePerDay}<span className="text-[10px] text-indigo-400 font-normal ml-0.5">/day</span></span>
+                  <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                    <span className="text-blue-500 text-[10px] font-mono block uppercase">Daily Rate (Est)</span>
+                    <span className="font-extrabold text-blue-700 text-sm mt-0.5 block">${selectedSpecVehicle.pricePerDay}<span className="text-[10px] text-blue-400 font-normal ml-0.5">/day</span></span>
                   </div>
                 </div>
 
@@ -184,7 +200,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                     handleInquire(selectedSpecVehicle.id);
                     setSelectedSpecVehicle(null);
                   }}
-                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-xs tracking-wider uppercase transition-colors shadow-md cursor-pointer text-center"
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl text-xs tracking-wider uppercase transition-colors shadow-md cursor-pointer text-center"
                 >
                   Request Dispatch Setup
                 </button>
@@ -219,8 +235,8 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                 </div>
 
                 {selectedSpecVehicle.detailedSpecs.bestFor && (
-                  <div className="bg-indigo-50/30 p-4 rounded-xl border border-indigo-100 text-xs mt-4">
-                    <span className="text-indigo-600 font-mono font-bold uppercase tracking-wider block mb-1">STRATEGIC ALIGNMENT: Best For</span>
+                  <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100 text-xs mt-4">
+                    <span className="text-blue-600 font-mono font-bold uppercase tracking-wider block mb-1">STRATEGIC ALIGNMENT: Best For</span>
                     <p className="text-slate-700 font-sans leading-relaxed font-medium">{selectedSpecVehicle.detailedSpecs.bestFor}</p>
                   </div>
                 )}
@@ -235,7 +251,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                   className="bg-[#0f172a] text-white rounded-3xl p-8 border border-slate-800 shadow-xl space-y-5"
                 >
                   <div>
-                    <span className="text-indigo-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-1">
+                    <span className="text-blue-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-1">
                       SECURITY &amp; RUNTIME SPECS
                     </span>
                     <h3 className="text-base font-black tracking-tight text-slate-100">Custom Upcountry Setup</h3>
@@ -264,7 +280,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
         
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">Sierra Leone Ready Fleet</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 px-3 py-1 rounded">Sierra Leone Ready Fleet</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Our Premium 4WD Fleet</h1>
           <p className="mt-2 text-sm text-slate-600">
             Uncompromising mechanical safety and peak structural capability. Fully customized with heavy-duty suspension and extra-clearance setups for regional terrain demands.
@@ -273,7 +289,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
 
         {/* Preventative Maintenance Notice Card */}
         <div className="bg-[#0f172a] text-white rounded-2xl p-6 md:p-8 shadow-xl max-w-4xl mx-auto mb-12 border border-slate-800 flex flex-col md:flex-row gap-6 items-center">
-          <div className="bg-indigo-600/10 p-4 rounded-full text-indigo-400 shrink-0 border border-indigo-500/20 animate-pulse">
+          <div className="bg-blue-600/10 p-4 rounded-full text-blue-400 shrink-0 border border-blue-500/20 animate-pulse">
             <ShieldAlert size={32} />
           </div>
           <div>
@@ -299,7 +315,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
               onClick={() => setFilterType(type)}
               className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 filterType === type
-                  ? 'bg-indigo-600 text-white shadow-sm border border-indigo-600'
+                  ? 'bg-blue-600 text-white shadow-sm border border-blue-600'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-800'
               }`}
             >
@@ -309,19 +325,25 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
         </div>
 
         {/* Main Fleet Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 w-full">
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 w-full"
+        >
           {filteredVehicles.map((vehicle) => (
-            <div 
+            <motion.div 
+              variants={fadeUpVariant}
               key={vehicle.id} 
-              className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col md:flex-row h-full"
+              className="group bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 transition-all duration-300 flex flex-col md:flex-row h-full"
             >
               {/* Image side */}
-              <div className="md:w-1/2 relative bg-slate-50 min-h-[220px] max-h-[300px] md:max-h-full">
+              <div className="md:w-1/2 relative bg-slate-50 min-h-[220px] max-h-[300px] md:max-h-full overflow-hidden">
                 {vehicle.image ? (
                   <img 
                     src={vehicle.image} 
                     alt={vehicle.name} 
-                    className="w-full h-full object-cover select-none"
+                    className="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
                 ) : (
@@ -329,7 +351,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                     <span className="text-4xl font-black text-slate-400">{vehicle.name.slice(0, 2)}</span>
                   </div>
                 )}
-                <span className="absolute top-4 left-4 bg-[#0f172a] text-indigo-400 text-[10px] uppercase font-mono font-bold px-2.5 py-1 rounded shadow-sm border border-slate-800">
+                <span className="absolute top-4 left-4 bg-[#0f172a] text-blue-400 text-[10px] uppercase font-mono font-bold px-2.5 py-1 rounded shadow-sm border border-slate-800">
                   {vehicle.type}
                 </span>
               </div>
@@ -348,11 +370,11 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                   {/* Highlights checklist */}
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center gap-2 text-xs text-slate-700">
-                      <Fuel size={14} className="text-indigo-500" />
+                      <Fuel size={14} className="text-blue-500" />
                       <span>{vehicle.engine} ({vehicle.fuel})</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-slate-700">
-                      <Users size={14} className="text-indigo-500" />
+                      <Users size={14} className="text-blue-500" />
                       <span>Accommodates up to {vehicle.seats} adult passengers</span>
                     </div>
                   </div>
@@ -362,7 +384,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => handleInquire(vehicle.id)}
-                      className="py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-[11px] tracking-wider uppercase transition-all duration-200 shadow-sm cursor-pointer text-center"
+                      className="py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-[11px] tracking-wider uppercase transition-all duration-200 shadow-sm cursor-pointer text-center"
                     >
                       Inquire Now
                     </button>
@@ -376,9 +398,9 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </div>

@@ -234,7 +234,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   <CheckCircle2 size={12} /> Completed
                 </span>
               ) : (
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-black uppercase rounded-lg border border-indigo-200 flex items-center gap-1">
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-black uppercase rounded-lg border border-blue-200 flex items-center gap-1">
                   <Navigation size={12} /> Active
                 </span>
               )}
@@ -267,7 +267,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                   {isCompleted && (
                     <button
                       onClick={() => { exportDispatchPDF(); setIsMenuOpen(false); }}
-                      className="w-full text-left px-4 py-2 text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors flex items-center gap-2"
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-2"
                     >
                       <Download size={16} /> Export PDF
                     </button>
@@ -300,7 +300,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <button
           onClick={() => setActiveTab('overview')}
           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-            activeTab === 'overview' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
+            activeTab === 'overview' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
           }`}
         >
           <Navigation size={16} /> Overview
@@ -308,7 +308,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <button
           onClick={() => setActiveTab('trip')}
           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-            activeTab === 'trip' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
+            activeTab === 'trip' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
           }`}
         >
           <Activity size={16} /> Trip Log
@@ -316,7 +316,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         <button
           onClick={() => setActiveTab('fuel')}
           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
-            activeTab === 'fuel' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
+            activeTab === 'fuel' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-700'
           }`}
         >
           <Fuel size={16} /> Fuel Details
@@ -332,7 +332,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
           {/* Active Dispatch Details */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2">
-              <Navigation size={18} className="text-indigo-600" />
+              <Navigation size={18} className="text-blue-600" />
               <h3 className="font-bold text-slate-800">Active Dispatch Details</h3>
             </div>
             <div className="p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
@@ -397,7 +397,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
               <div>
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Corporate A/C</p>
                 <p className="font-semibold text-slate-800 text-sm flex items-center gap-1">
-                  <Building2 size={12} className="text-indigo-400" /> 
+                  <Building2 size={12} className="text-blue-400" /> 
                   {dispatch.corporateAccountId || <span className="text-slate-400 font-normal">Not assigned</span>}
                 </p>
               </div>
@@ -406,7 +406,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
               <div>
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Project</p>
                 <p className="font-semibold text-slate-800 text-sm flex items-center gap-1">
-                  <Briefcase size={12} className="text-indigo-400" /> 
+                  <Briefcase size={12} className="text-blue-400" /> 
                   {dispatch.projectId
                     ? (clients.find(c => c.id === dispatch.projectId)?.name ?? dispatch.projectId)
                     : <span className="text-slate-400 font-normal">Not assigned</span>}
@@ -562,11 +562,11 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
 
                   {/* Date & Basic Info Bar */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100 flex items-center gap-2">
-                      <Calendar size={14} className="text-indigo-500 shrink-0" />
+                    <div className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex items-center gap-2">
+                      <Calendar size={14} className="text-blue-500 shrink-0" />
                       <div>
-                        <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Trip Date</p>
-                        <p className="text-sm font-bold text-indigo-800 mt-0.5">{formatDateOnly(tripLog.date)}</p>
+                        <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Trip Date</p>
+                        <p className="text-sm font-bold text-blue-800 mt-0.5">{formatDateOnly(tripLog.date)}</p>
                       </div>
                     </div>
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
@@ -672,7 +672,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {tripLog.projectCode && (
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3">
-                          <Briefcase size={16} className="text-indigo-500 shrink-0" />
+                          <Briefcase size={16} className="text-blue-500 shrink-0" />
                           <div>
                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Project Code</p>
                             <p className="font-bold text-slate-800 text-sm mt-0.5">{tripLog.projectCode}</p>
@@ -708,7 +708,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                       <div className="space-y-1">
                         {tripLog.legs.map((leg: TripLeg, i: number) => (
                           <div key={leg.id || i} className="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">{i + 1}</div>
+                            <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">{i + 1}</div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-800">
                                 <span className="truncate">{leg.departurePoint}</span>
@@ -726,8 +726,8 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                         ))}
                       </div>
                       {/* Auto-calculated total from legs */}
-                      <div className="mt-2 text-xs text-slate-600 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
-                        Auto-calculated distance: <span className="font-bold text-indigo-700">
+                      <div className="mt-2 text-xs text-slate-600 bg-blue-50 p-2 rounded-lg border border-blue-100">
+                        Auto-calculated distance: <span className="font-bold text-blue-700">
                           {tripLog.legs.reduce((sum, l) => sum + Math.max(0, (l.odometerEnd || 0) - (l.odometerStart || 0)), 0).toLocaleString()} km
                         </span> from {tripLog.legs.length} leg(s).
                       </div>

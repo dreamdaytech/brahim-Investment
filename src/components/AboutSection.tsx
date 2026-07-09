@@ -6,13 +6,30 @@ import { useNavigate } from 'react-router-dom';
 
 export const AboutSection: React.FC = () => {
   const navigate = useNavigate();
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
   return (
     <div className="w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE INSTITUTION</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 px-3 py-1 rounded">THE INSTITUTION</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">
             Registered and headquartered on 11 Freetown Road, Wilberforce, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
@@ -32,21 +49,21 @@ export const AboutSection: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-150">
               <div className="space-y-1">
-                <span className="text-indigo-600 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
+                <span className="text-blue-600 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
                 <span className="text-xs text-slate-800 font-semibold block">11 Freetown Road, Wilberforce, Freetown</span>
               </div>
               <div className="space-y-1">
-                <span className="text-indigo-600 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
+                <span className="text-blue-600 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
                 <span className="text-xs text-slate-800 font-semibold block">Vetted 4WD Field Operations</span>
               </div>
             </div>
           </div>
 
-          <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+          <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
             <img 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJAJuwLKqmbCse-Nr7f2kMge-783BnAN83YrbCbBXXFQrYAmiS8gNRJE6LO38MhZ4HT7FLSAvK4p1lFYDTP8R7h01aKz2OMLo5TPSAWjtAGFHniLvoUXT8H-65iXd0WnnFFC9NBcRpAYn8OfD5ZiK6EDeQjRiE0OeYq7NEz3v9TyfDQLWYfnzw5bnBblcr2aAfRVqDMj2jMQAGU0wHTnKL4gua7OZoKq9J9OpAHaCf5BexXZQyIcKXTi3kpYvw-Z8HsP8-BEj8Xzw" 
               alt="BIG Group corporate headquarters white SUV fleet" 
-              className="w-full h-auto object-cover"
+              className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
               referrerPolicy="no-referrer"
             />
           </div>
@@ -55,33 +72,46 @@ export const AboutSection: React.FC = () => {
         {/* The Foundation of Our Service (Bento of Core Values) */}
         <section className="bg-[#0f172a] text-white py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-indigo-400 text-xs font-mono font-bold tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">ADMINISTRATIVE CODES</span>
+            <span className="text-blue-400 text-xs font-mono font-bold tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">ADMINISTRATIVE CODES</span>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mt-3">The Foundation of Our Service</h2>
             <p className="text-xs md:text-sm text-slate-200 mt-2 leading-relaxed">
               These simple guidelines govern every driver we hire, every filter we cycle, and every dynamic quote proposal we submit.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
             {VALUES.map((val, idx) => (
-              <div 
+              <motion.div 
+                variants={fadeUpVariant}
                 key={idx}
-                className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300"
+                className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-indigo-400 font-mono font-bold text-xs">0{idx+1}.</span>
+                  <span className="text-blue-400 font-mono font-bold text-xs">0{idx+1}.</span>
                   <h4 className="font-bold text-base tracking-tight text-white">{val.title}</h4>
                 </div>
                 <p className="text-xs text-white leading-relaxed font-sans">{val.description}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </section>
 
         {/* Leadership Excellence Card Spotlight - Emmanuel A.H Kpakama */}
-        <section className="max-w-4xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-sm"
+        >
           <div className="text-center max-w-xl mx-auto mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono">OPERATIONAL LEADERSHIP</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono">OPERATIONAL LEADERSHIP</span>
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-950 mt-1 tracking-tight">Leadership Excellence</h2>
             <p className="text-xs text-slate-600 mt-1">Direct managerial accountability ensures your mission has support at the highest level.</p>
           </div>
@@ -102,7 +132,7 @@ export const AboutSection: React.FC = () => {
             {/* Profile Bio Description */}
             <div className="space-y-4">
               <div>
-                <span className="text-indigo-600 text-[10px] font-mono font-bold uppercase tracking-wider block mb-0.5 font-semibold">HEAD OF DEPLOYMENT OPERATIONS</span>
+                <span className="text-blue-600 text-[10px] font-mono font-bold uppercase tracking-wider block mb-0.5 font-semibold">HEAD OF DEPLOYMENT OPERATIONS</span>
                 <h3 className="text-xl md:text-2xl font-black text-[#0f172a] tracking-tight">Emmanuel A.H Kpakama</h3>
                 <p className="text-xs font-semibold text-slate-600">Head of Administration &amp; Logistics Operations, BIG Group</p>
               </div>
@@ -118,16 +148,15 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* Team Subpage Link block */}
         <div className="mt-16 text-center">
           <button
             onClick={() => navigate('/team')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-sm cursor-pointer"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 hover:-translate-y-1 text-white font-semibold rounded-xl text-sm transition-all duration-300 shadow-sm cursor-pointer group"
           >
             Meet the Full Team
-            <ArrowRight size={16} />
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 

@@ -34,11 +34,11 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors shrink-0"
+            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shrink-0"
           >
             <ArrowLeft size={20} />
           </button>
-          <div className="w-14 h-14 bg-indigo-50 rounded-2xl border border-indigo-100 overflow-hidden flex items-center justify-center shrink-0 text-indigo-400">
+          <div className="w-14 h-14 bg-blue-50 rounded-2xl border border-blue-100 overflow-hidden flex items-center justify-center shrink-0 text-blue-400">
             {vehicle.imageUrl ? (
               <img src={vehicle.imageUrl} alt={vehicle.makeModel} className="w-full h-full object-cover" />
             ) : (
@@ -66,7 +66,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
 
         <button
           onClick={onEdit}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl font-bold transition-colors text-sm shadow-sm shrink-0"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-bold transition-colors text-sm shadow-sm shrink-0"
         >
           <PenTool size={15} /> Edit Vehicle
         </button>
@@ -128,7 +128,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               onClick={() => setActiveTab(tab)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all ${
                 activeTab === tab
-                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-200"
                   : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
               }`}
             >
@@ -145,7 +145,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
               <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Car size={14} className="text-indigo-500" /> Core Specifications
+                <Car size={14} className="text-blue-500" /> Core Specifications
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
                 <div>
@@ -168,7 +168,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
             {vehicle.description && (
               <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                 <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <FileText size={14} className="text-indigo-500" /> Marketing Description
+                  <FileText size={14} className="text-blue-500" /> Marketing Description
                 </h3>
                 <p className="text-sm text-slate-700 leading-relaxed">{vehicle.description}</p>
               </div>
@@ -179,7 +179,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
                 <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">Features</h3>
                 <div className="flex flex-wrap gap-2">
                   {vehicle.features.map((f, i) => (
-                    <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold border border-indigo-100">
+                    <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold border border-blue-100">
                       {f}
                     </span>
                   ))}
@@ -192,7 +192,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
               <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Shield size={14} className="text-indigo-500" /> Asset & Registry
+                <Shield size={14} className="text-blue-500" /> Asset & Registry
               </h3>
               <InfoRow label="Status" value={vehicle.status} />
               <InfoRow label="Company Registered" value={vehicle.isCompanyRegistered ? "Yes" : "No"} />
@@ -203,7 +203,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
 
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
               <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <DollarSign size={14} className="text-indigo-500" /> Pricing
+                <DollarSign size={14} className="text-blue-500" /> Pricing
               </h3>
               <InfoRow label="Price Per Day" value={vehicle.pricePerDay !== undefined ? `$${vehicle.pricePerDay}` : null} />
               <InfoRow label="Ground Clearance" value={(vehicle as any).specGroundClearance} />
@@ -226,7 +226,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               <div className="divide-y divide-slate-100">
                 {vehicle.documents.map((doc: VehicleDocument) => (
                   <div key={doc.id || doc.fileUrl} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                       <FileText size={18} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -238,7 +238,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
                         href={doc.fileUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-2 text-indigo-500 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl transition-colors"
+                        className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-colors"
                       >
                         <ExternalLink size={16} />
                       </a>
@@ -252,7 +252,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               <FileText size={48} className="mx-auto text-slate-300 mb-4" />
               <h3 className="text-lg font-bold text-slate-700 mb-2">No Documents Yet</h3>
               <p className="text-slate-500 mb-5 text-sm max-w-sm mx-auto">Upload insurance certificates, registration documents, and maintenance records in the vehicle editor.</p>
-              <button onClick={onEdit} className="px-5 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors text-sm">
+              <button onClick={onEdit} className="px-5 py-2 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors text-sm">
                 Open Editor to Add Documents
               </button>
             </div>
@@ -277,7 +277,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
                     <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/20 transition-all flex items-center justify-center">
                       <ExternalLink size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" />
                     </div>
-                    <span className="absolute top-2 left-2 bg-indigo-600 text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-md">Primary</span>
+                    <span className="absolute top-2 left-2 bg-blue-600 text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-md">Primary</span>
                   </div>
                 )}
                 {vehicle.galleryUrls?.map((url, idx) => (
@@ -299,7 +299,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               <Layers size={48} className="mx-auto text-slate-300 mb-4" />
               <h3 className="text-lg font-bold text-slate-700 mb-2">No Images Yet</h3>
               <p className="text-slate-500 mb-5 text-sm max-w-sm mx-auto">Upload a primary image and gallery photos in the vehicle editor.</p>
-              <button onClick={onEdit} className="px-5 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors text-sm">
+              <button onClick={onEdit} className="px-5 py-2 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors text-sm">
                 Open Editor to Add Images
               </button>
             </div>

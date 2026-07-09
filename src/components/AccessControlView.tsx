@@ -128,7 +128,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
         >
           <Plus size={16} />
           <span>Add User</span>
@@ -160,7 +160,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                     <select
                       value={u.role}
                       onChange={(e) => updateRole(u.id, e.target.value)}
-                      className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2"
+                      className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     >
                       <option value="super_admin">Super Admin</option>
                       <option value="admin">Admin</option>
@@ -265,7 +265,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
 
               <div className="pt-4 flex gap-3">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 text-slate-600 font-semibold text-sm hover:bg-slate-50 rounded-lg transition">Cancel</button>
-                <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 rounded-lg transition disabled:opacity-50">
+                <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 rounded-lg transition disabled:opacity-50">
                   {isSubmitting ? 'Creating...' : 'Create User'}
                 </button>
               </div>

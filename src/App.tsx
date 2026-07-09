@@ -224,7 +224,7 @@ export default function App() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f7f9fb] text-slate-950 selection:bg-indigo-600 selection:text-white antialiased">
+    <div className="flex flex-col min-h-screen bg-[#f7f9fb] text-slate-950 selection:bg-blue-600 selection:text-white antialiased">
       {/* Dynamic sticky header */}
       <Header />
 

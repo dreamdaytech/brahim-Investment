@@ -38,8 +38,8 @@ const Field: React.FC<{
   </div>
 );
 
-const inp = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition bg-white";
-const sel = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none transition bg-white";
+const inp = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition bg-white";
+const sel = "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition bg-white";
 
 // ── Tab pill ───────────────────────────────────────────────────────────────────
 const TabPill: React.FC<{
@@ -50,7 +50,7 @@ const TabPill: React.FC<{
     onClick={onClick}
     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
       active
-        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
+        ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
     }`}
   >
@@ -238,12 +238,12 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
 
         {/* ── Header ── */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-indigo-600 shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-blue-600 shrink-0">
           <div className="flex items-center gap-3">
             {photoPreview ? (
               <img src={photoPreview} alt="driver" className="w-10 h-10 rounded-full object-cover ring-2 ring-white/20 shadow-sm" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-indigo-500/50 border border-indigo-400 flex items-center justify-center shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-blue-500/50 border border-blue-400 flex items-center justify-center shadow-sm">
                 <User size={18} className="text-white" />
               </div>
             )}
@@ -251,10 +251,10 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
               <h2 className="text-lg font-black text-white">
                 {editingDriver ? 'Edit Driver Profile' : 'Add New Driver'}
               </h2>
-              <p className="text-xs text-indigo-200 mt-0.5">Fill out all sections for a complete profile</p>
+              <p className="text-xs text-blue-200 mt-0.5">Fill out all sections for a complete profile</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors">
+          <button onClick={onClose} className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -286,7 +286,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                     </div>
                     {photoUploading && (
                       <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-2xl">
-                        <Loader2 size={18} className="animate-spin text-indigo-500" />
+                        <Loader2 size={18} className="animate-spin text-blue-500" />
                       </div>
                     )}
                   </div>
@@ -296,7 +296,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                     <button
                       type="button"
                       onClick={() => photoInputRef.current?.click()}
-                      className="flex items-center gap-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-xl transition border border-indigo-100"
+                      className="flex items-center gap-2 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-xl transition border border-blue-100"
                     >
                       <Upload size={13} /> {photoPreview ? 'Change Photo' : 'Upload Photo'}
                     </button>
@@ -419,7 +419,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                       type="button"
                       disabled={!newDocLabel.trim()}
                       onClick={() => docInputRef.current?.click()}
-                      className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 px-3 py-2 rounded-xl transition disabled:opacity-40 shrink-0"
+                      className="flex items-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-2 rounded-xl transition disabled:opacity-40 shrink-0"
                     >
                       <Plus size={13} /> Attach
                     </button>
@@ -486,7 +486,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                             <p className="text-[10px] text-slate-500 truncate">{doc.file.name} · {(doc.file.size / 1024).toFixed(0)} KB</p>
                           </div>
                           <div className="shrink-0">
-                            {doc.status === 'uploading' && <Loader2 size={14} className="animate-spin text-indigo-400" />}
+                            {doc.status === 'uploading' && <Loader2 size={14} className="animate-spin text-blue-400" />}
                             {doc.status === 'done' && <CheckCircle2 size={14} className="text-emerald-500" />}
                             {doc.status === 'error' && <AlertCircle size={14} className="text-red-400" />}
                             {doc.status === 'pending' && (
@@ -594,7 +594,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
               <button
                 type="submit"
                 disabled={saving || !form.name || !form.licenseExpiry}
-                className="flex items-center gap-2 px-6 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-md shadow-indigo-200 disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-md shadow-blue-200 disabled:opacity-50"
               >
                 {saving ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
                 {saving ? 'Saving...' : (editingDriver ? 'Update Driver' : 'Save Driver')}

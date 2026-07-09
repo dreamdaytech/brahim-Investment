@@ -42,11 +42,27 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
 
   const serviceIconMap = (iconName: string) => {
     switch (iconName) {
-      case 'Car': return <Truck className="text-indigo-600 w-8 h-8" />;
-      case 'ShieldAlert': return <Users className="text-indigo-600 w-8 h-8" />;
-      case 'Wrench': return <Wrench className="text-indigo-600 w-8 h-8" />;
-      default: return <Shield className="text-indigo-600 w-8 h-8" />;
+      case 'Car': return <Truck className="text-blue-600 w-8 h-8" />;
+      case 'ShieldAlert': return <Users className="text-blue-600 w-8 h-8" />;
+      case 'Wrench': return <Wrench className="text-blue-600 w-8 h-8" />;
+      default: return <Shield className="text-blue-600 w-8 h-8" />;
     }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
   return (
@@ -54,53 +70,56 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
       {/* 1. HERO SECTION WITH OFFROAD LAND CRUISER */}
       <section className="relative h-[620px] w-full flex items-center justify-center overflow-hidden">
         {/* Background Image with darken filters */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-[1.01]" 
+        <motion.div 
+          initial={{ scale: 1.0 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 25, ease: "linear", repeat: Infinity, repeatType: "mirror" }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
           style={{ 
             backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCp-r63C6asQd2h41qWZMk-QJPqmib0ya2KLH8fAYBRGMRsqT9seldJn-3BeFu75Sj5zIGHN78fJaaUnmni3NTvVY2_T4NzrkIy5ONFbUJfQCmxEgSByq175skbr_3QOmyZjNmHUQfaFmc3xnb-DHEBjp7oKEANRKJ_dKhyFph4aIB-CGbT5Mq3oC71Y1NIyZuiATnZ2cgiG7mIIbVAZ254acSBzX4GohyuDxu6iFF-VW-vvO1F_7xA67UQ3cWqaGP54JpdaXdz0Ng')` 
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/95 via-[#0f172a]/80 to-transparent"></div>
-        </div>
+        </motion.div>
 
         {/* Content Box */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 text-white flex flex-col items-start">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center space-x-2 bg-indigo-600/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-indigo-400/30 text-xs text-white mb-6 shadow-sm"
-          >
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 text-white flex flex-col items-start"
+        >
+          <motion.div variants={fadeUpVariant} className="inline-flex items-center space-x-2 bg-blue-600/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-blue-400/30 text-xs text-white mb-6 shadow-sm">
             <ShieldCheck size={14} className="animate-pulse" />
             <span className="font-semibold tracking-wide uppercase font-mono text-[10px]">Guaranteed 24/7 Deployment Coverage</span>
           </motion.div>
 
-          <span className="text-sm uppercase tracking-widest text-white font-bold font-mono mb-2">SIERRA LEONE'S PREMIER OPERATOR</span>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight max-w-3xl">
+          <motion.span variants={fadeUpVariant} className="text-sm uppercase tracking-widest text-white font-bold font-mono mb-2">SIERRA LEONE'S PREMIER OPERATOR</motion.span>
+          <motion.h1 variants={fadeUpVariant} className="text-4xl md:text-6xl font-black tracking-tight leading-tight max-w-3xl">
             Premium Car Rental &amp; Driver Services
-          </h1>
-          <p className="mt-4 text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed">
+          </motion.h1>
+          <motion.p variants={fadeUpVariant} className="mt-4 text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed">
             Engineered for diplomats, global NGOs, banks, and senior executives. We operate the most rigorously maintained 4WD fleet in Freetown with absolute administrative integrity.
-          </p>
+          </motion.p>
 
           {/* Quick CTA Actions */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <motion.div variants={fadeUpVariant} className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <button
               onClick={() => navigate('/contact')}
-              className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:shadow-md hover:bg-indigo-700 transition-all text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer group"
+              className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-sm hover:shadow-lg hover:bg-blue-700 hover:-translate-y-1 transition-all duration-300 text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer group"
             >
               <span>Book Your Vehicle</span>
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform" />
             </button>
             <button
               onClick={() => navigate('/fleet')}
-              className="px-8 py-4 bg-transparent text-white border-2 border-slate-400 font-semibold rounded-lg hover:bg-white/10 transition-all text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer"
+              className="px-8 py-4 bg-transparent text-white border-2 border-slate-400 font-semibold rounded-lg hover:bg-white/10 hover:border-white hover:-translate-y-1 transition-all duration-300 text-sm tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer group"
             >
               <span>Explore SUV Fleet</span>
-              <ChevronRight size={16} />
+              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* 2. PARTNERS LOGO BAND */}
@@ -125,12 +144,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
                   {partner.logoUrl ? (
                     <img src={partner.logoUrl} alt={partner.name} className="h-8 object-contain mb-2 max-w-[120px]" />
                   ) : (
-                    <div className="h-8 w-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold mb-2 shadow-inner">
+                    <div className="h-8 w-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 font-bold mb-2 shadow-inner">
                       {partner.name.charAt(0)}
                     </div>
                   )}
                   <span className="font-extrabold text-[#0f172a] text-sm tracking-tight truncate w-full">{partner.name}</span>
-                  {(partner.shortCode || partner.label) && <span className="text-[9px] font-bold text-indigo-600 font-mono uppercase mt-0.5 truncate w-full">{partner.shortCode || partner.label}</span>}
+                  {(partner.shortCode || partner.label) && <span className="text-[9px] font-bold text-blue-600 font-mono uppercase mt-0.5 truncate w-full">{partner.shortCode || partner.label}</span>}
                 </div>
               ))}
             </motion.div>
@@ -141,7 +160,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
       {/* 3. CORE SERVICES BENTO GRID */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 text-indigo px-3 py-1 rounded">Comprehensive Fleet Logistics</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 text-blue px-3 py-1 rounded">Comprehensive Fleet Logistics</span>
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#0f172a] mt-4">
             Uncompromising Transportation Solutions
           </h2>
@@ -151,41 +170,48 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {CORE_SERVICES.map((service, idx) => (
-            <div 
+            <motion.div 
+              variants={fadeUpVariant}
               key={service.id}
-              className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 flex flex-col justify-between"
+              className="group bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
-                <div className="bg-indigo-50/85 p-4 rounded-xl w-fit mb-6 border border-indigo-100/50">
+                <div className="bg-blue-50/85 p-4 rounded-xl w-fit mb-6 border border-blue-100/50 group-hover:scale-110 group-hover:bg-blue-100 transition-transform duration-300">
                   {serviceIconMap(service.iconName)}
                 </div>
-                <h3 className="text-xl font-bold text-[#0f172a] tracking-tight">{service.title}</h3>
+                <h3 className="text-xl font-bold text-[#0f172a] tracking-tight group-hover:text-blue-700 transition-colors">{service.title}</h3>
                 <p className="text-sm text-slate-600 mt-3 leading-relaxed">{service.description}</p>
               </div>
 
               <div className="mt-8 pt-6 border-t border-slate-100">
-                <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-wide block mb-3">Highlights Include:</span>
+                <span className="text-xs font-mono font-bold text-blue-600 uppercase tracking-wide block mb-3">Highlights Include:</span>
                 <ul className="space-y-2">
                   {service.highlights.map((h, hIdx) => (
                     <li key={hIdx} className="flex items-center text-xs text-slate-700 font-sans gap-2">
-                      <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
                       <span>{h}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* 4. WHY CHOOSE US BLUE METALLIC BANNER */}
       <section className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] text-white py-20 px-8 rounded-t-3xl md:rounded-t-[40px]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="text-indigo-400 text-xs font-semibold tracking-widest uppercase font-mono px-2.5 py-1 bg-white/5 border border-white/10 rounded">PREVENTATIVE SHIELD</span>
+            <span className="text-white text-xs font-semibold tracking-widest uppercase font-mono px-2.5 py-1 bg-white/5 border border-white/10 rounded">PREVENTATIVE SHIELD</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-4">
               Honesty of Safe Travel &amp; Deep Local Expertise.
             </h2>
@@ -195,7 +221,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
 
             <div className="mt-8 space-y-4">
               <div className="flex items-start gap-4">
-                <div className="p-1 bg-indigo-600 text-white rounded-full mt-1">
+                <div className="p-1 bg-blue-600 text-white rounded-full mt-1">
                   <CheckCircle2 size={16} />
                 </div>
                 <div>
@@ -204,7 +230,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="p-1 bg-indigo-600 text-white rounded-full mt-1">
+                <div className="p-1 bg-blue-600 text-white rounded-full mt-1">
                   <CheckCircle2 size={16} />
                 </div>
                 <div>
@@ -223,7 +249,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
               referrerPolicy="no-referrer"
             />
             <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md p-4 rounded-xl border border-slate-705/40 text-center">
-              <p className="text-xs font-mono font-bold text-indigo-400">OUR PREMIUM OFF-ROAD TRANSIT LINE-UP</p>
+              <p className="text-xs font-mono font-bold text-white">OUR PREMIUM OFF-ROAD TRANSIT LINE-UP</p>
               <p className="text-[10px] text-slate-400 mt-1">Configured for continuous deployments across Sierra Leone.</p>
             </div>
           </div>
@@ -239,18 +265,29 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
           </div>
           <button 
             onClick={() => navigate('/fleet')}
-            className="text-sm font-semibold text-indigo-600 hover:text-indigo-500 transition-all flex items-center gap-1 mt-4 md:mt-0 cursor-pointer hover:underline"
+            className="text-sm font-semibold text-blue-600 hover:text-blue-500 transition-all flex items-center gap-1 mt-4 md:mt-0 cursor-pointer hover:underline"
           >
             <span>View Full Rent Options</span>
             <ArrowRight size={14} />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {sourceVehicles.slice(0, 3).map((vehicle) => (
-            <div 
+            <motion.div 
+              variants={fadeUpVariant}
               key={vehicle.id} 
-              className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              className="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+              onClick={() => {
+                setSelectedVehicleId(vehicle.id);
+                navigate('/fleet');
+              }}
             >
               <div>
                 {/* Vehicle photo */}
@@ -258,7 +295,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
                   <img 
                     src={vehicle.imageUrl || (vehicle as any).image} 
                     alt={vehicle.name}
-                    className="w-full h-full object-cover select-none"
+                    className="w-full h-full object-cover select-none group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
                   <span className="absolute top-4 right-4 bg-slate-900 border border-slate-750 text-slate-100 text-[10px] uppercase font-mono font-semibold px-2.5 py-1 rounded shadow-sm">
@@ -268,8 +305,8 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] uppercase tracking-widest text-indigo-600 font-mono font-bold">{vehicle.engine}</span>
-                    <div className="flex items-center text-indigo-500 gap-0.5">
+                    <span className="text-[10px] uppercase tracking-widest text-blue-600 font-mono font-bold">{vehicle.engine}</span>
+                    <div className="flex items-center text-blue-500 gap-0.5">
                       <Star size={12} fill="currentColor" />
                       <Star size={12} fill="currentColor" />
                       <Star size={12} fill="currentColor" />
@@ -296,15 +333,15 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
               <div className="p-6 pt-0">
                 <button
                   onClick={() => handleQuickBook(vehicle.id)}
-                  className="w-full py-3 bg-[#0f172a] text-white font-semibold rounded-lg hover:bg-indigo-600 hover:text-white transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                  className="w-full py-3 bg-[#0f172a] text-white font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                 >
                   <span>Inquire / Request Quote</span>
                   <ArrowRight size={13} />
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* 6. IMMERSIVE STATS / EXCELLENCE BLOCK */}
@@ -333,11 +370,11 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
       <section className="bg-white py-20 px-4">
         <div className="max-w-5xl mx-auto bg-[#0f172a] text-white rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden">
           {/* Subtle decoration bar */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-indigo-600"></div>
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-blue-600"></div>
 
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="max-w-2xl text-center md:text-left">
-              <span className="text-xs font-bold font-mono uppercase text-indigo-400 tracking-wider">Secure Sierra Leone operations Today</span>
+              <span className="text-xs font-bold font-mono uppercase text-blue-400 tracking-wider">Secure Sierra Leone operations Today</span>
               <h3 className="text-2xl md:text-4xl font-extrabold tracking-tight mt-2">
                 Need a formal multi-vehicle institutional quote?
               </h3>
@@ -347,7 +384,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
             </div>
             <button
               onClick={() => navigate('/contact')}
-              className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all text-xs tracking-wider uppercase shrink-0 cursor-pointer"
+              className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all text-xs tracking-wider uppercase shrink-0 cursor-pointer"
             >
               Request Custom Quote Proposal
             </button>

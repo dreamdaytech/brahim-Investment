@@ -108,7 +108,7 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 size={32} className="text-indigo-600 animate-spin" />
+        <Loader2 size={32} className="text-blue-600 animate-spin" />
       </div>
     );
   }
@@ -117,11 +117,11 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
     <div className="max-w-3xl mx-auto">
       <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden">
         {/* Accent header */}
-        <div className="absolute top-0 left-0 right-0 h-2 bg-indigo-600"></div>
+        <div className="absolute top-0 left-0 right-0 h-2 bg-blue-600"></div>
 
         <div className="flex items-center gap-3 mb-8 mt-2">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
-            <ShieldCheck size={20} className="text-indigo-600" />
+          <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+            <ShieldCheck size={20} className="text-blue-600" />
           </div>
           <div>
             <h2 className="text-xl font-black text-slate-950">Admin Profile</h2>
@@ -184,7 +184,7 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
             
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <User size={14} className="text-indigo-500" /> Full Name
+                <User size={14} className="text-blue-500" /> Full Name
               </label>
               <input 
                 type="text"
@@ -192,13 +192,13 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Samuel Koroma"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Mail size={14} className="text-indigo-500" /> Email Address
+                <Mail size={14} className="text-blue-500" /> Email Address
               </label>
               <input 
                 type="email"
@@ -211,14 +211,14 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
 
             <div className="space-y-1.5 md:col-span-2">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Phone size={14} className="text-indigo-500" /> Telephone Number
+                <Phone size={14} className="text-blue-500" /> Telephone Number
               </label>
               <input 
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+232 XX XXX XXX"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
 
@@ -228,7 +228,7 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 cursor-pointer"
             >
               {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
               {saving ? 'Saving Profile...' : 'Save Changes'}
@@ -239,7 +239,7 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
       
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mt-8">
           <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <ShieldCheck className="text-indigo-600" />
+            <ShieldCheck className="text-blue-600" />
             Security
           </h2>
 
@@ -261,7 +261,7 @@ export const AdminProfile: React.FC<{ currentUserRole?: string }> = ({ currentUs
                 onChange={e => setPassword(e.target.value)}
                 minLength={6}
                 placeholder="Enter new password"
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-shadow text-sm"
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none transition-shadow text-sm"
               />
             </div>
             

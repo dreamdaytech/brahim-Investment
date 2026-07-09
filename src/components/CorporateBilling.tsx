@@ -260,30 +260,30 @@ export const CorporateBilling: React.FC = () => {
     <div className="space-y-4">
       <div>
         <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Company Name</label>
-        <input required type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        <input required type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={data.name || ''} onChange={e => onChange({ ...data, name: e.target.value })} />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Contact Person</label>
-          <input required type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          <input required type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={data.contactPerson || ''} onChange={e => onChange({ ...data, contactPerson: e.target.value })} />
         </div>
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Phone</label>
-          <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={data.phone || ''} onChange={e => onChange({ ...data, phone: e.target.value })} />
         </div>
       </div>
       <div>
         <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email</label>
-        <input required type="email" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        <input required type="email" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={data.email || ''} onChange={e => onChange({ ...data, email: e.target.value })} />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Billing Type</label>
-          <select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          <select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={data.billingType} onChange={e => onChange({ ...data, billingType: e.target.value as any })}>
             <option value="Per Day">Per Day</option>
             <option value="Monthly Retainer">Monthly Retainer</option>
@@ -291,13 +291,13 @@ export const CorporateBilling: React.FC = () => {
         </div>
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Rate ($)</label>
-          <input required type="number" min="0" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          <input required type="number" min="0" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={data.rate || 0} onChange={e => onChange({ ...data, rate: Number(e.target.value) })} />
         </div>
       </div>
       <div>
         <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Status</label>
-        <select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        <select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={data.status} onChange={e => onChange({ ...data, status: e.target.value as any })}>
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
@@ -313,7 +313,7 @@ export const CorporateBilling: React.FC = () => {
           <h2 className="text-2xl font-black text-slate-950 tracking-tight">Corporate Accounts</h2>
           <p className="text-slate-600 text-sm mt-1">Manage B2B relationships and billing rates</p>
         </div>
-        <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 text-sm font-bold text-white bg-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">
+        <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 text-sm font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
           <Plus size={16} /> New Account
         </button>
       </div>
@@ -324,7 +324,7 @@ export const CorporateBilling: React.FC = () => {
             <div className={`absolute top-0 left-0 w-1.5 h-full ${account.status === 'Active' ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                   <Building2 size={20} />
                 </div>
                 <div>
@@ -341,7 +341,7 @@ export const CorporateBilling: React.FC = () => {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600 font-medium">Billing:</span>
-                <span className="text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded text-xs font-bold">{account.billingType}</span>
+                <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-xs font-bold">{account.billingType}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-600 font-medium">Rate:</span>
@@ -361,7 +361,7 @@ export const CorporateBilling: React.FC = () => {
               <button
                 onClick={() => handleGenerateInvoice(account)}
                 disabled={generatingFor === account.id}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold py-2 rounded-lg transition-colors border border-indigo-100 disabled:opacity-60"
+                className="flex-1 flex items-center justify-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold py-2 rounded-lg transition-colors border border-blue-100 disabled:opacity-60"
               >
                 {generatingFor === account.id ? <Loader2 size={12} className="animate-spin" /> : <FileText size={12} />}
                 {generatingFor === account.id ? 'Calculating...' : 'Generate Invoice'}
@@ -424,7 +424,7 @@ export const CorporateBilling: React.FC = () => {
                       {/* #4 Download PDF — opens print dialog */}
                       <button
                         onClick={() => printInvoice(invoice, account)}
-                        className="text-slate-600 hover:text-indigo-600 p-1.5 hover:bg-indigo-50 rounded-md transition-colors"
+                        className="text-slate-600 hover:text-blue-600 p-1.5 hover:bg-blue-50 rounded-md transition-colors"
                         title="Download / Print PDF"
                       >
                         <Download size={16} />
@@ -432,7 +432,7 @@ export const CorporateBilling: React.FC = () => {
                       {/* #4 Email client — mailto link */}
                       <a
                         href={`mailto:${account?.email}?subject=Invoice ${invoice.id} — ${invoice.period}&body=Dear ${account?.contactPerson},%0A%0APlease find attached your invoice for ${invoice.period}.%0A%0AInvoice ID: ${invoice.id}%0APeriod: ${invoice.period}%0AAmount Due: $${invoice.amount.toLocaleString()}%0A%0APlease remit payment at your earliest convenience.%0A%0ARegards,%0ABIG Group Fleet Management`}
-                        className="text-slate-600 hover:text-indigo-600 p-1.5 hover:bg-indigo-50 rounded-md transition-colors"
+                        className="text-slate-600 hover:text-blue-600 p-1.5 hover:bg-blue-50 rounded-md transition-colors"
                         title="Email Client"
                       >
                         <Mail size={16} />
@@ -453,7 +453,7 @@ export const CorporateBilling: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-200 pb-6">
         <div>
           <h1 className="text-3xl font-black text-slate-950 tracking-tight flex items-center gap-3">
-            <Building2 className="text-indigo-600" size={32} />
+            <Building2 className="text-blue-600" size={32} />
             Corporate Billing
           </h1>
           <p className="text-slate-600 mt-2 font-medium">B2B client management and automated invoicing from live trip data.</p>
@@ -473,7 +473,7 @@ export const CorporateBilling: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
                 isActive
-                  ? 'bg-white text-indigo-600 shadow-sm'
+                  ? 'bg-white text-blue-600 shadow-sm'
                   : 'text-slate-600 hover:text-slate-700 hover:bg-slate-200/50'
               }`}
             >
@@ -485,7 +485,7 @@ export const CorporateBilling: React.FC = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 size={32} className="animate-spin text-indigo-400" />
+          <Loader2 size={32} className="animate-spin text-blue-400" />
         </div>
       ) : (
         <>
@@ -498,14 +498,14 @@ export const CorporateBilling: React.FC = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-blue-600">
               <div>
                 <h2 className="text-lg font-black text-white">New Corporate Account</h2>
-                <p className="text-indigo-200 text-xs mt-0.5">Register a new corporate billing account.</p>
+                <p className="text-blue-200 text-xs mt-0.5">Register a new corporate billing account.</p>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"
+                className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors"
               >
                 <X size={18} />
               </button>
@@ -524,7 +524,7 @@ export const CorporateBilling: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isAdding}
-                  className="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-sm flex justify-center items-center gap-2"
+                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm flex justify-center items-center gap-2"
                 >
                   {isAdding ? <Loader2 size={16} className="animate-spin" /> : 'Save Account'}
                 </button>
@@ -538,14 +538,14 @@ export const CorporateBilling: React.FC = () => {
       {isEditModalOpen && editingAccount && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-indigo-600">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-blue-600">
               <div>
                 <h2 className="text-lg font-black text-white">Edit Account</h2>
-                <p className="text-indigo-200 text-xs mt-0.5">Editing: {editingAccount.name}</p>
+                <p className="text-blue-200 text-xs mt-0.5">Editing: {editingAccount.name}</p>
               </div>
               <button
                 onClick={() => { setIsEditModalOpen(false); setEditingAccount(null); }}
-                className="text-indigo-200 hover:text-white bg-indigo-500 hover:bg-indigo-400 rounded-lg p-1.5 transition-colors"
+                className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors"
               >
                 <X size={18} />
               </button>
@@ -564,7 +564,7 @@ export const CorporateBilling: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSavingEdit}
-                  className="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-sm flex justify-center items-center gap-2"
+                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm flex justify-center items-center gap-2"
                 >
                   {isSavingEdit ? <Loader2 size={16} className="animate-spin" /> : 'Save Changes'}
                 </button>

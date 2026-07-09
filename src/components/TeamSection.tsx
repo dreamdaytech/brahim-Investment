@@ -101,14 +101,14 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
         <div className="mb-12">
           <button
             onClick={() => navigate('/about')}
-            className="group flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors mb-6 cursor-pointer"
+            className="group flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors mb-6 cursor-pointer"
           >
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to About Us
           </button>
 
           <div className="max-w-2xl">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-mono bg-indigo-50 border border-indigo-100 px-3 py-1 rounded">THE PEOPLE BEHIND THE FLEET</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 px-3 py-1 rounded">THE PEOPLE BEHIND THE FLEET</span>
             <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-4">Our Operational Team</h1>
             <p className="mt-4 text-sm md:text-base text-slate-600 leading-relaxed">
               Logistics is more than vehicles—it is about the experienced, vetted professionals ensuring your mission remains completely secure, responsive, and seamless from departure to return.
@@ -135,12 +135,12 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
                     className="w-full h-full object-cover" 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-indigo-50">
-                    <span className="text-4xl font-black text-indigo-600">{getInitial(member.name)}</span>
+                  <div className="w-full h-full flex items-center justify-center bg-blue-50">
+                    <span className="text-4xl font-black text-blue-600">{getInitial(member.name)}</span>
                   </div>
                 )}
                 <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-lg shadow-sm">
-                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                  <ShieldCheck className="w-4 h-4 text-blue-600" />
                 </div>
               </div>
 
@@ -148,7 +148,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
               <div className="space-y-4 flex-1">
                 <div>
                   <h3 className="text-xl md:text-2xl font-black text-slate-950 tracking-tight">{member.name}</h3>
-                  <p className="text-sm font-semibold text-indigo-600 mt-1">{member.role}</p>
+                  <p className="text-sm font-semibold text-blue-600 mt-1">{member.role}</p>
                 </div>
                 
                 <p className="text-sm text-slate-600 leading-relaxed max-w-3xl">
@@ -175,7 +175,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
                   <div>
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="text-indigo-600 hover:text-indigo-700 text-sm font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                      className="text-blue-600 hover:text-blue-700 text-sm font-bold flex items-center gap-1 transition-colors cursor-pointer"
                     >
                       View Full Details &rarr;
                     </button>
@@ -223,12 +223,12 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
                         className="w-full h-full object-cover" 
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-indigo-50">
-                        <span className="text-5xl font-black text-indigo-600">{getInitial(selectedMember.name)}</span>
+                      <div className="w-full h-full flex items-center justify-center bg-blue-50">
+                        <span className="text-5xl font-black text-blue-600">{getInitial(selectedMember.name)}</span>
                       </div>
                     )}
                     <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-lg shadow-sm">
-                      <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                      <ShieldCheck className="w-4 h-4 text-blue-600" />
                     </div>
                   </div>
 
@@ -236,10 +236,10 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
                   <div className="flex-1 space-y-6">
                     <div>
                       <h2 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tight">{selectedMember.name}</h2>
-                      <p className="text-base font-semibold text-indigo-600 mt-1">{selectedMember.role}</p>
+                      <p className="text-base font-semibold text-blue-600 mt-1">{selectedMember.role}</p>
                       {selectedMember.dedicatedRole && (
-                        <div className="mt-3 bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-start gap-3">
-                          <Briefcase size={18} className="shrink-0 mt-0.5 text-indigo-500" />
+                        <div className="mt-3 bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+                          <Briefcase size={18} className="shrink-0 mt-0.5 text-blue-500" />
                           <p className="text-sm font-medium text-slate-700 leading-relaxed">
                             {selectedMember.dedicatedRole}
                           </p>

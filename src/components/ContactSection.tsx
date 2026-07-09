@@ -180,7 +180,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 </div>
 
                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-left space-y-3">
-                  <span className="text-[9px] font-mono font-bold text-indigo-600 block uppercase tracking-wide">CONFIRMATION DETAILS</span>
+                  <span className="text-[9px] font-mono font-bold text-blue-600 block uppercase tracking-wide">CONFIRMATION DETAILS</span>
                   <div className="grid grid-cols-2 gap-4 text-xs">
                     <div>
                       <span className="text-slate-500 block font-mono">REQUEST REFERENCE</span>
@@ -212,7 +212,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
                 <div>
-                  <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider font-mono">LOGISTICS DIRECT PORTAL</span>
+                  <span className="text-xs font-bold text-blue-600 uppercase tracking-wider font-mono">LOGISTICS DIRECT PORTAL</span>
                   <h1 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tight mt-1">Book Your Vehicle</h1>
                   <p className="text-xs text-slate-600 mt-1">Please provide accurate corporate coordinates to ensure dynamic proposal vetting.</p>
                 </div>
@@ -227,12 +227,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   ].map((pStep) => (
                     <div key={pStep.s} className="flex items-center space-x-2 shrink-0">
                       <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono transition-colors ${
-                        step >= pStep.s ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
+                        step >= pStep.s ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500'
                       }`}>
                         {pStep.s}
                       </span>
                       <span className={`text-[10px] font-bold uppercase tracking-wider font-sans ${
-                        step >= pStep.s ? 'text-indigo-600' : 'text-slate-500'
+                        step >= pStep.s ? 'text-blue-600' : 'text-slate-500'
                       }`}>
                         {pStep.text}
                       </span>
@@ -246,7 +246,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* STEP 1: Contact details */}
                 {step === 1 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                    <span className="text-[10px] uppercase font-mono font-extrabold text-indigo-600">PHASE 1 SEC-A: INDIVIDUAL VETTING CODES</span>
+                    <span className="text-[10px] uppercase font-mono font-extrabold text-blue-600">PHASE 1 SEC-A: INDIVIDUAL VETTING CODES</span>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
@@ -257,7 +257,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           placeholder="e.g., Dr. Roland Cole"
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm font-sans"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm font-sans"
                         />
                       </div>
                       <div>
@@ -267,7 +267,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           value={organization}
                           onChange={(e) => setOrganization(e.target.value)}
                           placeholder="e.g., World Health Organization (WHO)"
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm font-sans"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm font-sans"
                         />
                       </div>
                       <div>
@@ -278,7 +278,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="e.g., r.cole@who.int"
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm font-sans"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm font-sans"
                         />
                       </div>
                       <div>
@@ -289,7 +289,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="e.g., +232 76 990 880"
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm font-sans"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm font-sans"
                         />
                       </div>
                     </div>
@@ -299,7 +299,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* STEP 2: Service Details */}
                 {step === 2 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                    <span className="text-[10px] uppercase font-mono font-extrabold text-indigo-600">PHASE 2 SEC-B: LOGISTICAL CATEGORIES</span>
+                    <span className="text-[10px] uppercase font-mono font-extrabold text-blue-600">PHASE 2 SEC-B: LOGISTICAL CATEGORIES</span>
 
                     <div>
                       <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Choose General Program Class Of Service</label>
@@ -315,16 +315,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                             onClick={() => setServiceType(srv.val as any)}
                             className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start select-none ${
                               serviceType === srv.val 
-                                ? 'bg-indigo-50 border-indigo-600 text-indigo-900' 
+                                ? 'bg-blue-50 border-blue-600 text-blue-900' 
                                 : 'bg-white border-slate-200 hover:bg-slate-50'
                             }`}
                           >
                             <div className="flex-1 pr-2">
                               <span className="text-xs font-bold block">{srv.title}</span>
-                              <span className={`text-[10px] leading-snug block mt-1 ${serviceType === srv.val ? 'text-indigo-700/80' : 'text-slate-600'}`}>{srv.desc}</span>
+                              <span className={`text-[10px] leading-snug block mt-1 ${serviceType === srv.val ? 'text-blue-700/80' : 'text-slate-600'}`}>{srv.desc}</span>
                             </div>
                             <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
-                              serviceType === srv.val ? 'border-indigo-605 bg-indigo-600' : 'border-slate-300'
+                              serviceType === srv.val ? 'border-blue-605 bg-blue-600' : 'border-slate-300'
                             }`}>
                               {serviceType === srv.val && <span className="w-1.5 h-1.5 bg-white rounded-full"></span>}
                             </span>
@@ -338,7 +338,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Preferred Vehicle Class</label>
                         <div 
                           onClick={() => setIsVehicleDropdownOpen(!isVehicleDropdownOpen)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:outline-none shadow-sm cursor-pointer flex items-center justify-between"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus-within:ring-2 focus-within:ring-blue-600 focus-within:outline-none shadow-sm cursor-pointer flex items-center justify-between"
                         >
                           <span className="font-medium truncate">
                             {sourceVehicles.find(v => v.id === preferredVehicle)?.name || 'Select a vehicle...'} 
@@ -371,7 +371,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                                       setVehicleSearchTerm('');
                                     }}
                                     className={`p-3 rounded-lg cursor-pointer text-xs flex justify-between items-center transition-colors ${
-                                      preferredVehicle === v.id ? 'bg-indigo-50 text-indigo-700 font-bold' : 'hover:bg-slate-50 text-slate-700'
+                                      preferredVehicle === v.id ? 'bg-blue-50 text-blue-700 font-bold' : 'hover:bg-slate-50 text-slate-700'
                                     }`}
                                   >
                                     <span className="truncate">{v.name}</span>
@@ -413,7 +413,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* STEP 3: Rental Specifics */}
                 {step === 3 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                    <span className="text-[10px] uppercase font-mono font-extrabold text-indigo-600">PHASE 3 SEC-C: ROUTING &amp; DISPATCH</span>
+                    <span className="text-[10px] uppercase font-mono font-extrabold text-blue-600">PHASE 3 SEC-C: ROUTING &amp; DISPATCH</span>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -423,7 +423,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           required
                           value={startDate}
                           onChange={(e) => setStartDate(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm cursor-pointer"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm cursor-pointer"
                         />
                       </div>
                       <div>
@@ -433,7 +433,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           required
                           value={endDate}
                           onChange={(e) => setEndDate(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm cursor-pointer"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm cursor-pointer"
                         />
                       </div>
                     </div>
@@ -446,7 +446,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           value={pickupLocation}
                           onChange={(e) => setPickupLocation(e.target.value)}
                           placeholder="e.g., Lungi Airport Terminal / Depot Compound"
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm"
                         />
                       </div>
                       <div>
@@ -455,7 +455,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           type="text" 
                           value={dropoffLocation}
                           onChange={(e) => setDropoffLocation(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600 focus:outline-none shadow-sm"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm"
                         />
                       </div>
                     </div>
@@ -465,7 +465,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* STEP 4: Vetting Code / Special details */}
                 {step === 4 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                    <span className="text-[10px] uppercase font-mono font-extrabold text-indigo-600">PHASE 4 SEC-D: OPERATIONS STATEMENT</span>
+                    <span className="text-[10px] uppercase font-mono font-extrabold text-blue-600">PHASE 4 SEC-D: OPERATIONS STATEMENT</span>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -473,7 +473,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         <select 
                           value={travelScope}
                           onChange={(e) => setTravelScope(e.target.value as any)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600"
                         >
                           <option value="Freetown Only">Freetown Only Limits</option>
                           <option value="Upcountry Provinces">Upcountry Provinces (Severe offroad maintenance index)</option>
@@ -484,7 +484,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         <select 
                           value={fuelPolicy}
                           onChange={(e) => setFuelPolicy(e.target.value as any)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600"
+                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600"
                         >
                           <option value="Client Top-up">Client Top-up (Daily fuel audit by driver)</option>
                           <option value="Pre-paid fuel card">Preloaded fuel card supplied (Flat billing)</option>
@@ -499,7 +499,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         value={specialRequirementsDet}
                         onChange={(e) => setSpecialRequirementsDet(e.target.value)}
                         placeholder="e.g. Requires satellite tracker pre-configuration and diplomatic license plate holder..."
-                        className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-indigo-600"
+                        className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600"
                       ></textarea>
                     </div>
 
@@ -510,7 +510,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           required
                           checked={termsAccepted}
                           onChange={(e) => setTermsAccepted(e.target.checked)}
-                          className="w-5 h-5 text-indigo-600 rounded border-slate-300 accent-indigo-600 mt-0.5 shrink-0 cursor-pointer"
+                          className="w-5 h-5 text-blue-600 rounded border-slate-300 accent-blue-600 mt-0.5 shrink-0 cursor-pointer"
                         />
                         <span className="text-[11px] text-slate-700 font-sans leading-relaxed">
                           I verify and agree that the driver and logistics coordinators assigned by B.I.G Group are fully credentialed, and that our organization guarantees compliance with direct vehicle diagnostic checks and local safety audits during the scope of leasing.
@@ -545,7 +545,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   ) : (
                     <button
                       type="submit"
-                      className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs uppercase tracking-widest shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200"
+                      className="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs uppercase tracking-widest shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200"
                     >
                       <Send size={13} />
                       <span>Request Formal Proposal</span>
@@ -610,21 +610,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             {/* Quick Contacts Block */}
             <div className="bg-[#0f172a] text-white rounded-3xl p-6 border border-slate-800 shadow-sm space-y-6">
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-indigo-400 font-mono font-bold block mb-1">BRAHIM INVESTMENT GROUP</span>
+                <span className="text-[9px] uppercase tracking-wider text-blue-400 font-mono font-bold block mb-1">BRAHIM INVESTMENT GROUP</span>
                 <h3 className="text-xl font-bold text-white tracking-tight">Direct Contact Info</h3>
                 <p className="text-xs text-slate-200 mt-1">Get immediate answers for emergency deployments.</p>
               </div>
 
               <div className="space-y-4 text-xs">
                 <div className="flex items-start gap-3">
-                  <MapPin size={18} className="text-indigo-400 shrink-0 mt-0.5" />
+                  <MapPin size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
                     <span className="text-white leading-relaxed font-semibold">11 Freetown Road, Wilberforce, Freetown</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Phone size={18} className="text-indigo-400 shrink-0 mt-0.5" />
+                  <Phone size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
                     <span className="text-white font-semibold block">+232 79 121 013</span>
@@ -632,7 +632,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Mail size={18} className="text-indigo-400 shrink-0 mt-0.5" />
+                  <Mail size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">Corporate Mail</span>
                     <span className="text-white font-semibold block">bossbahonly@gmail.com</span>

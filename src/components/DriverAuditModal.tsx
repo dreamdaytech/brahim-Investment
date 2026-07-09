@@ -80,7 +80,7 @@ export const DriverAuditModal: React.FC<Props> = ({
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50">
           <div>
             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-              <ShieldAlert className="text-indigo-600" size={24} />
+              <ShieldAlert className="text-blue-600" size={24} />
               Driver Compliance Audit
             </h2>
             <p className="text-sm text-slate-500 mt-1">Review compliance issues and update driver statuses.</p>
@@ -102,7 +102,7 @@ export const DriverAuditModal: React.FC<Props> = ({
               placeholder="Search drivers by name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
         </div>
@@ -178,7 +178,7 @@ export const DriverAuditModal: React.FC<Props> = ({
                         onClose();
                         onEditProfile(driver as Driver);
                       }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-100 rounded-lg text-sm font-bold transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-100 rounded-lg text-sm font-bold transition-colors"
                     >
                       <PenTool size={14} /> Edit Profile
                     </button>
@@ -214,7 +214,7 @@ export const DriverAuditModal: React.FC<Props> = ({
               </button>
               <button
                 onClick={confirmStatusChange}
-                className="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm shadow-sm"
+                className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors text-sm shadow-sm"
               >
                 Confirm Update
               </button>

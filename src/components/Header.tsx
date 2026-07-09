@@ -43,15 +43,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
       <div className="hidden md:flex w-full bg-[#090d16] text-xs py-2 px-6 border-b border-slate-800 justify-between items-center text-slate-100 font-sans">
         <div className="flex items-center space-x-6">
           <span className="flex items-center space-x-1">
-            <Phone size={13} className="text-indigo-500" />
+            <Phone size={13} className="text-blue-500" />
             <span>+232 79 121 013 / +232 30 133 574</span>
           </span>
           <span className="flex items-center space-x-1">
-            <Mail size={13} className="text-indigo-500" />
+            <Mail size={13} className="text-blue-500" />
             <span>bossbahonly@gmail.com</span>
           </span>
           <span className="flex items-center space-x-1">
-            <MapPin size={13} className="text-indigo-500" />
+            <MapPin size={13} className="text-blue-500" />
             <span>11 Freetown Road, Wilberforce, Freetown</span>
           </span>
         </div>
@@ -121,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           ) : (
             <button 
               onClick={() => navigate('/admin')}
-              className="flex items-center space-x-1 text-xs text-slate-100 hover:text-indigo-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
+              className="flex items-center space-x-1 text-xs text-slate-100 hover:text-blue-400 transition-colors duration-200 cursor-pointer border-l border-slate-800 pl-4 h-full"
             >
               <Lock size={12} />
               <span>Admin Portal</span>
@@ -137,13 +137,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           to="/" 
           className="flex items-center space-x-3 cursor-pointer select-none group"
         >
-          <div className="bg-indigo-600 p-2 rounded flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
+          <div className="bg-blue-600 p-2 rounded flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
             <Shield size={24} className="text-white" />
           </div>
           <div>
             <div className="flex items-baseline space-x-1">
               <span className="text-2xl font-black tracking-wider text-white">B.I.G</span>
-              <span className="text-xs font-semibold text-indigo-400">GROUP</span>
+              <span className="text-xs font-semibold text-blue-400">GROUP</span>
             </div>
             <p className="text-[10px] tracking-widest text-slate-600 font-mono -mt-1">BRAHIM INVESTMENT GROUP</p>
           </div>
@@ -159,7 +159,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
                     to={item.path}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer flex items-center ${
                       isActive 
-                        ? 'bg-indigo-600 text-white shadow-sm font-semibold' 
+                        ? 'bg-blue-600 text-white shadow-sm font-semibold' 
                         : 'text-white hover:text-white hover:bg-slate-800'
                     }`}
                   >
@@ -185,7 +185,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                     isActive 
-                      ? 'bg-indigo-600 text-white shadow-sm font-semibold' 
+                      ? 'bg-blue-600 text-white shadow-sm font-semibold' 
                       : 'text-white hover:text-white hover:bg-slate-800'
                   }`}
                 >
@@ -199,7 +199,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
         <div className="flex md:hidden items-center space-x-3">
           <button
             onClick={() => navigate('/admin')}
-            className="p-1.5 text-slate-100 hover:text-indigo-400 transition-colors"
+            className="p-1.5 text-slate-100 hover:text-blue-400 transition-colors"
             title="Admin Logs"
           >
             <Lock size={18} />
@@ -226,7 +226,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`w-full text-left px-4 py-3 rounded-md text-base font-semibold block transition-colors ${
                       isActive 
-                        ? 'bg-indigo-600 text-white font-bold' 
+                        ? 'bg-blue-600 text-white font-bold' 
                         : 'text-white hover:text-white hover:bg-slate-800'
                     }`}
                   >
@@ -251,9 +251,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           })}
           
           <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-100 space-y-2">
-            <p className="flex items-center gap-2"><Phone size={12} className="text-indigo-400" /> +232 79 121 013 / +232 30 133 574</p>
-            <p className="flex items-center gap-2"><Mail size={12} className="text-indigo-400" /> bossbahonly@gmail.com</p>
-            <p className="flex items-center gap-2"><MapPin size={12} className="text-indigo-400" /> 11 Freetown Road, Wilberforce, Freetown</p>
+            <p className="flex items-center gap-2"><Phone size={12} className="text-blue-400" /> +232 79 121 013 / +232 30 133 574</p>
+            <p className="flex items-center gap-2"><Mail size={12} className="text-blue-400" /> bossbahonly@gmail.com</p>
+            <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 11 Freetown Road, Wilberforce, Freetown</p>
           </div>
         </div>
       )}
