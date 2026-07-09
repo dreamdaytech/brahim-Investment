@@ -608,25 +608,25 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             </div>
 
             {/* Quick Contacts Block */}
-            <div className="bg-[#0f172a] text-slate-400 rounded-3xl p-6 border border-slate-800 shadow-sm space-y-6">
+            <div className="bg-[#0f172a] text-white rounded-3xl p-6 border border-slate-800 shadow-sm space-y-6">
               <div>
                 <span className="text-[9px] uppercase tracking-wider text-indigo-400 font-mono font-bold block mb-1">BRAHIM INVESTMENT GROUP</span>
                 <h3 className="text-xl font-bold text-white tracking-tight">Direct Contact Info</h3>
-                <p className="text-xs text-slate-500 mt-1">Get immediate answers for emergency deployments.</p>
+                <p className="text-xs text-slate-200 mt-1">Get immediate answers for emergency deployments.</p>
               </div>
 
               <div className="space-y-4 text-xs">
                 <div className="flex items-start gap-3">
                   <MapPin size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
+                    <span className="text-slate-200 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
                     <span className="text-white leading-relaxed font-semibold">11 Freetown Road, Wilberforce, Freetown</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Phone size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
+                    <span className="text-slate-200 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
                     <span className="text-white font-semibold block">+232 79 121 013</span>
                     <span className="text-white font-semibold block">+232 30 133 574</span>
                   </div>
@@ -634,7 +634,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div className="flex items-start gap-3">
                   <Mail size={18} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 block font-mono text-[9px] uppercase">Corporate Mail</span>
+                    <span className="text-slate-200 block font-mono text-[9px] uppercase">Corporate Mail</span>
                     <span className="text-white font-semibold block">bossbahonly@gmail.com</span>
                   </div>
                 </div>

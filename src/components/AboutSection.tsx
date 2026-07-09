@@ -53,11 +53,11 @@ export const AboutSection: React.FC = () => {
         </div>
 
         {/* The Foundation of Our Service (Bento of Core Values) */}
-        <section className="bg-[#0f172a] text-slate-400 py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
+        <section className="bg-[#0f172a] text-white py-16 px-6 md:px-12 rounded-3xl mb-20 max-w-6xl mx-auto shadow-sm border border-slate-800">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-indigo-400 text-xs font-mono font-bold tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">ADMINISTRATIVE CODES</span>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mt-3">The Foundation of Our Service</h2>
-            <p className="text-xs md:text-sm text-slate-500 mt-2 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-200 mt-2 leading-relaxed">
               These simple guidelines govern every driver we hire, every filter we cycle, and every dynamic quote proposal we submit.
             </p>
           </div>
@@ -72,7 +72,7 @@ export const AboutSection: React.FC = () => {
                   <span className="text-indigo-400 font-mono font-bold text-xs">0{idx+1}.</span>
                   <h4 className="font-bold text-base tracking-tight text-white">{val.title}</h4>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed font-sans">{val.description}</p>
+                <p className="text-xs text-white leading-relaxed font-sans">{val.description}</p>
               </div>
             ))}
           </div>

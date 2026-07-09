@@ -242,7 +242,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                   </div>
                   <ul className="space-y-3">
                     {selectedSpecVehicle.features.map((feature: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-400 leading-relaxed font-medium">
+                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-200 leading-relaxed font-medium">
                         <CircleCheck size={14} className="text-emerald-400 shrink-0 mt-0.5" />
                         <span>{feature}</span>
                       </li>
@@ -280,10 +280,10 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
             <h3 className="text-lg font-bold text-slate-200 tracking-tight flex items-center gap-2">
               Rigorous Preventative Maintenance Active
             </h3>
-            <p className="text-xs md:text-sm text-slate-500 mt-2 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-200 mt-2 leading-relaxed">
               Every driver shift and logistics deployment begins with a meticulous mechanical scan. Under direct oversight by our workshop director on Freetown Road, we inspect suspension pressure, tire tread depth, battery output, and fluids, ensuring absolute upcountry runtime and zero breakdowns.
             </p>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-[10px] text-slate-500 font-mono font-semibold">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-[10px] text-slate-200 font-mono font-semibold">
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Full Diagnostic Computer Scans</span>
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Dynamic Brake Thermal Analysis</span>
               <span className="flex items-center gap-1"><CircleCheck size={12} className="text-emerald-400" /> Complete OEM Spares Registry</span>

@@ -69,13 +69,13 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center space-x-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/50 text-xs text-indigo-400 mb-6 shadow-sm"
+            className="inline-flex items-center space-x-2 bg-indigo-600/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-indigo-400/30 text-xs text-white mb-6 shadow-sm"
           >
             <ShieldCheck size={14} className="animate-pulse" />
             <span className="font-semibold tracking-wide uppercase font-mono text-[10px]">Guaranteed 24/7 Deployment Coverage</span>
           </motion.div>
 
-          <span className="text-sm uppercase tracking-widest text-[#818cf8] font-bold font-mono mb-2">SIERRA LEONE'S PREMIER OPERATOR</span>
+          <span className="text-sm uppercase tracking-widest text-white font-bold font-mono mb-2">SIERRA LEONE'S PREMIER OPERATOR</span>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight max-w-3xl">
             Premium Car Rental &amp; Driver Services
           </h1>
@@ -341,7 +341,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
               <h3 className="text-2xl md:text-4xl font-extrabold tracking-tight mt-2">
                 Need a formal multi-vehicle institutional quote?
               </h3>
-              <p className="text-xs md:text-sm text-slate-400 mt-3 leading-relaxed">
+              <p className="text-xs md:text-sm text-slate-200 mt-3 leading-relaxed">
                 Contact our senior administration. We rapidly generate compliant, itemized logistic proposals complete with driver certifications, preventative scan clearances, and transparent terms.
               </p>
             </div>

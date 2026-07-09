@@ -143,7 +143,7 @@ export const ClientsSection: React.FC<ClientsSectionProps> = ({ clients }) => {
           <div className="max-w-xl">
             <span className="text-indigo-400 text-[10px] uppercase font-mono font-bold tracking-widest block mb-2">VETTED EXCELLENCE</span>
             <h3 className="text-2xl font-black tracking-tight text-white">Trust In Official Deployments</h3>
-            <p className="text-xs md:text-sm text-slate-500 mt-3 leading-relaxed">
+            <p className="text-xs md:text-sm text-slate-200 mt-3 leading-relaxed">
               B.I.G Group's continuous operational record highlights our capacity for long-term fleet stability, proactive mechanical resolution, and seamless compliance with international non-profit security demands.
             </p>
           </div>

@@ -81,6 +81,7 @@ export default function App() {
   // Only public data is held here.
   const [fleetVehicles, setFleetVehicles] = useState<any[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [clients, setClients] = useState<any[]>([]);
 
   // Connect to Supabase and listen for PUBLIC data changes only
   useEffect(() => {
@@ -112,6 +113,22 @@ export default function App() {
           // SECURITY: phone and email intentionally excluded from public fetch
         }));
         setTeamMembers(mapped);
+      }
+      // Clients (public /clients page)
+      const { data: clientsData } = await supabase
+        .from('clients')
+        .select('*');
+      if (clientsData) {
+        const mappedClients = clientsData.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          service: c.service,
+          status: c.status,
+          isDraft: c.is_draft,
+          shortCode: c.short_code,
+          logoUrl: c.logo_url
+        }));
+        setClients(mappedClients);
       }
     };
 
@@ -193,16 +210,16 @@ export default function App() {
 
   const renderRoutes = () => (
     <Routes>
-      <Route path="/" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={[]} />} />
+      <Route path="/" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={clients} />} />
       <Route path="/fleet" element={<FleetSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} />} />
       <Route path="/services" element={<ServicesSection setSelectedVehicleId={setSelectedVehicleId} setEstimateDetails={setEstimateDetails} fleetVehicles={fleetVehicles} />} />
       <Route path="/about" element={<AboutSection />} />
       <Route path="/team" element={<TeamSection teamMembers={teamMembers} />} />
-      <Route path="/clients" element={<ClientsSection clients={[]} />} />
+      <Route path="/clients" element={<ClientsSection clients={clients} />} />
       <Route path="/contact" element={<ContactSection selectedVehicleId={selectedVehicleId} setSelectedVehicleId={setSelectedVehicleId} estimateDetails={estimateDetails} clearEstimateDetails={handleClearEstimate} onAddInquiry={handleAddInquiry} fleetVehicles={fleetVehicles} />} />
       {/* SECURITY: AdminSection now fetches its own data internally behind authentication */}
       <Route path="/admin" element={<AdminSection teamMembers={teamMembers} onAddTeamMember={handleAddTeamMember} onUpdateTeamMember={handleUpdateTeamMember} onDeleteTeamMember={handleDeleteTeamMember} />} />
-      <Route path="*" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={[]} />} />
+      <Route path="*" element={<HomeSection setSelectedVehicleId={setSelectedVehicleId} fleetVehicles={fleetVehicles} clients={clients} />} />
     </Routes>
   );
 
