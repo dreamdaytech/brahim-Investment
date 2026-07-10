@@ -382,11 +382,12 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
                   <Field label="License Type">
                     <select value={form.licenseType} onChange={set('licenseType')} className={sel}>
                       <option value="">-- Select type --</option>
-                      <option value="Commercial (CDL)">Commercial (CDL)</option>
-                      <option value="Standard (Class B)">Standard (Class B)</option>
-                      <option value="Heavy Goods (HGV)">Heavy Goods (HGV)</option>
-                      <option value="Motorcycle">Motorcycle</option>
-                      <option value="Other">Other</option>
+                      <option value="A">A</option>
+                      <option value="AA">AA</option>
+                      <option value="AB">AB</option>
+                      <option value="BC">BC</option>
+                      <option value="ABC">ABC</option>
+                      <option value="ABCD">ABCD</option>
                     </select>
                   </Field>
                   <Field label="License Expiry Date" required>
