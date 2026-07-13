@@ -38,7 +38,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
   const formatDateOnly = (dateStr?: string) => {
     if (!dateStr) return '-';
     try {
-      return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
     } catch {
       return dateStr;
     }
@@ -58,7 +58,7 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
     doc.text('Completed Dispatch Report', 14, 14);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Ref: ${dispatch.id.slice(0,8).toUpperCase()}   |   Generated: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}`, 14, 22);
+    doc.text(`Ref: ${dispatch.id.slice(0,8).toUpperCase()}   |   Generated: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}`, 14, 22);
 
     // ── Section 1: Dispatch Overview ────────────────────
     doc.setTextColor(30, 30, 90);

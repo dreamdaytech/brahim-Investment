@@ -100,7 +100,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
             {insuranceDaysLeft !== null ? `${insuranceDaysLeft}d` : "—"}
           </p>
           <p className="text-xs text-slate-500 mt-0.5">
-            {insuranceDate ? insuranceDate.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "No expiry set"}
+            {insuranceDate ? insuranceDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : "No expiry set"}
           </p>
         </div>
         <div className={`p-5 rounded-2xl border shadow-sm ${vehicle.showOnFleet ? "bg-emerald-50 border-emerald-200" : "bg-slate-50 border-slate-200"}`}>
@@ -196,7 +196,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               </h3>
               <InfoRow label="Status" value={vehicle.status} />
               <InfoRow label="Company Registered" value={vehicle.isCompanyRegistered ? "Yes" : "No"} />
-              <InfoRow label="Insurance Expiry" value={insuranceDate?.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })} />
+              <InfoRow label="Insurance Expiry" value={insuranceDate?.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} />
               <InfoRow label="Fleet Listing" value={vehicle.showOnFleet ? "Active (Public)" : "Hidden"} />
               <InfoRow label="Category" value={vehicle.vehicleCategory} />
             </div>

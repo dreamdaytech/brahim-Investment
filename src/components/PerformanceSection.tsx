@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye, LayoutGrid, List } from 'lucide-react';
+import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye, LayoutGrid, List, Pencil, ExternalLink, Loader2 } from 'lucide-react';
 
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
@@ -15,9 +15,62 @@ import { DispatchDetailsView } from './DispatchDetailsView';
 import { VehicleDetailsView } from './VehicleDetailsView';
 import { VehicleModal } from './VehicleModal';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
 import { FuelCity, FuelStation } from '../types';
+const SearchableSelect = ({ value, onChange, options, placeholder }: any) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('');
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
 
+  React.useEffect(() => {
+    const handleClick = (e: any) => { if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setIsOpen(false); };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const filteredOptions = options.filter((o: any) => o.label.toLowerCase().includes(search.toLowerCase()));
+  const selectedLabel = options.find((o: any) => o.value === value)?.label || placeholder;
+
+  return (
+    <div className="relative min-w-[140px]" ref={wrapperRef}>
+      <button type="button" onClick={() => { setIsOpen(!isOpen); setSearch(''); }} className="w-full text-left bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400 flex justify-between items-center">
+        <span className="truncate pr-2">{selectedLabel}</span>
+        <span className="text-slate-400 text-[10px]">▼</span>
+      </button>
+      {isOpen && (
+        <div className="absolute z-[100] mt-1 w-full min-w-[200px] max-w-[400px] left-0 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden">
+          <input 
+            type="text" 
+            autoFocus 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+            placeholder="Search..." 
+            className="w-full px-3 py-2 text-xs border-b border-slate-100 focus:outline-none bg-slate-50" 
+          />
+          <div className="max-h-48 overflow-y-auto">
+            {filteredOptions.length === 0 ? <div className="px-3 py-2 text-xs text-slate-400">No results</div> : null}
+            {filteredOptions.map((o: any) => (
+              <button 
+                key={o.value} 
+                type="button" 
+                onClick={() => { onChange(o.value); setIsOpen(false); }} 
+                className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-50 ${value === o.value ? 'font-bold bg-blue-50 text-blue-700' : 'text-slate-700'}`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const slDistricts = ['Western Area Urban', 'Western Area Rural', 'Bo', 'Bonthe', 'Moyamba', 'Pujehun', 'Kailahun', 'Kenema', 'Kono', 'Bombali', 'Falaba', 'Koinadugu', 'Tonkolili', 'Kambia', 'Karene', 'Port Loko'];
+const slCities = ['Freetown', 'Waterloo', 'Bo', 'Kenema', 'Makeni', 'Koidu', 'Lunsar', 'Port Loko', 'Kabala', 'Segbwema', 'Kailahun', 'Magburaka'];
+const partnerStations = [{ name: 'NP', isPartner: true }, { name: 'TotalEnergies', isPartner: true }, { name: 'Malado', isPartner: true }, { name: 'Other', isPartner: false }];
+const supplierColors: Record<string, string> = { NP: 'bg-blue-500', Malado: 'bg-emerald-500', TotalEnergies: 'bg-amber-500', Other: 'bg-slate-400' };
 
 export interface DriverDocument {
   id: string;
@@ -388,6 +441,14 @@ const generateMockLogs = (): TripLog[] => {
 
 export const initialLogs = generateMockLogs();
 
+
+export const parseReceipt = (receipt?: string) => {
+  if (!receipt) return { text: '', url: '' };
+  const parts = receipt.split('|URL:');
+  if (parts.length === 1 && receipt.startsWith('URL:')) return { text: '', url: receipt.replace('URL:', '') };
+  return { text: parts[0] || '', url: parts.length > 1 ? parts.slice(1).join('|URL:') : '' };
+};
+
 export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string }> = ({ clients = [], defaultTab }) => {
   const [activeTab, _setActiveTab] = useState<'dashboard' | 'dispatch' | 'maintenance' | 'logs' | 'drivers' | 'driver_details' | 'vehicles' | 'leaderboard' | 'fuel'>(() => {
     if (defaultTab) return defaultTab as any;
@@ -408,6 +469,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   }, [defaultTab]);
   
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
+  const [deletingDriverId, setDeletingDriverId] = useState<string | null>(null);
   const [dispatchSubTab, setDispatchSubTab] = useState<'active' | 'completed' | 'logs'>('active');
   const [dispatchSearchQuery, setDispatchSearchQuery] = useState('');
   const [dispatchFilter, setDispatchFilter] = useState<'all' | 'overdue'>('all');
@@ -882,7 +944,29 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [odometerWarnings, setOdometerWarnings] = useState<Record<number, string>>({});
   const [returningDispatchId, setReturningDispatchId] = useState<string | null>(null);
   const [returningDispatch, setReturningDispatch] = useState<ActiveDispatch | null>(null);
-  
+
+  // Standalone fuel entry modal (separate from trip log form)
+  const [standaloneFuelReceiptFile, setStandaloneFuelReceiptFile] = useState<File | null>(null);
+  const [isUploadingFuel, setIsUploadingFuel] = useState(false);
+  const [isStandaloneFuelModalOpen, setIsStandaloneFuelModalOpen] = useState(false);
+  const [standaloneFuelEntry, setStandaloneFuelEntry] = useState<Partial<FuelCollection>>({
+    id: '', stationName: '', supplier: 'NP', isPartnerStation: true, location: '',
+    liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card',
+    date: new Date().toISOString().split('T')[0], time: '',
+    fuelType: 'Diesel',
+  });
+  const [standaloneFuelDriverId, setStandaloneFuelDriverId] = useState('');
+  const [standaloneFuelVehicleId, setStandaloneFuelVehicleId] = useState('');
+  const [standaloneFuelTripLogId, setStandaloneFuelTripLogId] = useState('');
+
+  // Fuel Log detail view, delete confirmation & three-dot menu
+  const [viewingFuelCollection, setViewingFuelCollection] = useState<FuelCollection | null>(null);
+  const [isExportingModal, setIsExportingModal] = useState(false);
+  const [deletingFuelCollection, setDeletingFuelCollection] = useState<FuelCollection | null>(null);
+  const [openFuelMenuId, setOpenFuelMenuId] = useState<string | null>(null);
+  const [fuelMenuPos, setFuelMenuPos] = useState<{ x: number; y: number } | null>(null);
+  const [fuelMenuEntry, setFuelMenuEntry] = useState<FuelCollection | null>(null);
+
   const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
   const [editingDispatch, setEditingDispatch] = useState<Partial<ActiveDispatch | CompletedDispatch> | null>(null);
   const [dispatchBillingMode, setDispatchBillingMode] = useState<'project' | 'corporate'>('project');
@@ -1361,9 +1445,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           <button
             onClick={() => {
               const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-              const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+              const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
               doc.setFontSize(16); doc.setTextColor(30, 30, 90);
-              doc.text('BIG Group - Trip Logs', 14, 16);
+              doc.text('BIG - Trip Logs', 14, 16);
               doc.setFontSize(9); doc.setTextColor(100, 100, 120);
               doc.text(`Generated on: ${today}`, 14, 22);
 
@@ -1742,9 +1826,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-blue-50 hover:border-blue-200 text-slate-600 hover:text-blue-600 rounded-lg transition-all">
                       <PenTool size={12}/>
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); setDrivers(prev => prev.filter(d => d.id !== driver.id)); }}
+                    <button onClick={(e) => { e.stopPropagation(); setDeletingDriverId(driver.id); }}
                       className="p-1.5 bg-white shadow-sm border border-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-500 rounded-lg transition-all">
-                      <AlertTriangle size={12}/>
+                      <Trash2 size={12}/>
                     </button>
                   </div>
                 </div>
@@ -1772,7 +1856,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   {driver.licenseExpiry && (
                     <div className={`flex items-center gap-2 text-xs font-semibold ${licenseExpired ? 'text-red-600' : licenseExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
                       <span className="shrink-0">{licenseExpired ? <AlertTriangle size={14} className="text-red-500" /> : licenseExpiringSoon ? <Clock size={14} className="text-amber-500" /> : '🟢'}</span>
-                      <span>License expires: {new Date(driver.licenseExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })}</span>
+                      <span>License expires: {new Date(driver.licenseExpiry).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                     </div>
                   )}
                   {driver.nextOfKinName && (
@@ -1801,6 +1885,38 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Driver Delete Confirmation Modal */}
+      {deletingDriverId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in" onClick={() => setDeletingDriverId(null)}>
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm relative z-10 overflow-hidden transform transition-all" onClick={e => e.stopPropagation()}>
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-4 mx-auto">
+                <AlertTriangle size={24} />
+              </div>
+              <h3 className="text-xl font-black text-slate-900 text-center tracking-tight mb-2">Delete Driver?</h3>
+              <p className="text-sm text-slate-600 text-center mb-6 leading-relaxed">
+                Are you sure you want to delete this driver? This action cannot be undone and will remove them from the active roster.
+              </p>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setDeletingDriverId(null)} 
+                  className="flex-1 px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => { setDrivers(prev => prev.filter(d => d.id !== deletingDriverId)); setDeletingDriverId(null); }} 
+                  className="flex-1 px-4 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors shadow-sm shadow-red-200"
+                >
+                  Delete Driver
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -1929,7 +2045,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       <p className={`text-xs ${licenseExpired ? 'text-red-500 font-bold' : licenseExpiringSoon ? 'text-amber-600 font-bold' : 'text-slate-600'}`}>
                         {licenseExpired ? 'License Expired' : licenseExpiringSoon ? 'License Expiring Soon' : 'License Expiry'}
                       </p>
-                      <p className="font-semibold">{new Date(driver.licenseExpiry).toLocaleDateString()}</p>
+                      <p className="font-semibold">{new Date(driver.licenseExpiry).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
                     </div>
                   </div>
                 )}
@@ -2131,7 +2247,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   const displayStatus = isEditingThis ? editingLogForm.status : log.status;
                   const c = statusColors[displayStatus] || statusColors['Active'];
                   const logDate = new Date(log.createdAt);
-                  const formattedDate = logDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                  const formattedDate = logDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                   const formattedTime = logDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
                   // ── Helper: save edited log ───────────────────────────────────
@@ -2443,7 +2559,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                         return (
                           <div className={`flex items-center gap-1.5 text-xs font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
                             {insExpired ? <AlertTriangle size={12} /> : insExpiringSoon ? <Clock size={12} /> : null}
-                            {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : 'N/A'}
+                            {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A'}
                           </div>
                         );
                       })()}
@@ -2595,7 +2711,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                         <span className="block text-[10px] uppercase font-mono font-bold text-slate-400 mb-1">Ins. Expiry</span>
                         <div className={`flex items-center gap-1.5 font-bold ${insExpired ? 'text-red-600' : insExpiringSoon ? 'text-amber-600' : 'text-slate-700'}`}>
                           {insExpired ? <AlertTriangle size={14} /> : insExpiringSoon ? <Clock size={14} /> : null}
-                          {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : 'N/A'}
+                          {vehicle.insuranceExpiry ? new Date(vehicle.insuranceExpiry).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A'}
                         </div>
                       </div>
                     </div>
@@ -3190,7 +3306,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     onClick={() => {
                       if (!awardModal.driverId) return;
                       setAwardSaving(true);
-                      const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                      const dateStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                       // Pipe-delimited format: type|period|note|date
                       const entry = `${awardType}|${awardPeriod}|${awardNote}|${dateStr}`;
                       setDrivers((prev: any) => prev.map((d: any) => d.id === awardModal!.driverId ? { ...d, awards: [...(d.awards || []), entry] } : d));
@@ -3369,17 +3485,17 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         const driver = drivers.find(d => d.id === f.driverId);
         const vehicle = vehicles.find(v => v.id === f.vehicleId);
         const esc = (v?: string | number) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-        return [esc(f.date), esc(f.time), esc(driver?.name), esc(vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : ''), esc(f.supplier), esc(f.stationName), esc(f.district), esc(f.location), esc(f.fuelType), f.liters.toFixed(2), f.costPerLiter.toFixed(2), (f.liters * f.costPerLiter).toFixed(2), esc(f.paymentMethod), esc(f.receiptNumber), f.isPartnerStation === false ? 'No' : 'Yes', esc(f.nonPartnerReason), esc(f.tripLogId), esc(f.remarks)].join(',');
+        return [esc(f.date), esc(f.time), esc(driver?.name), esc(vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : ''), esc(f.supplier), esc(f.stationName), esc(f.district), esc(f.location), esc(f.fuelType), f.liters.toFixed(2), f.costPerLiter.toFixed(2), (f.liters * f.costPerLiter).toFixed(2), esc(f.paymentMethod), esc(parseReceipt(f.receiptNumber).text), f.isPartnerStation === false ? 'No' : 'Yes', esc(f.nonPartnerReason), esc(f.tripLogId), esc(f.remarks)].join(',');
       });
       downloadBlob(new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' }), `fuel-transactions-${new Date().toISOString().split('T')[0]}.csv`);
     };
 
     const exportFuelPDF = () => {
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
       // Title
       doc.setFontSize(16); doc.setTextColor(30, 30, 90);
-      doc.text('BIG Group — Fuel Transactions Report', 14, 16);
+      doc.text('BIG — Fuel Transactions Report', 14, 16);
       doc.setFontSize(9); doc.setTextColor(100, 100, 120);
       doc.text(`Generated: ${today}   |   ${filteredTx.length} transactions   |   ${filteredLiters.toFixed(0)} L   |   Le ${filteredCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, 14, 23);
       autoTable(doc, {
@@ -3392,7 +3508,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             f.date || '', driver?.name || '', vehicle ? `${vehicle.plateNumber}` : '',
             f.supplier || '', f.stationName || '', `${f.location || ''}${f.district ? ` (${f.district})` : ''}`,
             f.fuelType || '', f.liters.toFixed(1), f.costPerLiter.toFixed(2), (f.liters * f.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 }),
-            f.paymentMethod || '', f.isPartnerStation === false ? 'No' : 'Yes', f.receiptNumber || '',
+            f.paymentMethod || '', f.isPartnerStation === false ? 'No' : 'Yes', parseReceipt(f.receiptNumber).text || '',
           ];
         }),
         headStyles: { fillColor: [67, 56, 202], textColor: 255, fontStyle: 'bold', fontSize: 7.5 },
@@ -3412,7 +3528,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(7); doc.setTextColor(150);
-        doc.text(`BIG Group Fleet Management — Confidential   |   Page ${i} of ${pageCount}`, 14, doc.internal.pageSize.height - 6);
+        doc.text(`BIG Fleet Management — Confidential   |   Page ${i} of ${pageCount}`, 14, doc.internal.pageSize.height - 6);
       }
       doc.save(`fuel-transactions-${new Date().toISOString().split('T')[0]}.pdf`);
     };
@@ -3428,9 +3544,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
     const exportSuppliersPDF = () => {
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
       doc.setFontSize(16); doc.setTextColor(30, 30, 90);
-      doc.text('BIG Group — Fuel Project Registry', 14, 16);
+      doc.text('BIG — Fuel Project Registry', 14, 16);
       doc.setFontSize(9); doc.setTextColor(100, 100, 120);
       doc.text(`Generated: ${today}   |   ${fuelSuppliers.length} projects   |   ${fuelSuppliers.filter(s => s.isPartner).length} partners`, 14, 23);
       autoTable(doc, {
@@ -3459,7 +3575,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(7); doc.setTextColor(150);
-        doc.text(`BIG Group Fleet Management — Confidential   |   Page ${i} of ${pageCount}`, 14, doc.internal.pageSize.height - 6);
+        doc.text(`BIG Fleet Management — Confidential   |   Page ${i} of ${pageCount}`, 14, doc.internal.pageSize.height - 6);
       }
       doc.save(`fuel-projects-${new Date().toISOString().split('T')[0]}.pdf`);
     };
@@ -3468,7 +3584,6 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
     const maxSupplierLiters = Math.max(...fuelBySupplier.map(x => x.liters), 1);
     const maxCityLiters = Math.max(...fuelByCity.map(x => x.liters), 1);
 
-    const supplierColors: Record<string, string> = { NP: 'bg-blue-500', Malado: 'bg-emerald-500', TotalEnergies: 'bg-amber-500', Other: 'bg-slate-400' };
     const paymentBadge = (pm?: string) => {
       if (pm === 'Fuel Card') return 'bg-blue-50 text-blue-700 border border-blue-200';
       if (pm === 'Voucher') return 'bg-purple-50 text-purple-700 border border-purple-200';
@@ -3497,6 +3612,24 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 </button>
               ))}
             </div>
+            <button
+              onClick={() => {
+                setStandaloneFuelEntry({
+                  id: uuidv4(),
+                  stationName: '', supplier: 'NP', isPartnerStation: true, location: '',
+                  liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card',
+                  date: new Date().toISOString().split('T')[0], time: '',
+                  fuelType: 'Diesel',
+                });
+                setStandaloneFuelDriverId('');
+                setStandaloneFuelVehicleId('');
+                setStandaloneFuelTripLogId('');
+                setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true);
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+            >
+              <Fuel size={15} /> Record Fuel Fill-Up
+            </button>
           </div>
         </div>
 
@@ -3616,6 +3749,165 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
         {fuelSubTab === 'fuel' && (
           <div className="space-y-6 animate-fade-in">
+
+        {/* ── Fuel Log Detail View ── */}
+        {viewingFuelCollection && (() => {
+          const fc = viewingFuelCollection;
+          const _driver = drivers.find(d => d.id === fc.driverId);
+          const _vehicle = vehicles.find(v => v.id === fc.vehicleId);
+          const _parentLog = logs.find(l => l.id === fc.tripLogId);
+          const _isNonPartner = fc.isPartnerStation === false;
+          const totalCost = (fc.liters || 0) * (fc.costPerLiter || 0);
+          return (
+            <div className="animate-fade-in">
+              {!isExportingModal && (
+                <div className="flex items-center justify-between mb-5">
+                  <button onClick={() => setViewingFuelCollection(null)} className="flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"><ArrowLeft size={16} /> Back to Fuel Logs</button>
+                  <button 
+                    onClick={async () => {
+                      setIsExportingModal(true);
+                      try {
+                        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                        const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        
+                        doc.setFontSize(18); doc.setTextColor(30, 30, 90);
+                        doc.text('BIG — Fuel Log Details', 14, 20);
+                        
+                        doc.setFontSize(10); doc.setTextColor(100, 100, 120);
+                        doc.text(`Exported on: ${today}   |   Ref: ${parseReceipt(fc.receiptNumber).text || 'N/A'}`, 14, 28);
+                        
+                        const tableData = [
+                          ['Date & Time', `${fc.date || ''} ${fc.time || ''}`.trim()],
+                          ['Driver', _driver?.name || 'Unknown'],
+                          ['Vehicle', _vehicle ? `${_vehicle.makeModel} (${_vehicle.plateNumber})` : 'Unknown'],
+                          ['Station', `${fc.stationName || ''} - ${fc.location || ''} ${fc.district ? `(${fc.district})` : ''}`],
+                          ['Project / Supplier', fc.supplier || 'N/A'],
+                          ['Fuel Type', fc.fuelType || 'N/A'],
+                          ['Volume & Rate', `${(fc.liters || 0).toFixed(1)} L @ Le ${(fc.costPerLiter || 0).toFixed(2)} / L`],
+                          ['Total Cost', `Le ${((fc.liters || 0) * (fc.costPerLiter || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}`],
+                          ['Payment Method', fc.paymentMethod || 'N/A'],
+                          ['Partner Station', _isNonPartner ? 'No' : 'Yes']
+                        ];
+                        
+                        if (_isNonPartner && fc.nonPartnerReason) {
+                          tableData.push(['Non-Partner Reason', fc.nonPartnerReason]);
+                        }
+                        if (fc.remarks) {
+                          tableData.push(['Remarks', fc.remarks]);
+                        }
+                        
+                        autoTable(doc, {
+                          startY: 35,
+                          head: [['Field', 'Details']],
+                          body: tableData,
+                          theme: 'grid',
+                          headStyles: { fillColor: [40, 40, 100], textColor: 255, fontStyle: 'bold' },
+                          columnStyles: {
+                            0: { fontStyle: 'bold', cellWidth: 50, fillColor: [245, 247, 250] },
+                            1: { cellWidth: 'auto' }
+                          },
+                          styles: { fontSize: 10, cellPadding: 6 }
+                        });
+                        
+                        const receiptUrl = parseReceipt(fc.receiptNumber).url;
+                        if (receiptUrl) {
+                          const finalY = (doc as any).lastAutoTable.finalY + 15;
+                          doc.setFontSize(10);
+                          doc.setTextColor(50, 50, 200);
+                          doc.textWithLink('View Attached Receipt Image Online', 14, finalY, { url: receiptUrl });
+                        }
+                    
+                        doc.save(`Fuel-Log-${fc.stationName?.replace(/\s+/g, '-') || 'Details'}-${fc.date || today}.pdf`);
+                      } catch (err) {
+                        console.error('Export failed', err);
+                        alert('Failed to export PDF');
+                      } finally {
+                        setIsExportingModal(false);
+                      }
+                    }} 
+                    disabled={isExportingModal}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold transition-colors shadow-sm disabled:opacity-50"
+                  >
+                    {isExportingModal ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />} 
+                    {isExportingModal ? 'Exporting...' : 'Export to PDF'}
+                  </button>
+                </div>
+              )}
+
+              <div id="fuel-log-details-export-area" className={isExportingModal ? 'p-6 bg-slate-50' : ''}>
+                {/* Hero */}
+                <div className={`rounded-2xl p-6 mb-6 ${_isNonPartner ? 'bg-gradient-to-br from-red-600 to-red-700' : 'bg-gradient-to-br from-blue-600 to-indigo-700'} text-white shadow-xl`}>
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2"><Fuel size={20} className="opacity-80" /><span className="text-sm font-bold opacity-80 uppercase tracking-wider">Fuel Fill-Up Record</span></div>
+                      <h1 className="text-2xl font-black mb-1">{fc.stationName || 'Unknown Station'}</h1>
+                      <p className="opacity-75 text-sm">{fc.location}{fc.district ? ` · ${fc.district}` : ''}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-3xl font-black">Le {totalCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                      <div className="text-sm opacity-75 mt-1">{(fc.liters || 0).toFixed(1)} L @ Le {(fc.costPerLiter || 0).toFixed(2)}/L</div>
+                      {_isNonPartner ? <span className="inline-flex items-center gap-1 mt-2 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/20 border border-white/30"><AlertTriangle size={11} /> Non-Partner</span> : <span className="inline-flex items-center gap-1 mt-2 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/20 border border-white/30"><CheckCircle2 size={11} /> Partner Station</span>}
+                    </div>
+                  </div>
+                  {!isExportingModal && (
+                    <div className="flex gap-3 mt-6 pt-4 border-t border-white/20">
+                      <button onClick={() => { setStandaloneFuelEntry({ ...fc }); setStandaloneFuelDriverId(fc.driverId || ''); setStandaloneFuelVehicleId(fc.vehicleId || ''); setStandaloneFuelTripLogId(fc.tripLogId || ''); setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true); }} className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 border border-white/30 rounded-xl text-sm font-bold transition-colors"><Pencil size={14} /> Edit Entry</button>
+                      <button onClick={() => setDeletingFuelCollection(fc)} className="flex items-center gap-2 px-4 py-2 bg-red-800/40 hover:bg-red-800/60 border border-red-400/30 rounded-xl text-sm font-bold transition-colors"><Trash2 size={14} /> Delete Entry</button>
+                    </div>
+                  )}
+                </div>
+
+              {/* Info grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"><Calendar size={12} /> Date & Time</p>
+                  <p className="text-xl font-black text-slate-900">{fc.date || '—'}</p>
+                  <p className="text-sm text-slate-500 mt-1">{fc.time || 'Time not recorded'}</p>
+                </div>
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"><Fuel size={12} /> Fuel Type</p>
+                  {fc.fuelType ? <span className={`inline-flex items-center px-3 py-1.5 rounded-xl text-sm font-black ${fc.fuelType === 'Diesel' ? 'bg-amber-100 text-amber-800' : fc.fuelType === 'Premium' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'}`}>{fc.fuelType}</span> : <span className="text-slate-400 text-sm">Not recorded</span>}
+                  <p className="text-xs text-slate-500 mt-2">Project: <span className="font-bold">{fc.supplier || '—'}</span></p>
+                </div>
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5"><CreditCard size={12} /> Payment</p>
+                  <p className="text-xl font-black text-slate-900">{fc.paymentMethod || '—'}</p>
+                  <p className="text-sm text-slate-500 mt-1">Receipt: <span className="font-mono font-bold">{parseReceipt(fc.receiptNumber).text || '—'}</span></p>
+                  {parseReceipt(fc.receiptNumber).url && (
+                    <div className="mt-3 relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+                      <img src={parseReceipt(fc.receiptNumber).url} alt="Receipt" className="w-full h-full object-contain" />
+                      <a href={parseReceipt(fc.receiptNumber).url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 hover:opacity-100"><ExternalLink className="text-white drop-shadow-md" /></a>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5"><User size={12} /> Driver</p>
+                  <div className="flex items-center gap-3">
+                    {_driver?.imgUrl ? <img src={_driver.imgUrl} alt="" className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-200" /> : <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center"><User size={20} className="text-slate-500" /></div>}
+                    <div><p className="font-black text-slate-900">{_driver?.name || '—'}</p><p className="text-xs text-slate-500">{_driver?.licenseNumber ? `Lic: ${_driver.licenseNumber}` : 'No license on file'}</p></div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5"><Car size={12} /> Vehicle</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center"><Car size={20} className="text-blue-600" /></div>
+                    <div><p className="font-black text-slate-900">{_vehicle?.makeModel || '—'}</p><p className="text-xs font-mono text-slate-500">{_vehicle?.plateNumber || '—'}</p></div>
+                  </div>
+                </div>
+              </div>
+
+              {_parentLog && (<div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mb-6"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5"><ExternalLink size={12} /> Linked Trip Log</p><div className="flex items-center justify-between"><div><p className="font-bold text-slate-800">{_parentLog.date}</p><p className="text-xs text-slate-500">Distance: {_parentLog.distanceTraveledKm} km</p></div><span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${_parentLog.approvalStatus === 'Approved' ? 'bg-emerald-100 text-emerald-700' : _parentLog.approvalStatus === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>{_parentLog.approvalStatus || 'Pending'}</span></div></div>)}
+              {_isNonPartner && fc.nonPartnerReason && (<div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6"><p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1.5 flex items-center gap-1.5"><AlertTriangle size={12} /> Non-Partner Reason</p><p className="text-sm text-amber-800 font-medium">{fc.nonPartnerReason}</p></div>)}
+              {fc.remarks && (<div className="bg-slate-50 border border-slate-200 rounded-2xl p-5"><p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Remarks</p><p className="text-sm text-slate-700">{fc.remarks}</p></div>)}
+              </div>
+            </div>
+          );
+        })()}
+
+        {!viewingFuelCollection && (<>
         {/* ── Filters Panel ── */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4">
           <div className="p-4 space-y-4">
@@ -3631,45 +3923,78 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 />
               </div>
               <div className="flex flex-wrap gap-2 items-center">
-                <select value={fuelSortBy} onChange={e => { setFuelSortBy(e.target.value as any); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                  <option value="date_desc">Newest First</option>
-                  <option value="date_asc">Oldest First</option>
-                  <option value="liters_desc">Highest Litres</option>
-                  <option value="liters_asc">Lowest Litres</option>
-                  <option value="cost_desc">Highest Cost</option>
-                  <option value="cost_asc">Lowest Cost</option>
-                </select>
-              <select value={fuelDriverFilter} onChange={e => { setFuelDriverFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="all">All Drivers</option>
-                {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-              </select>
-              <select value={fuelSupplierFilter} onChange={e => { setFuelSupplierFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="all">All Projects</option>
-                {[...new Set(allFuelCollections.map(f => f.supplier || 'Unknown'))].map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-              <select value={fuelPaymentFilter} onChange={e => { setFuelPaymentFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="all">All Payments</option>
-                <option value="Fuel Card">Fuel Card</option>
-                <option value="Voucher">Voucher</option>
-                <option value="Mobile Money">Mobile Money</option>
-                <option value="Cash">Cash</option>
-              </select>
-              <select value={fuelFuelTypeFilter} onChange={e => { setFuelFuelTypeFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="all">All Fuel Types</option>
-                <option value="Petrol">⛽ Petrol</option>
-                <option value="Diesel">🟡 Diesel</option>
-                <option value="Premium">💜 Premium</option>
-              </select>
-              <select value={fuelPartnerFilter} onChange={e => { setFuelPartnerFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="all">All Stations</option>
-                {[...new Set(allFuelCollections.map(f => f.stationName).filter(Boolean))].sort().map(s => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-              <select value={fuelCityFilter} onChange={e => { setFuelCityFilter(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <option value="all">All Cities</option>
-                {[...new Set(allFuelCollections.map(f => f.location).filter(Boolean))].sort().map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+                <SearchableSelect 
+                value={fuelSortBy} 
+                onChange={(v: any) => { setFuelSortBy(v as any); setFuelPage(0); }} 
+                options={[
+                  {value: 'date_desc', label: 'Newest First'},
+                  {value: 'date_asc', label: 'Oldest First'},
+                  {value: 'liters_desc', label: 'Highest Litres'},
+                  {value: 'liters_asc', label: 'Lowest Litres'},
+                  {value: 'cost_desc', label: 'Highest Cost'},
+                  {value: 'cost_asc', label: 'Lowest Cost'}
+                ]} 
+                placeholder="Sort By" 
+              />
+              <SearchableSelect 
+                value={fuelDriverFilter} 
+                onChange={(v: any) => { setFuelDriverFilter(v); setFuelPage(0); }} 
+                options={[
+                  {value: 'all', label: 'All Drivers'},
+                  ...drivers.map(d => ({value: d.id, label: d.name}))
+                ]} 
+                placeholder="All Drivers" 
+              />
+              <SearchableSelect 
+                value={fuelSupplierFilter} 
+                onChange={(v: any) => { setFuelSupplierFilter(v); setFuelPage(0); }} 
+                options={[
+                  {value: 'all', label: 'All Projects'},
+                  ...[...new Set(allFuelCollections.map(f => f.supplier || 'Unknown'))].map(s => ({value: s, label: s}))
+                ]} 
+                placeholder="All Projects" 
+              />
+              <SearchableSelect 
+                value={fuelPaymentFilter} 
+                onChange={(v: any) => { setFuelPaymentFilter(v); setFuelPage(0); }} 
+                options={[
+                  {value: 'all', label: 'All Payments'},
+                  {value: 'Fuel Card', label: 'Fuel Card'},
+                  {value: 'Voucher', label: 'Voucher'},
+                  {value: 'Mobile Money', label: 'Mobile Money'},
+                  {value: 'Cash', label: 'Cash'}
+                ]} 
+                placeholder="All Payments" 
+              />
+              <SearchableSelect 
+                value={fuelFuelTypeFilter} 
+                onChange={(v: any) => { setFuelFuelTypeFilter(v); setFuelPage(0); }} 
+                options={[
+                  {value: 'all', label: 'All Fuel Types'},
+                  {value: 'Petrol', label: '⛽ Petrol'},
+                  {value: 'Diesel', label: '🟡 Diesel'},
+                  {value: 'Premium', label: '💜 Premium'}
+                ]} 
+                placeholder="All Fuel Types" 
+              />
+              <SearchableSelect 
+                value={fuelPartnerFilter} 
+                onChange={(v: any) => { setFuelPartnerFilter(v); setFuelPage(0); }} 
+                options={[
+                  {value: 'all', label: 'All Stations'},
+                  ...[...new Set(allFuelCollections.map(f => f.stationName).filter(Boolean))].sort().map(s => ({value: s, label: s}))
+                ]} 
+                placeholder="All Stations" 
+              />
+              <SearchableSelect 
+                value={fuelCityFilter} 
+                onChange={(v: any) => { setFuelCityFilter(v); setFuelPage(0); }} 
+                options={[
+                  {value: 'all', label: 'All Cities'},
+                  ...[...new Set(allFuelCollections.map(f => f.location).filter(Boolean))].sort().map(c => ({value: c, label: c}))
+                ]} 
+                placeholder="All Cities" 
+              />
               <input type="date" value={fuelDateFrom} onChange={e => { setFuelDateFrom(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" title="From date" />
               <input type="date" value={fuelDateTo} onChange={e => { setFuelDateTo(e.target.value); setFuelPage(0); }} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" title="To date" />
               {(fuelSearchQuery || fuelSortBy !== 'date_desc' || fuelDriverFilter !== 'all' || fuelSupplierFilter !== 'all' || fuelPaymentFilter !== 'all' || fuelFuelTypeFilter !== 'all' || fuelPartnerFilter !== 'all' || fuelCityFilter !== 'all' || fuelDateFrom || fuelDateTo) && (
@@ -3721,7 +4046,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 const _vehicle = vehicles.find(v => v.id === fc.vehicleId);
                 const _isNonPartner = fc.isPartnerStation === false;
                 return (
-                  <div key={fc.id} className={`bg-white rounded-2xl border flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all ${_isNonPartner ? 'border-red-200' : 'border-slate-200'}`}>
+                  <div key={fc.id} onClick={() => setViewingFuelCollection(fc)} className={`bg-white rounded-2xl border flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer ${_isNonPartner ? 'border-red-200' : 'border-slate-200'}`}>
                     <div className={`p-4 border-b flex justify-between items-start gap-2 ${_isNonPartner ? 'bg-red-50/50 border-red-100' : 'bg-slate-50/50 border-slate-100'}`}>
                       <div className="flex flex-col min-w-0">
                         <h4 className="font-bold text-slate-900 truncate text-sm">{fc.stationName}</h4>
@@ -3736,7 +4061,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     <div className="p-4 flex-1 space-y-3">
                       <div className="flex justify-between items-start">
                         <div><p className="font-bold text-slate-900 text-sm">{fc.date}</p><p className="text-xs text-slate-500">{fc.time}</p></div>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${supplierColors[fc.supplier || ''] || 'bg-slate-100 text-slate-700'} text-white`}>{fc.supplier || '—'}</span>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${supplierColors[fc.supplier || ''] ? supplierColors[fc.supplier || ''] + ' text-white' : 'bg-slate-100 text-slate-700'}`}>{fc.supplier || '—'}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
@@ -3765,7 +4090,14 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     </div>
                     <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${paymentBadge(fc.paymentMethod)}`}>{fc.paymentMethod || '—'}</span>
-                      <span className="font-mono text-[10px] text-slate-500 truncate ml-2">#{fc.receiptNumber || '—'}</span>
+                      <span className="font-mono text-[10px] text-slate-500 truncate ml-2">#{parseReceipt(fc.receiptNumber).text || '—'}</span>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border-t border-slate-100 flex justify-end" onClick={e => e.stopPropagation()}>
+                      <button
+                        onClick={e => { e.stopPropagation(); const r = e.currentTarget.getBoundingClientRect(); setFuelMenuPos({ x: r.right, y: r.bottom + 4 }); setFuelMenuEntry(fc); setOpenFuelMenuId(fc.id || null); }}
+                        className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                        title="More options"
+                      ><MoreVertical size={15} /></button>
                     </div>
                   </div>
                 );
@@ -3792,6 +4124,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   <th className="px-5 py-3 font-semibold">Payment</th>
                   <th className="px-5 py-3 font-semibold">Receipt</th>
                   <th className="px-5 py-3 font-semibold">Partner</th>
+                  <th className="px-5 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -3803,7 +4136,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   const vehicle = vehicles.find(v => v.id === fc.vehicleId);
                   const isNonPartner = fc.isPartnerStation === false;
                   return (
-                    <tr key={fc.id} className={`hover:bg-slate-50/80 transition-colors ${isNonPartner ? 'bg-amber-50/30' : ''}`}>
+                    <tr key={fc.id} onClick={() => setViewingFuelCollection(fc)} className={`hover:bg-slate-50/80 transition-colors cursor-pointer ${isNonPartner ? 'bg-amber-50/30' : ''}`}>
                       <td className="px-5 py-3">
                         <div className="font-medium text-slate-950">{fc.date}</div>
                         {fc.time && <div className="text-xs text-slate-500">{fc.time}</div>}
@@ -3819,7 +4152,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                         <div className="text-[10px] text-slate-500 font-mono">{vehicle?.plateNumber}</div>
                       </td>
                       <td className="px-5 py-3">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${supplierColors[fc.supplier || ''] || 'bg-slate-100 text-slate-700'} text-white`}>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${supplierColors[fc.supplier || ''] ? supplierColors[fc.supplier || ''] + ' text-white' : 'bg-slate-100 text-slate-700'}`}>
                           {fc.supplier || '—'}
                         </span>
                       </td>
@@ -3841,7 +4174,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           {fc.paymentMethod || '—'}
                         </span>
                       </td>
-                      <td className="px-5 py-3 font-mono text-xs text-slate-600">{fc.receiptNumber || '—'}</td>
+                      <td className="px-5 py-3 font-mono text-xs text-slate-600">{parseReceipt(fc.receiptNumber).text || '—'}</td>
                       <td className="px-5 py-3">
                         {isNonPartner ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-red-100 text-red-700 border border-red-200" title={fc.nonPartnerReason}>
@@ -3852,6 +4185,13 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                             <CheckCircle2 size={10} /> Partner
                           </span>
                         )}
+                      </td>
+                      <td className="px-5 py-3 text-right" onClick={e => e.stopPropagation()}>
+                        <button
+                          onClick={e => { e.stopPropagation(); const r = e.currentTarget.getBoundingClientRect(); setFuelMenuPos({ x: r.right, y: r.bottom + 4 }); setFuelMenuEntry(fc); setOpenFuelMenuId(fc.id || null); }}
+                          className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                          title="More options"
+                        ><MoreVertical size={16} /></button>
                       </td>
                     </tr>
                   );
@@ -3872,6 +4212,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             </div>
           )}
         </div>
+        </>) /* end !viewingFuelCollection */}
         </div>
         )}
 
@@ -4189,7 +4530,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       project,
                       client,
                       d.dispatchTime ? new Date(d.dispatchTime).toLocaleString() : '-',
-                      d.expectedReturnDate ? new Date(d.expectedReturnDate).toLocaleDateString() : '-',
+                      d.expectedReturnDate ? new Date(d.expectedReturnDate).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-',
                       d.odometerOut.toString(),
                       d.fuelLevelOut || '-',
                       `"${(d.conditionOut || '').replace(/"/g, '""')}"`,
@@ -4213,9 +4554,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   const isAct = dispatchSubTab === 'active';
                   const dataToExport = isAct ? filteredActive : filteredCompleted;
                   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-                  const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                  const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                   doc.setFontSize(16); doc.setTextColor(30, 30, 90);
-                  doc.text(`BIG Group - ${isAct ? 'Active' : 'Completed'} Dispatches`, 14, 16);
+                  doc.text(`BIG - ${isAct ? 'Active' : 'Completed'} Dispatches`, 14, 16);
                   doc.setFontSize(9); doc.setTextColor(100, 100, 120);
                   doc.text(`Generated on: ${today}`, 14, 22);
 
@@ -4233,11 +4574,11 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : d.vehicleId,
                       project,
                       client,
-                      d.dispatchTime ? new Date(d.dispatchTime).toLocaleDateString() : '-',
-                      d.expectedReturnDate ? new Date(d.expectedReturnDate).toLocaleDateString() : '-',
+                      d.dispatchTime ? new Date(d.dispatchTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-',
+                      d.expectedReturnDate ? new Date(d.expectedReturnDate).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-',
                       d.odometerOut.toString(),
                       d.fuelLevelOut || '-',
-                      isComp ? new Date((d as CompletedDispatch).completedAt).toLocaleDateString() : '-'
+                      isComp ? new Date((d as CompletedDispatch).completedAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'
                     ];
                   });
 
@@ -4486,9 +4827,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
     const exportMaintenancePDF = () => {
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
       doc.setFontSize(16); doc.setTextColor(30, 30, 90);
-      doc.text('BIG Group - Fleet Maintenance Logs', 14, 16);
+      doc.text('BIG - Fleet Maintenance Logs', 14, 16);
       doc.setFontSize(10); doc.setTextColor(100);
       doc.text(`Generated: ${today}   |   ${filteredMaintenanceRecords.length} records   |   Total Cost: Le ${totalFilteredCost.toLocaleString()}`, 14, 23);
       
@@ -4997,185 +5338,47 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   <input type="number" name="distanceTraveledKm" required defaultValue={editingLog?.distanceTraveledKm || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
                 )}
               </div>
-              <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="cursor-pointer flex items-center gap-2 select-none" onClick={() => setIsFuelTransactionsExpanded(!isFuelTransactionsExpanded)}>
-                    {isFuelTransactionsExpanded ? <ChevronDown size={18} className="text-slate-500" /> : <ChevronRight size={18} className="text-slate-500" />}
-                    <div>
-                      <h3 className="text-sm font-bold text-slate-950 flex items-center gap-1.5"><Fuel size={14} className="text-blue-500" /> Fuel Transactions</h3>
-                      <p className="text-[10px] text-slate-500 mt-0.5">Record every fuel stop as a separate entry.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {editingFuelCollections.length > 0 && (
-                      <div className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
-                        Total: {editingFuelCollections.reduce((sum, fc) => sum + (Number(fc.liters) || 0), 0).toFixed(1)} L
-                      </div>
-                    )}
-                    <button type="button" onClick={() => { setEditingFuelCollections(prev => [...prev, { id: `new-${Date.now()}`, stationName: '', supplier: 'NP', isPartnerStation: true, location: '', liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card', date: editingLog?.date || new Date().toISOString().split('T')[0] }]); setIsFuelTransactionsExpanded(true); }} className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 flex items-center gap-1">
-                      <Plus size={12} /> Add Fuel Stop
-                    </button>
-                  </div>
-                </div>
-                {isFuelTransactionsExpanded && (
-                  <div className="space-y-4">
-                    {editingFuelCollections.length === 0 && <p className="text-xs text-slate-500 italic text-center py-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">No fuel stops recorded for this trip.</p>}
-                  {editingFuelCollections.map((fc, i) => {
-                    const isMin = minimizedFuelStops[fc.id || i];
-                    return (
-                    <div key={fc.id || i} className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
-                      <div className="flex items-center justify-between mb-1 cursor-pointer select-none" onClick={() => setMinimizedFuelStops(prev => ({ ...prev, [fc.id || i]: !prev[fc.id || i] }))}>
-                        <div className="flex items-center gap-2">
-                           {isMin ? <ChevronRight size={14} className="text-slate-500" /> : <ChevronDown size={14} className="text-slate-500" />}
-                           <span className="text-[10px] font-black text-blue-600 uppercase tracking-wider">Stop {i + 1} {fc.stationName ? `- ${fc.stationName}` : ''}</span>
-                        </div>
-                        <button type="button" onClick={(e) => { 
-                          e.stopPropagation(); 
-                          setEditingFuelCollections(prev => {
-                            const n = prev.filter((_, idx) => idx !== i);
-                            const newTotal = n.reduce((sum, item) => sum + (Number(item.liters) || 0), 0);
-                            setEditingLog(prevLog => prevLog ? { ...prevLog, fuelConsumedLiters: newTotal } : prevLog);
-                            return n;
-                          }); 
-                        }} className="text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 p-1 rounded-md transition-colors"><X size={12} /></button>
-                      </div>
-                      {!isMin && (
-                      <>
-                      {/* Row 1: Project + Station */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Project</label>
-                          <select value={fc.supplier || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; const chosen = fuelSuppliers.find(s => s.name === e.target.value); n[i] = { ...n[i], supplier: e.target.value, isPartnerStation: chosen ? chosen.isPartner : false }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg bg-white">
-                            <option value="">Select Project</option>
-                            {fuelSuppliers.map(s => <option key={s.id} value={s.name}>{s.name}{s.isPartner ? ' ✓' : ''}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Station Name</label>
-                          <select value={fc.stationName || ''} onChange={e => {
-                            const station = fuelStations.find(s => s.name === e.target.value);
-                            setEditingFuelCollections(prev => {
-                              const n = [...prev];
-                              n[i] = { 
-                                ...n[i], 
-                                stationName: e.target.value,
-                                supplier: station?.supplier || n[i].supplier,
-                                isPartnerStation: station ? !!station.is_partner : n[i].isPartnerStation,
-                                location: station && station.city_id ? fuelCities.find(c => c.id === station.city_id)?.name || n[i].location : n[i].location
-                              };
-                              return n;
-                            });
-                          }} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required>
-                            <option value="">Select Station...</option>
-                            {fuelStations.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
-                          </select>
-                        </div>
-                        {/* Row 2: City + District */}
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">City</label>
-                          <select value={fc.location || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], location: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required>
-                            <option value="">Select City...</option>
-                            {fuelCities.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">District</label>
-                          <select value={fc.district || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], district: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg bg-white">
-                            <option value="">Select District...</option>
-                            {["Bo", "Bombali", "Bonthe", "Falaba", "Kailahun", "Kambia", "Karene", "Kenema", "Koinadugu", "Kono", "Moyamba", "Port Loko", "Pujehun", "Tonkolili", "Western Area Rural", "Western Area Urban"].map(d => (
-                              <option key={d} value={d}>{d}</option>
-                            ))}
-                          </select>
 
-                        </div>
-                        {/* Row 3: Litres + Cost/L */}
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Litres</label>
-                          <input type="number" step="0.1" value={fc.liters || ''} onChange={e => setEditingFuelCollections(prev => { 
-                            const n = [...prev]; 
-                            n[i] = { ...n[i], liters: Number(e.target.value) }; 
-                            const newTotal = n.reduce((sum, item) => sum + (Number(item.liters) || 0), 0);
-                            setEditingLog(prevLog => prevLog ? { ...prevLog, fuelConsumedLiters: newTotal } : prevLog);
-                            return n; 
-                          })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Cost / Litre (Le)</label>
-                          <input type="number" step="0.01" value={fc.costPerLiter || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], costPerLiter: Number(e.target.value) }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" required />
-                        </div>
-                        {/* Row 3b: Fuel Type */}
-                        <div className="col-span-2">
-                          <div className="grid grid-cols-3 gap-2">
-                            {(['Petrol', 'Diesel', 'Premium'] as const).map(ft => (
-                              <label key={ft} className={`flex items-center justify-center gap-1.5 p-1.5 rounded-lg border-2 cursor-pointer text-xs font-bold transition-all ${ fc.fuelType === ft ? ft === 'Diesel' ? 'border-amber-400 bg-amber-50 text-amber-700' : ft === 'Premium' ? 'border-purple-400 bg-purple-50 text-purple-700' : 'border-green-400 bg-green-50 text-green-700' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300' }`}>
-                                <input type="radio" name={`fuelType-${fc.id}`} value={ft} checked={fc.fuelType === ft} onChange={() => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], fuelType: ft }; return n; })} className="hidden" />
-                                {ft}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                        {/* Row 4: Date + Payment Method + Time */}
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Date of Fill-up</label>
-                          <input type="date" value={fc.date || editingLog?.date || new Date().toISOString().split('T')[0]} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], date: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Time of Fill-up</label>
-                          <input type="time" value={fc.time || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], time: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
-                        </div>
-                        <div className="col-span-2">
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Payment Method</label>
-                          <select value={fc.paymentMethod || 'Fuel Card'} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], paymentMethod: e.target.value as any }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg bg-white">
-                            <option value="Fuel Card">Fuel Card</option>
-                            <option value="Voucher">Voucher</option>
-                            <option value="Mobile Money">Mobile Money</option>
-                            <option value="Cash">Cash</option>
-                          </select>
-                        </div>
-                        {/* Row 5: Receipt + Partner toggle */}
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Receipt / Ref #</label>
-                          <input type="text" placeholder="e.g. REC-1234" value={fc.receiptNumber || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], receiptNumber: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
-                        </div>
-                        <div className="flex flex-col justify-end">
-                          <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer mt-1">
-                            <input type="checkbox" checked={fc.isPartnerStation !== false} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], isPartnerStation: e.target.checked }; return n; })} className="w-4 h-4 rounded text-blue-600" />
-                            Partner Station
-                          </label>
-                        </div>
-                        {/* Non-partner reason (conditional) */}
-                        {fc.isPartnerStation === false && (
-                          <div className="col-span-2">
-                            <label className="block text-[10px] font-bold text-amber-600 uppercase mb-1">⚠ Reason for Non-Partner Station</label>
-                            <input type="text" placeholder="e.g. No partner station available in area" value={fc.nonPartnerReason || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], nonPartnerReason: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-amber-300 bg-amber-50 rounded-lg" />
-                          </div>
-                        )}
-                        {/* Remarks */}
-                        <div className="col-span-2">
-                          <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">Remarks</label>
-                          <input type="text" placeholder="Optional notes for this stop..." value={fc.remarks || ''} onChange={e => setEditingFuelCollections(prev => { const n = [...prev]; n[i] = { ...n[i], remarks: e.target.value }; return n; })} className="w-full p-1.5 text-xs border border-slate-200 rounded-lg" />
-                        </div>
-                        {/* Total display */}
-                        {fc.liters && fc.costPerLiter && (
-                          <div className="col-span-2 bg-blue-50 border border-blue-100 rounded-lg p-2 flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-blue-600 uppercase">Total Cost</span>
-                            <span className="font-black text-blue-700 text-sm">Le {(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                          </div>
-                        )}
-                      </div>
-                      </>
-                      )}
-                    </div>
-                  )})}
+              {/* ⛽ Fuel Reminder Banner */}
+              <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
+                <div className="flex items-start gap-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl">
+                  <Fuel size={18} className="text-blue-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-blue-800">Record Fuel on the Fuel Page</p>
+                    <p className="text-xs text-blue-600 mt-0.5">
+                      Fuel fill-ups for this trip are recorded separately. Go to the{' '}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsLogModalOpen(false);
+                          setActiveTab('fuel');
+                          setStandaloneFuelEntry({
+                            id: uuidv4(),
+                            stationName: '', supplier: 'NP', isPartnerStation: true, location: '',
+                            liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card',
+                            date: editingLog?.date || new Date().toISOString().split('T')[0], time: '',
+                            fuelType: 'Diesel',
+                          });
+                          setStandaloneFuelDriverId(editingLog?.driverId || '');
+                          setStandaloneFuelVehicleId(editingLog?.vehicleId || '');
+                          setStandaloneFuelTripLogId(editingLog?.id || '');
+                          setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true);
+                        }}
+                        className="font-bold underline hover:text-blue-800 transition-colors"
+                      >
+                        ⛽ Fuel Page → Record Fuel Fill-Up
+                      </button>
+                      {' '}to log fuel stops linked to this trip.
+                    </p>
+                  </div>
                 </div>
-              )}
               </div>
-              
+
               <div className="col-span-2">
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Total Litres (Fuel Consumed)</label>
                 <input type="number" step="0.1" name="fuelConsumedLiters" required value={editingLog?.fuelConsumedLiters ?? 0} onChange={e => setEditingLog(prev => prev ? { ...prev, fuelConsumedLiters: Number(e.target.value) } : prev)} className="w-full p-2 border border-slate-200 rounded-xl" />
               </div>
-              
+
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
                 <h3 className="text-sm font-bold text-slate-950 mb-4">Behavior & Compliance</h3>
               </div>
@@ -5620,7 +5823,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                         <p className="text-sm text-emerald-700 mt-1">Has this driver performed exceptionally well this month? Add a Driver of the Month award to their profile.</p>
                         <button 
                           onClick={() => {
-                            setDrivers(prev => prev.map(d => d.id === ds.driver.id ? { ...d, awards: [...(d.awards || []), `Driver of the Month - ${new Date().toLocaleDateString()}`] } : d));
+                            setDrivers(prev => prev.map(d => d.id === ds.driver.id ? { ...d, awards: [...(d.awards || []), `Driver of the Month - ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}`] } : d));
                             alert('Award added successfully!');
                           }}
                           className="mt-3 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-emerald-700 transition-colors"
@@ -6197,7 +6400,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
       {/* â”€â”€ Approval Modal â”€â”€ */}
       {approvalModalLogId && (() => {
         const logForApproval = logs.find(l => l.id === approvalModalLogId);
-        const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
         return (
           <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
@@ -6424,6 +6627,467 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 <button type="submit" className="px-5 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-sm hover:bg-emerald-700 transition-colors">Save Station</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Standalone Fuel Fill-Up Modal ── */}
+      {isStandaloneFuelModalOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-blue-600 sticky top-0 z-10">
+              <div>
+                <h2 className="text-lg font-black text-white flex items-center gap-2"><Fuel size={18} /> Record Fuel Fill-Up</h2>
+                <p className="text-blue-200 text-xs mt-0.5">Log a fuel fill-up independently of a trip return.</p>
+              </div>
+              <button onClick={() => setIsStandaloneFuelModalOpen(false)} className="text-blue-200 hover:text-white bg-blue-500 hover:bg-blue-400 rounded-lg p-1.5 transition-colors"><X size={18} /></button>
+            </div>
+            <div className="p-6 space-y-4">
+              {/* Driver + Vehicle */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver</label>
+                  <SearchableSelect 
+                    value={standaloneFuelDriverId} 
+                    onChange={(v: any) => setStandaloneFuelDriverId(v)} 
+                    options={[
+                      {value: '', label: 'Select Driver...'},
+                      ...drivers.map(d => ({value: d.id, label: d.name}))
+                    ]} 
+                    placeholder="Select Driver..." 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
+                  <select value={standaloneFuelVehicleId} onChange={e => setStandaloneFuelVehicleId(e.target.value)} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:bg-white">
+                    <option value="">Select Vehicle</option>
+                    {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
+                  </select>
+                </div>
+              </div>
+              {/* Link to Trip Log (optional) */}
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Link to Trip Log <span className="font-normal text-slate-400 normal-case">(optional)</span></label>
+                <SearchableSelect 
+                    value={standaloneFuelTripLogId} 
+                    onChange={(v: any) => {
+                      setStandaloneFuelTripLogId(v);
+                      if (v) {
+                        const selectedLog = logs.find(l => l.id === v);
+                        if (selectedLog) {
+                          if (selectedLog.driverId) setStandaloneFuelDriverId(selectedLog.driverId);
+                          if (selectedLog.vehicleId) setStandaloneFuelVehicleId(selectedLog.vehicleId);
+                          if (selectedLog.date) {
+                            setStandaloneFuelEntry((prev: any) => ({ ...prev, date: selectedLog.date }));
+                          }
+                        }
+                      }
+                    }} 
+                    options={[
+                      {value: '', label: 'No linked trip (Standalone)'},
+                      ...logs.filter(l => !standaloneFuelDriverId || l.driverId === standaloneFuelDriverId).slice(0, 30).map(l => {
+                        const drv = drivers.find(d => d.id === l.driverId)?.name || 'Unknown Driver';
+                        const veh = vehicles.find(v => v.id === l.vehicleId)?.name || 'Unknown Vehicle';
+                        const dest = l.district ? ` to ${l.district}` : '';
+                        return {
+                          value: l.id, 
+                          label: `${l.date}: Trip${dest} (${drv} • ${veh})`
+                        };
+                      })
+                    ]} 
+                    placeholder="No linked trip (Standalone)" 
+                  />
+              </div>
+              {/* Station + Supplier */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Station Name</label>
+                  <SearchableSelect 
+                    value={standaloneFuelEntry.stationName || ''} 
+                    onChange={(v: any) => {
+                      const st = fuelStations.find(s => s.name === v);
+                      setStandaloneFuelEntry((prev: any) => ({
+                        ...prev,
+                        stationName: v,
+                        isPartnerStation: st ? (st.is_partner ?? false) : prev.isPartnerStation
+                      }));
+                    }} 
+                    options={[
+                      {value: '', label: 'Select Station...'},
+                      ...fuelStations.map(s => ({value: s.name, label: s.name + (s.is_partner ? ' ★' : '')}))
+                    ]} 
+                    placeholder="Select Station..." 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Partner / Client</label>
+                  <SearchableSelect 
+                    value={standaloneFuelEntry.supplier || ''} 
+                    onChange={(v: any) => {
+                      setStandaloneFuelEntry((prev: any) => ({ ...prev, supplier: v }));
+                    }} 
+                    options={[
+                      {value: '', label: 'Select Partner / Client...'},
+                      ...clients.map((c: any) => ({value: c.name, label: c.name + (c.isPartner ? ' ★' : '')}))
+                    ]} 
+                    placeholder="Select Partner / Client..." 
+                  />
+                </div>
+              </div>
+              {/* City + District */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">City</label>
+                  <SearchableSelect 
+                    value={standaloneFuelEntry.location || ''} 
+                    onChange={(v: any) => setStandaloneFuelEntry((prev: any) => ({ ...prev, location: v }))} 
+                    options={[
+                      {value: '', label: 'Select City...'},
+                      ...(fuelCities.length > 0 ? fuelCities.map(c => ({value: c.name, label: c.name})) : slCities.map(c => ({value: c, label: c})))
+                    ]} 
+                    placeholder="Select City..." 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">District</label>
+                  <SearchableSelect 
+                    value={standaloneFuelEntry.district || ''} 
+                    onChange={(v: any) => setStandaloneFuelEntry((prev: any) => ({ ...prev, district: v }))} 
+                    options={[
+                      {value: '', label: 'Select District...'},
+                      ...slDistricts.map(d => ({value: d, label: d}))
+                    ]} 
+                    placeholder="Select District..." 
+                  />
+                </div>
+              </div>
+              {/* Date + Time */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Date</label>
+                  <input type="date" value={standaloneFuelEntry.date || ''} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, date: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Time</label>
+                  <input type="time" value={standaloneFuelEntry.time || ''} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, time: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-xl text-sm" />
+                </div>
+              </div>
+              {/* Fuel Type */}
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Fuel Type</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['Petrol', 'Diesel', 'Premium'] as const).map(ft => (
+                    <label key={ft} className={`flex items-center justify-center gap-1.5 p-2 rounded-xl border-2 cursor-pointer text-xs font-bold transition-all ${standaloneFuelEntry.fuelType === ft ? ft === 'Diesel' ? 'border-amber-400 bg-amber-50 text-amber-700' : ft === 'Premium' ? 'border-purple-400 bg-purple-50 text-purple-700' : 'border-green-400 bg-green-50 text-green-700' : 'border-slate-200 bg-white text-slate-600'}`}>
+                      <input type="radio" checked={standaloneFuelEntry.fuelType === ft} onChange={() => setStandaloneFuelEntry(prev => ({ ...prev, fuelType: ft }))} className="hidden" />
+                      {ft}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              {/* Litres + Cost */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Litres</label>
+                  <input type="number" step="0.1" min="0" value={standaloneFuelEntry.liters || ''} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, liters: Number(e.target.value) }))} className="w-full p-2 border border-slate-200 rounded-xl text-sm" placeholder="0.0" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Cost / Litre (Le)</label>
+                  <input type="number" step="0.01" min="0" value={standaloneFuelEntry.costPerLiter || ''} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, costPerLiter: Number(e.target.value) }))} className="w-full p-2 border border-slate-200 rounded-xl text-sm" placeholder="0.00" />
+                </div>
+              </div>
+              {/* Auto-calc total */}
+              {(standaloneFuelEntry.liters || 0) > 0 && (standaloneFuelEntry.costPerLiter || 0) > 0 && (
+                <div className="flex justify-between items-center p-3 bg-blue-50 border border-blue-100 rounded-xl">
+                  <span className="text-xs font-bold text-blue-600 uppercase">Total Cost</span>
+                  <span className="font-black text-blue-700 text-lg">Le {((standaloneFuelEntry.liters || 0) * (standaloneFuelEntry.costPerLiter || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                </div>
+              )}
+              {/* Payment + Receipt */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Payment Method</label>
+                  <SearchableSelect 
+                    value={standaloneFuelEntry.paymentMethod || 'Fuel Card'} 
+                    onChange={(v: any) => setStandaloneFuelEntry((prev: any) => ({ ...prev, paymentMethod: v as any }))} 
+                    options={[
+                      {value: 'Fuel Card', label: 'Fuel Card'},
+                      {value: 'Voucher', label: 'Voucher'},
+                      {value: 'Mobile Money', label: 'Mobile Money'},
+                      {value: 'Cash', label: 'Cash'}
+                    ]} 
+                    placeholder="Payment Method" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Receipt / Ref #</label>
+                  <div className="flex flex-col gap-2">
+                    <input type="text" value={parseReceipt(standaloneFuelEntry.receiptNumber).text} onChange={e => {
+                      const newText = e.target.value;
+                      const existingUrl = parseReceipt(standaloneFuelEntry.receiptNumber).url;
+                      setStandaloneFuelEntry(prev => ({ ...prev, receiptNumber: existingUrl ? `${newText}|URL:${existingUrl}` : newText }));
+                    }} placeholder="e.g. REC-1234" className="w-full p-2 border border-slate-200 rounded-xl text-sm" />
+                    <div className="relative w-full">
+                      <input type="file" accept="image/*" onChange={e => setStandaloneFuelReceiptFile(e.target.files?.[0] || null)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                      <div className="w-full px-3 py-2 flex items-center justify-between border border-slate-200 border-dashed rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
+                        {standaloneFuelReceiptFile ? (
+                          <div className="flex items-center gap-2">
+                            <img src={URL.createObjectURL(standaloneFuelReceiptFile)} alt="Preview" className="w-8 h-8 object-cover rounded shadow-sm" />
+                            <span className="text-xs font-medium text-slate-600 truncate">{standaloneFuelReceiptFile.name}</span>
+                          </div>
+                        ) : parseReceipt(standaloneFuelEntry.receiptNumber).url ? (
+                          <div className="flex items-center gap-2">
+                            <img src={parseReceipt(standaloneFuelEntry.receiptNumber).url} alt="Existing" className="w-8 h-8 object-cover rounded shadow-sm" />
+                            <span className="text-xs font-medium text-slate-600 truncate">Replace Image (Optional)</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs font-medium text-slate-600 truncate">Attach Receipt Image (Optional)</span>
+                        )}
+                        <Upload size={14} className="text-slate-400" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Partner Station */}
+              <div className="flex items-center gap-3">
+                <input type="checkbox" id="standalonePartner" checked={standaloneFuelEntry.isPartnerStation !== false} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, isPartnerStation: e.target.checked }))} className="w-4 h-4 rounded text-blue-600" />
+                <label htmlFor="standalonePartner" className="text-sm font-bold text-slate-700 cursor-pointer">Partner Station</label>
+              </div>
+              {standaloneFuelEntry.isPartnerStation === false && (
+                <div>
+                  <label className="block text-xs font-bold text-amber-600 uppercase mb-1.5">⚠ Reason for Non-Partner Station</label>
+                  <input type="text" value={standaloneFuelEntry.nonPartnerReason || ''} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, nonPartnerReason: e.target.value }))} placeholder="e.g. No partner station available in area" className="w-full p-2 border border-amber-300 bg-amber-50 rounded-xl text-sm" />
+                </div>
+              )}
+              {/* Remarks */}
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Remarks</label>
+                <input type="text" value={standaloneFuelEntry.remarks || ''} onChange={e => setStandaloneFuelEntry(prev => ({ ...prev, remarks: e.target.value }))} placeholder="Optional notes..." className="w-full p-2 border border-slate-200 rounded-xl text-sm" />
+              </div>
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-2 border-t border-slate-100">
+                <button type="button" onClick={() => setIsStandaloneFuelModalOpen(false)} className="px-5 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                <button
+                  type="button"
+                  disabled={isUploadingFuel}
+                  onClick={async () => {
+                    if (!standaloneFuelDriverId || !standaloneFuelVehicleId) {
+                      alert('Please select a driver and vehicle.');
+                      return;
+                    }
+                    if (!standaloneFuelEntry.stationName || !(standaloneFuelEntry.liters || 0) || !(standaloneFuelEntry.costPerLiter || 0)) {
+                      alert('Please fill in Station, Litres, and Cost per Litre.');
+                      return;
+                    }
+                    if (standaloneFuelReceiptFile) {
+                      setIsUploadingFuel(true);
+                      const fileExt = standaloneFuelReceiptFile.name.split('.').pop();
+                      const fileName = `fuel-receipt-${Date.now()}.${fileExt}`;
+                      const { error: upErr } = await supabase.storage
+                        .from('vehicle-documents')
+                        .upload(`receipts/${fileName}`, standaloneFuelReceiptFile, { upsert: true });
+                      
+                      if (upErr) {
+                        alert(`Receipt upload failed: ${upErr.message}`);
+                        setIsUploadingFuel(false);
+                        return;
+                      }
+                      
+                      const { data: urlData } = supabase.storage.from('vehicle-documents').getPublicUrl(`receipts/${fileName}`);
+                      const currentReceipt = standaloneFuelEntry.receiptNumber || '';
+                      standaloneFuelEntry.receiptNumber = currentReceipt ? `${currentReceipt}|URL:${urlData.publicUrl}` : `URL:${urlData.publicUrl}`;
+                      setIsUploadingFuel(false);
+                    }
+
+                    const entryId = standaloneFuelEntry.id || uuidv4();
+                    const isEditing = logs.some(l => (l.fuelCollections || []).some(fc => fc.id === entryId));
+                    const newEntry: FuelCollection = {
+                      ...standaloneFuelEntry as FuelCollection,
+                      id: entryId,
+                      driverId: standaloneFuelDriverId,
+                      vehicleId: standaloneFuelVehicleId,
+                      tripLogId: standaloneFuelTripLogId || undefined,
+                    };
+
+                    // ── Persist to Supabase ──────────────────────────────
+                    const buildFuelRow = (e: FuelCollection, logId?: string) => ({
+                      id: e.id,
+                      trip_log_id: logId || e.tripLogId || null,
+                      driver_id: e.driverId || null,
+                      vehicle_id: e.vehicleId || null,
+                      station_name: e.stationName,
+                      location: e.location || 'Juba',
+                      date: e.date || new Date().toISOString().split('T')[0],
+                      time: e.time || null,
+                      supplier: e.supplier || null,
+                      is_partner_station: e.isPartnerStation ?? true,
+                      district: e.district || null,
+                      liters: e.liters || 0,
+                      cost_per_liter: e.costPerLiter || 0,
+                      total_cost: e.totalAmount || (e.liters * e.costPerLiter) || null,
+                      fuel_type: e.fuelType || null,
+                      payment_method: e.paymentMethod || null,
+                      receipt_number: e.receiptNumber || null,
+                      notes: e.nonPartnerReason || null,
+                      remarks: e.remarks || null,
+                    });
+
+                    if (isEditing) {
+                      // Update in state
+                      setLogs(prev => prev.map(l => ({
+                        ...l,
+                        fuelCollections: (l.fuelCollections || []).map(fc => fc.id === entryId ? newEntry : fc),
+                      })));
+                      setViewingFuelCollection(newEntry);
+                      // Persist update to Supabase
+                      supabase.from('fuel_collections').update(buildFuelRow(newEntry)).eq('id', entryId)
+                        .then(({ error }) => { if (error) console.warn('[Fuel Update]', error.message); });
+                    } else if (standaloneFuelTripLogId) {
+                      setLogs(prev => prev.map(l => l.id === standaloneFuelTripLogId
+                        ? { ...l, fuelCollections: [...(l.fuelCollections || []), newEntry] }
+                        : l
+                      ));
+                      // Persist to Supabase linked to existing trip log
+                      supabase.from('fuel_collections').insert(buildFuelRow(newEntry, standaloneFuelTripLogId))
+                        .then(({ error }) => { if (error) console.warn('[Fuel Insert (linked)]', error.message); });
+                    } else {
+                      // Standalone entry — create a synthetic trip log + linked fuel_collection
+                      const syntheticLogId = uuidv4();
+                      const entryDate = newEntry.date || new Date().toISOString().split('T')[0];
+                      const syntheticLog: TripLog = {
+                        id: syntheticLogId,
+                        date: entryDate,
+                        driverId: standaloneFuelDriverId,
+                        vehicleId: standaloneFuelVehicleId,
+                        distanceTraveledKm: 0,
+                        fuelConsumedLiters: newEntry.liters || 0,
+                        fuelIssuedLiters: newEntry.liters || 0,
+                        fuelCostPerLiter: newEntry.costPerLiter || 0,
+                        incidents: 0, speedingEvents: 0, harshBraking: 0,
+                        idlingTimeHours: 0, routeDeviations: 0, policyViolations: 0,
+                        maintenanceIssuesLogged: false,
+                        fuelCollections: [{ ...newEntry, tripLogId: syntheticLogId }],
+                        notes: 'Standalone fuel entry',
+                        approvalStatus: 'Pending',
+                      };
+                      _setLogs(prev => [syntheticLog, ...prev]); // Bypasses handleSupabaseSync to prevent race condition
+                      // Persist: trip log first, then fuel collection
+                      supabase.from('trip_logs').insert({
+                        id: syntheticLogId,
+                        date: entryDate,
+                        driver_id: standaloneFuelDriverId,
+                        vehicle_id: standaloneFuelVehicleId,
+                        distance_traveled_km: 0,
+                        fuel_consumed_liters: newEntry.liters || 0,
+                        fuel_issued_liters: newEntry.liters || 0,
+                        fuel_cost_per_liter: newEntry.costPerLiter || 0,
+                        incidents: 0, speeding_events: 0, harsh_braking: 0,
+                        idling_time_hours: 0, route_deviations: 0, policy_violations: 0,
+                        maintenance_issues_logged: false,
+                        notes: 'Standalone fuel entry',
+                        approval_status: 'Pending',
+                      }).then(({ error: logErr }) => {
+                        if (logErr) { console.warn('[Fuel SyntheticLog Insert]', logErr.message); return; }
+                        supabase.from('fuel_collections').insert(buildFuelRow({ ...newEntry, tripLogId: syntheticLogId }, syntheticLogId))
+                          .then(({ error: fcErr }) => { if (fcErr) console.warn('[Fuel Insert (standalone)]', fcErr.message); });
+                      });
+                    }
+                    setIsStandaloneFuelModalOpen(false);
+                    // Switch to Fuel Logs subtab so admin can see the new entry
+                    setFuelSubTab('fuel');
+                  }}
+                  className="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50"
+                >
+                  {isUploadingFuel ? <Loader2 size={14} className="animate-spin" /> : <Fuel size={14} />} 
+                  {isUploadingFuel ? 'Uploading...' : 'Save Fuel Entry'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Global Fuel Three-Dot Menu (fixed position, always on top) ── */}
+      {openFuelMenuId && fuelMenuEntry && fuelMenuPos && (
+        <>
+          {/* Invisible backdrop to close menu on outside click */}
+          <div
+            className="fixed inset-0 z-[190]"
+            onClick={() => { setOpenFuelMenuId(null); setFuelMenuEntry(null); setFuelMenuPos(null); }}
+          />
+          <div
+            className="fixed z-[200] w-48 bg-white rounded-xl shadow-2xl border border-slate-200 py-1 animate-fade-in"
+            style={{ top: fuelMenuPos.y, right: window.innerWidth - fuelMenuPos.x }}
+          >
+            <button
+              onClick={() => { setViewingFuelCollection(fuelMenuEntry); setOpenFuelMenuId(null); setFuelMenuEntry(null); setFuelMenuPos(null); }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+            ><Eye size={14} className="text-blue-500" /> View Details</button>
+            <button
+              onClick={() => { setStandaloneFuelEntry({ ...fuelMenuEntry }); setStandaloneFuelDriverId(fuelMenuEntry.driverId || ''); setStandaloneFuelVehicleId(fuelMenuEntry.vehicleId || ''); setStandaloneFuelTripLogId(fuelMenuEntry.tripLogId || ''); setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true); setOpenFuelMenuId(null); setFuelMenuEntry(null); setFuelMenuPos(null); }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+            ><Pencil size={14} className="text-amber-500" /> Edit Entry</button>
+            <div className="border-t border-slate-100 my-1" />
+            <button
+              onClick={() => { setDeletingFuelCollection(fuelMenuEntry); setOpenFuelMenuId(null); setFuelMenuEntry(null); setFuelMenuPos(null); }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"
+            ><Trash2 size={14} /> Delete Entry</button>
+          </div>
+        </>
+      )}
+
+      {/* ── Delete Fuel Entry Confirmation ── */}
+      {deletingFuelCollection && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-red-50">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0"><Trash2 size={18} className="text-red-600" /></div>
+              <div>
+                <h2 className="text-base font-black text-slate-900">Delete Fuel Entry?</h2>
+                <p className="text-xs text-slate-500 mt-0.5">This action cannot be undone.</p>
+              </div>
+            </div>
+            <div className="px-6 py-5">
+              <div className="bg-slate-50 rounded-xl border border-slate-200 p-4 mb-5">
+                <p className="text-sm font-bold text-slate-800">{deletingFuelCollection.stationName || 'Unknown Station'}</p>
+                <p className="text-xs text-slate-500 mt-1">{deletingFuelCollection.date} · {(deletingFuelCollection.liters || 0).toFixed(1)} L · Le {((deletingFuelCollection.liters || 0) * (deletingFuelCollection.costPerLiter || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{drivers.find(d => d.id === deletingFuelCollection.driverId)?.name || '—'} · {vehicles.find(v => v.id === deletingFuelCollection.vehicleId)?.plateNumber || '—'}</p>
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setDeletingFuelCollection(null)}
+                  className="px-5 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+                >Cancel</button>
+                <button
+                  onClick={() => {
+                    const idToDelete = deletingFuelCollection.id;
+                    // Find the parent log to detect synthetic logs that will become empty
+                    const parentLog = logs.find(l => (l.fuelCollections || []).some(fc => fc.id === idToDelete));
+                    const parentBecomesEmpty = parentLog && (parentLog.fuelCollections || []).length === 1;
+                    const isSyntheticLog = parentLog?.id?.startsWith('log-');
+                    setLogs(prev => prev
+                      .map(l => ({
+                        ...l,
+                        fuelCollections: (l.fuelCollections || []).filter(fc => fc.id !== idToDelete),
+                      }))
+                      .filter(l => l.id !== parentLog?.id || !isSyntheticLog || !parentBecomesEmpty)
+                    );
+                    // Delete fuel_collection from Supabase
+                    supabase.from('fuel_collections').delete().eq('id', idToDelete)
+                      .then(({ error }) => { if (error) console.warn('[Fuel Delete]', error.message); });
+                    // If the synthetic parent trip log becomes empty, delete it too
+                    if (parentLog && isSyntheticLog && parentBecomesEmpty) {
+                      supabase.from('trip_logs').delete().eq('id', parentLog.id)
+                        .then(({ error }) => { if (error) console.warn('[Fuel SyntheticLog Delete]', error.message); });
+                    }
+                    setDeletingFuelCollection(null);
+                    // If we were viewing the deleted entry, go back to list
+                    if (viewingFuelCollection?.id === idToDelete) setViewingFuelCollection(null);
+                  }}
+                  className="px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors shadow-sm flex items-center gap-2"
+                ><Trash2 size={14} /> Yes, Delete</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

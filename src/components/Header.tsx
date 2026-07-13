@@ -34,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
     { id: 'services', label: 'Services', path: '/services' },
     { id: 'about', label: 'About Us', path: '/about', submenu: [{label: 'Our Team', path: '/team'}] },
     { id: 'clients', label: 'Partners', path: '/clients' },
-    { id: 'contact', label: 'Book Now', path: '/contact' }
+    { id: 'contact', label: 'Book Ride', path: '/contact' }
   ];
 
   return (
@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           </span>
           <span className="flex items-center space-x-1">
             <MapPin size={13} className="text-blue-500" />
-            <span>11 Freetown Road, Wilberforce, Freetown</span>
+            <span>3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
           </span>
         </div>
         <div className="flex items-center space-x-4">
@@ -137,15 +137,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           to="/" 
           className="flex items-center space-x-3 cursor-pointer select-none group"
         >
-          <div className="bg-blue-600 p-2 rounded flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
-            <Shield size={24} className="text-white" />
+          <div className="flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200 rounded-full">
+            <img src="/logo.jpg" alt="BIG Logo" className="h-14 w-14 object-cover rounded-full" />
           </div>
           <div>
             <div className="flex items-baseline space-x-1">
-              <span className="text-2xl font-black tracking-wider text-white">B.I.G</span>
-              <span className="text-xs font-semibold text-blue-400">GROUP</span>
+              <span className="text-lg font-black tracking-wider text-white">Brahim Investment Group</span>
             </div>
-            <p className="text-[10px] tracking-widest text-slate-600 font-mono -mt-1">BRAHIM INVESTMENT GROUP</p>
+            <p className="text-[10px] tracking-widest text-blue-400 font-mono uppercase">Safe and Smooth Ride</p>
           </div>
         </Link>
 
@@ -253,7 +252,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-100 space-y-2">
             <p className="flex items-center gap-2"><Phone size={12} className="text-blue-400" /> +232 34 692208 / +232 76 268296 / +232 79 121013</p>
             <p className="flex items-center gap-2"><Mail size={12} className="text-blue-400" /> bigroupsl2010@gmail.com</p>
-            <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 11 Freetown Road, Wilberforce, Freetown</p>
+            <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 3 Massalay Drive Juba Formerly Johnny Paul Drive</p>
           </div>
         </div>
       )}

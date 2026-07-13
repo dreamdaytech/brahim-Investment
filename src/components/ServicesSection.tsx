@@ -330,7 +330,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setSelectedVeh
                 <span className="text-[10px] font-bold tracking-widest text-blue-400 font-mono uppercase mb-4 block">Itemized Deployment Estimate</span>
                 <h3 className="text-2xl font-black text-white tracking-tight mb-2">{selectedVehicle.name}</h3>
                 <p className="text-xs text-slate-200 leading-relaxed max-w-sm mb-8">
-                  Configured for continuous operations under BIG Group safety standards.
+                  Configured for continuous operations under BIG safety standards.
                 </p>
 
                 <div className="space-y-3 font-mono text-xs border-b border-white/10 pb-6 mb-6">

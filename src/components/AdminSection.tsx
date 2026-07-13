@@ -114,7 +114,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       id: dbItem.id,
       name: dbItem.name,
       service: dbItem.service,
-      logoUrl: dbItem.logoUrl || dbItem.logourl,
+      logoUrl: dbItem.logo_url || dbItem.logoUrl || dbItem.logourl,
       shortCode: dbItem.short_code || dbItem.shortCode,
       isPartner: dbItem.is_partner !== undefined ? dbItem.is_partner : dbItem.isPartner,
       contactPerson: dbItem.contact_person || dbItem.contactPerson,
@@ -252,7 +252,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
 
           <div>
             <span className="text-[10px] font-mono font-bold tracking-widest text-[#855300] bg-amber-50 px-2 py-0.5 rounded uppercase">
-              BIG GROUP SECURE PORT
+              BIG SECURE PORT
             </span>
             <h2 className="text-2xl font-black text-slate-950 tracking-tight mt-1">Staff Access Requested</h2>
             <p className="text-xs text-slate-600 mt-1 max-w-xs mx-auto">
@@ -316,7 +316,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                 </div>
                 {sidebarOpen && (
                   <div className="overflow-hidden">
-                    <p className="text-xs font-mono font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap">BIG Group</p>
+                    <p className="text-xs font-mono font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap">BIG</p>
                     <p className="text-sm font-black text-white leading-tight whitespace-nowrap">Ops Registry</p>
                   </div>
                 )}
@@ -501,7 +501,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     {adminTab === 'performance' && 'Management'}
                     {adminTab === 'billing' && 'Billing & CRM'}
                   </h1>
-                  <p className="text-xs text-slate-600 font-mono">11 Freetown Road, Wilberforce • Live Channel SL-5</p>
+                  <p className="text-xs text-slate-600 font-mono">3 Massalay Drive Juba Formerly Johnny Paul Drive • Live Channel SL-5</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -900,9 +900,9 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
             <button
               onClick={() => {
                 const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-                const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                 doc.setFontSize(16); doc.setTextColor(30, 30, 90);
-                doc.text(`BIG Group - Partners & Clients`, 14, 16);
+                doc.text(`BIG - Partners & Clients`, 14, 16);
                 doc.setFontSize(9); doc.setTextColor(100, 100, 120);
                 doc.text(`Generated on: ${today}`, 14, 22);
 
@@ -1151,8 +1151,8 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
               const saved: any = {
                 id: editingClient?.id || `client-${Date.now()}`,
                 name: g('name') || '',
-                service: g('service') || editingClient?.service,
-                logoUrl: finalLogoUrl,
+                service: g('service') || editingClient?.service || 'Logistics & Transport',
+                logo_url: finalLogoUrl,
                 short_code: g('shortCode'),
                 is_partner: fd.get('isPartner') === 'true',
                 contact_person: g('contactPerson'),

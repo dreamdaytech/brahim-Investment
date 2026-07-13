@@ -124,7 +124,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!termsAccepted) {
-      alert("Please accept the BIG Group vehicle vetting & agreement code to proceed.");
+      alert("Please accept the BIG vehicle vetting & agreement code to proceed.");
       return;
     }
 
@@ -175,7 +175,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div>
                   <h2 className="text-3xl font-black text-slate-950 tracking-tight">Proposal Request Received</h2>
                   <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-                    Thank you, <strong>{fullName}</strong>. We have registered your inquiry on our Freetown servers. An official, itemized logistics quote complete with driver security credentials and fuel cycle audits will be generated under direct oversight by <strong>Emmanuel Kpakama</strong> and dispatched to <strong>{email}</strong> within 30 minutes.
+                    Thank you, <strong>{fullName}</strong>. We have registered your inquiry on our Freetown servers. An official, itemized logistics quote complete with driver security credentials and fuel cycle audits will be generated under direct oversight by <strong>Emmanuel Kpakama (<a href="tel:+23234692208" className="text-blue-600 hover:underline">+232 34 692208</a> / <a href="tel:+23276268296" className="text-blue-600 hover:underline">+232 76 268296</a> / <a href="tel:+23279121013" className="text-blue-600 hover:underline">+232 79 121013</a>)</strong> and dispatched to <strong><a href={`mailto:${email}`} className="text-blue-600 hover:underline">{email}</a></strong> as soon as possible.
                   </p>
                 </div>
 
@@ -188,7 +188,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     </div>
                     <div>
                       <span className="text-slate-500 block font-mono">DISPATCH WINDOW</span>
-                      <span className="font-bold text-slate-800">Under 30 Minutes</span>
+                      <span className="font-bold text-slate-800">As soon as possible</span>
                     </div>
                   </div>
                 </div>
@@ -513,7 +513,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           className="w-5 h-5 text-blue-600 rounded border-slate-300 accent-blue-600 mt-0.5 shrink-0 cursor-pointer"
                         />
                         <span className="text-[11px] text-slate-700 font-sans leading-relaxed">
-                          I verify and agree that the driver and logistics coordinators assigned by B.I.G Group are fully credentialed, and that our organization guarantees compliance with direct vehicle diagnostic checks and local safety audits during the scope of leasing.
+                          I verify and agree that the driver and logistics coordinators assigned by BIG are fully credentialed, and that our organization guarantees compliance with direct vehicle diagnostic checks and local safety audits during the scope of leasing.
                         </span>
                       </label>
                     </div>
@@ -568,8 +568,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
               <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-700">
                 <div className="text-center pb-2 border-b border-slate-200">
-                  <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">B.I.G GROUP (SL)</span>
-                  <span className="text-[8px] text-slate-500 block uppercase">11 Freetown Road, Wilberforce, Freetown</span>
+                  <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">BIG (SL)</span>
+                  <span className="text-[8px] text-slate-500 block uppercase">3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
                 </div>
 
                 {currentVehicleObj?.imageUrl ? (
@@ -620,7 +620,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <MapPin size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
-                    <span className="text-white leading-relaxed font-semibold">11 Freetown Road, Wilberforce, Freetown</span>
+                    <span className="text-white leading-relaxed font-semibold">3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

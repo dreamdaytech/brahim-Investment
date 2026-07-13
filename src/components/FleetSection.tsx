@@ -13,7 +13,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
   const navigate = useNavigate();
   const [filterType, setFilterType] = useState<string>('All');
   const [selectedSpecVehicle, setSelectedSpecVehicle] = useState<any | null>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
   // Use live DB vehicles if available, else fall back to hardcoded data
   const sourceVehicles = (fleetVehicles && fleetVehicles.length > 0)
@@ -181,7 +181,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                   onClick={() => { handleInquire(selectedSpecVehicle.id); setSelectedSpecVehicle(null); }}
                   className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl text-xs tracking-wider uppercase transition-colors shadow-md cursor-pointer text-center"
                 >
-                  Request Dispatch Setup
+                  Book Ride
                 </button>
               </motion.div>
 
@@ -410,7 +410,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                             onClick={(e) => { e.stopPropagation(); handleInquire(vehicle.id); }}
                             className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-[11px] tracking-wider uppercase transition-all shadow-sm cursor-pointer"
                           >
-                            Inquire
+                            Book Ride
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); setSelectedSpecVehicle(vehicle); }}
@@ -494,7 +494,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ setSelectedVehicleId
                         onClick={(e) => { e.stopPropagation(); handleInquire(vehicle.id); }}
                         className="py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-[11px] tracking-wider uppercase transition-all cursor-pointer text-center"
                       >
-                        Inquire
+                        Book Ride
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedSpecVehicle(vehicle); }}

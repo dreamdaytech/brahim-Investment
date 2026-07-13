@@ -58,7 +58,7 @@ const printInvoice = (invoice: Invoice, account: CorporateAccount | undefined) =
       </style>
     </head>
     <body>
-      <h1>BIG Group Invoice</h1>
+      <h1>BIG Invoice</h1>
       <hr />
       <div class="meta">
         <div><div class="label">Invoice ID</div><div class="value">${invoice.id}</div></div>
@@ -73,7 +73,7 @@ const printInvoice = (invoice: Invoice, account: CorporateAccount | undefined) =
       <hr />
       <div class="amount">Total: $${invoice.amount.toLocaleString()}</div>
       <hr />
-      <div class="footer">BIG Group Fleet Management · 11 Freetown Road, Wilberforce, Sierra Leone · Generated ${new Date().toLocaleString()}</div>
+      <div class="footer">BIG Fleet Management · 3 Massalay Drive Juba Formerly Johnny Paul Drive · Generated ${new Date().toLocaleString()}</div>
     </body>
     </html>
   `;
@@ -431,7 +431,7 @@ export const CorporateBilling: React.FC = () => {
                       </button>
                       {/* #4 Email client — mailto link */}
                       <a
-                        href={`mailto:${account?.email}?subject=Invoice ${invoice.id} — ${invoice.period}&body=Dear ${account?.contactPerson},%0A%0APlease find attached your invoice for ${invoice.period}.%0A%0AInvoice ID: ${invoice.id}%0APeriod: ${invoice.period}%0AAmount Due: $${invoice.amount.toLocaleString()}%0A%0APlease remit payment at your earliest convenience.%0A%0ARegards,%0ABIG Group Fleet Management`}
+                        href={`mailto:${account?.email}?subject=Invoice ${invoice.id} — ${invoice.period}&body=Dear ${account?.contactPerson},%0A%0APlease find attached your invoice for ${invoice.period}.%0A%0AInvoice ID: ${invoice.id}%0APeriod: ${invoice.period}%0AAmount Due: $${invoice.amount.toLocaleString()}%0A%0APlease remit payment at your earliest convenience.%0A%0ARegards,%0ABIG Fleet Management`}
                         className="text-slate-600 hover:text-blue-600 p-1.5 hover:bg-blue-50 rounded-md transition-colors"
                         title="Email Client"
                       >

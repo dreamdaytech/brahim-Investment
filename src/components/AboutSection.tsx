@@ -32,7 +32,7 @@ export const AboutSection: React.FC = () => {
           <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 px-3 py-1 rounded">THE INSTITUTION</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-            Registered and headquartered on 11 Freetown Road, Wilberforce, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
+            Registered and headquartered on 3 Massalay Drive Juba Formerly Johnny Paul Drive. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export const AboutSection: React.FC = () => {
           <div className="space-y-5">
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-950">Our Legacy of Reliable Transit</h2>
             <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
-              Brahim Investment Group (BIG Group) was established to resolve the severe logistical challenges faced by international agencies operating in Sierra Leone. While others offer vehicles, we deliver complete operational security.
+              Brahim Investment Group (BIG) was established to resolve the severe logistical challenges faced by international agencies operating in Sierra Leone. While others offer vehicles, we deliver complete operational security.
             </p>
             <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
               Over the years, our programmatic mechanical safety procedures, vertical cost honesty, and dedicated driver wellness program have set a benchmark. We maintain full ownership of all fleet assets, ensuring that we never lease sub-standard vehicles from secondary contractors.
@@ -50,7 +50,7 @@ export const AboutSection: React.FC = () => {
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-150">
               <div className="space-y-1">
                 <span className="text-blue-600 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
-                <span className="text-xs text-slate-800 font-semibold block">11 Freetown Road, Wilberforce, Freetown</span>
+                <span className="text-xs text-slate-800 font-semibold block">3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
               </div>
               <div className="space-y-1">
                 <span className="text-blue-600 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
@@ -62,7 +62,7 @@ export const AboutSection: React.FC = () => {
           <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
             <img 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJAJuwLKqmbCse-Nr7f2kMge-783BnAN83YrbCbBXXFQrYAmiS8gNRJE6LO38MhZ4HT7FLSAvK4p1lFYDTP8R7h01aKz2OMLo5TPSAWjtAGFHniLvoUXT8H-65iXd0WnnFFC9NBcRpAYn8OfD5ZiK6EDeQjRiE0OeYq7NEz3v9TyfDQLWYfnzw5bnBblcr2aAfRVqDMj2jMQAGU0wHTnKL4gua7OZoKq9J9OpAHaCf5BexXZQyIcKXTi3kpYvw-Z8HsP8-BEj8Xzw" 
-              alt="BIG Group corporate headquarters white SUV fleet" 
+              alt="BIG corporate headquarters white SUV fleet" 
               className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
               referrerPolicy="no-referrer"
             />
@@ -134,11 +134,11 @@ export const AboutSection: React.FC = () => {
               <div>
                 <span className="text-blue-600 text-[10px] font-mono font-bold uppercase tracking-wider block mb-0.5 font-semibold">HEAD OF DEPLOYMENT OPERATIONS</span>
                 <h3 className="text-xl md:text-2xl font-black text-[#0f172a] tracking-tight">Emmanuel A.H Kpakama</h3>
-                <p className="text-xs font-semibold text-slate-600">Head of Administration &amp; Logistics Operations, BIG Group</p>
+                <p className="text-xs font-semibold text-slate-600">Head of Administration &amp; Logistics Operations, BIG</p>
               </div>
 
               <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
-                With over 12 coordination years resolving complex NGO logistics and high-end executive transport fleets across the Mano River Union, Emmanuel drives the operational excellence program at BIG Group. His absolute commitment remains directed at flawless diagnostic mechanical security, compliance with strict UN carrier criteria, and instant administrative responsiveness.
+                With over 12 coordination years resolving complex NGO logistics and high-end executive transport fleets across the Mano River Union, Emmanuel drives the operational excellence program at BIG. His absolute commitment remains directed at flawless diagnostic mechanical security, compliance with strict UN carrier criteria, and instant administrative responsiveness.
               </p>
 
               <div className="flex flex-wrap gap-2 pt-2 text-[10px] text-slate-600 font-mono">

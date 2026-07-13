@@ -1,0 +1,23 @@
+-- Comprehensive migration to ensure all fields required by the Partners/Clients platform exist.
+
+ALTER TABLE public.clients
+  ADD COLUMN IF NOT EXISTS name TEXT,
+  ADD COLUMN IF NOT EXISTS service TEXT,
+  ADD COLUMN IF NOT EXISTS logo_url TEXT,
+  ADD COLUMN IF NOT EXISTS short_code TEXT,
+  ADD COLUMN IF NOT EXISTS is_partner BOOLEAN DEFAULT false,
+  ADD COLUMN IF NOT EXISTS contact_person TEXT,
+  ADD COLUMN IF NOT EXISTS phone TEXT,
+  ADD COLUMN IF NOT EXISTS email TEXT,
+  ADD COLUMN IF NOT EXISTS website TEXT,
+  ADD COLUMN IF NOT EXISTS head_office_address TEXT,
+  ADD COLUMN IF NOT EXISTS city TEXT,
+  ADD COLUMN IF NOT EXISTS country TEXT,
+  ADD COLUMN IF NOT EXISTS account_number TEXT,
+  ADD COLUMN IF NOT EXISTS contract_ref TEXT,
+  ADD COLUMN IF NOT EXISTS contract_start_date DATE,
+  ADD COLUMN IF NOT EXISTS contract_end_date DATE,
+  ADD COLUMN IF NOT EXISTS credit_limit NUMERIC DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS notes TEXT,
+  ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Ongoing',
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();

@@ -165,7 +165,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
             Uncompromising Transportation Solutions
           </h2>
           <p className="mt-3 text-sm md:text-base text-slate-600">
-            From single executive airport transfers to massive institutional multi-vehicle development deployments, BIG Group guarantees absolute fleet readiness.
+            From single executive airport transfers to massive institutional multi-vehicle development deployments, BIG guarantees absolute fleet readiness.
           </p>
         </div>
 
@@ -244,7 +244,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
           <div className="relative rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
             <img 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk4Sy77sM_D51guPMkYxasFWbrfxVLb_Z9YrOeLBsMlbWv_OTouvHBm4yEzjostnK1FyIX8Mbai9GGCDM9KzQB1JT0H3mMrW9XRxRmo39JACgJ0jNGWsg7FTZLaxyKOfKFfBqfZP8cVzcqRigeSu4qXrQcPohxGFwTIJ8e3Wyr67m-gwNTFA_JUUWILtokkq6YVPL81x1gQLPwywsvnu-x_gBkuTY_PC63rqUyWpTk4K8dP3HPagtSlBIFetzC6oz-yXyRn4fKxj8" 
-              alt="BIG Group corporate fleet lineup" 
+              alt="BIG corporate fleet lineup" 
               className="w-full h-auto object-cover"
               referrerPolicy="no-referrer"
             />

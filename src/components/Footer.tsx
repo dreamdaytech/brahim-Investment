@@ -42,12 +42,12 @@ export const Footer: React.FC = () => {
         {/* Brand Column */}
         <div className="space-y-4">
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-600 p-1.5 rounded text-white font-black">
-              <Shield size={18} />
+            <div className="flex items-center justify-center shadow-md rounded-full">
+              <img src="/logo.jpg" alt="BIG Logo" className="h-12 w-12 object-cover rounded-full" />
             </div>
             <div>
-              <span className="text-lg font-black tracking-wide">B.I.G</span>
-              <span className="text-xs font-semibold text-blue-400 ml-1">GROUP</span>
+              <span className="text-base font-black tracking-wide">Brahim Investment Group</span>
+              <p className="text-[10px] tracking-widest text-blue-400 font-mono mt-0.5 uppercase">Safe and Smooth Ride</p>
             </div>
           </div>
           <p className="text-xs text-slate-100 leading-relaxed font-sans">
@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
           <ul className="space-y-3 text-xs text-slate-100 font-sans">
             <li className="flex items-start space-x-2">
               <MapPin size={14} className="text-blue-400 mt-0.5 shrink-0" />
-              <span>11 Freetown Road, Wilberforce, Freetown</span>
+              <span>3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
             </li>
             <li className="flex items-center space-x-2">
               <Phone size={14} className="text-blue-400 shrink-0" />
@@ -136,7 +136,7 @@ export const Footer: React.FC = () => {
       {/* Extreme Bottom Bar */}
       <div className="bg-[#090d16] py-4 text-center text-[10px] text-slate-600 font-sans border-t border-slate-950 px-4">
         <p className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-          <span>&copy; {new Date().getFullYear()} Brahim Investment Group (B.I.G Group SRL). All Rights Reserved.</span>
+          <span>&copy; {new Date().getFullYear()} Brahim Investment Group (BIG SRL). All Rights Reserved.</span>
           <span className="flex items-center gap-3">
             <span className="hover:text-white cursor-pointer">Terms of Rental</span>
             <span>&bull;</span>
