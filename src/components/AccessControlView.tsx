@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, Trash2, X, AlertCircle, MoreVertical, Power } from 'lucide-react';
+import { ShieldCheck, Plus, Trash2, X, AlertCircle, MoreVertical, Power, Edit3 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AccessControlViewProps {
@@ -11,6 +11,8 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -60,6 +62,57 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
       fetchUsers();
     } catch (err: any) {
       setAuthError(err.message || 'Failed to create user');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleEditUserClick = (u: any) => {
+    setEditingUserId(u.id);
+    setFullName(u.full_name || '');
+    setEmail(u.email || '');
+    setRole(u.role || 'fleet_manager');
+    setPassword(''); // Leave empty unless they want to change it
+    setAuthError('');
+    setIsEditModalOpen(true);
+    setActiveDropdown(null);
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUserId) return;
+    
+    setIsSubmitting(true);
+    setAuthError('');
+
+    try {
+      const response = await fetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          id: editingUserId, 
+          email, 
+          password: password || undefined, // Only send if not empty
+          fullName, 
+          role 
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to update user');
+      }
+
+      setIsEditModalOpen(false);
+      setEditingUserId(null);
+      setEmail('');
+      setPassword('');
+      setFullName('');
+      setRole('fleet_manager');
+      fetchUsers();
+    } catch (err: any) {
+      setAuthError(err.message || 'Failed to update user');
     } finally {
       setIsSubmitting(false);
     }
@@ -143,6 +196,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                       <option value="super_admin">Super Admin</option>
                       <option value="admin">Admin</option>
                       <option value="fleet_manager">Fleet Manager</option>
+                      <option value="maintenance_logs">Fleet Maintenance Logs</option>
                       <option value="finance">Finance</option>
                     </select>
                   </td>
@@ -175,6 +229,14 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                           >
                             <Power size={14} className={u.is_active ? 'text-amber-500' : 'text-green-500'} />
                             {u.is_active ? 'Suspend' : 'Activate'}
+                          </button>
+                          
+                          <button
+                            onClick={() => handleEditUserClick(u)}
+                            className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors text-slate-700"
+                          >
+                            <Edit3 size={14} className="text-blue-500" />
+                            Edit User
                           </button>
                           
                           <button
@@ -237,6 +299,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                   <option value="super_admin">Super Admin</option>
                   <option value="admin">Admin</option>
                   <option value="fleet_manager">Fleet Manager</option>
+                  <option value="maintenance_logs">Fleet Maintenance Logs</option>
                   <option value="finance">Finance</option>
                 </select>
               </div>
@@ -245,6 +308,61 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                 <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 text-slate-600 font-semibold text-sm hover:bg-slate-50 rounded-lg transition">Cancel</button>
                 <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 rounded-lg transition disabled:opacity-50">
                   {isSubmitting ? 'Creating...' : 'Create User'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-slate-900">Edit User</h3>
+              <button onClick={() => setIsEditModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleUpdateUser} className="p-6 space-y-4">
+              {authError && (
+                <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-center gap-2">
+                  <AlertCircle size={16} />
+                  <span>{authError}</span>
+                </div>
+              )}
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Name</label>
+                <input required type="text" value={fullName} onChange={e => setFullName(e.target.value)} className="w-full p-2.5 border border-slate-200 rounded-lg text-sm" />
+              </div>
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email</label>
+                <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-2.5 border border-slate-200 rounded-lg text-sm" />
+              </div>
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">New Password <span className="text-slate-400 font-normal">(Leave blank to keep current)</span></label>
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} minLength={6} className="w-full p-2.5 border border-slate-200 rounded-lg text-sm" />
+              </div>
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Role</label>
+                <select value={role} onChange={e => setRole(e.target.value)} className="w-full p-2.5 border border-slate-200 rounded-lg text-sm">
+                  <option value="super_admin">Super Admin</option>
+                  <option value="admin">Admin</option>
+                  <option value="fleet_manager">Fleet Manager</option>
+                  <option value="maintenance_logs">Fleet Maintenance Logs</option>
+                  <option value="finance">Finance</option>
+                </select>
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="flex-1 px-4 py-2 text-slate-600 font-semibold text-sm hover:bg-slate-50 rounded-lg transition">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 rounded-lg transition disabled:opacity-50">
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>

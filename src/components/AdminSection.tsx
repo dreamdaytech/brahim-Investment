@@ -393,10 +393,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
               }
               {[
                 { id: 'reservations', label: 'Reservations', icon: LayoutDashboard, badge: pendingInquiries > 0 ? pendingInquiries : null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
-                { id: 'performance', label: 'Management', icon: Activity, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
+                { id: 'performance', label: 'Management', icon: Activity, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance', 'maintenance_logs'] },
                 { id: 'dispatch_management', label: 'Dispatch', icon: Navigation, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
                 { id: 'drivers', label: 'Drivers', icon: User, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
-                { id: 'vehicles', label: 'Vehicles', icon: Car, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
+                { id: 'vehicles', label: 'Vehicles', icon: Car, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'maintenance_logs'] },
                 { id: 'fuel', label: 'Fuel', icon: Fuel, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
                 { id: 'billing', label: 'Billing & CRM', icon: CreditCard, badge: null, roles: ['super_admin', 'admin', 'finance'] },
               ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
@@ -433,7 +433,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                 : <div className="h-px bg-white/10 my-3 mx-1" />
               }
               {[
-                { id: 'profile', label: 'Profile & Security', icon: Settings, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
+                { id: 'profile', label: 'Profile & Security', icon: Settings, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance', 'maintenance_logs'] },
                 { id: 'access', label: 'Access Control', icon: ShieldCheck, badge: null, roles: ['super_admin'] }
               ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
                 const Icon = item.icon;

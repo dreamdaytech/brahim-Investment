@@ -60,4 +60,56 @@ router.post('/admin/create-user', express.json(), async (req, res) => {
   }
 });
 
+// POST /api/admin/update-user
+// Updates a user's details (email, password, full_name, role)
+router.post('/admin/update-user', express.json(), async (req, res) => {
+  const serviceRoleKey = process.env.SERVICE_ROLE_SECRET;
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+
+  if (!serviceRoleKey || !supabaseUrl) {
+    return res.status(500).json({ error: 'Server is missing required environment variables.' });
+  }
+
+  const adminClient = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  });
+
+  const { id, email, password, fullName, role } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: 'Missing required field: id.' });
+  }
+
+  try {
+    // Step 1: Update auth user (if email or password is provided)
+    const authUpdates = {};
+    if (email) authUpdates.email = email;
+    if (password) authUpdates.password = password;
+
+    if (Object.keys(authUpdates).length > 0) {
+      const { error: authError } = await adminClient.auth.admin.updateUserById(id, authUpdates);
+      if (authError) {
+        return res.status(400).json({ error: authError.message });
+      }
+    }
+
+    // Step 2: Update user_roles table
+    const roleUpdates = {};
+    if (email) roleUpdates.email = email;
+    if (fullName) roleUpdates.full_name = fullName;
+    if (role) roleUpdates.role = role;
+
+    if (Object.keys(roleUpdates).length > 0) {
+      const { error: roleError } = await adminClient.from('user_roles').update(roleUpdates).eq('id', id);
+      if (roleError) {
+        return res.status(500).json({ error: `Auth updated but role update failed: ${roleError.message}` });
+      }
+    }
+
+    return res.status(200).json({ success: true, userId: id });
+  } catch (err) {
+    return res.status(500).json({ error: err.message || 'An unexpected error occurred.' });
+  }
+});
+
 export default router;
