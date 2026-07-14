@@ -44,7 +44,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
         <div className="flex items-center space-x-6">
           <span className="flex items-center space-x-1">
             <Phone size={13} className="text-blue-500" />
-            <span>+232 34 692208 / +232 76 268296 / +232 79 121013</span>
+            <span>
+              <a href={`https://wa.me/23234692208?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">+232 34 692208</a> / 
+              <a href={`https://wa.me/23276268296?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">+232 76 268296</a> / 
+              <a href={`https://wa.me/23279121013?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">+232 79 121013</a>
+            </span>
           </span>
           <span className="flex items-center space-x-1">
             <Mail size={13} className="text-blue-500" />
@@ -250,7 +254,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           })}
           
           <div className="pt-4 border-t border-slate-850 mt-4 text-xs text-slate-100 space-y-2">
-            <p className="flex items-center gap-2"><Phone size={12} className="text-blue-400" /> +232 34 692208 / +232 76 268296 / +232 79 121013</p>
+            <p className="flex items-start gap-2">
+              <Phone size={12} className="text-blue-400 mt-1 shrink-0" /> 
+              <span>
+                <a href={`https://wa.me/23234692208?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors block">+232 34 692208</a>
+                <a href={`https://wa.me/23276268296?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors block">+232 76 268296</a>
+                <a href={`https://wa.me/23279121013?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors block">+232 79 121013</a>
+              </span>
+            </p>
             <p className="flex items-center gap-2"><Mail size={12} className="text-blue-400" /> bigroupsl2010@gmail.com</p>
             <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 3 Massalay Drive Juba Formerly Johnny Paul Drive</p>
           </div>

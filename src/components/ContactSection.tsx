@@ -175,7 +175,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div>
                   <h2 className="text-3xl font-black text-slate-950 tracking-tight">Proposal Request Received</h2>
                   <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-                    Thank you, <strong>{fullName}</strong>. We have registered your inquiry on our Freetown servers. An official, itemized logistics quote complete with driver security credentials and fuel cycle audits will be generated under direct oversight by <strong>Emmanuel Kpakama (<a href="tel:+23234692208" className="text-blue-600 hover:underline">+232 34 692208</a> / <a href="tel:+23276268296" className="text-blue-600 hover:underline">+232 76 268296</a> / <a href="tel:+23279121013" className="text-blue-600 hover:underline">+232 79 121013</a>)</strong> and dispatched to <strong><a href={`mailto:${email}`} className="text-blue-600 hover:underline">{email}</a></strong> as soon as possible.
+                    Thank you, <strong>{fullName}</strong>. We have registered your inquiry on our Freetown servers. An official, itemized logistics quote complete with driver security credentials and fuel cycle audits will be generated under direct oversight by <strong>Emmanuel Kpakama (<a href="https://wa.me/23234692208" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">+232 34 692208</a> / <a href="https://wa.me/23276268296" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">+232 76 268296</a> / <a href="https://wa.me/23279121013" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">+232 79 121013</a>)</strong> and dispatched to <strong><a href={`mailto:${email}`} className="text-blue-600 hover:underline">{email}</a></strong> as soon as possible.
                   </p>
                 </div>
 
@@ -626,9 +626,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <Phone size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">Leasing Desk Phone</span>
-                    <span className="text-white font-semibold block">+232 34 692208</span>
-                    <span className="text-white font-semibold block">+232 76 268296</span>
-                    <span className="text-white font-semibold block">+232 79 121013</span>
+                    <a href={`https://wa.me/23234692208?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="text-white font-semibold block hover:underline">+232 34 692208</a>
+                    <a href={`https://wa.me/23276268296?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="text-white font-semibold block hover:underline">+232 76 268296</a>
+                    <a href={`https://wa.me/23279121013?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="text-white font-semibold block hover:underline">+232 79 121013</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

@@ -123,7 +123,11 @@ export const Footer: React.FC = () => {
             </li>
             <li className="flex items-center space-x-2">
               <Phone size={14} className="text-blue-400 shrink-0" />
-              <span>+232 34 692208 / +232 76 268296 / +232 79 121013</span>
+              <span>
+                <a href={`https://wa.me/23234692208?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">+232 34 692208</a> / 
+                <a href={`https://wa.me/23276268296?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">+232 76 268296</a> / 
+                <a href={`https://wa.me/23279121013?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">+232 79 121013</a>
+              </span>
             </li>
             <li className="flex items-center space-x-2">
               <Mail size={14} className="text-blue-400 shrink-0" />

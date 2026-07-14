@@ -258,7 +258,14 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers = [] }) =>
                             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Phone</span>
                             <div className="flex items-start gap-2.5 text-sm font-medium text-slate-700">
                               <Phone size={16} className="text-slate-500 shrink-0 mt-0.5" />
-                              <span className="break-words">{selectedMember.phone}</span>
+                              <span className="break-words">
+                                {selectedMember.phone.split(' / ').map((p, i, arr) => (
+                                  <React.Fragment key={p}>
+                                    <a href={`https://wa.me/${p.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello Brahim Investment Group, I am reaching out from your website: " + window.location.origin)}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 hover:underline transition-colors">{p}</a>
+                                    {i < arr.length - 1 && ' / '}
+                                  </React.Fragment>
+                                ))}
+                              </span>
                             </div>
                           </div>
                         )}
