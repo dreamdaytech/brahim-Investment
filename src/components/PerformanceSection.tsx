@@ -988,6 +988,22 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
   const [editingDispatch, setEditingDispatch] = useState<Partial<ActiveDispatch | CompletedDispatch> | null>(null);
   const [dispatchBillingMode, setDispatchBillingMode] = useState<'project' | 'corporate'>('project');
+  const [dispatchDriverId, setDispatchDriverId] = useState<string>('');
+  const [dispatchVehicleId, setDispatchVehicleId] = useState<string>('');
+  const [dispatchProjectId, setDispatchProjectId] = useState<string>('');
+  const [dispatchCorporateAccountId, setDispatchCorporateAccountId] = useState<string>('');
+  const [dispatchFuelLevel, setDispatchFuelLevel] = useState<string>('100');
+
+  // Sync dropdown selections whenever dispatch modal opens or editing target changes
+  React.useEffect(() => {
+    if (isDispatchModalOpen) {
+      setDispatchDriverId(editingDispatch?.driverId || '');
+      setDispatchVehicleId(editingDispatch?.vehicleId || '');
+      setDispatchProjectId(editingDispatch?.projectId || '');
+      setDispatchCorporateAccountId(editingDispatch?.corporateAccountId || '');
+      setDispatchFuelLevel(editingDispatch?.fuelLevelOut || '100');
+    }
+  }, [isDispatchModalOpen, editingDispatch?.id]);
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
   const [editingMaintenance, setEditingMaintenance] = useState<Partial<MaintenanceRecord> | null>(null);
   const [viewingMaintenance, setViewingMaintenance] = useState<MaintenanceRecord | null>(null);
@@ -5997,8 +6013,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             <form key={editingDispatch?.id || 'new'} onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
-              const driverId = fd.get('driverId') as string;
-              const vehicleId = fd.get('vehicleId') as string;
+              // react-select doesn't submit via FormData natively — read from controlled state
+              const driverId = dispatchDriverId || (fd.get('driverId') as string);
+              const vehicleId = dispatchVehicleId || (fd.get('vehicleId') as string);
 
               if (!driverId || !vehicleId) {
                 alert('Please select both a driver and a vehicle.');
@@ -6028,10 +6045,10 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 vehicleId,
                 dispatchTime: new Date(fd.get('dispatchTime') as string).toISOString(),
                 odometerOut: Number(fd.get('odometerOut')),
-                fuelLevelOut: fd.get('fuelLevelOut') as string,
+                fuelLevelOut: dispatchFuelLevel || (fd.get('fuelLevelOut') as string),
                 conditionOut: fd.get('conditionOut') as string,
-                corporateAccountId: fd.get('corporateAccountId') as string || undefined,
-                projectId: fd.get('projectId') as string || undefined,
+                corporateAccountId: (dispatchBillingMode === 'corporate' ? dispatchCorporateAccountId : '') || (fd.get('corporateAccountId') as string) || undefined,
+                projectId: dispatchProjectId || (fd.get('projectId') as string) || undefined,
                 expectedReturnDate: fd.get('expectedReturnDate') as string,
               };
               if (editingDispatch) {
@@ -6099,29 +6116,33 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               <div>
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver *</label>
                 <Select
-                  name="driverId"
                   options={drivers.filter(d => {
                     const isActiveElsewhere = activeDispatches.some(ad => ad.driverId === d.id && ad.id !== editingDispatch?.id);
                     return !isActiveElsewhere || d.id === editingDispatch?.driverId;
                   }).map(d => ({ value: d.id, label: d.name }))}
-                  defaultValue={editingDispatch?.driverId ? { value: editingDispatch.driverId, label: drivers.find(d => d.id === editingDispatch.driverId)?.name } : null}
-                  placeholder="Select Driver..."
+                  value={dispatchDriverId ? { value: dispatchDriverId, label: drivers.find(d => d.id === dispatchDriverId)?.name || '' } : null}
+                  onChange={(opt: any) => setDispatchDriverId(opt?.value || '')}
+                  placeholder="Search & select driver..."
+                  isSearchable
                   className="text-sm"
                   menuPosition="fixed"
                   styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#f8fafc', padding: '2px' }) }}
                 />
+                <input type="hidden" name="driverId" value={dispatchDriverId} />
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle *</label>
                 <Select
-                  name="vehicleId"
                   options={vehicles.filter(v => v.status === 'Available' || v.id === editingDispatch?.vehicleId).map(v => ({ value: v.id, label: `${v.makeModel} (${v.plateNumber || 'N/A'})` }))}
-                  defaultValue={editingDispatch?.vehicleId ? { value: editingDispatch.vehicleId, label: (() => { const v = vehicles.find(v => v.id === editingDispatch.vehicleId); return v ? `${v.makeModel} (${v.plateNumber || 'N/A'})` : ''; })() } : null}
-                  placeholder="Select Vehicle..."
+                  value={dispatchVehicleId ? { value: dispatchVehicleId, label: (() => { const v = vehicles.find(v => v.id === dispatchVehicleId); return v ? `${v.makeModel} (${v.plateNumber || 'N/A'})` : ''; })() } : null}
+                  onChange={(opt: any) => setDispatchVehicleId(opt?.value || '')}
+                  placeholder="Search & select vehicle..."
+                  isSearchable
                   className="text-sm"
                   menuPosition="fixed"
                   styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#f8fafc', padding: '2px' }) }}
                 />
+                <input type="hidden" name="vehicleId" value={dispatchVehicleId} />
               </div>
 
               {/* ── Billing Section ──────────────────────────────── */}
@@ -6154,14 +6175,16 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Client / Project</label>
                   <Select
-                    name="projectId"
                     options={[{ value: '', label: 'None / Internal' }, ...clients.map(c => ({ value: c.id, label: c.name }))]}
-                    defaultValue={editingDispatch?.projectId ? { value: editingDispatch.projectId, label: clients.find(c => c.id === editingDispatch.projectId)?.name || 'None / Internal' } : { value: '', label: 'None / Internal' }}
+                    value={dispatchProjectId !== undefined ? { value: dispatchProjectId, label: clients.find(c => c.id === dispatchProjectId)?.name || 'None / Internal' } : { value: '', label: 'None / Internal' }}
+                    onChange={(opt: any) => setDispatchProjectId(opt?.value || '')}
                     placeholder="Search Client/Project..."
+                    isSearchable
                     className="text-sm"
                     menuPosition="fixed"
                     styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#ffffff', padding: '0px' }) }}
                   />
+                  <input type="hidden" name="projectId" value={dispatchProjectId} />
                   {dispatchBillingMode === 'project' && (
                     <p className="text-[10px] text-blue-500 mt-1 font-medium">✓ Billing will be assigned to the selected client / project above.</p>
                   )}
@@ -6172,14 +6195,16 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Corporate Account</label>
                     <Select
-                      name="corporateAccountId"
                       options={[{ value: '', label: 'None / Default' }, ...mockAccounts.map((a: any) => ({ value: a.id, label: a.name }))]}
-                      defaultValue={editingDispatch?.corporateAccountId ? { value: editingDispatch.corporateAccountId, label: (() => { const a = mockAccounts.find((a: any) => a.id === editingDispatch.corporateAccountId); return a ? a.name : 'None / Default'; })() } : { value: '', label: 'None / Default' }}
+                      value={dispatchCorporateAccountId ? { value: dispatchCorporateAccountId, label: (() => { const a = mockAccounts.find((a: any) => a.id === dispatchCorporateAccountId); return a ? a.name : 'None / Default'; })() } : { value: '', label: 'None / Default' }}
+                      onChange={(opt: any) => setDispatchCorporateAccountId(opt?.value || '')}
                       placeholder="Search Corporate Account..."
+                      isSearchable
                       className="text-sm"
                       menuPosition="fixed"
                       styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#ffffff', padding: '0px' }) }}
                     />
+                    <input type="hidden" name="corporateAccountId" value={dispatchCorporateAccountId} />
                     <p className="text-[10px] text-amber-600 mt-1 font-medium">⚠ Billing will be routed to this corporate account instead of the client/project.</p>
                   </div>
                 )}
@@ -6195,19 +6220,25 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Fuel Level OUT</label>
-                <select name="fuelLevelOut" defaultValue={editingDispatch?.fuelLevelOut || '100'} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
-                  <option value="100">100% — Full</option>
-                  <option value="90">90%</option>
-                  <option value="80">80%</option>
-                  <option value="70">70%</option>
-                  <option value="60">60%</option>
-                  <option value="50">50% — Half</option>
-                  <option value="40">40%</option>
-                  <option value="30">30%</option>
-                  <option value="20">20%</option>
-                  <option value="10">10%</option>
-                  <option value="Empty">Empty (Reserve)</option>
-                </select>
+                <SearchableSelect
+                  value={dispatchFuelLevel}
+                  onChange={(val: string) => setDispatchFuelLevel(val)}
+                  options={[
+                    { value: '100', label: '100% — Full' },
+                    { value: '90', label: '90%' },
+                    { value: '80', label: '80%' },
+                    { value: '70', label: '70%' },
+                    { value: '60', label: '60%' },
+                    { value: '50', label: '50% — Half' },
+                    { value: '40', label: '40%' },
+                    { value: '30', label: '30%' },
+                    { value: '20', label: '20%' },
+                    { value: '10', label: '10%' },
+                    { value: 'Empty', label: 'Empty (Reserve)' },
+                  ]}
+                  placeholder="Select Fuel Level..."
+                />
+                <input type="hidden" name="fuelLevelOut" value={dispatchFuelLevel} />
               </div>
               <div className="col-span-2">
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Visual Condition / Notes</label>
