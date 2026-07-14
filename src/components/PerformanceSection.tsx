@@ -136,7 +136,7 @@ export interface Vehicle {
   condition: string;
   isCompanyRegistered: boolean;
   type: string;
-  status: 'Available' | 'Maintenance' | 'Decommissioned';
+  status: 'Available' | 'Maintenance' | 'Decommissioned' | 'Active Dispatch';
   imageUrl?: string;
   galleryUrls?: string[];
   documents?: VehicleDocument[];
@@ -247,6 +247,8 @@ export interface TripLog {
   fuelCollections?: FuelCollection[];
   corporateAccountId?: string;
   notes?: string;
+  returnDate?: string;
+  status?: string;
   /** ID of the ActiveDispatch that originated this trip */
   dispatchId?: string;
   /** ID of the MaintenanceRecord created as follow-up to this trip */
@@ -494,7 +496,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   
   // Audit Modal
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
-  const handleAuditStatusUpdate = async (driverId: string, newStatus: string, reason: string) => {
+  const handleAuditStatusUpdate = async (driverId: string, newStatus: Driver['status'], reason: string) => {
     const { error } = await supabase.from('drivers').update({ status: newStatus }).eq('id', driverId);
     if (error) {
       alert(`Error updating driver status: ${error.message}`);
@@ -1613,7 +1615,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     <td className="px-6 py-4 text-slate-700">{log.fuelConsumedLiters} L</td>
                     <td className="px-6 py-4 text-slate-700 font-bold">
                       {tripFuelIssued > 0 ? tripFuelIssued : '-'} L
-                      {hasVariance && <AlertTriangle size={12} className="inline ml-1 text-red-500" title="High Fuel Variance" />}
+                      {hasVariance && <span title="High Fuel Variance"><AlertTriangle size={12} className="inline ml-1 text-red-500" /></span>}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {log.incidents > 0 ? (
@@ -4009,7 +4011,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 </div>
               </div>
 
-              {_parentLog && (<div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mb-6"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5"><ExternalLink size={12} /> Linked Trip Log</p><div className="flex items-center justify-between"><div><p className="font-bold text-slate-800">{_parentLog.date}</p><p className="text-xs text-slate-500">Distance: {_parentLog.distanceTraveledKm} km</p></div><span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${_parentLog.approvalStatus === 'Approved' ? 'bg-emerald-100 text-emerald-700' : _parentLog.approvalStatus === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>{_parentLog.approvalStatus || 'Pending'}</span></div></div>)}
+              {_parentLog && (<div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mb-6"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5"><ExternalLink size={12} /> Linked Trip Log</p><div className="flex items-center justify-between"><div><p className="font-bold text-slate-800">{_parentLog.date}</p><p className="text-xs text-slate-500">Distance: {_parentLog.distanceTraveledKm} km</p></div><span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${_parentLog.approvalStatus === 'Approved' ? 'bg-emerald-100 text-emerald-700' : _parentLog.approvalStatus === 'Flagged' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>{_parentLog.approvalStatus || 'Pending'}</span></div></div>)}
               {_isNonPartner && fc.nonPartnerReason && (<div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6"><p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1.5 flex items-center gap-1.5"><AlertTriangle size={12} /> Non-Partner Reason</p><p className="text-sm text-amber-800 font-medium">{fc.nonPartnerReason}</p></div>)}
               {fc.remarks && (<div className="bg-slate-50 border border-slate-200 rounded-2xl p-5"><p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Remarks</p><p className="text-sm text-slate-700">{fc.remarks}</p></div>)}
               </div>
@@ -5746,7 +5748,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
       {/* Driver Modal - Tabbed Form */}
       {isDriverModalOpen && (
         <DriverModal
-          editingDriver={editingDriver}
+          editingDriver={editingDriver as Driver | null}
           allStatusLogs={allStatusLogs}
           onClose={() => setIsDriverModalOpen(false)}
           onSave={async (driverData) => {
@@ -6855,7 +6857,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       {value: '', label: 'No linked trip (Standalone)'},
                       ...logs.filter(l => !standaloneFuelDriverId || l.driverId === standaloneFuelDriverId).slice(0, 30).map(l => {
                         const drv = drivers.find(d => d.id === l.driverId)?.name || 'Unknown Driver';
-                        const veh = vehicles.find(v => v.id === l.vehicleId)?.name || 'Unknown Vehicle';
+                        const veh = vehicles.find(v => v.id === l.vehicleId)?.makeModel || 'Unknown Vehicle';
                         const dest = l.district ? ` to ${l.district}` : '';
                         return {
                           value: l.id, 
