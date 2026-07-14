@@ -117,6 +117,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       logoUrl: dbItem.logo_url || dbItem.logoUrl || dbItem.logourl,
       shortCode: dbItem.short_code || dbItem.shortCode,
       isPartner: dbItem.is_partner !== undefined ? dbItem.is_partner : dbItem.isPartner,
+      isDraft: dbItem.isdraft,
       contactPerson: dbItem.contact_person || dbItem.contactPerson,
       phone: dbItem.phone,
       email: dbItem.email,
@@ -1023,9 +1024,16 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                     )}
                     <div>
                       <h4 className="font-black text-slate-950">{supplier.name}</h4>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isPartner ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                        {isPartner ? '✓ Partner Project' : '✗ Non-Partner'}
-                      </span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isPartner ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                          {isPartner ? '✓ Partner Project' : '✗ Non-Partner'}
+                        </span>
+                        {supplier.isDraft && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
+                            Hidden
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="relative flex items-center justify-center pr-2">
@@ -1155,6 +1163,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 logo_url: finalLogoUrl,
                 short_code: g('shortCode'),
                 is_partner: fd.get('isPartner') === 'true',
+                isdraft: fd.get('isDraft') === 'true',
                 contact_person: g('contactPerson'),
                 phone: g('phone'),
                 email: g('email'),
@@ -1234,6 +1243,12 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                       <option value="Pending">🟡 Pending</option>
                       <option value="Completed">⚪ Completed</option>
                     </select>
+                  </div>
+                  <div className="col-span-2">
+                    <label className="flex items-center gap-2 text-xs font-bold text-slate-700 mt-1 cursor-pointer">
+                      <input type="checkbox" name="isDraft" value="true" defaultChecked={editingClient?.isDraft} className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                      Hide from Public Partners Page (Keep as Draft)
+                    </label>
                   </div>
                 </div>
               </div>

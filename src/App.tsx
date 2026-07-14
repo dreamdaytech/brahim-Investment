@@ -124,7 +124,7 @@ export default function App() {
           name: c.name,
           service: c.service,
           status: c.status,
-          isDraft: c.is_draft,
+          isDraft: c.isdraft,
           shortCode: c.short_code,
           logoUrl: c.logoUrl || c.logourl
         }));
