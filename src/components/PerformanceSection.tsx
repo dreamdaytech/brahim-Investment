@@ -481,6 +481,10 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [dispatchSortConfig, setDispatchSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' }>({ key: 'dispatchTime', direction: 'desc' });
   const [dispatchFiltersOpen, setDispatchFiltersOpen] = useState(false);
   
+  const [driverSearchQuery, setDriverSearchQuery] = useState('');
+  const [driverStatusFilter, setDriverStatusFilter] = useState('All');
+  const [driverSortConfig, setDriverSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' }>({ key: 'name', direction: 'asc' });
+
   // Document Dropdowns
   const [activeDocDropdown, setActiveDocDropdown] = useState<string | null>(null);
   const [headerDocDropdownOpen, setHeaderDocDropdownOpen] = useState(false);
@@ -1774,6 +1778,40 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
     </div>
   );
 
+  const processedDrivers = useMemo(() => {
+    let result = [...drivers];
+    
+    if (driverSearchQuery) {
+      const q = driverSearchQuery.toLowerCase();
+      result = result.filter(d => 
+        d.name.toLowerCase().includes(q) || 
+        d.licenseNumber?.toLowerCase().includes(q) ||
+        d.phone?.toLowerCase().includes(q) ||
+        d.email?.toLowerCase().includes(q)
+      );
+    }
+    
+    if (driverStatusFilter !== 'All') {
+      result = result.filter(d => d.status === driverStatusFilter);
+    }
+    
+    result.sort((a, b) => {
+      let aVal: any = a[driverSortConfig.key as keyof Driver] || '';
+      let bVal: any = b[driverSortConfig.key as keyof Driver] || '';
+      
+      if (driverSortConfig.key === 'licenseExpiry') {
+        aVal = a.licenseExpiry ? new Date(a.licenseExpiry).getTime() : 0;
+        bVal = b.licenseExpiry ? new Date(b.licenseExpiry).getTime() : 0;
+      }
+      
+      if (aVal < bVal) return driverSortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return driverSortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+    
+    return result;
+  }, [drivers, driverSearchQuery, driverStatusFilter, driverSortConfig]);
+
   const renderDrivers = () => (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
@@ -1797,15 +1835,72 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         </div>
       </div>
 
+      {drivers.length > 0 && (
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search drivers by name, phone, license..." 
+              value={driverSearchQuery}
+              onChange={(e) => setDriverSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <select
+                value={driverStatusFilter}
+                onChange={(e) => setDriverStatusFilter(e.target.value)}
+                className="pl-9 pr-8 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm appearance-none bg-white font-medium text-slate-700 cursor-pointer min-w-[140px]"
+              >
+                <option value="All">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Warning">Warning</option>
+                <option value="Suspended">Suspended</option>
+                <option value="Contract Cancelled">Contract Cancelled</option>
+                <option value="Left Company">Left Company</option>
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            </div>
+            <div className="relative">
+              <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <select
+                value={`${driverSortConfig.key}-${driverSortConfig.direction}`}
+                onChange={(e) => {
+                  const [key, direction] = e.target.value.split('-');
+                  setDriverSortConfig({ key, direction: direction as 'asc' | 'desc' });
+                }}
+                className="pl-9 pr-8 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm appearance-none bg-white font-medium text-slate-700 cursor-pointer min-w-[160px]"
+              >
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="status-asc">Status</option>
+                <option value="licenseExpiry-asc">License Expiry (Earliest)</option>
+                <option value="licenseExpiry-desc">License Expiry (Latest)</option>
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+      )}
+
       {drivers.length === 0 ? (
         <div className="bg-white p-12 rounded-2xl border border-slate-200 shadow-sm text-center col-span-full">
           <User size={48} className="mx-auto text-slate-400 mb-4" />
           <h3 className="text-lg font-bold text-slate-950">No Drivers Found</h3>
           <p className="text-slate-600 mt-2">Add your first driver to start building your roster.</p>
         </div>
+      ) : processedDrivers.length === 0 ? (
+        <div className="bg-white p-12 rounded-2xl border border-slate-200 shadow-sm text-center col-span-full">
+          <Search size={48} className="mx-auto text-slate-400 mb-4" />
+          <h3 className="text-lg font-bold text-slate-950">No Matches Found</h3>
+          <p className="text-slate-600 mt-2">Try adjusting your search or filters.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {drivers.map(driver => {
+          {processedDrivers.map(driver => {
             const licenseExpired = driver.licenseExpiry && new Date(driver.licenseExpiry) < new Date();
             const licenseExpiringSoon = !licenseExpired && driver.licenseExpiry && new Date(driver.licenseExpiry) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
             return (
