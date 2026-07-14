@@ -261,6 +261,7 @@ export interface TripLog {
   approvedBy?: string;
   approvedAt?: string;
   approvalNotes?: string;
+  approvalSignature?: string;
 }
 
 export interface CompletedDispatch {
@@ -686,6 +687,10 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         passengers: Array.isArray(l.passengers) ? l.passengers : typeof l.passengers === 'string' ? JSON.parse(l.passengers) : undefined,
         projectCode: l.project_code || undefined,
         approvalStatus: l.approval_status || undefined,
+        approvedBy: l.approved_by || undefined,
+        approvedAt: l.approved_at || undefined,
+        approvalNotes: l.approval_notes ? l.approval_notes.split('||SIG||')[0] : undefined,
+        approvalSignature: l.approval_notes && l.approval_notes.includes('||SIG||') ? l.approval_notes.split('||SIG||')[1] : undefined,
         fuelIssuedLiters: Number(l.fuel_issued_liters || 0), fuelCostPerLiter: Number(l.fuel_cost_per_liter || 0)
       })));
 
@@ -806,7 +811,8 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         route_deviations: l.routeDeviations, policy_violations: l.policyViolations, maintenance_issues_logged: l.maintenanceIssuesLogged,
         notes: l.notes, project_code: l.projectCode || null,
         approval_status: l.approvalStatus || 'Pending', approved_by: l.approvedBy || null,
-        approved_at: l.approvedAt || null, approval_notes: l.approvalNotes || null,
+        approved_at: l.approvedAt || null, 
+        approval_notes: (l.approvalNotes || '') + (l.approvalSignature ? `||SIG||${l.approvalSignature}` : '') || null,
         legs: l.legs ? JSON.stringify(l.legs) : null,
         passengers: l.passengers ? JSON.stringify(l.passengers) : null,
         dispatch_id: l.dispatchId || null,
@@ -863,7 +869,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
   const handleApproveLog = (logId: string, approverName: string, notes: string, sigData: string | null) => {
     setLogs(prev => prev.map(l => l.id === logId
-      ? { ...l, approvalStatus: 'Approved', approvedBy: approverName || 'Admin', approvedAt: new Date().toISOString(), approvalNotes: notes || undefined }
+      ? { ...l, approvalStatus: 'Approved', approvedBy: approverName || 'Admin', approvedAt: new Date().toISOString(), approvalNotes: notes || undefined, approvalSignature: sigData || undefined }
       : l
     ));
     setApprovalModalLogId(null); setApprovalApproverName(''); setApprovalNoteInput(''); setApprovalSignatureData(null); setApprovingLogId(null);
@@ -1691,7 +1697,10 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                               <button
                                 onClick={() => {
                                   setApprovalModalLogId(log.id);
-                                  setApprovalApproverName(log.approvedBy || ''); setApprovalNoteInput(log.approvalNotes || ''); setApprovalSignatureData(null);
+                                  setApprovalApproverName(log.approvedBy || ''); 
+                                  setApprovalNoteInput(log.approvalNotes || ''); 
+                                  setApprovalSignatureData(log.approvalSignature || null); 
+                                  setApprovalSignatureMode(log.approvalSignature ? 'upload' : 'draw');
                                   setActiveLogMenu(null);
                                 }}
                                 className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left"
@@ -4318,7 +4327,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         const driver = drivers.find(d => d.id === dispatch.driverId);
         const vehicle = vehicles.find(v => v.id === dispatch.vehicleId);
         // Find triplog if it's completed
-        const tripLog = completedD?.tripLogId ? filteredLogs.find(l => l.id === completedD.tripLogId) : undefined;
+        const tripLog = completedD?.tripLogId ? logs.find(l => l.id === completedD.tripLogId) : undefined;
 
         return (
           <DispatchDetailsView 
@@ -4379,7 +4388,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               setOdometerWarnings({});
               setIsLogModalOpen(true);
             } : undefined}
-            onApprove={tripLog ? (logId) => { setApprovalModalLogId(logId); setApprovalApproverName(tripLog.approvedBy || ''); setApprovalNoteInput(tripLog.approvalNotes || ''); setApprovalSignatureData(null); } : undefined}
+            onApprove={tripLog ? (logId) => { setApprovalModalLogId(logId); setApprovalApproverName(tripLog.approvedBy || ''); setApprovalNoteInput(tripLog.approvalNotes || ''); setApprovalSignatureData(tripLog.approvalSignature || null); setApprovalSignatureMode(tripLog.approvalSignature ? 'upload' : 'draw'); } : undefined}
             onFlag={tripLog ? (logId, note) => handleFlagLog(logId, note) : undefined}
           />
         );

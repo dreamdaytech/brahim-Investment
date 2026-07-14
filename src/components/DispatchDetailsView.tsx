@@ -95,28 +95,46 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
           ['Trip Date', tripLog.date || '-', 'District', tripLog.district || '-'],
           ['Distance Traveled', `${(tripLog.distanceTraveledKm || 0).toLocaleString()} km`, 'Fuel Consumed', `${tripLog.fuelConsumedLiters || 0} L`],
           ['Fuel Issued', `${tripLog.fuelIssuedLiters || 0} L`, 'Fuel Cost / L', `Le ${(tripLog.fuelCostPerLiter || 0).toLocaleString()}`],
-          ['Project Code', tripLog.projectCode || '-', 'Corporate A/C', tripLog.corporateAccountId || '-'],
+          ['Projects/Clients', tripLog.projectCode ? (clients.find(c => c.id === tripLog.projectCode)?.name || tripLog.projectCode) : '-', 'Corporate A/C', tripLog.corporateAccountId || '-'],
           ['Speeding Events', String(tripLog.speedingEvents || 0), 'Harsh Braking', String(tripLog.harshBraking || 0)],
           ['Idling (hrs)', String(tripLog.idlingTimeHours || 0), 'Incidents', String(tripLog.incidents || 0)],
           ['Route Deviations', String(tripLog.routeDeviations || 0), 'Policy Violations', String(tripLog.policyViolations || 0)],
           ['Maintenance Flagged', tripLog.maintenanceIssuesLogged ? 'YES' : 'No', 'Approval Status', tripLog.approvalStatus || 'Pending'],
           ['Approved By', tripLog.approvedBy || '-', 'Approved At', tripLog.approvedAt ? formatDate(tripLog.approvedAt) : '-'],
-          ['Approval Notes', tripLog.approvalNotes || '-', '', ''],
+          ['Approval Notes', tripLog.approvalNotes || '-', 'Admin Signature', ''],
         ],
         theme: 'grid',
         styles: { fontSize: 9, cellPadding: 3 },
         columnStyles: { 0: { fontStyle: 'bold', cellWidth: 38, fillColor: [245, 247, 255] }, 2: { fontStyle: 'bold', cellWidth: 38, fillColor: [245, 247, 255] } },
+        didParseCell: (data) => {
+          if (data.row.index === 9 && (tripLog as any).approvalSignature) {
+            data.cell.styles.minCellHeight = 16;
+          }
+        },
+        didDrawCell: (data) => {
+          if (data.row.index === 9 && data.column.index === 3 && (tripLog as any).approvalSignature) {
+            try {
+              doc.addImage((tripLog as any).approvalSignature, 'PNG', data.cell.x + 2, data.cell.y + 2, 35, 12);
+            } catch(e) {
+              console.error("Failed to add signature image to PDF", e);
+            }
+          }
+        }
       });
 
+      let contentY = (doc as any).lastAutoTable.finalY;
       if (tripLog.notes) {
-        currentY = (doc as any).lastAutoTable.finalY + 4;
+        contentY += 4;
         doc.setFontSize(9);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(90, 90, 110);
         const noteLines = doc.splitTextToSize(`Notes: "${tripLog.notes}"`, pageW - 28);
-        doc.text(noteLines, 14, currentY);
-        currentY += noteLines.length * 5;
+        doc.text(noteLines, 14, contentY);
+        contentY += noteLines.length * 5;
       }
+
+      
+      (doc as any).lastAutoTable.finalY = contentY;
 
       // ── Section 3: Route Legs ──────────────────────────
       if (tripLog.legs && tripLog.legs.length > 0) {
@@ -653,8 +671,8 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                     )}
                     {tripLog.projectCode && (
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Project Code</p>
-                        <p className="text-sm font-bold text-slate-800">{tripLog.projectCode}</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Projects/Clients</p>
+                        <p className="text-sm font-bold text-slate-800">{clients.find(c => c.id === tripLog.projectCode)?.name || tripLog.projectCode}</p>
                       </div>
                     )}
                   </div>
@@ -687,8 +705,8 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3">
                           <Briefcase size={16} className="text-blue-500 shrink-0" />
                           <div>
-                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Project Code</p>
-                            <p className="font-bold text-slate-800 text-sm mt-0.5">{tripLog.projectCode}</p>
+                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Projects/Clients</p>
+                            <p className="font-bold text-slate-800 text-sm mt-0.5">{clients.find(c => c.id === tripLog.projectCode)?.name || tripLog.projectCode}</p>
                           </div>
                         </div>
                       )}
@@ -706,6 +724,11 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                             tripLog.approvalStatus === 'Flagged' ? 'text-red-700' : 'text-slate-700'
                           }`}>{tripLog.approvalStatus || 'Pending'}</p>
                           {tripLog.approvedBy && <p className="text-xs text-slate-600 mt-0.5">By: {tripLog.approvedBy} {tripLog.approvedAt ? `· ${formatDate(tripLog.approvedAt)}` : ''}</p>}
+                          {(tripLog as any).approvalSignature && (
+                            <div className="mt-2 mb-2">
+                              <img src={(tripLog as any).approvalSignature} alt="Admin Signature" className="h-10 object-contain bg-white border border-slate-200 rounded p-1" />
+                            </div>
+                          )}
                           {tripLog.approvalNotes && <p className="text-xs text-red-600 mt-0.5 italic">{tripLog.approvalNotes}</p>}
                         </div>
                       </div>
