@@ -1246,7 +1246,14 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                   </div>
                   <div className="col-span-2">
                     <label className="flex items-center gap-2 text-xs font-bold text-slate-700 mt-1 cursor-pointer">
-                      <input type="checkbox" name="isDraft" value="true" defaultChecked={editingClient?.isDraft} className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                      <input 
+                        key={`draft-${editingClient?.id || 'new'}-${!!editingClient?.isDraft}`}
+                        type="checkbox" 
+                        name="isDraft" 
+                        value="true" 
+                        defaultChecked={!!editingClient?.isDraft} 
+                        className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" 
+                      />
                       Hide from Public Partners Page (Keep as Draft)
                     </label>
                   </div>
