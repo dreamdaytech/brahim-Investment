@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Shield, Fuel, Navigation, AlertTriangle, PenTool, CheckCircle2, TrendingUp, TrendingDown, Clock, Car, Trophy, AlertCircle, Search, ArrowUpDown, Plus, Calendar, FileText, User, ShieldAlert, Briefcase, Activity, ArrowLeft, Mail, Phone, MapPin, CreditCard, Users, Download, Upload, Trash2, X, ChevronDown, ChevronRight, ChevronUp, MoreVertical, Filter, Gift, Award, Eye, LayoutGrid, List, Pencil, ExternalLink, Loader2 } from 'lucide-react';
+import Select from 'react-select';
 
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
@@ -5997,6 +5998,11 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               const driverId = fd.get('driverId') as string;
               const vehicleId = fd.get('vehicleId') as string;
 
+              if (!driverId || !vehicleId) {
+                alert('Please select both a driver and a vehicle.');
+                return;
+              }
+
               const isEditingCompleted = editingDispatch && 'completedAt' in editingDispatch;
 
               // Gap #7 and #8: Prevent dispatching if already active (only for active dispatches)
@@ -6089,21 +6095,31 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               setEditingDispatch(null);
             }} className="p-6 grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver</label>
-                <select name="driverId" defaultValue={editingDispatch?.driverId || ''} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
-                  <option value="">Select Driver</option>
-                  {drivers.filter(d => {
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Driver *</label>
+                <Select
+                  name="driverId"
+                  options={drivers.filter(d => {
                     const isActiveElsewhere = activeDispatches.some(ad => ad.driverId === d.id && ad.id !== editingDispatch?.id);
                     return !isActiveElsewhere || d.id === editingDispatch?.driverId;
-                  }).map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                </select>
+                  }).map(d => ({ value: d.id, label: d.name }))}
+                  defaultValue={editingDispatch?.driverId ? { value: editingDispatch.driverId, label: drivers.find(d => d.id === editingDispatch.driverId)?.name } : null}
+                  placeholder="Select Driver..."
+                  className="text-sm"
+                  menuPosition="fixed"
+                  styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#f8fafc', padding: '2px' }) }}
+                />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
-                <select name="vehicleId" defaultValue={editingDispatch?.vehicleId || ''} required className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
-                  <option value="">Select Vehicle</option>
-                  {vehicles.filter(v => v.status === 'Available' || v.id === editingDispatch?.vehicleId).map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
-                </select>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle *</label>
+                <Select
+                  name="vehicleId"
+                  options={vehicles.filter(v => v.status === 'Available' || v.id === editingDispatch?.vehicleId).map(v => ({ value: v.id, label: `${v.makeModel} (${v.plateNumber || 'N/A'})` }))}
+                  defaultValue={editingDispatch?.vehicleId ? { value: editingDispatch.vehicleId, label: (() => { const v = vehicles.find(v => v.id === editingDispatch.vehicleId); return v ? `${v.makeModel} (${v.plateNumber || 'N/A'})` : ''; })() } : null}
+                  placeholder="Select Vehicle..."
+                  className="text-sm"
+                  menuPosition="fixed"
+                  styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#f8fafc', padding: '2px' }) }}
+                />
               </div>
 
               {/* ── Billing Section ──────────────────────────────── */}
@@ -6135,10 +6151,15 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 {/* Client / Project selector — always visible */}
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Client / Project</label>
-                  <select name="projectId" defaultValue={editingDispatch?.projectId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-300 text-sm">
-                    <option value="">None / Internal</option>
-                    {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                  </select>
+                  <Select
+                    name="projectId"
+                    options={[{ value: '', label: 'None / Internal' }, ...clients.map(c => ({ value: c.id, label: c.name }))]}
+                    defaultValue={editingDispatch?.projectId ? { value: editingDispatch.projectId, label: clients.find(c => c.id === editingDispatch.projectId)?.name || 'None / Internal' } : { value: '', label: 'None / Internal' }}
+                    placeholder="Search Client/Project..."
+                    className="text-sm"
+                    menuPosition="fixed"
+                    styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#ffffff', padding: '0px' }) }}
+                  />
                   {dispatchBillingMode === 'project' && (
                     <p className="text-[10px] text-blue-500 mt-1 font-medium">✓ Billing will be assigned to the selected client / project above.</p>
                   )}
@@ -6148,10 +6169,15 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 {dispatchBillingMode === 'corporate' && (
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Corporate Account</label>
-                    <select name="corporateAccountId" defaultValue={editingDispatch?.corporateAccountId || ''} className="w-full p-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-300 text-sm">
-                      <option value="">Select Corporate Account</option>
-                      {mockAccounts.map((a: any) => <option key={a.id} value={a.id}>{a.name}</option>)}
-                    </select>
+                    <Select
+                      name="corporateAccountId"
+                      options={[{ value: '', label: 'None / Default' }, ...mockAccounts.map((a: any) => ({ value: a.id, label: a.name }))]}
+                      defaultValue={editingDispatch?.corporateAccountId ? { value: editingDispatch.corporateAccountId, label: (() => { const a = mockAccounts.find((a: any) => a.id === editingDispatch.corporateAccountId); return a ? a.name : 'None / Default'; })() } : { value: '', label: 'None / Default' }}
+                      placeholder="Search Corporate Account..."
+                      className="text-sm"
+                      menuPosition="fixed"
+                      styles={{ control: (base) => ({ ...base, borderRadius: '0.75rem', borderColor: '#e2e8f0', backgroundColor: '#ffffff', padding: '0px' }) }}
+                    />
                     <p className="text-[10px] text-amber-600 mt-1 font-medium">⚠ Billing will be routed to this corporate account instead of the client/project.</p>
                   </div>
                 )}
