@@ -196,7 +196,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                       <option value="super_admin">Super Admin</option>
                       <option value="admin">Admin</option>
                       <option value="fleet_manager">Fleet Manager</option>
-                      <option value="maintenance_logs">Fleet Maintenance Logs</option>
+                      <option value="maintenance_logs">Maintenance Manager</option>
                       <option value="finance">Finance</option>
                     </select>
                   </td>
@@ -299,7 +299,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                   <option value="super_admin">Super Admin</option>
                   <option value="admin">Admin</option>
                   <option value="fleet_manager">Fleet Manager</option>
-                  <option value="maintenance_logs">Fleet Maintenance Logs</option>
+                  <option value="maintenance_logs">Maintenance Manager</option>
                   <option value="finance">Finance</option>
                 </select>
               </div>
@@ -354,7 +354,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                   <option value="super_admin">Super Admin</option>
                   <option value="admin">Admin</option>
                   <option value="fleet_manager">Fleet Manager</option>
-                  <option value="maintenance_logs">Fleet Maintenance Logs</option>
+                  <option value="maintenance_logs">Maintenance Manager</option>
                   <option value="finance">Finance</option>
                 </select>
               </div>
