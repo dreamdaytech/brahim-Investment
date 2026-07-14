@@ -809,6 +809,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         approved_at: l.approvedAt || null, approval_notes: l.approvalNotes || null,
         legs: l.legs ? JSON.stringify(l.legs) : null,
         passengers: l.passengers ? JSON.stringify(l.passengers) : null,
+        dispatch_id: l.dispatchId || null,
+        fuel_issued_liters: l.fuelIssuedLiters || null,
+        fuel_cost_per_liter: l.fuelCostPerLiter || null,
       }));
       return next;
     });
@@ -5170,7 +5173,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             <form onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
-              const tripId = editingLog?.id ? editingLog.id : `log-${Date.now()}`;
+              const tripId = editingLog?.id ? editingLog.id : uuidv4();
               const data: Partial<TripLog> = {
                 date: fd.get('date') as string,
                 driverId: fd.get('driverId') as string,
@@ -5223,6 +5226,33 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 }
               } else {
                 setLogs(prev => [{ ...data, id: tripId } as TripLog, ...prev]);
+                if (editingFuelCollections && editingFuelCollections.length > 0) {
+                  const newFuels = editingFuelCollections.map(fc => ({
+                    id: fc.id || uuidv4(),
+                    trip_log_id: tripId,
+                    station_name: fc.stationName,
+                    supplier: fc.supplier,
+                    is_partner_station: fc.isPartnerStation,
+                    location: fc.location,
+                    district: fc.district,
+                    region: fc.region,
+                    liters: fc.liters,
+                    cost_per_liter: fc.costPerLiter,
+                    total_amount: fc.totalAmount,
+                    fuel_type: fc.fuelType,
+                    payment_method: fc.paymentMethod,
+                    receipt_number: fc.receiptNumber,
+                    date: fc.date,
+                    time: fc.time,
+                    non_partner_reason: fc.nonPartnerReason,
+                    remarks: fc.remarks,
+                    driver_id: data.driverId,
+                    vehicle_id: data.vehicleId
+                  }));
+                  supabase.from('fuel_collections').insert(newFuels).then(({ error }) => {
+                    if (error) console.warn('[Fuel Collections Insert]', error.message);
+                  });
+                }
               }
 
               // #6 Update vehicle odometer from trip distance
@@ -5263,6 +5293,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 setActiveDispatches(prev => prev.filter(d => d.id !== returningDispatchId));
                 // Persist archive in background (silently fails if table not yet created)
                 supabase.from('completed_dispatches').insert({
+                  id: archived.id,
                   original_dispatch_id: archived.originalDispatchId,
                   driver_id: archived.driverId,
                   vehicle_id: archived.vehicleId,

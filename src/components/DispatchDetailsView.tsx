@@ -1,8 +1,8 @@
 import React from 'react';
-import { ArrowLeft, Clock, Car, User, Fuel, AlertTriangle, MapPin, CheckCircle2, Navigation, Activity, ShieldAlert, AlertCircle, Route, Users, Briefcase, ChevronRight, PenTool, Trash2, Download, Building2, Calendar, ThumbsUp, Flag, X, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Clock, Car, User, Fuel, AlertTriangle, MapPin, CheckCircle2, Navigation, Activity, ShieldAlert, AlertCircle, Route, Users, Briefcase, ChevronRight, PenTool, Trash2, Download, Building2, Calendar, ThumbsUp, Flag, X, MoreVertical, ExternalLink } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { ActiveDispatch, CompletedDispatch, TripLog, TripLeg, Passenger, Driver, Vehicle } from './PerformanceSection';
+import { ActiveDispatch, CompletedDispatch, TripLog, TripLeg, Passenger, Driver, Vehicle, parseReceipt } from './PerformanceSection';
 
 interface DispatchDetailsViewProps {
   dispatch: ActiveDispatch | CompletedDispatch;
@@ -179,25 +179,38 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
         autoTable(doc, {
           startY: currentY + 4,
           head: [['Date', 'Time', 'Station', 'Supplier', 'Partner', 'City', 'District', 'Fuel Type', 'Litres', 'Cost/L', 'Total (Le)', 'Payment', 'Receipt', 'Reason / Remarks']],
-          body: tripLog.fuelCollections.map(fc => [
-            fc.date || tripLog.date || '-',
-            fc.time || '-',
-            fc.stationName || '-',
-            fc.supplier || '-',
-            fc.isPartnerStation ? 'Yes' : 'No',
-            fc.location || '-',
-            fc.district || '-',
-            fc.fuelType || '-',
-            fc.liters ? String(fc.liters) : '-',
-            fc.costPerLiter ? `Le ${fc.costPerLiter.toLocaleString()}` : '-',
-            fc.totalAmount ? `Le ${fc.totalAmount.toLocaleString()}` : (fc.liters && fc.costPerLiter ? `Le ${(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-'),
-            fc.paymentMethod || '-',
-            fc.receiptNumber || '-',
-            fc.nonPartnerReason || fc.remarks || '-',
-          ]),
+          body: tripLog.fuelCollections.map(fc => {
+            const receipt = parseReceipt(fc.receiptNumber);
+            return [
+              fc.date || tripLog.date || '-',
+              fc.time || '-',
+              fc.stationName || '-',
+              fc.supplier || '-',
+              fc.isPartnerStation ? 'Yes' : 'No',
+              fc.location || '-',
+              fc.district || '-',
+              fc.fuelType || '-',
+              fc.liters ? String(fc.liters) : '-',
+              fc.costPerLiter ? `Le ${fc.costPerLiter.toLocaleString()}` : '-',
+              fc.totalAmount ? `Le ${fc.totalAmount.toLocaleString()}` : (fc.liters && fc.costPerLiter ? `Le ${(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-'),
+              fc.paymentMethod || '-',
+              receipt.url ? { content: receipt.text || 'Receipt', styles: { textColor: [37, 99, 235] } } : (receipt.text || '-'),
+              fc.nonPartnerReason || fc.remarks || '-',
+            ];
+          }),
           theme: 'grid',
           headStyles: { fillColor: [16, 185, 129], fontSize: 7 },
           styles: { fontSize: 7, cellPadding: 2 },
+          didDrawCell: (data) => {
+            if (data.column.index === 12 && data.cell.section === 'body') {
+              const rowIndex = data.row.index;
+              const fc = tripLog.fuelCollections![rowIndex];
+              const receipt = parseReceipt(fc.receiptNumber);
+              if (receipt.url) {
+                doc.link(data.cell.x, data.cell.y, data.cell.width, data.cell.height, { url: receipt.url });
+              }
+            }
+          },
         });
 
         // Fuel Summary row
@@ -856,7 +869,19 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                                 : (fc.liters && fc.costPerLiter ? `Le ${(fc.liters * fc.costPerLiter).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-')}
                             </td>
                             <td className="px-4 py-3 text-slate-700 text-xs">{fc.paymentMethod || '-'}</td>
-                            <td className="px-4 py-3 text-slate-700 text-xs">{fc.receiptNumber || '-'}</td>
+                            <td className="px-4 py-3 text-slate-700 text-xs">
+                              {(() => {
+                                const { text, url } = parseReceipt(fc.receiptNumber);
+                                return url ? (
+                                  <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 hover:underline inline-flex items-center gap-1 font-mono font-bold">
+                                    {text || 'Receipt'}
+                                    <ExternalLink size={12} />
+                                  </a>
+                                ) : (
+                                  <span className="font-mono text-slate-500">{text || '-'}</span>
+                                );
+                              })()}
+                            </td>
                             <td className="px-4 py-3 max-w-[160px]">
                               <p className="text-xs text-slate-600 truncate" title={fc.remarks || '-'}>{fc.remarks || '-'}</p>
                             </td>
