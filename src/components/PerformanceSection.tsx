@@ -6794,10 +6794,15 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
-                  <select value={standaloneFuelVehicleId} onChange={e => setStandaloneFuelVehicleId(e.target.value)} className="w-full p-2 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:bg-white">
-                    <option value="">Select Vehicle</option>
-                    {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
-                  </select>
+                  <SearchableSelect 
+                    value={standaloneFuelVehicleId} 
+                    onChange={(v: any) => setStandaloneFuelVehicleId(v)} 
+                    options={[
+                      {value: '', label: 'Select Vehicle...'},
+                      ...vehicles.map(v => ({value: v.id, label: `${v.makeModel} (${v.plateNumber})`}))
+                    ]} 
+                    placeholder="Select Vehicle..." 
+                  />
                 </div>
               </div>
               {/* Link to Trip Log (optional) */}
