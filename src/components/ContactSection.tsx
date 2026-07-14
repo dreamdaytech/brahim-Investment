@@ -271,10 +271,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Corporate Email Address*</label>
+                        <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Corporate Email Address</label>
                         <input 
                           type="email" 
-                          required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="e.g., r.cole@who.int"
