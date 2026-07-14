@@ -450,8 +450,10 @@ export const parseReceipt = (receipt?: string) => {
   return { text: parts[0] || '', url: parts.length > 1 ? parts.slice(1).join('|URL:') : '' };
 };
 
-export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string }> = ({ clients = [], defaultTab }) => {
+export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string, userRole?: string }> = ({ clients = [], defaultTab, userRole = 'super_admin' }) => {
   const [activeTab, _setActiveTab] = useState<'dashboard' | 'dispatch' | 'maintenance' | 'logs' | 'drivers' | 'driver_details' | 'vehicles' | 'leaderboard' | 'fuel'>(() => {
+    // Maintenance Managers always land on the maintenance tab
+    if (userRole === 'maintenance_logs') return 'maintenance';
     if (defaultTab) return defaultTab as any;
     const saved = sessionStorage.getItem('adminActiveTab');
     if (saved === 'scoring') return 'leaderboard';
@@ -5232,8 +5234,8 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           { id: 'drivers', label: 'Drivers', icon: User },
           { id: 'vehicles', label: 'Vehicles', icon: Car },
           { id: 'leaderboard', label: 'Performance & Awards', icon: Trophy },
-
-        ].map(tab => {
+        // Filter tabs by role: maintenance_logs only sees Maintenance
+        ].filter(tab => userRole === 'maintenance_logs' ? tab.id === 'maintenance' : true).map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (

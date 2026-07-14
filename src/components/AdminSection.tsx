@@ -727,15 +727,15 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
               onDelete={onDeleteTeamMember || (() => {})}
             />
           ) : adminTab === 'performance' ? (
-            <PerformanceSection clients={clients} />
+            <PerformanceSection clients={clients} userRole={userRole} defaultTab={userRole === 'maintenance_logs' ? 'maintenance' : undefined} />
           ) : adminTab === 'dispatch_management' ? (
-            <PerformanceSection clients={clients} defaultTab="dispatch" />
+            <PerformanceSection clients={clients} userRole={userRole} defaultTab="dispatch" />
           ) : adminTab === 'drivers' ? (
-            <PerformanceSection clients={clients} defaultTab="drivers" />
+            <PerformanceSection clients={clients} userRole={userRole} defaultTab="drivers" />
           ) : adminTab === 'vehicles' ? (
-            <PerformanceSection clients={clients} defaultTab="vehicles" />
+            <PerformanceSection clients={clients} userRole={userRole} defaultTab="vehicles" />
           ) : adminTab === 'fuel' ? (
-            <PerformanceSection clients={clients} defaultTab="fuel" />
+            <PerformanceSection clients={clients} userRole={userRole} defaultTab="fuel" />
           ) : adminTab === 'billing' ? (
             <CorporateBilling />
           ) : adminTab === 'access' ? (
