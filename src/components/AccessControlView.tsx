@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, Trash2, Edit3, Save, X, AlertCircle, MoreVertical, Power } from 'lucide-react';
+import { ShieldCheck, Plus, Trash2, X, AlertCircle, MoreVertical, Power } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { createClient } from '@supabase/supabase-js';
-
-// We need the env variables for a temporary client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 interface AccessControlViewProps {
   currentUserRole: string;
@@ -41,45 +36,28 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
     e.preventDefault();
     setIsSubmitting(true);
     setAuthError('');
-    
+
     try {
-      // 1. Create user using a temporary client so it doesn't log the admin out!
-      const tempClient = createClient(supabaseUrl, supabaseKey, {
-        auth: { persistSession: false, autoRefreshToken: false }
-      });
-      
-      const { data: authData, error: authError } = await tempClient.auth.signUp({
-        email,
-        password,
+      // Call the secure backend endpoint which uses the service role key server-side.
+      // This bypasses Supabase's public signup restrictions safely.
+      const response = await fetch('/api/admin/create-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName, role }),
       });
 
-      if (authError) throw authError;
+      const result = await response.json();
 
-      if (authData.user) {
-        // 2. The trigger should have inserted the default row. 
-        // We will just do an upsert or wait a second and update it.
-        // Wait for the trigger to finish
-        await new Promise(r => setTimeout(r, 1000));
-        
-        // Update the role and full name using the main admin client
-        // We use upsert here in case the database trigger failed or hasn't fired yet
-        const { error: updateError } = await supabase.from('user_roles').upsert({
-          id: authData.user.id,
-          email: email,
-          full_name: fullName,
-          role: role,
-          is_active: true
-        });
-        
-        if (updateError) throw updateError;
-
-        setIsModalOpen(false);
-        setEmail('');
-        setPassword('');
-        setFullName('');
-        setRole('fleet_manager');
-        fetchUsers();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to create user');
       }
+
+      setIsModalOpen(false);
+      setEmail('');
+      setPassword('');
+      setFullName('');
+      setRole('fleet_manager');
+      fetchUsers();
     } catch (err: any) {
       setAuthError(err.message || 'Failed to create user');
     } finally {
