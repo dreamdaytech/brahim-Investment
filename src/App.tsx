@@ -148,8 +148,27 @@ export default function App() {
       })
       .subscribe();
 
+    const clientsChannel = supabase.channel('public:clients')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, async () => {
+        const { data: clientsData } = await supabase.from('clients').select('*');
+        if (clientsData) {
+          const mappedClients = clientsData.map((c: any) => ({
+            id: c.id,
+            name: c.name,
+            service: c.service,
+            status: c.status,
+            isDraft: c.isdraft,
+            shortCode: c.short_code,
+            logoUrl: c.logoUrl || c.logourl
+          }));
+          setClients(mappedClients);
+        }
+      })
+      .subscribe();
+
     return () => {
       supabase.removeChannel(vehiclesChannel);
+      supabase.removeChannel(clientsChannel);
     };
   }, []);
 

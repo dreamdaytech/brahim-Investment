@@ -23,6 +23,8 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
         engine: v.engineLabel || '',
         pricePerDay: v.pricePerDay || 0,
         image: v.imageUrl || '',
+        imageUrl: v.imageUrl || '',
+        description: v.description || '',
       }))
     : VEHICLES.map(v => ({
         id: v.id,
@@ -32,6 +34,8 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
         engine: v.engine,
         pricePerDay: v.pricePerDay,
         image: v.imageUrl || (v as any).image || '',
+        imageUrl: v.imageUrl || (v as any).image || '',
+        description: v.description || '',
       }));
   const handleQuickBook = (vehicleId: string) => {
     startTransition(() => {
@@ -62,7 +66,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
 
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
   };
 
   return (
@@ -136,7 +140,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
               animate={{ x: ["0%", "-50%"] }}
               transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
             >
-              {[...(clients.filter(c => c.isPartner !== false).length > 0 ? clients.filter(c => c.isPartner !== false) : PARTNER_LOGOS), ...(clients.filter(c => c.isPartner !== false).length > 0 ? clients.filter(c => c.isPartner !== false) : PARTNER_LOGOS)].map((partner, idx) => (
+              {[...(clients.filter(c => c.isPartner !== false && !c.isDraft).length > 0 ? clients.filter(c => c.isPartner !== false && !c.isDraft) : PARTNER_LOGOS), ...(clients.filter(c => c.isPartner !== false && !c.isDraft).length > 0 ? clients.filter(c => c.isPartner !== false && !c.isDraft) : PARTNER_LOGOS)].map((partner, idx) => (
                 <div 
                   key={`${partner.id || partner.name}-${idx}`} 
                   className="bg-slate-50 px-6 py-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center min-w-[180px] h-[100px] text-center shrink-0"
