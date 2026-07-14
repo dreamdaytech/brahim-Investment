@@ -1,20 +1,37 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Brahim Investment Group - Fleet & Dispatch Management System
 
-# Run and deploy your AI Studio app
+A comprehensive web application designed to streamline vehicle dispatching, trip logging, fuel tracking, and maintenance management for the Brahim Investment Group fleet.
 
-This contains everything you need to run your app locally.
+## Features
+- **Dispatch Management:** Create, track, and manage active and completed vehicle dispatches.
+- **Trip Logging & Safety:** Log trip routes, distance traveled, passengers, and safety metrics (speeding, idling, etc.).
+- **Fuel Tracking:** Record and monitor fuel transactions, supplier details, and generate detailed fuel consumption reports.
+- **Maintenance & Corporate Billing:** Manage vehicle maintenance records and handle corporate account billing.
+- **Data Export & Reporting:** Download comprehensive PDF reports for dispatches and fuel collections.
 
-View your app in AI Studio: https://ai.studio/apps/e9b71817-0aa6-49d0-af8c-0d0b7101337b
+## Tech Stack
+- **Frontend:** React, TypeScript, Tailwind CSS, Vite
+- **Backend/Database:** Supabase (PostgreSQL)
+- **PDF Generation:** jsPDF, jspdf-autotable
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js (v18+)
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+2. Set your environment variables in `.env`:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+**Developed By DreamDay Technology for Brahim Investment Group**
