@@ -4470,6 +4470,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   setActiveDispatches(prev => prev.filter(d => d.id !== dispatch.id));
                   supabase.from('active_dispatches').delete().eq('id', dispatch.id).then();
                   setVehicles(prev => prev.map(v => v.id === dispatch.vehicleId ? { ...v, status: 'Available' } : v));
+                  supabase.from('vehicles').update({ status: 'Available' }).eq('id', dispatch.vehicleId).then();
                   setSelectedDispatchDetailsId(null);
                 }
               } else if (completedD) {
@@ -5380,17 +5381,17 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 }
               }
 
-              // #6 Update vehicle odometer from trip distance
-              if (data.vehicleId && data.distanceTraveledKm) {
+              // #6 Update vehicle odometer and reset status from trip distance
+              if (data.vehicleId) {
                 setVehicles(prev => prev.map(v =>
                   v.id === data.vehicleId
-                    ? { ...v, odometer: v.odometer + (data.distanceTraveledKm || 0) }
+                    ? { ...v, odometer: v.odometer + (data.distanceTraveledKm || 0), status: 'Available' }
                     : v
                 ));
                 // Persist to Supabase silently
                 const vehicle = vehicles.find(v => v.id === data.vehicleId);
                 if (vehicle) {
-                  supabase.from('vehicles').update({ odometer: vehicle.odometer + (data.distanceTraveledKm || 0) })
+                  supabase.from('vehicles').update({ odometer: vehicle.odometer + (data.distanceTraveledKm || 0), status: 'Available' })
                     .eq('id', data.vehicleId)
                     .then(({ error }) => { if (error) console.warn('[Odometer] Update failed:', error.message); });
                 }
@@ -6094,6 +6095,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 setActiveDispatches(prev => [data as ActiveDispatch, ...prev]);
                 // Ensure active status changes
                 setVehicles(prev => prev.map(v => v.id === data.vehicleId ? { ...v, status: 'Active Dispatch' } : v));
+                supabase.from('vehicles').update({ status: 'Active Dispatch' }).eq('id', data.vehicleId).then();
                 // Persist to DB
                 supabase.from('active_dispatches').insert({
                   id: data.id,
