@@ -341,7 +341,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         >
                           <span className="font-medium truncate">
                             {sourceVehicles.find(v => v.id === preferredVehicle)?.name || 'Select a vehicle...'} 
-                            {sourceVehicles.find(v => v.id === preferredVehicle) && ` ($${sourceVehicles.find(v => v.id === preferredVehicle)?.pricePerDay}/day - Est.)`}
+                            {sourceVehicles.find(v => v.id === preferredVehicle) && ` (Le ${sourceVehicles.find(v => v.id === preferredVehicle)?.pricePerDay}/day - Est.)`}
                           </span>
                           <ChevronDown size={14} className="text-slate-500 shrink-0 ml-2" />
                         </div>

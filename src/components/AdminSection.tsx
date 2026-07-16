@@ -7,6 +7,7 @@ import { CorporateBilling } from './CorporateBilling';
 import { AdminProfile } from './AdminProfile';
 import { DashboardOverview } from './DashboardOverview';
 import { AccessControlView } from './AccessControlView';
+import { MaintenanceSection } from './MaintenanceSection';
 import { supabase } from '../lib/supabase';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -34,7 +35,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
   const [adminTeamMembers, setAdminTeamMembers] = useState<any[]>([]);
   
   // Filtering & Searches States
-  const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'profile' | 'access'>('overview');
+  const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'team' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'maintenance' | 'profile' | 'access'>('overview');
   const [userRole, setUserRole] = useState<string>('super_admin');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('All');
@@ -400,6 +401,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                 { id: 'vehicles', label: 'Vehicles', icon: Car, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'maintenance_logs'] },
                 { id: 'fuel', label: 'Fuel', icon: Fuel, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
                 { id: 'billing', label: 'Billing & CRM', icon: CreditCard, badge: null, roles: ['super_admin', 'admin', 'finance'] },
+                { id: 'maintenance', label: 'Maintenance', icon: Settings, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'maintenance_logs'] },
               ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
                 const Icon = item.icon;
                 const isActive = adminTab === item.id;
@@ -501,6 +503,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     {adminTab === 'team' && 'Operational Team'}
                     {adminTab === 'performance' && 'Management'}
                     {adminTab === 'billing' && 'Billing & CRM'}
+                    {adminTab === 'maintenance' && 'Maintenance & Spares'}
                   </h1>
                   <p className="text-xs text-slate-600 font-mono">3 Massalay Drive Juba Formerly Johnny Paul Drive • Live Channel SL-5</p>
                 </div>
@@ -739,6 +742,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
             <PerformanceSection clients={clients} userRole={userRole} defaultTab="fuel" />
           ) : adminTab === 'billing' ? (
             <CorporateBilling />
+          ) : adminTab === 'maintenance' ? (
+            <MaintenanceSection />
           ) : adminTab === 'access' ? (
             <AccessControlView currentUserRole={userRole} />
           ) : adminTab === 'profile' ? (
@@ -855,7 +860,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
         ].map(({ label, value, color }) => (
           <div key={label} className={`bg-white p-4 rounded-2xl border border-slate-200 shadow-sm`}>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
-            <h3 className={`text-2xl font-black text-${color}-600 mt-1`}>{value}</h3>
+            <h3 className={`text-2xl font-black text-Le {color}-600 mt-1`}>{value}</h3>
           </div>
         ))}
       </div>
@@ -890,7 +895,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                 const blob = new Blob([csv], { type: 'text/csv' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a'); a.href = url;
-                a.download = `partners-clients-${new Date().toISOString().split('T')[0]}.csv`;
+                a.download = `partners-clients-Le {new Date().toISOString().split('T')[0]}.csv`;
                 a.click(); URL.revokeObjectURL(url);
               }}
               className="flex items-center gap-2 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
@@ -921,7 +926,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                   alternateRowStyles: { fillColor: [248, 250, 252] },
                 });
 
-                doc.save(`partners-clients-${new Date().toISOString().split('T')[0]}.pdf`);
+                doc.save(`partners-clients-Le {new Date().toISOString().split('T')[0]}.pdf`);
               }}
               className="flex items-center gap-2 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
               title="Export to PDF"
@@ -1157,7 +1162,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
               }
 
               const saved: any = {
-                id: editingClient?.id || `client-${Date.now()}`,
+                id: editingClient?.id || `client-Le {Date.now()}`,
                 name: g('name') || '',
                 service: g('service') || editingClient?.service || 'Logistics & Transport',
                 logo_url: finalLogoUrl,
@@ -1247,7 +1252,7 @@ const ClientsAdminView: React.FC<{ clients: any[], onAddClient: (c: any) => void
                   <div className="col-span-2">
                     <label className="flex items-center gap-2 text-xs font-bold text-slate-700 mt-1 cursor-pointer">
                       <input 
-                        key={`draft-${editingClient?.id || 'new'}-${!!editingClient?.isDraft}`}
+                        key={`draft-Le {editingClient?.id || 'new'}-Le {!!editingClient?.isDraft}`}
                         type="checkbox" 
                         name="isDraft" 
                         value="true" 
@@ -1441,7 +1446,7 @@ const TeamAdminView: React.FC<{
         ].map(({ label, value, color }) => (
           <div key={label} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
-            <h3 className={`text-2xl font-black text-${color}-600 mt-1`}>{value}</h3>
+            <h3 className={`text-2xl font-black text-Le {color}-600 mt-1`}>{value}</h3>
           </div>
         ))}
       </div>

@@ -71,7 +71,7 @@ const printInvoice = (invoice: Invoice, account: CorporateAccount | undefined) =
         <div><div class="label">Billing Model</div><div class="value">${account?.billingType || ''}</div></div>
       </div>
       <hr />
-      <div class="amount">Total: $${invoice.amount.toLocaleString()}</div>
+      <div class="amount">Total: Le ${invoice.amount.toLocaleString()}</div>
       <hr />
       <div class="footer">BIG Fleet Management · 3 Massalay Drive Juba Formerly Johnny Paul Drive · Generated ${new Date().toLocaleString()}</div>
     </body>
@@ -232,7 +232,7 @@ export const CorporateBilling: React.FC = () => {
         return;
       }
 
-      const invoiceId = `INV-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${account.id.toUpperCase().slice(0, 4)}`;
+      const invoiceId = `INV-Le {now.getFullYear()}-Le {String(now.getMonth() + 1).padStart(2, '0')}-Le {account.id.toUpperCase().slice(0, 4)}`;
 
       const { error: insertError } = await supabase.from('invoices').insert({
         id: invoiceId,
@@ -247,7 +247,7 @@ export const CorporateBilling: React.FC = () => {
       if (insertError) throw insertError;
 
       await fetchData();
-      alert(`✅ Invoice generated!\n\nClient: ${account.name}\nPeriod: ${period}\nTrips: ${tripCount}\nAmount: $${amount.toLocaleString()}`);
+      alert(`✅ Invoice generated!\n\nClient: ${account.name}\nPeriod: ${period}\nTrips: ${tripCount}\nAmount: Le ${amount.toLocaleString()}`);
     } catch (err: any) {
       console.error('Invoice generation error:', err);
       alert(`Failed to generate invoice: ${err.message}`);
@@ -431,7 +431,7 @@ export const CorporateBilling: React.FC = () => {
                       </button>
                       {/* #4 Email client — mailto link */}
                       <a
-                        href={`mailto:${account?.email}?subject=Invoice ${invoice.id} — ${invoice.period}&body=Dear ${account?.contactPerson},%0A%0APlease find attached your invoice for ${invoice.period}.%0A%0AInvoice ID: ${invoice.id}%0APeriod: ${invoice.period}%0AAmount Due: $${invoice.amount.toLocaleString()}%0A%0APlease remit payment at your earliest convenience.%0A%0ARegards,%0ABIG Fleet Management`}
+                        href={`mailto:${account?.email}?subject=Invoice ${invoice.id} — ${invoice.period}&body=Dear ${account?.contactPerson},%0A%0APlease find attached your invoice for ${invoice.period}.%0A%0AInvoice ID: ${invoice.id}%0APeriod: ${invoice.period}%0AAmount Due: Le ${invoice.amount.toLocaleString()}%0A%0APlease remit payment at your earliest convenience.%0A%0ARegards,%0ABIG Fleet Management`}
                         className="text-slate-600 hover:text-blue-600 p-1.5 hover:bg-blue-50 rounded-md transition-colors"
                         title="Email Client"
                       >

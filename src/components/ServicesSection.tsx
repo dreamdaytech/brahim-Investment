@@ -300,7 +300,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setSelectedVeh
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">Include Professional Chauffeur</p>
-                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">+$30/day. Adds Red-Cross Certified, vetted driver coverage.</p>
+                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">+Le 30/day. Adds Red-Cross Certified, vetted driver coverage.</p>
                       </div>
                     </label>
 
@@ -314,7 +314,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setSelectedVeh
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">Provincial Deployment Scope</p>
-                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">+$45/day. Includes offroad tracking gear, preventative fluids reserve, and remote safety monitoring.</p>
+                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">+Le 45/day. Includes offroad tracking gear, preventative fluids reserve, and remote safety monitoring.</p>
                       </div>
                     </label>
                   </div>
@@ -335,20 +335,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setSelectedVeh
 
                 <div className="space-y-3 font-mono text-xs border-b border-white/10 pb-6 mb-6">
                   <div className="flex justify-between text-slate-300">
-                    <span>Unit base rental ({calcDays} Days x ${baseRate}):</span>
+                    <span>Unit base rental ({calcDays} Days x Le {baseRate}):</span>
                     <span className="font-semibold text-white">${baseRate * calcDays}</span>
                   </div>
                   
                   {calcChauffeur && (
                     <div className="flex justify-between text-slate-300">
-                      <span>Vetted driver surcharge ({calcDays} Days x ${chauffeurRate}):</span>
+                      <span>Vetted driver surcharge ({calcDays} Days x Le {chauffeurRate}):</span>
                       <span className="font-semibold text-white">${chauffeurRate * calcDays}</span>
                     </div>
                   )}
 
                   {calcProvincial && (
                     <div className="flex justify-between text-slate-300">
-                      <span>Provincial premium ({calcDays} Days x ${provincialRate}):</span>
+                      <span>Provincial premium ({calcDays} Days x Le {provincialRate}):</span>
                       <span className="font-semibold text-white">${provincialRate * calcDays}</span>
                     </div>
                   )}
@@ -356,7 +356,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ setSelectedVeh
                   {discountPercentage > 0 && (
                     <div className="flex justify-between text-emerald-400 pt-2 border-t border-white/5 mt-2">
                       <span>Long-term deployment discount ({discountPercentage}%):</span>
-                      <span className="font-semibold">-${discountAmount}</span>
+                      <span className="font-semibold">-Le {discountAmount}</span>
                     </div>
                   )}
                 </div>

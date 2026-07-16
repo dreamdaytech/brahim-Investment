@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 export const AboutSection: React.FC = () => {
   const navigate = useNavigate();
 
-  const staggerContainer = {
+  const staggerContainer: any = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -18,7 +18,7 @@ export const AboutSection: React.FC = () => {
     }
   };
 
-  const fadeUpVariant = {
+  const fadeUpVariant: any = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };

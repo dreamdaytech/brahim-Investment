@@ -9,11 +9,18 @@ export interface Vehicle {
   features: string[];
   imageUrl?: string;
   galleryUrls?: string[];
-  documents?: { name: string; url: string }[];
+  documents?: { name: string; url: string; expiryDate?: string }[];
   seats: number;
   engine: string;
   pricePerDay: number;
   description: string;
+  make_model?: string;
+  plate_number?: string;
+  specEngineSize?: string;
+  specDrivetrain?: string;
+  specGroundClearance?: string;
+  specFuelCapacity?: string;
+  specBestFor?: string;
   detailedSpecs: {
     engineSize: string;
     drivetrain: string;
@@ -21,6 +28,82 @@ export interface Vehicle {
     fuelCapacity: string;
     bestFor: string;
   };
+}
+
+export interface Supplier {
+  id: string;
+  name: string;
+  contact_person?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  created_at?: string;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  vehicle_id: string;
+  supplier_id?: string;
+  driver_id?: string;
+  start_date?: string;
+  expected_completion_date?: string;
+  completion_date?: string;
+  service_date?: string;
+  spares_description?: string;
+  quantity?: number;
+  cost: number;
+  odometer_reading?: number;
+  notes?: string;
+  status?: string;
+  issues_found?: string;
+  mechanic_or_shop?: string;
+  mechanic_contact?: string;
+  mechanic_address?: string;
+  created_at?: string;
+  supplier?: Supplier;
+  vehicle?: Vehicle;
+  driver?: Driver;
+  spares?: MaintenanceSpare[];
+}
+
+export interface MaintenanceSpare {
+  id?: string;
+  maintenance_record_id?: string;
+  description: string;
+  quantity: number;
+  unit_cost: number;
+  created_at?: string;
+}
+
+export interface SparesPurchase {
+  id: string;
+  vehicle_id: string;
+  supplier_id?: string;
+  purchase_date?: string;
+  status?: string;
+  notes?: string;
+  cost: number;
+  created_at?: string;
+  vehicle?: Vehicle;
+  supplier?: Supplier;
+  items?: SparesItem[];
+}
+
+export interface SparesItem {
+  id?: string;
+  spares_purchase_id?: string;
+  description: string;
+  quantity: number;
+  unit_cost: number;
+  created_at?: string;
+}
+
+export interface Driver {
+  id: string;
+  name: string;
+  imgUrl?: string;
+  status?: string;
+  licenseExpiry?: string;
 }
 
 export interface Inquiry {

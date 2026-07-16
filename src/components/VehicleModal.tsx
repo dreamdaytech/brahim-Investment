@@ -119,7 +119,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
   const handleDocSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !newDocLabel.trim()) return;
-    const key = `${Date.now()}-${Math.random()}`;
+    const key = `${Date.now()}-Le {Math.random()}`;
     const isImage = file.type.startsWith('image/');
     
     setPendingDocs(prev => [...prev, {
@@ -148,7 +148,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
       setPendingDocs(prev => prev.map(d => d.key === doc.key ? { ...d, status: 'uploading' } : d));
       try {
         const ext = doc.file.name.split('.').pop();
-        const path = `vehicle-docs/${vehicleId}/${doc.docType}-${Date.now()}.${ext}`;
+        const path = `vehicle-docs/${vehicleId}/${doc.docType}-Le {Date.now()}.${ext}`;
         
         // Upload to Supabase Storage
         const { error: upErr } = await supabase.storage.from('vehicle-documents').upload(path, doc.file, { upsert: true });
@@ -178,7 +178,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
   // ── Submit ────────────────────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.makeModel.trim() || !form.year || form.odometer === '' || !form.plateNumber.trim() || !form.insuranceExpiry.trim()) {
+    if (!form.makeModel.trim() || !form.year || String(form.odometer) === '' || !form.plateNumber.trim() || !form.insuranceExpiry.trim()) {
       alert("Please update all required fields (*).");
       setTab('details');
       return;
@@ -545,7 +545,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                   
                   <div className="flex flex-wrap gap-4">
                     {galleryUrls.map((url, i) => (
-                      <div key={`url-${i}`} className="relative group shrink-0">
+                      <div key={`url-Le {i}`} className="relative group shrink-0">
                         <img src={url} alt="Gallery" className="w-24 h-24 rounded-xl object-cover border border-slate-200 shadow-sm" referrerPolicy="no-referrer" />
                         {!readonly && (
                           <button type="button" onClick={() => setGalleryUrls(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition">
@@ -555,7 +555,7 @@ export const VehicleModal: React.FC<Props> = ({ editingVehicle, onClose, onSave,
                       </div>
                     ))}
                     {galleryFiles.map((file, i) => (
-                      <div key={`file-${i}`} className="relative group shrink-0">
+                      <div key={`file-Le {i}`} className="relative group shrink-0">
                         <img src={URL.createObjectURL(file)} alt="Gallery" className="w-24 h-24 rounded-xl object-cover border border-slate-200 shadow-sm" referrerPolicy="no-referrer" />
                         {!readonly && (
                           <button type="button" onClick={() => setGalleryFiles(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition">

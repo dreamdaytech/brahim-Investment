@@ -142,7 +142,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setSelectedVehicleId, 
             >
               {[...(clients.filter(c => c.isPartner !== false && !c.isDraft).length > 0 ? clients.filter(c => c.isPartner !== false && !c.isDraft) : PARTNER_LOGOS), ...(clients.filter(c => c.isPartner !== false && !c.isDraft).length > 0 ? clients.filter(c => c.isPartner !== false && !c.isDraft) : PARTNER_LOGOS)].map((partner, idx) => (
                 <div 
-                  key={`${partner.id || partner.name}-${idx}`} 
+                  key={`${partner.id || partner.name}-Le {idx}`} 
                   className="bg-slate-50 px-6 py-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center min-w-[180px] h-[100px] text-center shrink-0"
                 >
                   {partner.logoUrl ? (

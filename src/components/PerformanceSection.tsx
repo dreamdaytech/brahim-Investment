@@ -124,6 +124,7 @@ export interface VehicleDocument {
   label: string;
   fileUrl: string;
   uploadedAt?: string;
+  expiryDate?: string;
 }
 
 export interface Vehicle {
@@ -148,6 +149,11 @@ export interface Vehicle {
   features?: string[];
   fuelType?: string;
   transmission?: string;
+  specEngineSize?: string;
+  specDrivetrain?: string;
+  specGroundClearance?: string;
+  specFuelCapacity?: string;
+  specBestFor?: string;
   seats?: number;
   engineLabel?: string;
 }
@@ -399,7 +405,7 @@ const generateMockLogs = (): TripLog[] => {
         const payIdx = Math.floor(Math.random() * MOCK_PAYMENT.length);
         const stopLiters = si === 0 ? Math.floor(fuelConsumed * 0.6) : Math.ceil(fuelConsumed * 0.4);
         return {
-          id: `fuel-${Date.now()}-${Math.random()}-${si}`,
+          id: `fuel-Le {Date.now()}-Le {Math.random()}-Le {si}`,
           date: dateStr,
           time: `${8 + si * 3}:${si === 0 ? '30' : '00'}`,
           stationName: `${supplier} ${MOCK_CITIES[cityIdx]} Station`,
@@ -413,7 +419,7 @@ const generateMockLogs = (): TripLog[] => {
           totalAmount: stopLiters * 15.5,
           fuelType: MOCK_FUEL_TYPES[Math.floor(Math.random() * MOCK_FUEL_TYPES.length)],
           paymentMethod: isPartner ? MOCK_PAYMENT[payIdx] : 'Mobile Money',
-          receiptNumber: `REC-${Math.floor(Math.random() * 10000)}`,
+          receiptNumber: `REC-Le {Math.floor(Math.random() * 10000)}`,
 
           nonPartnerReason: !isPartner ? 'No partner station available in area' : undefined,
           remarks: si === 1 ? 'Stop during return journey' : undefined,
@@ -1468,7 +1474,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               const blob = new Blob([csv], { type: 'text/csv' });
               const url = URL.createObjectURL(blob);
               const a = document.createElement('a'); a.href = url;
-              a.download = `trip-logs-${new Date().toISOString().split('T')[0]}.csv`;
+              a.download = `trip-logs-Le {new Date().toISOString().split('T')[0]}.csv`;
               a.click(); URL.revokeObjectURL(url);
             }}
             className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
@@ -1511,7 +1517,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 alternateRowStyles: { fillColor: [248, 250, 252] },
               });
 
-              doc.save(`trip-logs-${new Date().toISOString().split('T')[0]}.pdf`);
+              doc.save(`trip-logs-Le {new Date().toISOString().split('T')[0]}.pdf`);
             }}
             className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
           >
@@ -1888,7 +1894,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             <div className="relative">
               <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <select
-                value={`${driverSortConfig.key}-${driverSortConfig.direction}`}
+                value={`${driverSortConfig.key}-Le {driverSortConfig.direction}`}
                 onChange={(e) => {
                   const [key, direction] = e.target.value.split('-');
                   setDriverSortConfig({ key, direction: direction as 'asc' | 'desc' });
@@ -3556,7 +3562,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
     // Duplicate detection: same driver, date, station within same day
     const dupeMap: Record<string, number> = {};
     allFuelCollections.forEach(f => {
-      const key = `${f.driverId}-${f.date}-${f.stationName}`;
+      const key = `${f.driverId}-Le {f.date}-Le {f.stationName}`;
       dupeMap[key] = (dupeMap[key] || 0) + 1;
     });
     Object.entries(dupeMap).forEach(([key, count]) => {
@@ -3615,7 +3621,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         const esc = (v?: string | number) => `"${String(v ?? '').replace(/"/g, '""')}"`;
         return [esc(f.date), esc(f.time), esc(driver?.name), esc(vehicle ? `${vehicle.makeModel} (${vehicle.plateNumber})` : ''), esc(f.supplier), esc(f.stationName), esc(f.district), esc(f.location), esc(f.fuelType), f.liters.toFixed(2), f.costPerLiter.toFixed(2), (f.liters * f.costPerLiter).toFixed(2), esc(f.paymentMethod), esc(parseReceipt(f.receiptNumber).text), f.isPartnerStation === false ? 'No' : 'Yes', esc(f.nonPartnerReason), esc(f.tripLogId), esc(f.remarks)].join(',');
       });
-      downloadBlob(new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' }), `fuel-transactions-${new Date().toISOString().split('T')[0]}.csv`);
+      downloadBlob(new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' }), `fuel-transactions-Le {new Date().toISOString().split('T')[0]}.csv`);
     };
 
     const exportFuelPDF = () => {
@@ -3658,7 +3664,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         doc.setFontSize(7); doc.setTextColor(150);
         doc.text(`BIG Fleet Management — Confidential   |   Page ${i} of ${pageCount}`, 14, doc.internal.pageSize.height - 6);
       }
-      doc.save(`fuel-transactions-${new Date().toISOString().split('T')[0]}.pdf`);
+      doc.save(`fuel-transactions-Le {new Date().toISOString().split('T')[0]}.pdf`);
     };
 
     const exportSuppliersCSV = () => {
@@ -3667,7 +3673,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         const esc = (v?: string | number) => `"${String(v ?? '').replace(/"/g, '""')}"`;
         return [esc(s.name), esc(s.shortCode), s.isPartner ? 'Partner' : 'Non-Partner', esc(s.contactPerson), esc(s.phone), esc(s.email), esc(s.website), esc(s.headOfficeAddress), esc(s.city), esc(s.country), esc(s.accountNumber), esc(s.contractRef), esc(s.contractStartDate), esc(s.contractEndDate), s.creditLimit ?? '', esc(s.notes)].join(',');
       });
-      downloadBlob(new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' }), `fuel-projects-${new Date().toISOString().split('T')[0]}.csv`);
+      downloadBlob(new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' }), `fuel-projects-Le {new Date().toISOString().split('T')[0]}.csv`);
     };
 
     const exportSuppliersPDF = () => {
@@ -3705,7 +3711,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         doc.setFontSize(7); doc.setTextColor(150);
         doc.text(`BIG Fleet Management — Confidential   |   Page ${i} of ${pageCount}`, 14, doc.internal.pageSize.height - 6);
       }
-      doc.save(`fuel-projects-${new Date().toISOString().split('T')[0]}.pdf`);
+      doc.save(`fuel-projects-Le {new Date().toISOString().split('T')[0]}.pdf`);
     };
 
     const maxBarLiters = Math.max(...fuelByDriver.map(x => x.liters), 1);
@@ -3802,7 +3808,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             { label: 'Trips With Fuel', value: tripsCompleted.toString(), icon: Navigation, color: 'blue' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 hover:shadow-md transition-shadow">
-              <div className={`w-10 h-10 bg-${color}-50 text-${color}-600 rounded-xl flex items-center justify-center shrink-0`}>
+              <div className={`w-10 h-10 bg-Le {color}-50 text-Le {color}-600 rounded-xl flex items-center justify-center shrink-0`}>
                 <Icon size={18} />
               </div>
               <div className="min-w-0">
@@ -3945,7 +3951,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           doc.textWithLink('View Attached Receipt Image Online', 14, finalY, { url: receiptUrl });
                         }
                     
-                        doc.save(`Fuel-Log-${fc.stationName?.replace(/\s+/g, '-') || 'Details'}-${fc.date || today}.pdf`);
+                        doc.save(`Fuel-Log-Le {fc.stationName?.replace(/\s+/g, '-') || 'Details'}-Le {fc.date || today}.pdf`);
                       } catch (err) {
                         console.error('Export failed', err);
                         alert('Failed to export PDF');
@@ -4670,7 +4676,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   const blob = new Blob([csv], { type: 'text/csv' });
                   const url = URL.createObjectURL(blob);
                   const a = document.createElement('a'); a.href = url;
-                  a.download = `${isAct ? 'active' : 'completed'}-dispatches-${new Date().toISOString().split('T')[0]}.csv`;
+                  a.download = `${isAct ? 'active' : 'completed'}-dispatches-Le {new Date().toISOString().split('T')[0]}.csv`;
                   a.click(); URL.revokeObjectURL(url);
                 }}
                 className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
@@ -4720,7 +4726,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     alternateRowStyles: { fillColor: [248, 250, 252] },
                   });
 
-                  doc.save(`${isAct ? 'active' : 'completed'}-dispatches-${new Date().toISOString().split('T')[0]}.pdf`);
+                  doc.save(`${isAct ? 'active' : 'completed'}-dispatches-Le {new Date().toISOString().split('T')[0]}.pdf`);
                 }}
                 className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-200 transition-colors"
               >
@@ -4987,7 +4993,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         headStyles: { fillColor: [79, 70, 229], textColor: 255, fontStyle: 'bold' },
         alternateRowStyles: { fillColor: [248, 250, 252] }
       });
-      doc.save(`maintenance-logs-${new Date().toISOString().split('T')[0]}.pdf`);
+      doc.save(`maintenance-logs-Le {new Date().toISOString().split('T')[0]}.pdf`);
     };
 
 
@@ -5171,14 +5177,14 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   <td className="px-6 py-4 font-bold text-slate-950">Le {record.cost.toLocaleString()}</td>
                   <td className="px-6 py-4 text-right">
                     <button
-                      id={`maint-btn-${record.id}`}
+                      id={`maint-btn-Le {record.id}`}
                       onClick={() => setActiveMaintenanceMenu(activeMaintenanceMenu === record.id ? null : record.id)}
                       className="text-slate-500 hover:text-slate-700 p-1 rounded-full hover:bg-slate-100 transition-colors"
                     >
                       <MoreVertical size={16} />
                     </button>
                     {activeMaintenanceMenu === record.id && (() => {
-                      const btn = document.getElementById(`maint-btn-${record.id}`);
+                      const btn = document.getElementById(`maint-btn-Le {record.id}`);
                       const rect = btn?.getBoundingClientRect();
                       const spaceBelow = rect ? window.innerHeight - rect.bottom : 999;
                       const menuH = 195;
@@ -5244,31 +5250,32 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
     <div className="animate-fade-in">
 
       {/* Responsive Tab Bar */}
-      <div className="overflow-x-auto pb-1 mb-6">
-        <div className="flex gap-1 bg-slate-100 p-1.5 rounded-2xl min-w-max">
+      <div className="overflow-x-auto pb-2 mb-8">
+        <div className="flex gap-2 bg-slate-100/80 p-2 rounded-2xl min-w-max border border-slate-200/60 shadow-inner">
         {[
           { id: 'dashboard', label: 'Overview', icon: TrendingUp },
           { id: 'dispatch', label: 'Dispatch', icon: Navigation },
-          { id: 'maintenance', label: 'Maintenance', icon: PenTool },
           { id: 'fuel', label: 'Fuel', icon: Fuel },
           { id: 'drivers', label: 'Drivers', icon: User },
           { id: 'vehicles', label: 'Vehicles', icon: Car },
           { id: 'leaderboard', label: 'Performance & Awards', icon: Trophy },
-        // Filter tabs by role: maintenance_logs only sees Maintenance
-        ].filter(tab => userRole === 'maintenance_logs' ? tab.id === 'maintenance' : true).map(tab => {
+        // Filter tabs by role: maintenance_logs only sees Maintenance (now deprecated in this view)
+        ].filter(tab => userRole === 'maintenance_logs' ? false : true).map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-black transition-all whitespace-nowrap ${
                 isActive 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-slate-600 hover:text-slate-700 hover:bg-slate-200/50'
+                  ? 'bg-white text-blue-700 shadow-md ring-1 ring-slate-900/5 scale-[1.02]' 
+                  : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 hover:scale-[1.01]'
               }`}
             >
-              <Icon size={14} /> <span className="hidden sm:inline">{tab.label}</span><span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              <Icon size={16} className={isActive ? "text-blue-600" : "text-slate-400"} /> 
+              <span className="hidden sm:inline tracking-tight">{tab.label}</span>
+              <span className="sm:hidden tracking-tight">{tab.label.split(' ')[0]}</span>
             </button>
           );
         })}
@@ -5277,7 +5284,6 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
       {activeTab === 'dashboard' && renderDashboard()}
       {activeTab === 'dispatch' && renderDispatch()}
-      {activeTab === 'maintenance' && renderMaintenance()}
       {activeTab === 'fuel' && renderFuel()}
       {activeTab === 'drivers' && renderDrivers()}
       {activeTab === 'driver_details' && renderDriverDetails()}
@@ -5598,7 +5604,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     type="button"
                     onClick={() => {
                       setEditingTripLegs(prev => [...prev, {
-                        id: `leg-${Date.now()}`,
+                        id: `leg-Le {Date.now()}`,
                         departurePoint: '',
                         departureTime: '',
                         destinationPoint: '',
@@ -5724,7 +5730,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   </div>
                   <button
                     type="button"
-                    onClick={() => setEditingPassengers(prev => [...prev, { id: `pax-${Date.now()}`, name: '' }])}
+                    onClick={() => setEditingPassengers(prev => [...prev, { id: `pax-Le {Date.now()}`, name: '' }])}
                     className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 flex items-center gap-1"
                   >
                     <Plus size={12} /> Add Passenger
@@ -7085,7 +7091,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     if (standaloneFuelReceiptFile) {
                       setIsUploadingFuel(true);
                       const fileExt = standaloneFuelReceiptFile.name.split('.').pop();
-                      const fileName = `fuel-receipt-${Date.now()}.${fileExt}`;
+                      const fileName = `fuel-receipt-Le {Date.now()}.${fileExt}`;
                       const { error: upErr } = await supabase.storage
                         .from('vehicle-documents')
                         .upload(`receipts/${fileName}`, standaloneFuelReceiptFile, { upsert: true });

@@ -143,7 +143,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
     setPhotoUploading(true);
     try {
       const ext = photoFile.name.split('.').pop();
-      const path = `driver-photos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const path = `driver-photos/${Date.now()}-Le {Math.random().toString(36).slice(2)}.${ext}`;
       const { error } = await supabase.storage.from('driver-assets').upload(path, photoFile, { upsert: true });
       if (error) throw error;
       const { data } = supabase.storage.from('driver-assets').getPublicUrl(path);
@@ -160,7 +160,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
   const handleDocSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !newDocLabel.trim()) return;
-    const key = `${Date.now()}-${Math.random()}`;
+    const key = `${Date.now()}-Le {Math.random()}`;
     const isImage = file.type.startsWith('image/');
     setPendingDocs(prev => [...prev, {
       key, label: newDocLabel.trim(), docType: newDocType, file,
@@ -185,7 +185,7 @@ export const DriverModal: React.FC<Props> = ({ editingDriver, allStatusLogs = []
       setPendingDocs(prev => prev.map(d => d.key === doc.key ? { ...d, status: 'uploading' } : d));
       try {
         const ext = doc.file.name.split('.').pop();
-        const path = `driver-docs/${driverId}/${doc.docType}-${Date.now()}.${ext}`;
+        const path = `driver-docs/${driverId}/${doc.docType}-Le {Date.now()}.${ext}`;
         const { error: upErr } = await supabase.storage.from('driver-assets').upload(path, doc.file, { upsert: true });
         if (upErr) throw upErr;
         const { data } = supabase.storage.from('driver-assets').getPublicUrl(path);

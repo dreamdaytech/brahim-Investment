@@ -205,7 +205,7 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <DollarSign size={14} className="text-blue-500" /> Pricing
               </h3>
-              <InfoRow label="Price Per Day" value={vehicle.pricePerDay !== undefined ? `$${vehicle.pricePerDay}` : null} />
+              <InfoRow label="Price Per Day" value={vehicle.pricePerDay !== undefined ? `Le ${vehicle.pricePerDay}` : null} />
               <InfoRow label="Ground Clearance" value={(vehicle as any).specGroundClearance} />
               <InfoRow label="Fuel Capacity" value={(vehicle as any).specFuelCapacity} />
               <InfoRow label="Best For" value={(vehicle as any).specBestFor} />
