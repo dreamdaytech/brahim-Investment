@@ -168,3 +168,40 @@ export interface FuelStation {
   supplier?: string;
   created_at?: string;
 }
+
+export interface Expense {
+  id: string;
+  category: string;
+  amount: number;
+  description?: string;
+  driver_id?: string;
+  vehicle_id?: string;
+  payment_method?: string;
+  status: 'Pending' | 'Approved' | 'Paid';
+  expense_date: string;
+  paid_date?: string;
+  logged_by?: string;
+  approved_by?: string;
+  notes?: string;
+  created_at?: string;
+  driver?: { id: string; name: string };
+  vehicle?: { id: string; make_model: string; plate_number: string };
+}
+
+export interface DriverPayroll {
+  id: string;
+  driver_id: string;
+  month: string;
+  base_salary: number;
+  allowances: number;
+  deductions: number;
+  net_pay: number;
+  payment_method?: string;
+  status: 'Pending' | 'Approved' | 'Paid';
+  logged_by?: string;
+  approved_by?: string;
+  paid_date?: string;
+  notes?: string;
+  created_at?: string;
+  driver?: { id: string; name: string };
+}

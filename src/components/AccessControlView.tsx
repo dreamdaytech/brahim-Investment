@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { ShieldCheck, Plus, Trash2, X, AlertCircle, MoreVertical, Power, Edit3 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -10,7 +11,7 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<{ id: string; rect: DOMRect } | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   
@@ -23,6 +24,10 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
 
   useEffect(() => {
     fetchUsers();
+    
+    const handleScroll = () => setActiveDropdown(null);
+    window.addEventListener('scroll', handleScroll, true);
+    return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
   const fetchUsers = async () => {
@@ -205,21 +210,37 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                       {u.is_active ? 'Active' : 'Suspended'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right relative">
+                  <td className="px-6 py-4 text-right">
                     <button 
-                      onClick={() => setActiveDropdown(activeDropdown === u.id ? null : u.id)}
+                      onClick={(e) => {
+                        if (activeDropdown?.id === u.id) {
+                          setActiveDropdown(null);
+                        } else {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setActiveDropdown({ id: u.id, rect });
+                        }
+                      }}
                       className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition"
                     >
                       <MoreVertical size={16} />
                     </button>
                     
-                    {activeDropdown === u.id && (
+                    {activeDropdown?.id === u.id && createPortal(
                       <>
                         <div 
-                          className="fixed inset-0 z-10" 
+                          className="fixed inset-0 z-[9998]" 
                           onClick={() => setActiveDropdown(null)}
                         />
-                        <div className="absolute right-6 top-10 w-36 bg-white rounded-lg shadow-xl border border-slate-100 z-20 py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                        <div 
+                          className="fixed bg-white rounded-lg shadow-xl border border-slate-100 z-[9999] py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-100"
+                          style={{
+                            width: '150px',
+                            left: activeDropdown.rect.right - 150,
+                            ...(window.innerHeight - activeDropdown.rect.bottom < 150
+                              ? { bottom: window.innerHeight - activeDropdown.rect.top + 4 }
+                              : { top: activeDropdown.rect.bottom + 4 })
+                          }}
+                        >
                           <button
                             onClick={() => {
                               toggleStatus(u.id, u.is_active);
@@ -250,7 +271,8 @@ export const AccessControlView: React.FC<AccessControlViewProps> = ({ currentUse
                             Delete
                           </button>
                         </div>
-                      </>
+                      </>,
+                      document.body
                     )}
                   </td>
                 </tr>

@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { Inquiry } from '../types';
-import { Lock, FileText, CheckCircle, XCircle, Search, Sparkles, Filter, Database, TrendingUp, AlertCircle, ShieldEllipsis, ShieldCheck, LayoutDashboard, Users, Activity, CreditCard, LogOut, Menu, X, ChevronRight, ChevronLeft, BarChart3, PenTool, Trash2, Plus, User, Phone, Mail, MapPin, ArrowUpDown, SlidersHorizontal, ChevronDown, Navigation, Fuel, Car, Settings, MoreVertical, Eye, Camera, Loader2 } from 'lucide-react';
+import { Lock, FileText, CheckCircle, XCircle, Search, Sparkles, Filter, Database, TrendingUp, AlertCircle, ShieldEllipsis, ShieldCheck, LayoutDashboard, Users, Activity, CreditCard, LogOut, Menu, X, ChevronRight, ChevronLeft, BarChart3, PenTool, Trash2, Plus, User, Phone, Mail, MapPin, ArrowUpDown, SlidersHorizontal, ChevronDown, Navigation, Fuel, Car, Settings, MoreVertical, Eye, Camera, Loader2, Wallet } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PerformanceSection } from './PerformanceSection';
 import { CorporateBilling } from './CorporateBilling';
 import { AdminProfile } from './AdminProfile';
 import { DashboardOverview } from './DashboardOverview';
 import { AccessControlView } from './AccessControlView';
-import { MaintenanceSection } from './MaintenanceSection';
+import { MaintenanceSection } from './MaintenanceSection'; 
+import { ExpensesSection } from './ExpensesSection';
 import { supabase } from '../lib/supabase';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -35,8 +36,9 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
   const [adminTeamMembers, setAdminTeamMembers] = useState<any[]>([]);
   
   // Filtering & Searches States
-  const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'team' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'maintenance' | 'profile' | 'access'>('overview');
+  const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'team' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'maintenance' | 'expenses' | 'profile' | 'access'>('overview');
   const [userRole, setUserRole] = useState<string>('super_admin');
+  const [userEmail, setUserEmail] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('All');
   // #20 Global search state
@@ -56,6 +58,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
               setIsAuthenticated(false);
             } else {
               setUserRole(roleData.role);
+              setUserEmail(session.user.email || '');
               setIsAuthenticated(true);
             }
           } else {
@@ -395,13 +398,14 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
               }
               {[
                 { id: 'reservations', label: 'Reservations', icon: LayoutDashboard, badge: pendingInquiries > 0 ? pendingInquiries : null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance'] },
-                { id: 'performance', label: 'Management', icon: Activity, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'finance', 'maintenance_logs'] },
+                { id: 'performance', label: 'Management', icon: Activity, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'maintenance_logs'] },
                 { id: 'dispatch_management', label: 'Dispatch', icon: Navigation, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
                 { id: 'drivers', label: 'Drivers', icon: User, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
                 { id: 'vehicles', label: 'Vehicles', icon: Car, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'maintenance_logs'] },
                 { id: 'fuel', label: 'Fuel', icon: Fuel, badge: null, roles: ['super_admin', 'admin', 'fleet_manager'] },
                 { id: 'billing', label: 'Billing & CRM', icon: CreditCard, badge: null, roles: ['super_admin', 'admin', 'finance'] },
                 { id: 'maintenance', label: 'Maintenance', icon: Settings, badge: null, roles: ['super_admin', 'admin', 'fleet_manager', 'maintenance_logs'] },
+                { id: 'expenses', label: 'Expenses & Payroll', icon: Wallet, badge: null, roles: ['super_admin', 'admin', 'finance'] },
               ].filter((item: any) => !item.roles || item.roles.includes(userRole)).map(item => {
                 const Icon = item.icon;
                 const isActive = adminTab === item.id;
@@ -504,6 +508,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     {adminTab === 'performance' && 'Management'}
                     {adminTab === 'billing' && 'Billing & CRM'}
                     {adminTab === 'maintenance' && 'Maintenance & Spares'}
+                    {adminTab === 'expenses' && 'Expenses & Payroll'}
                   </h1>
                   <p className="text-xs text-slate-600 font-mono">3 Massalay Drive Juba Formerly Johnny Paul Drive • Live Channel SL-5</p>
                 </div>
@@ -744,6 +749,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
             <CorporateBilling />
           ) : adminTab === 'maintenance' ? (
             <MaintenanceSection />
+          ) : adminTab === 'expenses' ? (
+            <ExpensesSection userEmail={userEmail} userRole={userRole} />
           ) : adminTab === 'access' ? (
             <AccessControlView currentUserRole={userRole} />
           ) : adminTab === 'profile' ? (

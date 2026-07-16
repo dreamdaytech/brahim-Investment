@@ -11,7 +11,7 @@ import {
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export const MaintenanceSection: React.FC = () => {
+export const MaintenanceSection: React.FC = () => { 
   const [activeTab, setActiveTab] = useState<'maintenance' | 'spares' | 'suppliers'>('maintenance');
 
   // Fleet Maintenance state (maintenance_records table)
