@@ -682,6 +682,10 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         maintenanceRecordId: l.maintenance_record_id || undefined,
         fuelCollections: Array.isArray(l.fuel_collections) ? l.fuel_collections.map((fc: any) => ({
            id: fc.id,
+           date: fc.date,
+           driverId: fc.driver_id,
+           vehicleId: fc.vehicle_id,
+           tripLogId: fc.trip_log_id,
            stationName: fc.station_name,
            supplier: fc.supplier || undefined,
            isPartnerStation: fc.is_partner_station != null ? !!fc.is_partner_station : undefined,
