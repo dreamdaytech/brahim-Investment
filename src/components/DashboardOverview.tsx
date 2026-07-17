@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Car, Users, FileText, AlertTriangle, CheckCircle2,
   Fuel, Navigation, Wrench, Award, Activity, ShieldAlert,
-  ArrowUpRight, TrendingUp, Clock, BarChart2
+  ArrowUpRight, TrendingUp, Clock, BarChart2, DollarSign, Wallet, Truck
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -28,6 +28,8 @@ interface OverviewData {
   tripTrend: { date: string; trips: number; distance: number; fuel: number }[];
   topDrivers: { name: string; img: string; score: number }[];
   recentAlerts: { type: string; message: string; severity: 'high' | 'medium' | 'low' }[];
+  totalExpenses: number;
+  pendingPayroll: number;
 }
 
 const EMPTY: OverviewData = {
@@ -35,7 +37,8 @@ const EMPTY: OverviewData = {
   totalDrivers: 0, activeDrivers: 0, warningDrivers: 0, suspendedDrivers: 0,
   totalTripLogs: 0, totalDistance: 0, totalFuelConsumed: 0, totalIncidents: 0,
   activeDispatches: 0, maintenanceRecords: 0, avgFuelEfficiency: 0,
-  tripTrend: [], topDrivers: [], recentAlerts: []
+  tripTrend: [], topDrivers: [], recentAlerts: [],
+  totalExpenses: 0, pendingPayroll: 0
 };
 
 // ── Mini stat card ────────────────────────────────────────────────────────────
@@ -113,11 +116,14 @@ export const DashboardOverview: React.FC = () => {
           try { return await fn(); } catch { return { data: null, error: null }; }
         };
 
-        const [vehiclesRes, driversRes, logsRes, maintenanceRes] = await Promise.all([
+        const [vehiclesRes, driversRes, logsRes, maintenanceRes, expRes, payRes, fuelRes] = await Promise.all([
           safeQuery(() => supabase.from('vehicles').select('id, status').then(r => r)),
           safeQuery(() => supabase.from('drivers').select('id, name, img_url, status').then(r => r)),
           safeQuery(() => supabase.from('trip_logs').select('id, date, distance_traveled_km, fuel_consumed_liters, incidents').then(r => r)),
           safeQuery(() => supabase.from('maintenance_records').select('id, status').then(r => r)),
+          safeQuery(() => supabase.from('expenses').select('id, amount, status').then(r => r)),
+          safeQuery(() => supabase.from('driver_payroll').select('id, net_pay, status').then(r => r)),
+          safeQuery(() => supabase.from('fuel_collections').select('id, date, liters').then(r => r)),
         ]);
 
         if (cancelled) return;
@@ -140,6 +146,12 @@ export const DashboardOverview: React.FC = () => {
         const drivers    = driversRes.data ?? [];
         const logs       = logsRes.data ?? [];
         const maintenance = maintenanceRes.data ?? [];
+        const expenses   = expRes.data ?? [];
+        const payroll    = payRes.data ?? [];
+        const fuelCollections = fuelRes.data ?? [];
+        
+        const totalExpenses = expenses.reduce((s: number, e: any) => s + Number(e.amount ?? 0), 0);
+        const pendingPayroll = payroll.filter((p: any) => p.status === 'Pending').reduce((s: number, p: any) => s + Number(p.net_pay ?? 0), 0);
 
         // ── Stats
         const availableVehicles     = vehicles.filter((v: any) => v.status === 'Available').length;
@@ -150,7 +162,7 @@ export const DashboardOverview: React.FC = () => {
         const suspendedDrivers = drivers.filter((d: any) => d.status === 'Suspended').length;
 
         const totalDistance  = logs.reduce((s: number, l: any) => s + Number(l.distance_traveled_km ?? 0), 0);
-        const totalFuel      = logs.reduce((s: number, l: any) => s + Number(l.fuel_consumed_liters ?? 0), 0);
+        const totalFuel      = fuelCollections.reduce((s: number, f: any) => s + Number(f.liters ?? 0), 0);
         const totalIncidents = logs.reduce((s: number, l: any) => s + Number(l.incidents ?? 0), 0);
         const avgEfficiency  = totalFuel > 0 ? totalDistance / totalFuel : 0;
 
@@ -162,11 +174,12 @@ export const DashboardOverview: React.FC = () => {
           const ws = wStart.toISOString().split('T')[0];
           const we = wEnd.toISOString().split('T')[0];
           const wl = (logs as any[]).filter(l => l.date >= ws && l.date < we);
+          const wf = (fuelCollections as any[]).filter(f => f.date >= ws && f.date < we);
           return {
             date: label,
             trips: wl.length,
             distance: Math.round(wl.reduce((s: number, l: any) => s + Number(l.distance_traveled_km ?? 0), 0)),
-            fuel: Math.round(wl.reduce((s: number, l: any) => s + Number(l.fuel_consumed_liters ?? 0), 0)),
+            fuel: Math.round(wf.reduce((s: number, f: any) => s + Number(f.liters ?? 0), 0)),
           };
         });
 
@@ -200,6 +213,7 @@ export const DashboardOverview: React.FC = () => {
           maintenanceRecords: maintenance.length,
           avgFuelEfficiency: parseFloat(avgEfficiency.toFixed(1)),
           tripTrend, topDrivers, recentAlerts,
+          totalExpenses, pendingPayroll
         });
       } catch (err: any) {
         if (!cancelled) setError(err?.message ?? 'Failed to load overview data');
@@ -213,7 +227,7 @@ export const DashboardOverview: React.FC = () => {
     // ── Real-time subscriptions so the dashboard updates instantly across all devices
     let channels: any[] = [];
     import('../lib/supabase').then(({ supabase }) => {
-      const tables = ['vehicles', 'drivers', 'trip_logs', 'maintenance_records', 'active_dispatches'];
+      const tables = ['vehicles', 'drivers', 'trip_logs', 'maintenance_records', 'active_dispatches', 'expenses', 'driver_payroll', 'fuel_collections'];
       channels = tables.map(table =>
         supabase.channel(`dashboard:${table}`)
           .on('postgres_changes', { event: '*', schema: 'public', table }, () => {
@@ -268,6 +282,20 @@ export const DashboardOverview: React.FC = () => {
         </div>
 
         {/* Row 2 KPIs */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-start justify-between">
+              <div className="space-y-2 flex-1">
+                <Shimmer className="h-3 w-20" />
+                <Shimmer className="h-8 w-16" />
+                <Shimmer className="h-3 w-24" />
+              </div>
+              <Shimmer className="w-12 h-12 rounded-xl shrink-0 ml-3" />
+            </div>
+          ))}
+        </div>
+
+        {/* Row 3 KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-start justify-between">
@@ -389,9 +417,17 @@ export const DashboardOverview: React.FC = () => {
       {/* ── Row 2 KPIs ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard label="Trip Logs" value={data.totalTripLogs} sub="total recorded" icon={<FileText size={20} className="text-slate-700" />} iconBg="bg-slate-50 border-slate-200" valueColor="text-slate-950" />
-        <KpiCard label="Fuel Consumed" value={`${data.totalFuelConsumed.toLocaleString()} L`} sub="all trips total" icon={<TrendingUp size={20} className="text-violet-600" />} iconBg="bg-violet-50 border-violet-100" valueColor="text-violet-600" />
+        <KpiCard label="Total Fuel Litres" value={`${data.totalFuelConsumed.toLocaleString()} L`} sub="all trips total" icon={<TrendingUp size={20} className="text-violet-600" />} iconBg="bg-violet-50 border-violet-100" valueColor="text-violet-600" />
         <KpiCard label="In Maintenance" value={data.inMaintenanceVehicles} sub="vehicles grounded" icon={<Wrench size={20} className="text-orange-500" />} iconBg="bg-orange-50 border-orange-100" valueColor="text-orange-500" />
         <KpiCard label="Incidents" value={data.totalIncidents} sub="logged this period" icon={<AlertTriangle size={20} className={data.totalIncidents > 0 ? "text-red-600" : "text-slate-500"} />} iconBg={data.totalIncidents > 0 ? "bg-red-50 border-red-100" : "bg-slate-50 border-slate-200"} valueColor={data.totalIncidents > 0 ? "text-red-600" : "text-slate-500"} />
+      </div>
+
+      {/* ── Row 3 KPIs (Operations & Finance) ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <KpiCard label="Active Dispatches" value={data.activeDispatches} sub="currently on route" icon={<Truck size={20} className="text-teal-600" />} iconBg="bg-teal-50 border-teal-100" valueColor="text-teal-600" />
+        <KpiCard label="Maintenance Jobs" value={data.maintenanceRecords} sub="historical & active" icon={<Wrench size={20} className="text-orange-600" />} iconBg="bg-orange-50 border-orange-100" valueColor="text-orange-600" />
+        <KpiCard label="Total Expenses" value={`SLE ${data.totalExpenses.toLocaleString()}`} sub="all logged expenses" icon={<DollarSign size={20} className="text-emerald-600" />} iconBg="bg-emerald-50 border-emerald-100" valueColor="text-emerald-600" />
+        <KpiCard label="Pending Payroll" value={`SLE ${data.pendingPayroll.toLocaleString()}`} sub="unpaid driver salaries" icon={<Wallet size={20} className="text-indigo-600" />} iconBg="bg-indigo-50 border-indigo-100" valueColor="text-indigo-600" />
       </div>
 
       {/* ── Utilisation Bars ── */}
