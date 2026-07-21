@@ -568,7 +568,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               <div className="mt-4 bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs space-y-3 font-mono text-slate-700">
                 <div className="text-center pb-2 border-b border-slate-200">
                   <span className="font-extrabold tracking-widest text-[#0f172a] block text-xs">BIG (SL)</span>
-                  <span className="text-[8px] text-slate-500 block uppercase">3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
+                  <span className="text-[8px] text-slate-500 block uppercase">4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown</span>
                 </div>
 
                 {currentVehicleObj?.imageUrl ? (
@@ -619,7 +619,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <MapPin size={18} className="text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-slate-200 block font-mono text-[9px] uppercase">TECHNICAL DEPOT Compound</span>
-                    <span className="text-white leading-relaxed font-semibold">3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
+                    <span className="text-white leading-relaxed font-semibold">4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
           </span>
           <span className="flex items-center space-x-1">
             <MapPin size={13} className="text-blue-500" />
-            <span>3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
+            <span>4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown</span>
           </span>
         </div>
         <div className="flex items-center space-x-4">
@@ -263,7 +263,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
               </span>
             </p>
             <p className="flex items-center gap-2"><Mail size={12} className="text-blue-400" /> bigroupsl2010@gmail.com</p>
-            <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 3 Massalay Drive Juba Formerly Johnny Paul Drive</p>
+            <p className="flex items-center gap-2"><MapPin size={12} className="text-blue-400" /> 4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown</p>
           </div>
         </div>
       )}

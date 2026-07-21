@@ -6089,6 +6089,17 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     return prev;
                   });
                 } else {
+                  if (editingDispatch.vehicleId && editingDispatch.vehicleId !== data.vehicleId) {
+                    setVehicles(prev => prev.map(v => {
+                      if (v.id === editingDispatch.vehicleId) return { ...v, status: 'Available' };
+                      if (v.id === data.vehicleId) return { ...v, status: 'Active Dispatch' };
+                      return v;
+                    }));
+                    supabase.from('vehicles').update({ status: 'Available' }).eq('id', editingDispatch.vehicleId).then();
+                    if (data.vehicleId) {
+                      supabase.from('vehicles').update({ status: 'Active Dispatch' }).eq('id', data.vehicleId).then();
+                    }
+                  }
                   setActiveDispatches(prev => prev.map(d => d.id === editingDispatch.id ? { ...d, ...data } as ActiveDispatch : d));
                   supabase.from('active_dispatches').update({
                     driver_id: data.driverId,

@@ -510,7 +510,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                     {adminTab === 'maintenance' && 'Maintenance & Spares'}
                     {adminTab === 'expenses' && 'Expenses & Payroll'}
                   </h1>
-                  <p className="text-xs text-slate-600 font-mono">3 Massalay Drive Juba Formerly Johnny Paul Drive • Live Channel SL-5</p>
+                  <p className="text-xs text-slate-600 font-mono">4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown • Live Channel SL-5</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">

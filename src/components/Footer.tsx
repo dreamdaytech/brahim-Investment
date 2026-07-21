@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
           <ul className="space-y-3 text-xs text-slate-100 font-sans">
             <li className="flex items-start space-x-2">
               <MapPin size={14} className="text-blue-400 mt-0.5 shrink-0" />
-              <span>3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
+              <span>4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown</span>
             </li>
             <li className="flex items-center space-x-2">
               <Phone size={14} className="text-blue-400 shrink-0" />

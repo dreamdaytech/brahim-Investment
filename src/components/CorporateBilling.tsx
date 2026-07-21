@@ -73,7 +73,7 @@ const printInvoice = (invoice: Invoice, account: CorporateAccount | undefined) =
       <hr />
       <div class="amount">Total: Le ${invoice.amount.toLocaleString()}</div>
       <hr />
-      <div class="footer">BIG Fleet Management · 3 Massalay Drive Juba Formerly Johnny Paul Drive · Generated ${new Date().toLocaleString()}</div>
+      <div class="footer">BIG Fleet Management · 4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown · Generated ${new Date().toLocaleString()}</div>
     </body>
     </html>
   `;

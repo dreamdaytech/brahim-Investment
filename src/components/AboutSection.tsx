@@ -32,7 +32,7 @@ export const AboutSection: React.FC = () => {
           <span className="text-xs font-bold uppercase tracking-widest text-blue-600 font-mono bg-blue-50 border border-blue-100 px-3 py-1 rounded">THE INSTITUTION</span>
           <h1 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight mt-3">Honesty &amp; Trust In Every Mile</h1>
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-            Registered and headquartered on 3 Massalay Drive Juba Formerly Johnny Paul Drive. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
+            Registered and headquartered on 4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown. Supporting international diplomatic corps, non-profit institutions, and high-level corporate missions for over a decade.
           </p>
         </div>
 
@@ -50,7 +50,7 @@ export const AboutSection: React.FC = () => {
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-150">
               <div className="space-y-1">
                 <span className="text-blue-600 font-mono font-bold text-xs uppercase block">HEADQUARTERS</span>
-                <span className="text-xs text-slate-800 font-semibold block">3 Massalay Drive Juba Formerly Johnny Paul Drive</span>
+                <span className="text-xs text-slate-800 font-semibold block">4 Juba Hill Estate, Off Massally Drive, by Johnny Paul Drive, Freetown</span>
               </div>
               <div className="space-y-1">
                 <span className="text-blue-600 font-mono font-bold text-xs uppercase block">PRIMARY FOCUS</span>
