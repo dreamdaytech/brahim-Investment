@@ -540,6 +540,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [fuelDateTo, setFuelDateTo] = useState('');
   const [fuelPage, setFuelPage] = useState(0);
   const [fuelFiltersOpen, setFuelFiltersOpen] = useState(false);
+  const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([]);
   const [fuelSubTab, setFuelSubTab] = useState<'overview' | 'fuel' | 'settings'>('overview');
   
   // Fuel Stations & Cities
@@ -594,7 +595,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   // Initialize data from Supabase
   React.useEffect(() => {
     const fetchData = async () => {
-      const [driversRes, vehiclesRes, dispatchesRes, maintenanceRes, tripLogsRes, scoresRes, statusLogsRes, completedDispRes, fuelCitiesRes, fuelStationsRes] = await Promise.all([
+      const [driversRes, vehiclesRes, dispatchesRes, maintenanceRes, tripLogsRes, scoresRes, statusLogsRes, completedDispRes, fuelCitiesRes, fuelStationsRes, dismissedAlertsRes] = await Promise.all([
         supabase.from('drivers').select('*, driver_documents(*)'),
         supabase.from('vehicles').select('*'),
         supabase.from('active_dispatches').select('*'),
@@ -604,11 +605,13 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         supabase.from('driver_status_logs').select('*').order('created_at', { ascending: false }),
         supabase.from('completed_dispatches').select('*').order('completed_at', { ascending: false }),
         supabase.from('fuel_cities').select('*').order('name'),
-        supabase.from('fuel_stations').select('*').order('name')
+        supabase.from('fuel_stations').select('*').order('name'),
+        supabase.from('dismissed_alerts').select('alert_id')
       ]);
 
       setFuelCities(fuelCitiesRes.data || []);
       setFuelStations(fuelStationsRes.data || []);
+      setDismissedAlerts(dismissedAlertsRes.data ? dismissedAlertsRes.data.map((r: any) => r.alert_id) : []);
 
       // Map status logs first so we can attach them to drivers
       const mappedStatusLogs: DriverStatusLog[] = (statusLogsRes.data || []).map((l: any) => ({
@@ -3582,24 +3585,42 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
     const avgEffKm = totalFuelLiters > 0 && totalDistance > 0 ? (totalDistance / totalFuelLiters).toFixed(1) : '—';
 
     // ── Alerts ────────────────────────────────────────────────────────────────
-    const alerts: { type: 'red' | 'amber'; msg: string }[] = [];
-    if (nonPartnerLiters > 0) alerts.push({ type: 'amber', msg: `${nonPartnerLiters.toFixed(0)} L purchased from non-partner stations — review receipts.` });
-    if (mmLiters > 0) alerts.push({ type: 'amber', msg: `${mmLiters.toFixed(0)} L purchased via Mobile Money — verify authorisation.` });
+    const generatedAlerts: { id: string; type: 'red' | 'amber'; msg: string }[] = [];
     allFuelCollections.forEach(f => {
-      if (f.liters > 55) alerts.push({ type: 'red', msg: `Unusually large fill-up: ${f.liters} L by ${drivers.find(d => d.id === f.driverId)?.name || f.driverId} at ${f.stationName} (${f.date}).` });
+      if (f.isPartnerStation === false) {
+        generatedAlerts.push({ id: `non_partner_${f.id}`, type: 'amber', msg: `${f.liters} L purchased from non-partner station (${f.stationName}) by ${drivers.find(d => d.id === f.driverId)?.name || f.driverId} — review receipt.` });
+      }
+      if (f.paymentMethod === 'Mobile Money') {
+        generatedAlerts.push({ id: `mobile_money_${f.id}`, type: 'amber', msg: `${f.liters} L purchased via Mobile Money by ${drivers.find(d => d.id === f.driverId)?.name || f.driverId} — verify authorisation.` });
+      }
+      if (f.liters > 55) {
+        generatedAlerts.push({ id: `large_fillup_${f.id}`, type: 'red', msg: `Unusually large fill-up: ${f.liters} L by ${drivers.find(d => d.id === f.driverId)?.name || f.driverId} at ${f.stationName} (${f.date}).` });
+      }
     });
+
     // Duplicate detection: same driver, date, station within same day
     const dupeMap: Record<string, number> = {};
     allFuelCollections.forEach(f => {
-      const key = `${f.driverId}-Le {f.date}-Le {f.stationName}`;
+      const key = `${f.driverId}-${f.date}-${f.stationName}`;
       dupeMap[key] = (dupeMap[key] || 0) + 1;
     });
     Object.entries(dupeMap).forEach(([key, count]) => {
       if (count > 1) {
         const [dId, date, stn] = key.split('-');
-        alerts.push({ type: 'red', msg: `Possible duplicate: ${count} transactions at "${stn}" on ${date} for driver ${drivers.find(d => d.id === dId)?.name || dId}.` });
+        generatedAlerts.push({ id: `duplicate_${dId}_${date}_${stn}`, type: 'red', msg: `Possible duplicate: ${count} transactions at "${stn}" on ${date} for driver ${drivers.find(d => d.id === dId)?.name || dId}.` });
       }
     });
+
+    const alerts = generatedAlerts.filter(a => !dismissedAlerts.includes(a.id));
+
+    const handleDismissAlert = async (alertId: string) => {
+      try {
+        setDismissedAlerts(prev => [...prev, alertId]);
+        await supabase.from('dismissed_alerts').insert([{ alert_id: alertId }]);
+      } catch (err: any) {
+        console.error('Failed to dismiss alert:', err);
+      }
+    };
 
     // ── Filtered Transactions ─────────────────────────────────────────────────
     const FUEL_PAGE_SIZE = 30;
