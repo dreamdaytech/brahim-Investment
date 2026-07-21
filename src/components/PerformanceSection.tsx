@@ -3835,14 +3835,25 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             </button>
             {fuelFiltersOpen && (
               <div className="px-5 pb-4 space-y-2">
-                {alerts.map((a, i) => (
-                  <div key={i} className={`flex items-start gap-2 p-3 rounded-xl text-xs font-medium ${a.type === 'red' ? 'bg-red-100 text-red-800' : 'bg-amber-50 text-amber-800 border border-amber-200'}`}>
-                    <AlertTriangle size={13} className="shrink-0 mt-0.5" /> {a.msg}
+                {alerts.map((a) => (
+                  <div key={a.id} className={`flex items-start justify-between gap-3 p-3 rounded-xl text-xs font-medium ${a.type === 'red' ? 'bg-red-100 text-red-800' : 'bg-amber-50 text-amber-800 border border-amber-200'}`}>
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle size={13} className="shrink-0 mt-0.5" />
+                      <span>{a.msg}</span>
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDismissAlert(a.id); }}
+                      title="Dismiss Alert"
+                      className={`shrink-0 p-1 rounded hover:bg-black/10 transition-colors ${a.type === 'red' ? 'text-red-500 hover:text-red-700' : 'text-amber-500 hover:text-amber-700'}`}
+                    >
+                      <X size={13} />
+                    </button>
                   </div>
                 ))}
               </div>
             )}
           </div>
+
         )}
 
         {/* ── KPI Cards ── */}
