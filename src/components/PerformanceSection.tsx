@@ -2581,6 +2581,14 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
             setIsVehicleReadOnly(false);
             setIsVehicleModalOpen(true);
           }}
+          onViewDispatch={() => {
+            const activeDispatch = activeDispatches.find(d => d.vehicleId === viewingVehicle.id);
+            if (activeDispatch) {
+              setActiveTab('dispatch');
+              setSelectedDispatchDetailsId(activeDispatch.id);
+              setViewingVehicle(null);
+            }
+          }}
         />
       );
     }
@@ -2704,13 +2712,30 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     </td>
                     <td className="px-6 py-4 text-slate-700">{vehicle.condition}</td>
                     <td className="px-6 py-4 text-center">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                        vehicle.status === 'Available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        vehicle.status === 'Maintenance' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                        'bg-slate-100 text-slate-700 border border-slate-200'
-                      }`}>
-                        {vehicle.status}
-                      </span>
+                      {vehicle.status === 'Active Dispatch' ? (
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const ad = activeDispatches.find(d => d.vehicleId === vehicle.id);
+                            if (ad) {
+                              setActiveTab('dispatch');
+                              setSelectedDispatchDetailsId(ad.id);
+                            }
+                          }}
+                          title="View Active Dispatch"
+                          className="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors cursor-pointer"
+                        >
+                          {vehicle.status}
+                        </button>
+                      ) : (
+                        <span className={`inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                          vehicle.status === 'Available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                          vehicle.status === 'Maintenance' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                          'bg-slate-100 text-slate-700 border border-slate-200'
+                        }`}>
+                          {vehicle.status}
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="relative inline-block text-left">

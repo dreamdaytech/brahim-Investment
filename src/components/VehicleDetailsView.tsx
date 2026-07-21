@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   ArrowLeft, Car, FileText, Activity, PenTool, CheckCircle2, AlertTriangle, Fuel,
   Settings, Shield, Users, DollarSign, Calendar, Layers, ExternalLink
@@ -9,16 +9,17 @@ interface VehicleDetailsViewProps {
   vehicle: Vehicle;
   onBack: () => void;
   onEdit: () => void;
+  onViewDispatch?: () => void;
 }
 
-const InfoRow: React.FC<{ label: string; value?: string | number | null }> = ({ label, value }) => (
+const InfoRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, value }) => (
   <div className="flex justify-between items-center py-2.5 border-b border-slate-100 last:border-0">
     <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
     <span className="text-sm font-semibold text-slate-800 text-right max-w-[55%]">{value ?? "—"}</span>
   </div>
 );
 
-export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle, onBack, onEdit }) => {
+export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle, onBack, onEdit, onViewDispatch }) => {
   const [activeTab, setActiveTab] = useState<"overview" | "documents" | "gallery">("overview");
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
 
@@ -50,11 +51,21 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               <h2 className="text-xl font-black text-slate-900 tracking-tight">
                 {vehicle.year} {vehicle.makeModel}
               </h2>
-              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                vehicle.status === "Available" ? "bg-emerald-100 text-emerald-700 border border-emerald-200" :
-                vehicle.status === "Maintenance" ? "bg-amber-100 text-amber-700 border border-amber-200" :
-                "bg-slate-100 text-slate-600 border border-slate-200"
-              }`}>{vehicle.status}</span>
+              {vehicle.status === "Active Dispatch" && onViewDispatch ? (
+                <button
+                  onClick={onViewDispatch}
+                  title="View Active Dispatch Details"
+                  className="inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 transition-colors cursor-pointer"
+                >
+                  {vehicle.status}
+                </button>
+              ) : (
+                <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                  vehicle.status === "Available" ? "bg-emerald-100 text-emerald-700 border border-emerald-200" :
+                  vehicle.status === "Maintenance" ? "bg-amber-100 text-amber-700 border border-amber-200" :
+                  "bg-slate-100 text-slate-700 border border-slate-200"
+                }`}>{vehicle.status}</span>
+              )}
             </div>
             <p className="text-sm text-slate-500 mt-0.5">
               Plate: <span className="font-mono font-bold text-slate-700">{vehicle.plateNumber}</span>
@@ -194,7 +205,11 @@ export const VehicleDetailsView: React.FC<VehicleDetailsViewProps> = ({ vehicle,
               <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <Shield size={14} className="text-blue-500" /> Asset & Registry
               </h3>
-              <InfoRow label="Status" value={vehicle.status} />
+              <InfoRow label="Status" value={
+                vehicle.status === "Active Dispatch" && onViewDispatch ? (
+                  <button onClick={onViewDispatch} className="text-blue-600 hover:underline cursor-pointer">{vehicle.status}</button>
+                ) : vehicle.status
+              } />
               <InfoRow label="Company Registered" value={vehicle.isCompanyRegistered ? "Yes" : "No"} />
               <InfoRow label="Insurance Expiry" value={insuranceDate?.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} />
               <InfoRow label="Fleet Listing" value={vehicle.showOnFleet ? "Active (Public)" : "Hidden"} />
