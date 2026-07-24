@@ -592,13 +592,21 @@ export const DispatchDetailsView: React.FC<DispatchDetailsViewProps> = ({ dispat
                 <div className="space-y-6">
 
                   {/* Date & Basic Info Bar */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     <div className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex items-center gap-2">
                       <Calendar size={14} className="text-blue-500 shrink-0" />
                       <div>
                         <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Trip Date</p>
                         <p className="text-sm font-bold text-blue-800 mt-0.5">{formatDateOnly(tripLog.date)}</p>
                       </div>
+                    </div>
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Odometer Out</p>
+                      <p className="text-sm font-bold text-slate-800">{dispatch.odometerOut.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Odometer In</p>
+                      <p className="text-sm font-bold text-slate-800">{(dispatch.odometerOut + tripLog.distanceTraveledKm).toLocaleString()}</p>
                     </div>
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Distance</p>

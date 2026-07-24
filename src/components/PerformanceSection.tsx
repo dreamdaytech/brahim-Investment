@@ -240,6 +240,7 @@ export interface TripLog {
   vehicleId: string;
   district?: string;
   distanceTraveledKm: number;
+  odometerIn?: number;
   fuelConsumedLiters: number;
   fuelIssuedLiters: number;
   fuelCostPerLiter: number;
@@ -587,7 +588,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [leaderboardPeriodValue, setLeaderboardPeriodValue] = useState<string>('Monthly');
   const [leaderboardSearch, setLeaderboardSearch] = useState('');
   const [leaderboardStatus, setLeaderboardStatus] = useState<'all' | 'eligible' | 'disqualified'>('all');
-  const [leaderboardSortField, setLeaderboardSortField] = useState<'score' | 'trips' | 'distance' | 'efficiency' | 'incidents' | 'variance' | 'name'>('score');
+  const [leaderboardSortField, setLeaderboardSortField] = useState<'score' | 'trips' | 'distance' | 'efficiency' | 'incidents' | 'variance' | 'name'>('distance');
   const [leaderboardSortDirection, setLeaderboardSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const [allStatusLogs, setAllStatusLogs] = useState<DriverStatusLog[]>([]);
@@ -1140,17 +1141,12 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         speeding += l.speedingEvents;
         idling += l.idlingTimeHours;
         
-        // 10% threshold for variance
-        const hasVariance = tripFuelIssued > l.fuelConsumedLiters * 1.1; 
-        if (hasVariance) varianceWarnings++;
-        
         score -= (l.incidents * 20);
         score -= ((l.policyViolations || 0) * 5);
         score -= ((l.routeDeviations || 0) * 5);
         score -= (l.speedingEvents * 2);
         score -= (l.harshBraking * 2);
         score -= (l.idlingTimeHours * 1);
-        if (hasVariance) score -= 15;
       });
 
       if (driverLogs.length > 0) {
@@ -1205,17 +1201,12 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         speeding += l.speedingEvents;
         idling += l.idlingTimeHours;
         
-        // 10% threshold for variance
-        const hasVariance = tripFuelIssued > l.fuelConsumedLiters * 1.1; 
-        if (hasVariance) varianceWarnings++;
-        
         score -= (l.incidents * 20);
         score -= ((l.policyViolations || 0) * 5);
         score -= ((l.routeDeviations || 0) * 5);
         score -= (l.speedingEvents * 2);
         score -= (l.harshBraking * 2);
         score -= (l.idlingTimeHours * 1);
-        if (hasVariance) score -= 15;
       });
 
       if (driverLogs.length > 0) {
@@ -1632,9 +1623,8 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 const driver = drivers.find(d => d.id === log.driverId);
                 const vehicle = vehicles.find(v => v.id === log.vehicleId);
                 const tripFuelIssued = log.fuelCollections ? log.fuelCollections.reduce((sum, fc) => sum + fc.liters, 0) : (log.fuelIssuedLiters || 0);
-                const hasVariance = tripFuelIssued > 0 && tripFuelIssued > log.fuelConsumedLiters * 1.1;
                 return (
-                  <tr key={log.id} className={`transition-colors ${hasVariance ? 'bg-red-50/50 hover:bg-red-50' : 'hover:bg-slate-50/50'}`}>
+                  <tr key={log.id} className={`transition-colors hover:bg-slate-50/50`}>
                     <td className="px-6 py-4 font-medium text-slate-950">{log.date}</td>
                     <td className="px-6 py-4 text-slate-700">{driver?.name || 'Unknown Driver'}</td>
                     <td className="px-6 py-4 text-slate-700">
@@ -1644,7 +1634,6 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     <td className="px-6 py-4 text-slate-700">{log.fuelConsumedLiters} L</td>
                     <td className="px-6 py-4 text-slate-700 font-bold">
                       {tripFuelIssued > 0 ? tripFuelIssued : '-'} L
-                      {hasVariance && <span title="High Fuel Variance"><AlertTriangle size={12} className="inline ml-1 text-red-500" /></span>}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {log.incidents > 0 ? (
@@ -1719,7 +1708,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                               </button>
                               <button
                                 onClick={() => { 
-                                  setEditingLog(log); 
+                                  const linkedDispatch = completedDispatches.find(d => d.tripLogId === log.id || d.originalDispatchId === log.dispatchId || d.id === log.dispatchId);
+                                  const outVal = linkedDispatch?.odometerOut ?? (log.vehicleId ? vehicles.find(v => v.id === log.vehicleId)?.odometer || 0 : 0);
+                                  setEditingLog({ ...log, odometerIn: outVal + (log.distanceTraveledKm || 0) });
                                   setEditingFuelCollections(log.fuelCollections || []); 
                                   setEditingTripLegs(log.legs || []); 
                                   setEditingPassengers(log.passengers || []); 
@@ -2892,8 +2883,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   };
 
   const renderLeaderboard = () => {
-    const isDisqualified = (ds: typeof driverScores[0]) =>
-      ds.incidents >= 1 || ds.varianceWarnings >= 2;
+    const isDisqualified = (ds: any) => ds.incidents >= 1;
 
     const rankStyle = (idx: number, disq: boolean) => {
       if (disq) return { badge: 'bg-red-50 text-red-400', label: String(idx + 1) };
@@ -2963,7 +2953,6 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
       { label: 'Policy Violation', penalty: -5, unit: 'each' },
       { label: 'Route Deviation', penalty: -5, unit: 'each' },
       { label: 'Speeding Event', penalty: -2, unit: 'each' },
-      { label: 'Fuel Variance Flag', penalty: -15, unit: 'each' },
       { label: 'Idling Time', penalty: -1, unit: 'per hr' },
     ];
 
@@ -3002,20 +2991,36 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
         if (leaderboardSortField === 'name') {
           valA = a.driver.name;
           valB = b.driver.name;
-        } else if (leaderboardSortField === 'variance') {
-          valA = a.varianceWarnings;
-          valB = b.varianceWarnings;
         } else if (leaderboardSortField === 'distance') {
           valA = a.totalDistance;
           valB = b.totalDistance;
         }
 
         if (typeof valA === 'string' && typeof valB === 'string') {
-          return leaderboardSortDirection === 'asc' 
+          const strCmp = leaderboardSortDirection === 'asc' 
             ? valA.localeCompare(valB) 
             : valB.localeCompare(valA);
+          if (strCmp !== 0) return strCmp;
+        } else {
+          const numCmp = leaderboardSortDirection === 'asc' ? valA - valB : valB - valA;
+          if (numCmp !== 0) return numCmp;
         }
-        return leaderboardSortDirection === 'asc' ? valA - valB : valB - valA;
+
+        // Tie-breakers based on priority ranking
+        if (leaderboardSortField !== 'distance' && b.totalDistance !== a.totalDistance) {
+          return b.totalDistance - a.totalDistance; // 1. Distance Traveled
+        }
+        if (leaderboardSortField !== 'trips' && b.trips !== a.trips) {
+          return b.trips - a.trips; // 2. Trips
+        }
+        if (leaderboardSortField !== 'efficiency' && b.efficiency !== a.efficiency) {
+          return Number(b.efficiency) - Number(a.efficiency); // 3. Fuel efficiency
+        }
+        if (leaderboardSortField !== 'score' && b.score !== a.score) {
+          return b.score - a.score; // 4. Other performance metrics (Safety score)
+        }
+        
+        return 0;
       });
 
     return (
@@ -3161,9 +3166,6 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('incidents')}>
                   Incidents <SortIcon field="incidents" />
                 </th>
-                <th className="px-4 py-4 font-semibold text-center cursor-pointer hover:text-blue-600 transition-colors select-none" onClick={() => handleSort('variance')}>
-                  Variance <SortIcon field="variance" />
-                </th>
                 <th className="px-4 py-4 font-semibold text-center">Award Status</th>
                 <th className="px-4 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -3225,15 +3227,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                         <span className="text-emerald-500 text-xs font-bold flex items-center justify-center gap-1"><CheckCircle2 size={11} /> None</span>
                       )}
                     </td>
-                    <td className="px-4 py-4 text-center">
-                      {ds.varianceWarnings > 0 ? (
-                        <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-1 rounded-lg text-xs font-bold">
-                          <AlertTriangle size={11} /> {ds.varianceWarnings} <span className="text-amber-500 font-normal">(-{ds.varianceWarnings * 15})</span>
-                        </span>
-                      ) : (
-                        <span className="text-emerald-500 text-xs font-bold flex items-center justify-center gap-1"><CheckCircle2 size={11} /> Clean</span>
-                      )}
-                    </td>
+
                     <td className="px-4 py-4 text-center">
                       {ds.trips === 0 ? (
                         <span className="text-slate-400 text-xs font-mono">No trips</span>
@@ -3275,7 +3269,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           <p className="text-sm font-bold text-amber-900">Disqualification Rules</p>
           <p className="text-xs text-amber-700 mt-1 leading-relaxed">
             A driver is <strong>automatically disqualified</strong> from monthly award eligibility if they have{' '}
-            <strong>1 or more incident</strong> or <strong>2 or more fuel variance flags</strong> in the scoring period.
+            <strong>1 or more incident</strong> in the scoring period.
           </p>
         </div>
       </div>
@@ -4565,7 +4559,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               setIsLogModalOpen(true);
             } : undefined}
             onEditTripLog={tripLog ? () => {
-              setEditingLog(tripLog);
+              const linkedDispatch = completedDispatches.find(d => d.tripLogId === tripLog.id || d.originalDispatchId === tripLog.dispatchId || d.id === tripLog.dispatchId);
+              const outVal = linkedDispatch?.odometerOut ?? (tripLog.vehicleId ? vehicles.find(v => v.id === tripLog.vehicleId)?.odometer || 0 : 0);
+              setEditingLog({ ...tripLog, odometerIn: outVal + (tripLog.distanceTraveledKm || 0) });
               setEditingFuelCollections(tripLog.fuelCollections || []);
               setEditingTripLegs(tripLog.legs || []);
               setEditingPassengers(tripLog.passengers || []);
@@ -5536,7 +5532,22 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Vehicle</label>
-                <select name="vehicleId" required defaultValue={editingLog?.vehicleId} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
+                <select name="vehicleId" required 
+                  value={editingLog?.vehicleId || ''} 
+                  onChange={(e) => {
+                    const newVehicleId = e.target.value;
+                    setEditingLog(prev => {
+                      if (!prev) return prev;
+                      const outVal = returningDispatch?.odometerOut || vehicles.find(v => v.id === newVehicleId)?.odometer || 0;
+                      const inVal = (prev as any).odometerIn;
+                      return {
+                        ...prev, 
+                        vehicleId: newVehicleId,
+                        distanceTraveledKm: (inVal !== undefined && inVal !== '') ? Math.max(0, inVal - outVal) : prev.distanceTraveledKm
+                      };
+                    });
+                  }}
+                  className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white">
                   <option value="">Select Vehicle</option>
                   {vehicles.map(v => <option key={v.id} value={v.id}>{v.makeModel} ({v.plateNumber})</option>)}
                 </select>
@@ -5552,14 +5563,40 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Distance (km)</label>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Trip Distance</label>
                 {editingTripLegs.length > 0 ? (
                   <div className="w-full p-2 border border-slate-200 rounded-xl bg-slate-100 text-slate-600 cursor-not-allowed">
-                    {editingTripLegs.reduce((sum, leg) => sum + Math.max(0, (leg.odometerEnd || 0) - (leg.odometerStart || 0)), 0)} (Calculated from legs)
+                    {editingTripLegs.reduce((sum, leg) => sum + Math.max(0, (leg.odometerEnd || 0) - (leg.odometerStart || 0)), 0)} km (Calculated from legs)
                     <input type="hidden" name="distanceTraveledKm" value={editingTripLegs.reduce((sum, leg) => sum + Math.max(0, (leg.odometerEnd || 0) - (leg.odometerStart || 0)), 0)} />
                   </div>
                 ) : (
-                  <input type="number" name="distanceTraveledKm" required defaultValue={editingLog?.distanceTraveledKm || 0} className="w-full p-2 border border-slate-200 rounded-xl" />
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Odometer Out</label>
+                      <input type="number" 
+                             disabled
+                             value={returningDispatch?.odometerOut || (editingLog?.vehicleId ? vehicles.find(v => v.id === editingLog.vehicleId)?.odometer : 0) || 0} 
+                             className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 text-slate-500" />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Odometer In</label>
+                      <input type="number" 
+                             value={(editingLog as any)?.odometerIn === undefined ? '' : (editingLog as any).odometerIn} 
+                             onChange={(e) => {
+                               const inVal = e.target.value === '' ? '' : Number(e.target.value);
+                               const outVal = returningDispatch?.odometerOut || (editingLog?.vehicleId ? vehicles.find(v => v.id === editingLog.vehicleId)?.odometer : 0) || 0;
+                               setEditingLog(prev => prev ? { ...prev, odometerIn: inVal as number, distanceTraveledKm: inVal === '' ? 0 : Math.max(0, (inVal as number) - outVal) } : prev);
+                             }}
+                             className="w-full p-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Distance (km)</label>
+                      <input type="number" name="distanceTraveledKm" required 
+                             value={editingLog?.distanceTraveledKm || 0} 
+                             onChange={(e) => setEditingLog(prev => prev ? { ...prev, distanceTraveledKm: Number(e.target.value) } : prev)}
+                             className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white transition-colors" />
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -5600,7 +5637,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
               <div className="col-span-2">
                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Total Litres (Fuel Consumed)</label>
-                <input type="number" step="0.1" name="fuelConsumedLiters" required value={editingLog?.fuelConsumedLiters ?? 0} onChange={e => setEditingLog(prev => prev ? { ...prev, fuelConsumedLiters: Number(e.target.value) } : prev)} className="w-full p-2 border border-slate-200 rounded-xl" />
+                <input type="number" step="0.1" name="fuelConsumedLiters" required value={editingLog?.fuelConsumedLiters ?? 0} onChange={e => setEditingLog(prev => prev ? { ...prev, fuelConsumedLiters: Number(e.target.value) } : prev)} className="w-full p-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white transition-colors" />
               </div>
 
               <div className="col-span-2 border-t border-slate-100 pt-4 mt-2">
@@ -6013,10 +6050,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                     <div>
                       <h3 className="text-sm font-black text-slate-950 uppercase tracking-wider mb-3 flex items-center gap-2"><AlertTriangle className="text-amber-500" size={16} /> Infractions & Behaviors</h3>
                       <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
-                        <div className="flex justify-between items-center p-3">
-                          <span className="text-sm font-semibold text-slate-700">Fuel Variance Warnings (Theft Suspicion)</span>
-                          <span className={`text-sm font-black ${ds.varianceWarnings > 0 ? 'text-red-600' : 'text-emerald-500'}`}>{ds.varianceWarnings}</span>
-                        </div>
+
                         <div className="flex justify-between items-center p-3">
                           <span className="text-sm font-semibold text-slate-700">Accidents / Incidents</span>
                           <span className={`text-sm font-black ${ds.incidents > 0 ? 'text-red-600' : 'text-emerald-500'}`}>{ds.incidents}</span>
