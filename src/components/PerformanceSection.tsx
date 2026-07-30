@@ -993,6 +993,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [standaloneFuelVehicleId, setStandaloneFuelVehicleId] = useState('');
   const [standaloneFuelTripLogId, setStandaloneFuelTripLogId] = useState('');
   const [standaloneFuelDispatchId, setStandaloneFuelDispatchId] = useState('');
+  const [dispatchLinkFilter, setDispatchLinkFilter] = useState<'all' | 'active' | 'completed'>('all');
 
   // Fuel Log detail view, delete confirmation & three-dot menu
   const [viewingFuelCollection, setViewingFuelCollection] = useState<FuelCollection | null>(null);
@@ -6987,10 +6988,35 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               </div>
               {/* Link to Active Dispatch or Trip Log (optional) */}
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">
-                  Link to Dispatch / Trip Log{' '}
-                  <span className="font-normal text-slate-400 normal-case">(optional)</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-slate-600 uppercase">
+                    Link to Dispatch / Trip Log{' '}
+                    <span className="font-normal text-slate-400 normal-case">(optional)</span>
+                  </label>
+                  <div className="flex gap-1 bg-slate-100 p-0.5 rounded-md text-[10px] font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => setDispatchLinkFilter('all')}
+                      className={`px-2 py-1 rounded transition-colors ${dispatchLinkFilter === 'all' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      All
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDispatchLinkFilter('active')}
+                      className={`px-2 py-1 rounded transition-colors ${dispatchLinkFilter === 'active' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Active Dispatches
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDispatchLinkFilter('completed')}
+                      className={`px-2 py-1 rounded transition-colors ${dispatchLinkFilter === 'completed' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Completed
+                    </button>
+                  </div>
+                </div>
                 <SearchableSelect
                   value={standaloneFuelDispatchId ? `dispatch:${standaloneFuelDispatchId}` : standaloneFuelTripLogId ? `log:${standaloneFuelTripLogId}` : ''}
                   onChange={(v: any) => {
@@ -7029,7 +7055,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   options={[
                     { value: '', label: 'No link (Standalone entry)' },
                     // ── Active Dispatches ──────────────────────────────
-                    ...activeDispatches
+                    ...(dispatchLinkFilter === 'all' || dispatchLinkFilter === 'active' ? activeDispatches
                       .filter(d => !standaloneFuelDriverId || d.driverId === standaloneFuelDriverId)
                       .map(d => {
                         const drv = drivers.find(dr => dr.id === d.driverId)?.name || 'Unknown Driver';
@@ -7041,9 +7067,9 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           value: `dispatch:${d.id}`,
                           label: `🚗 Ref: ${refNo} — ${drv} • ${vehLabel}${dispDate ? ` (out ${dispDate})` : ''}`,
                         };
-                      }),
+                      }) : []),
                     // ── Completed Trip Logs ────────────────────────────
-                    ...logs
+                    ...(dispatchLinkFilter === 'all' || dispatchLinkFilter === 'completed' ? logs
                       .filter(l => !standaloneFuelDriverId || l.driverId === standaloneFuelDriverId)
                       .sort((a, b) => b.date.localeCompare(a.date))
                       .slice(0, 50)
@@ -7057,7 +7083,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           value: `log:${l.id}`,
                           label: `📋 Ref: ${refNo} — ${l.date}: Trip${dest} (${drv} • ${veh})`,
                         };
-                      }),
+                      }) : []),
                   ]}
                   placeholder="No link (Standalone entry)"
                 />
