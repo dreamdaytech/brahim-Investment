@@ -7051,9 +7051,11 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                         const drv = drivers.find(d => d.id === l.driverId)?.name || 'Unknown Driver';
                         const veh = vehicles.find(v => v.id === l.vehicleId)?.makeModel || 'Unknown Vehicle';
                         const dest = l.district ? ` → ${l.district}` : '';
+                        const refId = l.dispatchId || l.id;
+                        const refNo = refId.slice(0, 8).toUpperCase();
                         return {
                           value: `log:${l.id}`,
-                          label: `📋 ${l.date}: Trip${dest} (${drv} • ${veh})`,
+                          label: `📋 Ref: ${refNo} — ${l.date}: Trip${dest} (${drv} • ${veh})`,
                         };
                       }),
                   ]}
