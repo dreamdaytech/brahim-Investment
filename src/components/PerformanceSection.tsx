@@ -983,7 +983,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [isStandaloneFuelModalOpen, setIsStandaloneFuelModalOpen] = useState(false);
   const [standaloneFuelEntry, setStandaloneFuelEntry] = useState<Partial<FuelCollection>>({
     id: '', stationName: '', supplier: 'NP', isPartnerStation: true, location: '',
-    liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card',
+    liters: 0, costPerLiter: 0, paymentMethod: 'Fuel Card',
     date: new Date().toISOString().split('T')[0], time: '',
     fuelType: 'Diesel',
   });
@@ -3795,7 +3795,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 setStandaloneFuelEntry({
                   id: uuidv4(),
                   stationName: '', supplier: 'NP', isPartnerStation: true, location: '',
-                  liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card',
+                  liters: 0, costPerLiter: 0, paymentMethod: 'Fuel Card',
                   date: new Date().toISOString().split('T')[0], time: '',
                   fuelType: 'Diesel',
                 });
@@ -5616,7 +5616,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           setStandaloneFuelEntry({
                             id: uuidv4(),
                             stationName: '', supplier: 'NP', isPartnerStation: true, location: '',
-                            liters: 0, costPerLiter: 15.5, paymentMethod: 'Fuel Card',
+                            liters: 0, costPerLiter: 0, paymentMethod: 'Fuel Card',
                             date: editingLog?.date || new Date().toISOString().split('T')[0], time: '',
                             fuelType: 'Diesel',
                           });
