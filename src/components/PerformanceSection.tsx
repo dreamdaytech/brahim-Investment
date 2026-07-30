@@ -188,6 +188,7 @@ export interface FuelCollection {
   id: string;
   // Linkage (populated by allFuelCollections memo)
   tripLogId?: string;
+  dispatchId?: string;   // link to an active dispatch directly
   driverId?: string;
   vehicleId?: string;
   // Time
@@ -690,6 +691,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
            driverId: fc.driver_id,
            vehicleId: fc.vehicle_id,
            tripLogId: fc.trip_log_id,
+           dispatchId: fc.dispatch_id || undefined,
            stationName: fc.station_name,
            supplier: fc.supplier || undefined,
            isPartnerStation: fc.is_partner_station != null ? !!fc.is_partner_station : undefined,
@@ -990,6 +992,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [standaloneFuelDriverId, setStandaloneFuelDriverId] = useState('');
   const [standaloneFuelVehicleId, setStandaloneFuelVehicleId] = useState('');
   const [standaloneFuelTripLogId, setStandaloneFuelTripLogId] = useState('');
+  const [standaloneFuelDispatchId, setStandaloneFuelDispatchId] = useState('');
 
   // Fuel Log detail view, delete confirmation & three-dot menu
   const [viewingFuelCollection, setViewingFuelCollection] = useState<FuelCollection | null>(null);
@@ -3802,6 +3805,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                 setStandaloneFuelDriverId('');
                 setStandaloneFuelVehicleId('');
                 setStandaloneFuelTripLogId('');
+                setStandaloneFuelDispatchId('');
                 setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true);
               }}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
@@ -5623,6 +5627,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           setStandaloneFuelDriverId(editingLog?.driverId || '');
                           setStandaloneFuelVehicleId(editingLog?.vehicleId || '');
                           setStandaloneFuelTripLogId(editingLog?.id || '');
+                          setStandaloneFuelDispatchId(editingLog?.dispatchId || '');
                           setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true);
                         }}
                         className="font-bold underline hover:text-blue-800 transition-colors"
@@ -6980,38 +6985,89 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                   />
                 </div>
               </div>
-              {/* Link to Trip Log (optional) */}
+              {/* Link to Active Dispatch or Trip Log (optional) */}
               <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">Link to Trip Log <span className="font-normal text-slate-400 normal-case">(optional)</span></label>
-                <SearchableSelect 
-                    value={standaloneFuelTripLogId} 
-                    onChange={(v: any) => {
-                      setStandaloneFuelTripLogId(v);
-                      if (v) {
-                        const selectedLog = logs.find(l => l.id === v);
-                        if (selectedLog) {
-                          if (selectedLog.driverId) setStandaloneFuelDriverId(selectedLog.driverId);
-                          if (selectedLog.vehicleId) setStandaloneFuelVehicleId(selectedLog.vehicleId);
-                          if (selectedLog.date) {
-                            setStandaloneFuelEntry((prev: any) => ({ ...prev, date: selectedLog.date }));
-                          }
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1.5">
+                  Link to Dispatch / Trip Log{' '}
+                  <span className="font-normal text-slate-400 normal-case">(optional)</span>
+                </label>
+                <SearchableSelect
+                  value={standaloneFuelDispatchId ? `dispatch:${standaloneFuelDispatchId}` : standaloneFuelTripLogId ? `log:${standaloneFuelTripLogId}` : ''}
+                  onChange={(v: any) => {
+                    if (!v) {
+                      // Clear both
+                      setStandaloneFuelDispatchId('');
+                      setStandaloneFuelTripLogId('');
+                    } else if (v.startsWith('dispatch:')) {
+                      const id = v.replace('dispatch:', '');
+                      setStandaloneFuelDispatchId(id);
+                      setStandaloneFuelTripLogId('');
+                      const d = activeDispatches.find(d => d.id === id);
+                      if (d) {
+                        if (d.driverId) setStandaloneFuelDriverId(d.driverId);
+                        if (d.vehicleId) setStandaloneFuelVehicleId(d.vehicleId);
+                        // Pre-fill date with today
+                        setStandaloneFuelEntry((prev: any) => ({
+                          ...prev,
+                          date: prev.date || new Date().toISOString().split('T')[0],
+                        }));
+                      }
+                    } else if (v.startsWith('log:')) {
+                      const id = v.replace('log:', '');
+                      setStandaloneFuelTripLogId(id);
+                      setStandaloneFuelDispatchId('');
+                      const selectedLog = logs.find(l => l.id === id);
+                      if (selectedLog) {
+                        if (selectedLog.driverId) setStandaloneFuelDriverId(selectedLog.driverId);
+                        if (selectedLog.vehicleId) setStandaloneFuelVehicleId(selectedLog.vehicleId);
+                        if (selectedLog.date) {
+                          setStandaloneFuelEntry((prev: any) => ({ ...prev, date: selectedLog.date }));
                         }
                       }
-                    }} 
-                    options={[
-                      {value: '', label: 'No linked trip (Standalone)'},
-                      ...logs.filter(l => !standaloneFuelDriverId || l.driverId === standaloneFuelDriverId).slice(0, 30).map(l => {
+                    }
+                  }}
+                  options={[
+                    { value: '', label: 'No link (Standalone entry)' },
+                    // ── Active Dispatches ──────────────────────────────
+                    ...activeDispatches
+                      .filter(d => !standaloneFuelDriverId || d.driverId === standaloneFuelDriverId)
+                      .map(d => {
+                        const drv = drivers.find(dr => dr.id === d.driverId)?.name || 'Unknown Driver';
+                        const veh = vehicles.find(v => v.id === d.vehicleId);
+                        const vehLabel = veh ? `${veh.makeModel} (${veh.plateNumber})` : 'Unknown Vehicle';
+                        const dispDate = d.dispatchTime ? new Date(d.dispatchTime).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '';
+                        const refNo = d.id.slice(0, 8).toUpperCase();
+                        return {
+                          value: `dispatch:${d.id}`,
+                          label: `🚗 Ref: ${refNo} — ${drv} • ${vehLabel}${dispDate ? ` (out ${dispDate})` : ''}`,
+                        };
+                      }),
+                    // ── Completed Trip Logs ────────────────────────────
+                    ...logs
+                      .filter(l => !standaloneFuelDriverId || l.driverId === standaloneFuelDriverId)
+                      .sort((a, b) => b.date.localeCompare(a.date))
+                      .slice(0, 50)
+                      .map(l => {
                         const drv = drivers.find(d => d.id === l.driverId)?.name || 'Unknown Driver';
                         const veh = vehicles.find(v => v.id === l.vehicleId)?.makeModel || 'Unknown Vehicle';
-                        const dest = l.district ? ` to ${l.district}` : '';
+                        const dest = l.district ? ` → ${l.district}` : '';
                         return {
-                          value: l.id, 
-                          label: `${l.date}: Trip${dest} (${drv} • ${veh})`
+                          value: `log:${l.id}`,
+                          label: `📋 ${l.date}: Trip${dest} (${drv} • ${veh})`,
                         };
-                      })
-                    ]} 
-                    placeholder="No linked trip (Standalone)" 
-                  />
+                      }),
+                  ]}
+                  placeholder="No link (Standalone entry)"
+                />
+                {standaloneFuelDispatchId && (() => {
+                  const linkedDispatch = activeDispatches.find(d => d.id === standaloneFuelDispatchId);
+                  const refNo = linkedDispatch ? linkedDispatch.id.slice(0, 8).toUpperCase() : standaloneFuelDispatchId.slice(0, 8).toUpperCase();
+                  return (
+                    <p className="mt-1.5 text-[10px] text-amber-600 font-semibold flex items-center gap-1">
+                      <span>⚡</span> Linked to dispatch <span className="font-mono bg-amber-100 px-1 rounded">Ref: {refNo}</span> — fuel entry will be saved without closing the dispatch.
+                    </p>
+                  );
+                })()}
               </div>
               {/* Station + Supplier */}
               <div className="grid grid-cols-2 gap-3">
@@ -7222,12 +7278,14 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       driverId: standaloneFuelDriverId,
                       vehicleId: standaloneFuelVehicleId,
                       tripLogId: standaloneFuelTripLogId || undefined,
+                      dispatchId: standaloneFuelDispatchId || undefined,
                     };
 
                     // ── Persist to Supabase ──────────────────────────────
-                    const buildFuelRow = (e: FuelCollection, logId?: string) => ({
+                    const buildFuelRow = (e: FuelCollection, logId?: string, dispId?: string) => ({
                       id: e.id,
                       trip_log_id: logId || e.tripLogId || null,
+                      dispatch_id: dispId || e.dispatchId || null,
                       driver_id: e.driverId || null,
                       vehicle_id: e.vehicleId || null,
                       station_name: e.stationName,
@@ -7257,6 +7315,51 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                       // Persist update to Supabase
                       supabase.from('fuel_collections').update(buildFuelRow(newEntry)).eq('id', entryId)
                         .then(({ error }) => { if (error) console.warn('[Fuel Update]', error.message); });
+                    } else if (standaloneFuelDispatchId) {
+                      // ── Linked to an active dispatch (no trip log yet) ──
+                      // Push into a synthetic in-memory group so it appears in the fuel log
+                      const syntheticLogId = uuidv4();
+                      const entryDate = newEntry.date || new Date().toISOString().split('T')[0];
+                      const dispatchLog: TripLog = {
+                        id: syntheticLogId,
+                        date: entryDate,
+                        driverId: standaloneFuelDriverId,
+                        vehicleId: standaloneFuelVehicleId,
+                        distanceTraveledKm: 0,
+                        fuelConsumedLiters: newEntry.liters || 0,
+                        fuelIssuedLiters: newEntry.liters || 0,
+                        fuelCostPerLiter: newEntry.costPerLiter || 0,
+                        incidents: 0, speedingEvents: 0, harshBraking: 0,
+                        idlingTimeHours: 0, routeDeviations: 0, policyViolations: 0,
+                        maintenanceIssuesLogged: false,
+                        dispatchId: standaloneFuelDispatchId,
+                        fuelCollections: [{ ...newEntry, tripLogId: syntheticLogId, dispatchId: standaloneFuelDispatchId }],
+                        notes: 'Fuel entry linked to active dispatch',
+                        approvalStatus: 'Pending',
+                      };
+                      _setLogs(prev => [dispatchLog, ...prev]);
+                      // Persist trip_log then fuel_collection, both referencing the dispatch
+                      supabase.from('trip_logs').insert({
+                        id: syntheticLogId,
+                        date: entryDate,
+                        driver_id: standaloneFuelDriverId,
+                        vehicle_id: standaloneFuelVehicleId,
+                        dispatch_id: standaloneFuelDispatchId,
+                        distance_traveled_km: 0,
+                        fuel_consumed_liters: newEntry.liters || 0,
+                        fuel_issued_liters: newEntry.liters || 0,
+                        fuel_cost_per_liter: newEntry.costPerLiter || 0,
+                        incidents: 0, speeding_events: 0, harsh_braking: 0,
+                        idling_time_hours: 0, route_deviations: 0, policy_violations: 0,
+                        maintenance_issues_logged: false,
+                        notes: 'Fuel entry linked to active dispatch',
+                        approval_status: 'Pending',
+                      }).then(({ error: logErr }) => {
+                        if (logErr) { console.warn('[Fuel DispatchLog Insert]', logErr.message); return; }
+                        supabase.from('fuel_collections')
+                          .insert(buildFuelRow({ ...newEntry, tripLogId: syntheticLogId, dispatchId: standaloneFuelDispatchId }, syntheticLogId, standaloneFuelDispatchId))
+                          .then(({ error: fcErr }) => { if (fcErr) console.warn('[Fuel Insert (dispatch-linked)]', fcErr.message); });
+                      });
                     } else if (standaloneFuelTripLogId) {
                       setLogs(prev => prev.map(l => l.id === standaloneFuelTripLogId
                         ? { ...l, fuelCollections: [...(l.fuelCollections || []), newEntry] }
@@ -7307,6 +7410,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
                           .then(({ error: fcErr }) => { if (fcErr) console.warn('[Fuel Insert (standalone)]', fcErr.message); });
                       });
                     }
+                    setStandaloneFuelDispatchId('');
                     setIsStandaloneFuelModalOpen(false);
                     // Switch to Fuel Logs subtab so admin can see the new entry
                     setFuelSubTab('fuel');
@@ -7339,7 +7443,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
               className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
             ><Eye size={14} className="text-blue-500" /> View Details</button>
             <button
-              onClick={() => { setStandaloneFuelEntry({ ...fuelMenuEntry }); setStandaloneFuelDriverId(fuelMenuEntry.driverId || ''); setStandaloneFuelVehicleId(fuelMenuEntry.vehicleId || ''); setStandaloneFuelTripLogId(fuelMenuEntry.tripLogId || ''); setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true); setOpenFuelMenuId(null); setFuelMenuEntry(null); setFuelMenuPos(null); }}
+              onClick={() => { setStandaloneFuelEntry({ ...fuelMenuEntry }); setStandaloneFuelDriverId(fuelMenuEntry.driverId || ''); setStandaloneFuelVehicleId(fuelMenuEntry.vehicleId || ''); setStandaloneFuelTripLogId(fuelMenuEntry.tripLogId || ''); setStandaloneFuelDispatchId(fuelMenuEntry.dispatchId || ''); setStandaloneFuelReceiptFile(null); setIsStandaloneFuelModalOpen(true); setOpenFuelMenuId(null); setFuelMenuEntry(null); setFuelMenuPos(null); }}
               className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
             ><Pencil size={14} className="text-amber-500" /> Edit Entry</button>
             <div className="border-t border-slate-100 my-1" />
