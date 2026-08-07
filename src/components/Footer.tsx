@@ -152,7 +152,7 @@ export const Footer: React.FC = () => {
         <p className="mt-2 text-[9px] text-slate-700">
           Powered by{' '}
           <a
-            href="https://dreamdaytech.com"
+            href="https://dreamdaytech-sl.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 hover:text-blue-400 transition-colors font-semibold hover:underline"
