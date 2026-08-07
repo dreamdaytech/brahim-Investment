@@ -102,6 +102,8 @@ export const DashboardOverview: React.FC = () => {
   const [data, setData] = useState<OverviewData>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [overviewStartDate, setOverviewStartDate] = useState('');
+  const [overviewEndDate, setOverviewEndDate] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -144,12 +146,21 @@ export const DashboardOverview: React.FC = () => {
 
         const vehicles   = vehiclesRes.data ?? [];
         const drivers    = driversRes.data ?? [];
-        const logs       = logsRes.data ?? [];
+        let logs       = logsRes.data ?? [];
         const maintenance = maintenanceRes.data ?? [];
         const expenses   = expRes.data ?? [];
         const payroll    = payRes.data ?? [];
-        const fuelCollections = fuelRes.data ?? [];
+        let fuelCollections = fuelRes.data ?? [];
         
+        if (overviewStartDate) {
+          logs = logs.filter((l: any) => l.date && l.date >= overviewStartDate);
+          fuelCollections = fuelCollections.filter((f: any) => f.date && f.date >= overviewStartDate);
+        }
+        if (overviewEndDate) {
+          logs = logs.filter((l: any) => l.date && l.date <= overviewEndDate);
+          fuelCollections = fuelCollections.filter((f: any) => f.date && f.date <= overviewEndDate);
+        }
+
         const totalExpenses = expenses.reduce((s: number, e: any) => s + Number(e.amount ?? 0), 0);
         const pendingPayroll = payroll.filter((p: any) => p.status === 'Pending').reduce((s: number, p: any) => s + Number(p.net_pay ?? 0), 0);
 
@@ -243,7 +254,7 @@ export const DashboardOverview: React.FC = () => {
         channels.forEach(ch => supabase.removeChannel(ch));
       });
     };
-  }, []);
+  }, [overviewStartDate, overviewEndDate]);
 
 
 
@@ -400,9 +411,24 @@ export const DashboardOverview: React.FC = () => {
           <h2 className="text-2xl font-black text-slate-950 tracking-tight">Platform Overview</h2>
           <p className="text-slate-600 text-sm mt-0.5">Live analytics across fleet, drivers &amp; operations · BIG SL</p>
         </div>
-        <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200 w-fit">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          LIVE · {new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+          <div className="flex items-center gap-3 bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-500 ml-1">From</span>
+              <input type="date" value={overviewStartDate} onChange={e => setOverviewStartDate(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-500">To</span>
+              <input type="date" value={overviewEndDate} onChange={e => setOverviewEndDate(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+            {(overviewStartDate || overviewEndDate) && (
+              <button onClick={() => { setOverviewStartDate(''); setOverviewEndDate(''); }} className="text-xs font-bold text-red-500 hover:text-red-700 transition-colors mx-1">Clear</button>
+            )}
+          </div>
+          <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200 w-fit">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            LIVE · {new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}
+          </div>
         </div>
       </div>
 

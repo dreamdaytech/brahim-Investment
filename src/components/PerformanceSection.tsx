@@ -544,6 +544,8 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
   const [fuelFiltersOpen, setFuelFiltersOpen] = useState(false);
   const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([]);
   const [fuelSubTab, setFuelSubTab] = useState<'overview' | 'fuel' | 'settings'>('overview');
+  const [overviewStartDate, setOverviewStartDate] = useState('');
+  const [overviewEndDate, setOverviewEndDate] = useState('');
   
   // Fuel Stations & Cities
   const [fuelCities, setFuelCities] = useState<FuelCity[]>([]);
@@ -3551,32 +3553,38 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
   const renderFuel = () => {
     // ── Analytics Computations ──────────────────────────────────────────────
-    const totalFuelLiters = allFuelCollections.reduce((acc, f) => acc + f.liters, 0);
-    const totalFuelCost = allFuelCollections.reduce((acc, f) => acc + (f.liters * f.costPerLiter), 0);
-    const partnerLiters = allFuelCollections.filter(f => f.isPartnerStation !== false).reduce((acc, f) => acc + f.liters, 0);
-    const nonPartnerLiters = allFuelCollections.filter(f => f.isPartnerStation === false).reduce((acc, f) => acc + f.liters, 0);
-    const mmLiters = allFuelCollections.filter(f => f.paymentMethod === 'Mobile Money').reduce((acc, f) => acc + f.liters, 0);
-    const tripsCompleted = new Set(allFuelCollections.map(f => f.tripLogId).filter(Boolean)).size;
+    const filteredCollections = allFuelCollections.filter(f => {
+      if (overviewStartDate && f.date && f.date < overviewStartDate) return false;
+      if (overviewEndDate && f.date && f.date > overviewEndDate) return false;
+      return true;
+    });
+
+    const totalFuelLiters = filteredCollections.reduce((acc, f) => acc + f.liters, 0);
+    const totalFuelCost = filteredCollections.reduce((acc, f) => acc + (f.liters * f.costPerLiter), 0);
+    const partnerLiters = filteredCollections.filter(f => f.isPartnerStation !== false).reduce((acc, f) => acc + f.liters, 0);
+    const nonPartnerLiters = filteredCollections.filter(f => f.isPartnerStation === false).reduce((acc, f) => acc + f.liters, 0);
+    const mmLiters = filteredCollections.filter(f => f.paymentMethod === 'Mobile Money').reduce((acc, f) => acc + f.liters, 0);
+    const tripsCompleted = new Set(filteredCollections.map(f => f.tripLogId).filter(Boolean)).size;
 
     // Per-driver totals (for dashboard card)
     const fuelByDriver = drivers.map(d => ({
       driver: d,
-      liters: allFuelCollections.filter(f => f.driverId === d.id).reduce((acc, f) => acc + f.liters, 0),
-      cost: allFuelCollections.filter(f => f.driverId === d.id).reduce((acc, f) => acc + f.liters * f.costPerLiter, 0),
+      liters: filteredCollections.filter(f => f.driverId === d.id).reduce((acc, f) => acc + f.liters, 0),
+      cost: filteredCollections.filter(f => f.driverId === d.id).reduce((acc, f) => acc + f.liters * f.costPerLiter, 0),
     })).filter(x => x.liters > 0).sort((a, b) => b.liters - a.liters);
 
     // Per-supplier totals
-    const suppliers = [...new Set(allFuelCollections.map(f => f.supplier || 'Unknown'))];
+    const suppliers = [...new Set(filteredCollections.map(f => f.supplier || 'Unknown'))];
     const fuelBySupplier = suppliers.map(s => ({
       supplier: s,
-      liters: allFuelCollections.filter(f => (f.supplier || 'Unknown') === s).reduce((acc, f) => acc + f.liters, 0),
+      liters: filteredCollections.filter(f => (f.supplier || 'Unknown') === s).reduce((acc, f) => acc + f.liters, 0),
     })).sort((a, b) => b.liters - a.liters);
 
     // Per-city totals
-    const cities = [...new Set(allFuelCollections.map(f => f.location).filter(Boolean))];
+    const cities = [...new Set(filteredCollections.map(f => f.location).filter(Boolean))];
     const fuelByCity = cities.map(c => ({
       city: c,
-      liters: allFuelCollections.filter(f => f.location === c).reduce((acc, f) => acc + f.liters, 0),
+      liters: filteredCollections.filter(f => f.location === c).reduce((acc, f) => acc + f.liters, 0),
     })).sort((a, b) => b.liters - a.liters).slice(0, 6);
 
     // Avg efficiency
@@ -3584,7 +3592,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
     // ── Alerts ────────────────────────────────────────────────────────────────
     const generatedAlerts: { id: string; type: 'red' | 'amber'; msg: string }[] = [];
-    allFuelCollections.forEach(f => {
+    filteredCollections.forEach(f => {
       if (f.isPartnerStation === false) {
         generatedAlerts.push({ id: `non_partner_${f.id}`, type: 'amber', msg: `${f.liters} L purchased from non-partner station (${f.stationName}) by ${drivers.find(d => d.id === f.driverId)?.name || f.driverId} — review receipt.` });
       }
@@ -3598,7 +3606,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
     // Duplicate detection: same driver, date, station within same day
     const dupeMap: Record<string, number> = {};
-    allFuelCollections.forEach(f => {
+    filteredCollections.forEach(f => {
       const key = `${f.driverId}-${f.date}-${f.stationName}`;
       dupeMap[key] = (dupeMap[key] || 0) + 1;
     });
@@ -3818,6 +3826,20 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
 
         {fuelSubTab === 'overview' && (
           <div className="space-y-6">
+            <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <span className="text-sm font-bold text-slate-700">Overview Date Range:</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-500">From</span>
+                <input type="date" value={overviewStartDate} onChange={e => setOverviewStartDate(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-500">To</span>
+                <input type="date" value={overviewEndDate} onChange={e => setOverviewEndDate(e.target.value)} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              </div>
+              {(overviewStartDate || overviewEndDate) && (
+                <button onClick={() => { setOverviewStartDate(''); setOverviewEndDate(''); }} className="text-xs font-bold text-red-500 hover:text-red-700 transition-colors ml-auto">Clear Filters</button>
+              )}
+            </div>
         {/* ── Overview Panel ── */}
         {/* ── Alerts ── */}
         {alerts.length > 0 && (
@@ -3860,7 +3882,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           {[
             { label: 'Total Litres', value: `${totalFuelLiters.toFixed(0)} L`, icon: Fuel, color: 'blue' },
             { label: 'Total Cost', value: `Le ${totalFuelCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, icon: TrendingDown, color: 'emerald' },
-            { label: 'Transactions', value: allFuelCollections.length.toString(), icon: FileText, color: 'amber' },
+            { label: 'Transactions', value: filteredCollections.length.toString(), icon: FileText, color: 'amber' },
             { label: 'Avg Efficiency', value: `${avgEffKm} km/L`, icon: TrendingUp, color: 'blue' },
             { label: 'Partner Station L', value: `${partnerLiters.toFixed(0)} L`, icon: CheckCircle2, color: 'emerald' },
             { label: 'Non-Partner L', value: `${nonPartnerLiters.toFixed(0)} L`, icon: AlertTriangle, color: 'red' },
@@ -3884,7 +3906,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           {/* Fuel by Project */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <h3 className="font-bold text-slate-950 text-sm uppercase tracking-wider mb-4">By Project</h3>
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
               {fuelBySupplier.map(({ supplier, liters }) => (
                 <div key={supplier}>
                   <div className="flex justify-between text-xs mb-1">
@@ -3903,8 +3925,8 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           {/* Fuel by Driver */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <h3 className="font-bold text-slate-950 text-sm uppercase tracking-wider mb-4">By Driver</h3>
-            <div className="space-y-3">
-              {fuelByDriver.slice(0, 5).map(({ driver, liters }) => (
+            <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
+              {fuelByDriver.map(({ driver, liters }) => (
                 <div key={driver.id}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="font-bold text-slate-700 truncate">{driver.name}</span>
@@ -3922,7 +3944,7 @@ export const PerformanceSection: React.FC<{ clients?: any[], defaultTab?: string
           {/* Fuel by City */}
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <h3 className="font-bold text-slate-950 text-sm uppercase tracking-wider mb-4">By City</h3>
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
               {fuelByCity.map(({ city, liters }) => (
                 <div key={city}>
                   <div className="flex justify-between text-xs mb-1">

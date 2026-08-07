@@ -31,7 +31,12 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
         setIsOpen(false);
       }
     };
-    const handleScroll = () => setIsOpen(false);
+    const handleScroll = (event: Event) => {
+      if (dropdownRef.current?.contains(event.target as Node)) {
+        return;
+      }
+      setIsOpen(false);
+    };
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);

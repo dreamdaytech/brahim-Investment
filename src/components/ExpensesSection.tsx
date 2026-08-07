@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Plus, Search, Download, DollarSign, CheckCircle, Clock, XCircle,
   List, User, Car, FileText, Calendar, ChevronDown, Trash2, Edit,
-  Wallet, TrendingUp, AlertCircle, MoreVertical, X, Eye
+  Wallet, TrendingUp, AlertCircle, MoreVertical, X, Eye, Settings
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -37,6 +37,9 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
   const [payrolls, setPayrolls] = useState<DriverPayroll[]>([]);
   const [drivers, setDrivers] = useState<{ id: string; name: string }[]>([]);
   const [vehicles, setVehicles] = useState<{ id: string; make_model: string; plate_number: string }[]>([]);
+  const [expenseCategories, setExpenseCategories] = useState<{ id: string; name: string }[]>([]);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<{ id: string; name: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // ── Filters ───────────────────────────────────────────────────────────────
@@ -101,7 +104,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [expRes, payRes, drRes, vhRes] = await Promise.all([
+      const [expRes, payRes, drRes, vhRes, catRes] = await Promise.all([
         supabase.from('expenses')
           .select('*, driver:drivers(id, name), vehicle:vehicles(id, make_model, plate_number)')
           .order('expense_date', { ascending: false }),
@@ -110,11 +113,13 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
           .order('month', { ascending: false }),
         supabase.from('drivers').select('id, name').order('name'),
         supabase.from('vehicles').select('id, make_model, plate_number').order('make_model'),
+        supabase.from('expense_categories').select('id, name').order('name')
       ]);
       if (expRes.data) setExpenses(expRes.data as Expense[]);
       if (payRes.data) setPayrolls(payRes.data as DriverPayroll[]);
       if (drRes.data) setDrivers(drRes.data);
       if (vhRes.data) setVehicles(vhRes.data);
+      if (catRes.data) setExpenseCategories(catRes.data);
     } catch (err) {
       console.error('Error fetching expenses data:', err);
     } finally {
@@ -368,6 +373,63 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
     });
   };
 
+  // ── Category Management ───────────────────────────────────────────────────
+  const [newCategoryName, setNewCategoryName] = useState('');
+
+  const saveCategory = async () => {
+    const trimmedName = newCategoryName.trim();
+    if (!trimmedName) return;
+    
+    // Prevent duplicate entries on the client side
+    const isDuplicate = expenseCategories.some(
+      c => c.name.toLowerCase() === trimmedName.toLowerCase() && c.id !== editingCategory?.id
+    );
+    if (isDuplicate) {
+      alert(`A category named "${trimmedName}" already exists.`);
+      return;
+    }
+
+    try {
+      if (editingCategory) {
+        const { error } = await supabase.from('expense_categories').update({ name: trimmedName }).eq('id', editingCategory.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('expense_categories').insert([{ name: trimmedName }]);
+        if (error) throw error;
+      }
+      setNewCategoryName('');
+      setEditingCategory(null);
+      fetchData();
+    } catch (err: any) {
+      if (err.message?.includes('duplicate key value') || err.code === '23505') {
+        alert('This category already exists.');
+      } else {
+        alert('Failed to save category: ' + err.message);
+      }
+    }
+  };
+
+  const deleteCategory = async (id: string, name: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Category',
+      message: `Are you sure you want to delete the category "${name}"? This action cannot be undone.`,
+      confirmText: 'Delete',
+      confirmStyle: 'danger',
+      onConfirm: async () => {
+        try {
+          const { error } = await supabase.from('expense_categories').delete().eq('id', id);
+          if (error) throw error;
+          fetchData();
+        } catch (err: any) {
+          alert(err.message);
+        } finally {
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
+  };
+
   // ── PDF Exports ───────────────────────────────────────────────────────────
   const exportExpensesPDF = () => {
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
@@ -468,13 +530,22 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
           <h2 className="text-2xl font-black text-slate-950 tracking-tight">Expenses & Payroll</h2>
           <p className="text-slate-500 text-sm mt-0.5">Finance-controlled payments, stipends and monthly driver payroll</p>
         </div>
-        <button
-          onClick={activeTab === 'expenses' ? openAddExpense : openAddPayroll}
-          className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
-        >
-          <Plus size={16} />
-          {activeTab === 'expenses' ? 'Record Expense' : 'Add Payroll Entry'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsCategoryModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
+          >
+            <Settings size={16} />
+            Categories
+          </button>
+          <button
+            onClick={activeTab === 'expenses' ? openAddExpense : openAddPayroll}
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+          >
+            <Plus size={16} />
+            {activeTab === 'expenses' ? 'Record Expense' : 'Add Payroll Entry'}
+          </button>
+        </div>
       </div>
 
       {/* ── KPI Cards ── */}
@@ -536,7 +607,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
               <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}
                 className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 font-medium text-slate-700">
                 <option value="All">All Categories</option>
-                {EXPENSE_CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                {expenseCategories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
               </select>
               <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
                 className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700" />
@@ -835,7 +906,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
                   <SearchableSelect
                     value={expenseForm.category}
                     onChange={val => setExpenseForm({ ...expenseForm, category: val })}
-                    options={EXPENSE_CATEGORIES.map(c => ({ value: c, label: c }))}
+                    options={expenseCategories.map(c => ({ value: c.name, label: c.name }))}
                     disabled={isViewOnly}
                     placeholder="Select category..."
                   />
@@ -1061,6 +1132,74 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
           )}
         </AnimatePresence>,
         document.body
+      )}
+
+      {/* ── Category Management Modal ── */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <h2 className="text-xl font-black text-slate-900">Manage Expense Categories</h2>
+              <button onClick={() => setIsCategoryModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-xl transition-colors">
+                <X size={20} className="text-slate-500" />
+              </button>
+            </div>
+            <div className="p-5 space-y-5">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="New category name..."
+                  value={newCategoryName}
+                  onChange={e => setNewCategoryName(e.target.value)}
+                  className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+                <button
+                  onClick={saveCategory}
+                  disabled={!newCategoryName.trim()}
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+                >
+                  {editingCategory ? 'Update' : 'Add'}
+                </button>
+                {editingCategory && (
+                  <button
+                    onClick={() => { setEditingCategory(null); setNewCategoryName(''); }}
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-bold rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+              
+              <div className="max-h-[300px] overflow-y-auto rounded-xl border border-slate-100 bg-slate-50/50 p-2 space-y-1">
+                {expenseCategories.length === 0 ? (
+                  <div className="text-center py-6 text-sm text-slate-400 font-medium">No categories found.</div>
+                ) : (
+                  expenseCategories.map(cat => (
+                    <div key={cat.id} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:border-slate-200 transition-colors">
+                      <span className="text-sm font-bold text-slate-700">{cat.name}</span>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => { setEditingCategory(cat); setNewCategoryName(cat.name); }}
+                          className="p-1.5 hover:bg-blue-50 hover:text-blue-600 text-slate-400 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit size={14} />
+                        </button>
+                        <button
+                          onClick={() => deleteCategory(cat.id, cat.name)}
+                          className="p-1.5 hover:bg-red-50 hover:text-red-600 text-slate-400 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
