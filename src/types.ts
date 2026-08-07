@@ -172,6 +172,7 @@ export interface FuelStation {
 export interface Expense {
   id: string;
   category: string;
+  project?: string;
   amount: number;
   description?: string;
   driver_id?: string;

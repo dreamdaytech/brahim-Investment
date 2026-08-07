@@ -38,8 +38,11 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
   const [drivers, setDrivers] = useState<{ id: string; name: string }[]>([]);
   const [vehicles, setVehicles] = useState<{ id: string; make_model: string; plate_number: string }[]>([]);
   const [expenseCategories, setExpenseCategories] = useState<{ id: string; name: string }[]>([]);
+  const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<{ id: string; name: string } | null>(null);
+  const [editingProject, setEditingProject] = useState<{ id: string; name: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // ── Filters ───────────────────────────────────────────────────────────────
@@ -59,6 +62,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [expenseForm, setExpenseForm] = useState({
     category: 'Driver Stipend',
+    project: '',
     amount: '',
     description: '',
     driver_id: '',
@@ -104,7 +108,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [expRes, payRes, drRes, vhRes, catRes] = await Promise.all([
+      const [expRes, payRes, drRes, vhRes, catRes, projRes] = await Promise.all([
         supabase.from('expenses')
           .select('*, driver:drivers(id, name), vehicle:vehicles(id, make_model, plate_number)')
           .order('expense_date', { ascending: false }),
@@ -113,13 +117,15 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
           .order('month', { ascending: false }),
         supabase.from('drivers').select('id, name').order('name'),
         supabase.from('vehicles').select('id, make_model, plate_number').order('make_model'),
-        supabase.from('expense_categories').select('id, name').order('name')
+        supabase.from('expense_categories').select('id, name').order('name'),
+        supabase.from('projects').select('id, name').order('name')
       ]);
       if (expRes.data) setExpenses(expRes.data as Expense[]);
       if (payRes.data) setPayrolls(payRes.data as DriverPayroll[]);
       if (drRes.data) setDrivers(drRes.data);
       if (vhRes.data) setVehicles(vhRes.data);
       if (catRes.data) setExpenseCategories(catRes.data);
+      if (projRes.data) setProjects(projRes.data);
     } catch (err) {
       console.error('Error fetching expenses data:', err);
     } finally {
@@ -178,7 +184,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
     setIsViewOnly(false);
     setEditingExpense(null);
     setExpenseForm({
-      category: 'Driver Stipend', amount: '', description: '',
+      category: 'Driver Stipend', project: '', amount: '', description: '',
       driver_id: '', vehicle_id: '', payment_method: 'Cash',
       expense_date: new Date().toISOString().split('T')[0], notes: '',
     });
@@ -189,7 +195,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
     setIsViewOnly(false);
     setEditingExpense(e);
     setExpenseForm({
-      category: e.category, amount: String(e.amount),
+      category: e.category, project: e.project || '', amount: String(e.amount),
       description: e.description || '', driver_id: e.driver_id || '',
       vehicle_id: e.vehicle_id || '', payment_method: e.payment_method || 'Cash',
       expense_date: e.expense_date, notes: e.notes || '',
@@ -209,6 +215,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
       const isAutoApprove = userRole === 'super_admin' || userRole === 'admin';
       const payload: any = {
         category: expenseForm.category,
+        project: expenseForm.project || null,
         amount: parseFloat(expenseForm.amount),
         description: expenseForm.description || null,
         driver_id: expenseForm.driver_id || null,
@@ -430,6 +437,62 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
     });
   };
 
+  // ── Project Management ───────────────────────────────────────────────────
+  const [newProjectName, setNewProjectName] = useState('');
+
+  const saveProject = async () => {
+    const trimmedName = newProjectName.trim();
+    if (!trimmedName) return;
+    
+    const isDuplicate = projects.some(
+      p => p.name.toLowerCase() === trimmedName.toLowerCase() && p.id !== editingProject?.id
+    );
+    if (isDuplicate) {
+      alert(`A project named "${trimmedName}" already exists.`);
+      return;
+    }
+
+    try {
+      if (editingProject) {
+        const { error } = await supabase.from('projects').update({ name: trimmedName }).eq('id', editingProject.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('projects').insert([{ name: trimmedName }]);
+        if (error) throw error;
+      }
+      setNewProjectName('');
+      setEditingProject(null);
+      fetchData();
+    } catch (err: any) {
+      if (err.message?.includes('duplicate key value') || err.code === '23505') {
+        alert('This project already exists.');
+      } else {
+        alert('Failed to save project: ' + err.message);
+      }
+    }
+  };
+
+  const deleteProject = async (id: string, name: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Project',
+      message: `Are you sure you want to delete the project "${name}"? This action cannot be undone.`,
+      confirmText: 'Delete',
+      confirmStyle: 'danger',
+      onConfirm: async () => {
+        try {
+          const { error } = await supabase.from('projects').delete().eq('id', id);
+          if (error) throw error;
+          fetchData();
+        } catch (err: any) {
+          alert(err.message);
+        } finally {
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
+  };
+
   // ── PDF Exports ───────────────────────────────────────────────────────────
   const exportExpensesPDF = () => {
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
@@ -440,9 +503,9 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
     doc.text(`Generated: ${today}  |  ${filteredExpenses.length} records  |  Total: Le ${filteredExpenses.reduce((s, e) => s + e.amount, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`, 14, 23);
     autoTable(doc, {
       startY: 28,
-      head: [['Date', 'Category', 'Description', 'Driver', 'Amount (Le)', 'Payment', 'Status', 'Logged By', 'Approved By']],
+      head: [['Date', 'Category', 'Project', 'Description', 'Driver', 'Amount (Le)', 'Payment', 'Status', 'Logged By', 'Approved By']],
       body: filteredExpenses.map(e => [
-        e.expense_date, e.category, e.description || '-',
+        e.expense_date, e.category, e.project || '-', e.description || '-',
         e.driver?.name || '-',
         e.amount.toLocaleString(undefined, { maximumFractionDigits: 0 }),
         e.payment_method || '-', e.status, e.logged_by || '-', e.approved_by || '-',
@@ -531,6 +594,13 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
           <p className="text-slate-500 text-sm mt-0.5">Finance-controlled payments, stipends and monthly driver payroll</p>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={() => setIsProjectModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
+          >
+            <Settings size={16} />
+            Projects
+          </button>
           <button
             onClick={() => setIsCategoryModalOpen(true)}
             className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors shadow-sm"
@@ -635,6 +705,7 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
                   <tr className="border-b border-slate-100 bg-slate-50/70">
                     <th className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Date</th>
                     <th className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Category</th>
+                    <th className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Project</th>
                     <th className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Description</th>
                     <th className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Driver</th>
                     <th className="text-right px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Amount</th>
@@ -652,6 +723,13 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
                         <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                           {exp.category}
                         </span>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        {exp.project ? (
+                          <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {exp.project}
+                          </span>
+                        ) : <span className="text-slate-400 italic text-xs">—</span>}
                       </td>
                       <td className="px-5 py-3.5 text-slate-600 max-w-[200px] truncate">{exp.description || <span className="italic text-slate-400">—</span>}</td>
                       <td className="px-5 py-3.5 text-slate-700">{exp.driver?.name || <span className="italic text-slate-400">—</span>}</td>
@@ -911,6 +989,18 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
                     placeholder="Select category..."
                   />
                 </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Project (Optional)</label>
+                  <SearchableSelect
+                    value={expenseForm.project}
+                    onChange={val => setExpenseForm({ ...expenseForm, project: val })}
+                    options={[{ value: '', label: '— None —' }, ...projects.map(p => ({ value: p.name, label: p.name }))]}
+                    disabled={isViewOnly}
+                    placeholder="Select project..."
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Amount (Le) *</label>
                   <input type="number" min="0" value={expenseForm.amount} onChange={e => setExpenseForm({ ...expenseForm, amount: e.target.value })}
@@ -1187,6 +1277,74 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
                         </button>
                         <button
                           onClick={() => deleteCategory(cat.id, cat.name)}
+                          className="p-1.5 hover:bg-red-50 hover:text-red-600 text-slate-400 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Project Management Modal ── */}
+      {isProjectModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <h2 className="text-xl font-black text-slate-900">Manage Projects</h2>
+              <button onClick={() => setIsProjectModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-xl transition-colors">
+                <X size={20} className="text-slate-500" />
+              </button>
+            </div>
+            <div className="p-5 space-y-5">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="New project name..."
+                  value={newProjectName}
+                  onChange={e => setNewProjectName(e.target.value)}
+                  className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+                <button
+                  onClick={saveProject}
+                  disabled={!newProjectName.trim()}
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+                >
+                  {editingProject ? 'Update' : 'Add'}
+                </button>
+                {editingProject && (
+                  <button
+                    onClick={() => { setEditingProject(null); setNewProjectName(''); }}
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-bold rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+              
+              <div className="max-h-[300px] overflow-y-auto rounded-xl border border-slate-100 bg-slate-50/50 p-2 space-y-1">
+                {projects.length === 0 ? (
+                  <div className="text-center py-6 text-sm text-slate-400 font-medium">No projects found.</div>
+                ) : (
+                  projects.map(proj => (
+                    <div key={proj.id} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:border-slate-200 transition-colors">
+                      <span className="text-sm font-bold text-slate-700">{proj.name}</span>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => { setEditingProject(proj); setNewProjectName(proj.name); }}
+                          className="p-1.5 hover:bg-blue-50 hover:text-blue-600 text-slate-400 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit size={14} />
+                        </button>
+                        <button
+                          onClick={() => deleteProject(proj.id, proj.name)}
                           className="p-1.5 hover:bg-red-50 hover:text-red-600 text-slate-400 rounded-lg transition-colors"
                           title="Delete"
                         >
