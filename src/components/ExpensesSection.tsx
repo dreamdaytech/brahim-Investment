@@ -524,6 +524,140 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
     doc.save(`BIG_Expenses_${today.replace(/\//g, '-')}.pdf`);
   };
 
+  // ── Excel Export ──────────────────────────────────────────────────────────
+  const exportExpensesExcel = () => {
+    const escapeXml = (value: unknown) =>
+      String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+
+    const rows = filteredExpenses.map(e => [
+      e.expense_date,
+      e.category,
+      e.project || '',
+      e.description || '',
+      e.driver?.name || '',
+      e.vehicle ? `${e.vehicle.make_model || ''}${e.vehicle.plate_number ? ` (${e.vehicle.plate_number})` : ''}` : '',
+      e.amount || 0,
+      e.payment_method || '',
+      e.status || '',
+      e.logged_by || '',
+      e.approved_by || '',
+      e.paid_date || '',
+      e.notes || '',
+    ]);
+
+    const headers = [
+      'Date', 'Category', 'Project', 'Description', 'Driver', 'Vehicle',
+      'Amount (Le)', 'Payment Method', 'Status', 'Logged By', 'Approved By',
+      'Paid Date', 'Notes'
+    ];
+
+    const total = filteredExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+    const today = new Date();
+    const generatedAt = today.toLocaleString('en-GB');
+
+    const makeCell = (value: unknown, type: 'String' | 'Number' = 'String', styleId?: string) =>
+      `<Cell${styleId ? ` ss:StyleID="${styleId}"` : ''}><Data ss:Type="${type}">${escapeXml(value)}</Data></Cell>`;
+
+    const headerRow = `<Row>${headers.map(h => makeCell(h, 'String', 'Header')).join('')}</Row>`;
+    const dataRows = rows.map(row =>
+      `<Row>${row.map((value, index) => makeCell(value, index === 6 ? 'Number' : 'String')).join('')}</Row>`
+    ).join('');
+
+    const totalRow = `<Row>${makeCell('TOTAL', 'String', 'Total')}${Array(5).fill(makeCell('', 'String', 'Total')).join('')}${makeCell(total, 'Number', 'Total')}${Array(6).fill(makeCell('', 'String', 'Total')).join('')}</Row>`;
+
+    const workbook = `<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Title>BIG Expenses Log</Title>
+  <Author>Brahim Investment Group</Author>
+  <Created>${today.toISOString()}</Created>
+ </DocumentProperties>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+  </Style>
+  <Style ss:ID="Header">
+   <Font ss:Bold="1"/>
+   <Interior ss:Color="#D9EAF7" ss:Pattern="Solid"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="Total">
+   <Font ss:Bold="1"/>
+   <Interior ss:Color="#E2E8F0" ss:Pattern="Solid"/>
+   <Borders>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Expenses Log">
+  <Table>
+   <Column ss:Width="80"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="220"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="140"/>
+   <Column ss:Width="90"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="80"/>
+   <Column ss:Width="150"/>
+   <Column ss:Width="150"/>
+   <Column ss:Width="80"/>
+   <Column ss:Width="220"/>
+   ${headerRow}
+   ${dataRows}
+   ${totalRow}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <FreezePanes/>
+   <FrozenNoSplit/>
+   <SplitHorizontal>1</SplitHorizontal>
+   <TopRowBottomPane>1</TopRowBottomPane>
+   <ActivePane>2</ActivePane>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="Export Info">
+  <Table>
+   <Row>${makeCell('BIG Expenses Log Export', 'String', 'Header')}</Row>
+   <Row>${makeCell('Generated', 'String')}${makeCell(generatedAt, 'String')}</Row>
+   <Row>${makeCell('Records', 'String')}${makeCell(filteredExpenses.length, 'Number')}</Row>
+   <Row>${makeCell('Total Amount (Le)', 'String')}${makeCell(total, 'Number')}</Row>
+   <Row>${makeCell('Status Filter', 'String')}${makeCell(statusFilter, 'String')}</Row>
+   <Row>${makeCell('Category Filter', 'String')}${makeCell(categoryFilter, 'String')}</Row>
+   <Row>${makeCell('Date From', 'String')}${makeCell(dateFrom || 'All', 'String')}</Row>
+   <Row>${makeCell('Date To', 'String')}${makeCell(dateTo || 'All', 'String')}</Row>
+   <Row>${makeCell('Search', 'String')}${makeCell(searchQuery || 'None', 'String')}</Row>
+  </Table>
+ </Worksheet>
+</Workbook>`;
+
+    const blob = new Blob([workbook], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const fileDate = today.toISOString().split('T')[0];
+
+    link.href = url;
+    link.download = `BIG_Expenses_${fileDate}.xls`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const exportPayrollPDF = () => {
     const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
     const today = new Date().toLocaleDateString('en-GB');
@@ -685,10 +819,17 @@ export const ExpensesSection: React.FC<ExpensesSectionProps> = ({ userEmail, use
               <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
                 className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700" />
             </div>
-            <button onClick={exportExpensesPDF}
-              className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap">
-              <Download size={15} className="text-blue-600" /> Export PDF
-            </button>
+            <div className="flex gap-2">
+              <button onClick={exportExpensesExcel} disabled={filteredExpenses.length === 0}
+                className="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors shadow-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Export the currently filtered Expenses Log to Excel">
+                <Download size={15} /> Export Excel
+              </button>
+              <button onClick={exportExpensesPDF} disabled={filteredExpenses.length === 0}
+                className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+                <Download size={15} className="text-blue-600" /> Export PDF
+              </button>
+            </div>
           </div>
 
           {/* Table */}
