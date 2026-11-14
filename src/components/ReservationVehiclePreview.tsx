@@ -102,7 +102,6 @@ export const ReservationVehicleDetails: React.FC<ReservationVehicleDetailsProps>
                   ['Fuel', vehicle.fuelType],
                   ['Transmission', vehicle.transmission],
                   ['Fleet status now', vehicle.status],
-                  ['Plate number', vehicle.plateNumber],
                   ['Indicative daily rate (Le)', vehicle.pricePerDay ? vehicle.pricePerDay.toLocaleString() : null]
                 ].filter((entry) => entry[1] !== null && entry[1] !== undefined && entry[1] !== '').map(([label, value]) => (
                   <div key={String(label)} className="rounded-xl bg-slate-50 p-3 border border-slate-100">
