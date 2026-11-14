@@ -465,6 +465,27 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         </div>
                       </div>
                     </div>
+                    {currentVehicleObj && (
+                      <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-3">
+                        {currentVehicleObj.imageUrl ? (
+                          <img src={currentVehicleObj.imageUrl} alt={currentVehicleObj.name}
+                            className="h-24 w-28 sm:w-36 object-cover rounded-lg bg-white shrink-0" />
+                        ) : (
+                          <div className="h-24 w-28 sm:w-36 rounded-lg bg-slate-100 flex items-center justify-center text-[11px] text-slate-500 shrink-0">Photo unavailable</div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-blue-700 uppercase">Selected vehicle</p>
+                          <p className="text-sm font-black text-slate-950 mt-0.5">{currentVehicleObj.name}</p>
+                          <p className="text-xs text-slate-600 mt-1">
+                            {[currentVehicleObj.type,
+                              currentVehicleObj.seats ? currentVehicleObj.seats + ' seats' : null,
+                              currentVehicleObj.transmission].filter(Boolean).join(' · ')}
+                          </p>
+                          {currentVehicleObj.description && <p className="text-xs text-slate-600 mt-1 line-clamp-2">{currentVehicleObj.description}</p>}
+                          <p className="text-[11px] text-slate-500 mt-1">Vehicle assignment is subject to BIG confirmation.</p>
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
