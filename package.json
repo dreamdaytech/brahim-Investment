@@ -11,7 +11,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "seed:data": "tsx scripts/seed_comprehensive.ts",
-    "test:reservations": "tsx --test scripts/test_reservation_vehicles.ts"
+    "test:reservations": "tsx --test scripts/test_reservation_vehicles.ts scripts/test_booking_dates.ts"
   },
   "dependencies": {
     "@babel/generator": "^8.0.0",

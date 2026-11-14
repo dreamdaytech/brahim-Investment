@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Vehicle, Inquiry } from '../types';
 import { VEHICLES } from '../data';
+import { estimatedBookingReturnDate, isValidBookingDateRange, minimumBookingReturnDate } from '../lib/bookingDates';
 import { Phone, Mail, MapPin, Send, Calendar, CheckSquare, Sparkles, Building, Briefcase, Plus, Minus, ArrowRight, ShieldAlert, BadgeCheck, ChevronDown, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -98,10 +99,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       const startStr = today.toISOString().split('T')[0];
       setStartDate(startStr);
       
-      const future = new Date();
-      future.setDate(today.getDate() + estimateDetails.days);
-      const endStr = future.toISOString().split('T')[0];
-      setEndDate(endStr);
+      setEndDate(estimatedBookingReturnDate(startStr, estimateDetails.days));
     }
   }, [estimateDetails]);
 
@@ -114,18 +112,33 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       return preferredVehicle !== '';
     }
     if (currentStep === 3) {
-      return startDate !== '' && endDate !== '' && pickupLocation.trim() !== '' && dropoffLocation.trim() !== '';
+      return isValidBookingDateRange(startDate, endDate) &&
+        pickupLocation.trim() !== '' && dropoffLocation.trim() !== '';
     }
     return true;
   };
 
   const currentVehicleObj = sourceVehicles.find(v => v.id === preferredVehicle);
+  const earliestReturnDate = minimumBookingReturnDate(startDate);
+  const hasInvalidReturnDate = Boolean(startDate && endDate && !isValidBookingDateRange(startDate, endDate));
+
+  const handleStartDateChange = (nextStartDate: string) => {
+    setStartDate(nextStartDate);
+    // If a start date is moved, clear any return date that no longer follows it.
+    if (endDate && !isValidBookingDateRange(nextStartDate, endDate)) {
+      setEndDate('');
+    }
+  };
 
   const handleNext = () => {
     if (validateStep(step)) {
       setStep(prev => prev + 1);
     } else {
-      alert("Please fill in all requested fields to safely proceed.");
+      if (step === 3 && startDate && endDate && !isValidBookingDateRange(startDate, endDate)) {
+        alert('The Vetting Return Date must be later than the Vetting Start Date.');
+      } else {
+        alert("Please fill in all requested fields to safely proceed.");
+      }
     }
   };
 
@@ -135,6 +148,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Recheck immediately before persisting, including if the user returned to
+    // step 3 or fields were changed outside the native date picker.
+    if (!isValidBookingDateRange(startDate, endDate)) {
+      setStep(3);
+      alert('The Vetting Return Date must be later than the Vetting Start Date.');
+      return;
+    }
     if (!termsAccepted) {
       alert("Please accept the BIG vehicle vetting & agreement code to proceed.");
       return;
@@ -506,7 +526,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           type="date" 
                           required
                           value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
+                          onChange={(e) => handleStartDateChange(e.target.value)}
                           className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm cursor-pointer"
                         />
                       </div>
@@ -516,9 +536,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                           type="date" 
                           required
                           value={endDate}
+                          min={earliestReturnDate || undefined}
                           onChange={(e) => setEndDate(e.target.value)}
-                          className="w-full p-3.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm cursor-pointer"
+                          aria-invalid={hasInvalidReturnDate}
+                          aria-describedby="booking-return-date-help"
+                          className={`w-full p-3.5 border rounded-xl text-xs bg-white text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm cursor-pointer ${hasInvalidReturnDate ? 'border-red-400' : 'border-slate-200'}`}
                         />
+                        <p id="booking-return-date-help"
+                           className={`text-[11px] mt-1.5 ${hasInvalidReturnDate ? 'text-red-600 font-semibold' : 'text-slate-500'}`}
+                           role={hasInvalidReturnDate ? 'alert' : undefined}>
+                          {hasInvalidReturnDate
+                            ? 'Vetting Return Date must be later than the Vetting Start Date.'
+                            : startDate
+                              ? `Select a return date on or after ${earliestReturnDate}.`
+                              : 'Select the Vetting Start Date first. Return must be at least one day later.'}
+                        </p>
                       </div>
                     </div>
 
