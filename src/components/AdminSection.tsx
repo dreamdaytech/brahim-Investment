@@ -113,6 +113,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       endDate: dbItem.enddate || dbItem.endDate,
       preferredVehicle: dbItem.preferredvehicle || dbItem.preferredVehicle,
       requestedVehicleId: dbItem.requested_vehicle_id || dbItem.requestedVehicleId || null,
+      requestedVehicleSnapshot: dbItem.requested_vehicle_snapshot || null,
       vehiclesNeeded: dbItem.vehiclesneeded || dbItem.vehiclesNeeded,
       pickupLocation: dbItem.pickuplocation || dbItem.pickupLocation,
       dropoffLocation: dbItem.dropofflocation || dbItem.dropoffLocation,
@@ -164,6 +165,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       // errors, without exposing the entire vehicles table to this view.
       if (['super_admin', 'admin', 'fleet_manager', 'finance'].includes(userRole)) {
         const selections = [
+          'id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status, features, engine_label, spec_engine_size, spec_drivetrain, spec_ground_clearance, spec_fuel_capacity, spec_best_for',
           'id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status',
           'id, make_model, image_url, gallery_urls',
           'id, make_model, image_url',

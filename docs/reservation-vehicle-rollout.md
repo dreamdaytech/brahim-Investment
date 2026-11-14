@@ -1,59 +1,45 @@
-# Reservation Vehicle Previews — safe rollout
+# Book Ride → Complete Reservation Vehicle Details
 
-This feature adds a vehicle photo/specification preview to **Admin → Reservations**
-and to the public inquiry selection and successful submission screens.
+## User flow
 
-## Compatibility and data integrity
+1. A visitor clicks **Book Ride** on a vehicle from Home or Fleet.
+2. The booking form pre-selects that vehicle ID and displays its **full public catalogue/fleet details**, including a browsable photo gallery, features and technical specifications.
+3. When the visitor submits their inquiry, the form captures an immutable **public-only vehicle snapshot**: model, category, seats, fuel, transmission, description, features, rates, detailed specs and image/gallery URLs.
+4. **Admin → Reservations → View complete vehicle details** uses the saved snapshot before attempting to resolve current fleet data.
+5. The submission confirmation also displays the selected vehicle, gallery, and request details.
 
-- Existing inquiries retain `preferredvehicle` and their original reference IDs.
-- New inquiries optionally persist `requested_vehicle_id` as a nullable UUID reference to
-  `vehicles.id`. This is a **requested vehicle**, not a confirmed assignment.
-- Older inquiries are matched by name **only if exactly one** current fleet record has
-  that name. If two or more vehicles share the same model, show the saved name and an
-  unavailable-image state instead of guessing.
-- Removed vehicle records do not delete inquiries: the new foreign key uses
-  `ON DELETE SET NULL` and the saved text field remains.
-- No changes are made to approve/decline, dispatch, inquiry search, or role restrictions.
+**Requested vehicle is not an allocated fleet unit**. Catalogue photos are labelled as model reference material.
 
-## Database change (not applied automatically)
+## Backward compatibility
 
-The Supabase project connected to the current development workspace could not be
-identified as the Brahim Investment production database. Therefore **do not run this
-migration on an unrelated project**.
+- Existing inquiries, names, inquiry references, approval/decline/reset, and dispatch remain unchanged.
+- New inquiries also save `requested_vehicle_id` for live database fleet vehicles.
+- Historical name-only inquiries still resolve by unique fleet match or an exact public catalogue model name. Never guess a fleet unit when the model has duplicates.
+- If optional columns are missing from a database, submission gracefully retries with the remaining legacy columns.
+- If a vehicle is edited later, the new inquiry's saved snapshot still displays what was selected at submission time.
+- Only public vehicle details are copied; do not include plate numbers, registration, insurance, internal notes, drivers or maintenance documents.
 
-Once the correct Brahim Supabase project is confirmed and backed up, apply:
+## Supabase database
 
-`supabase/migrations/20261114_add_requested_vehicle_to_inquiries.sql`
+The confirmed Brahim Investment Group Supabase project has ID `oxxdkxsjnhpbprmjxtgs`.
+Both new schema changes are additive and must be applied to **that project only**:
 
-The migration adds a nullable column and index without removing or rewriting data.
-If the code is deployed before this migration, the public form retries the existing
-inquiry insert **without** the optional field only when Supabase reports that the
-new column is missing. The admin preview still works via unique-name matching.
+- `supabase/migrations/20261114_add_requested_vehicle_to_inquiries.sql` (nullable UUID reference, with `ON DELETE SET NULL`)
+- `supabase/migrations/20261114_add_reservation_vehicle_snapshot.sql` (nullable JSONB public vehicle snapshot)
 
-## QA checklist
+Existing inquiry rows are untouched. The snapshot becomes persistent for **new inquiries after deployment**; historical records are not retroactively rewritten.
 
-1. Run `npm ci`, `npm run lint`, `npm run build`, and
-   `npm run test:reservations` in the checkout.
-2. Confirm old and new inquiries still appear under **Admin → Reservations**.
-3. Confirm search, status filters, Approve, Decline, Reset and Log Dispatch work
-   as before.
-4. Submit an inquiry for a live fleet vehicle. Confirm the selected photo and
-   specifications appear on step 2 and in the success summary, with the actual
-   generated inquiry reference rather than a sample reference.
-5. After applying the migration to the verified project, confirm the new row's
-   `requested_vehicle_id` matches the selected `vehicles.id`.
-6. Temporarily remove the new column in a local staging copy and confirm
-   the legacy insert fallback still succeeds without creating a duplicate.
-7. Verify old inquiries containing non-unique names show the saved name but
-   no guessed photo.
-8. Verify the modal closes with its Close button and Escape; check desktop and mobile.
-9. Confirm that customer inquiry data is never exposed through a public lookup
-   endpoint. This feature does **not** add an unauthenticated "My Inquiries" page.
+## QA before and after deployment
 
-## Deployment order
+- GitHub validation: `npm ci`, `npm run lint`, `npm run build`, `npm run test:reservations`.
+- From Fleet click Book Ride; confirm the correct selected vehicle and full gallery appear at Step 2.
+- Confirm dropdown selection updates images, features and technical specifications.
+- Submit an inquiry for a selected database fleet vehicle; check the saved row's `requested_vehicle_id` and `requested_vehicle_snapshot` in the verified database without exposing customer PII.
+- Open that inquiry in Admin → Reservations. Confirm the same photos and specs appear even if the selected fleet record is later updated.
+- Confirm older Prado inquiries still display clearly-labelled catalogue photos, not a guessed one of several identical fleet units.
+- Verify status changes, filters and dispatch flow are unaffected.
+- Test mobile gallery thumbnails and modal close/escape behavior.
 
-- Review the PR and run the QA steps in staging.
-- Apply the additive migration to the verified Brahim Supabase project.
-- Deploy the frontend.
-- Smoke-test an inquiry and an admin reservation record.
-- Only merge/deploy after tests and correct environment identification.
+## Separate security review needed
+
+The current project has existing overly-permissive inquiry policies (public SELECT/UPDATE/DELETE) and RLS is disabled on `dismissed_alerts`. These pre-existing concerns are not changed in this feature branch because changing them without scoping authentication and public booking behavior could interrupt the platform. Review them as a separate security fix.

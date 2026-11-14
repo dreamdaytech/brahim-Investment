@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Vehicle, Inquiry } from '../types';
 import { VEHICLES } from '../data';
+import { buildReservationVehicleSnapshot, resolveReservationVehicleDisplay, type ReservationVehicleSnapshot } from '../lib/reservationVehicles';
+import { VehicleDetailsGallery } from './VehicleDetailsGallery';
 import { estimatedBookingReturnDate, isValidBookingDateRange, minimumBookingReturnDate } from '../lib/bookingDates';
 import { Phone, Mail, MapPin, Send, Calendar, CheckSquare, Sparkles, Building, Briefcase, Plus, Minus, ArrowRight, ShieldAlert, BadgeCheck, ChevronDown, Search } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -37,7 +39,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         seats: v.seats || null,
         fuel: v.fuelType || null,
         transmission: v.transmission || null,
-        description: v.description || ''
+        description: v.description || '',
+        galleryUrls: v.galleryUrls || [],
+        engine: v.engineLabel || '',
+        features: v.features || [],
+        detailedSpecs: {
+          engineSize: v.specEngineSize || '',
+          drivetrain: v.specDrivetrain || '',
+          groundClearance: v.specGroundClearance || '',
+          fuelCapacity: v.specFuelCapacity || '',
+          bestFor: v.specBestFor || '',
+        }
       }))
     : VEHICLES.map(v => ({
         id: v.id,
@@ -49,14 +61,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         seats: v.seats,
         fuel: v.fuel,
         transmission: v.transmission,
-        description: v.description
+        description: v.description,
+        galleryUrls: v.galleryUrls || [],
+        engine: v.engine,
+        features: v.features,
+        detailedSpecs: v.detailedSpecs
       }));
 
   // Wizard Step State
   const [step, setStep] = useState<number>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [submittedInquiry, setSubmittedInquiry] = useState<Inquiry | null>(null);
-  const [submittedVehicleSnapshot, setSubmittedVehicleSnapshot] = useState<(typeof sourceVehicles)[number] | null>(null);
+  const [submittedVehicleSnapshot, setSubmittedVehicleSnapshot] = useState<ReservationVehicleSnapshot | null>(null);
   
   // Custom Dropdown State
   const [isVehicleDropdownOpen, setIsVehicleDropdownOpen] = useState<boolean>(false);
@@ -119,6 +135,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   };
 
   const currentVehicleObj = sourceVehicles.find(v => v.id === preferredVehicle);
+  const isDatabaseVehicle = Boolean(fleetVehicles?.some(v => v.id === preferredVehicle));
+  const currentVehicleSnapshot = currentVehicleObj
+    ? buildReservationVehicleSnapshot(currentVehicleObj, isDatabaseVehicle ? 'fleet' : 'catalog')
+    : null;
+  const currentVehicleDisplay = resolveReservationVehicleDisplay([], null, currentVehicleObj?.name, currentVehicleSnapshot);
   const earliestReturnDate = minimumBookingReturnDate(startDate);
   const hasInvalidReturnDate = Boolean(startDate && endDate && !isValidBookingDateRange(startDate, endDate));
 
@@ -171,6 +192,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       startDate,
       endDate,
       preferredVehicle: currentVehicleObj?.name || '',
+      requestedVehicleSnapshot: currentVehicleSnapshot || undefined,
       // Persist stable ID when selected from the live fleet, not demo fallback.
       requestedVehicleId: fleetVehicles?.some(v => v.id === preferredVehicle) &&
         /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(preferredVehicle)
@@ -190,7 +212,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     }
 
     setSubmittedInquiry(newInquiry);
-    setSubmittedVehicleSnapshot(currentVehicleObj || null);
+    setSubmittedVehicleSnapshot(currentVehicleSnapshot);
     setIsSubmitted(true);
     clearEstimateDetails();
   };
@@ -237,33 +259,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       <h3 className="font-black text-slate-950 text-base">Your requested vehicle</h3>
                       <p className="text-xs text-slate-500 mt-1">This inquiry is not yet a confirmed reservation or vehicle assignment.</p>
                     </div>
-                    <div className="p-4 sm:p-5 flex flex-col sm:flex-row gap-4">
-                      {submittedVehicleSnapshot?.imageUrl ? (
-                        <img src={submittedVehicleSnapshot.imageUrl} alt={submittedVehicleSnapshot.name}
-                          className="h-40 sm:h-32 w-full sm:w-48 object-cover bg-slate-50 rounded-xl border border-slate-100" />
-                      ) : (
-                        <div className="h-28 sm:h-32 sm:w-48 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 text-xs">Vehicle photo unavailable</div>
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <h4 className="font-black text-slate-950 text-lg">{submittedInquiry.preferredVehicle || 'Selected vehicle'}</h4>
-                        <p className="text-sm text-slate-600 mt-1">
-                          {[submittedVehicleSnapshot?.year, submittedVehicleSnapshot?.type,
-                            submittedVehicleSnapshot?.seats ? submittedVehicleSnapshot.seats + ' seats' : null]
-                            .filter(Boolean).join(' · ')}
-                        </p>
-                        {submittedVehicleSnapshot && (
-                          <p className="text-xs text-slate-600 mt-1">
-                            {[submittedVehicleSnapshot.fuel, submittedVehicleSnapshot.transmission].filter(Boolean).join(' · ')}
-                          </p>
-                        )}
-                        <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs mt-3">
-                          <div><dt className="text-slate-500">Quantity</dt><dd className="font-bold">{submittedInquiry.vehiclesNeeded}</dd></div>
-                          <div><dt className="text-slate-500">Service</dt><dd className="font-bold">{submittedInquiry.serviceType}</dd></div>
-                          <div><dt className="text-slate-500">From</dt><dd className="font-bold">{submittedInquiry.startDate}</dd></div>
-                          <div><dt className="text-slate-500">To</dt><dd className="font-bold">{submittedInquiry.endDate}</dd></div>
-                          <div className="col-span-2"><dt className="text-slate-500">Pickup</dt><dd className="font-bold">{submittedInquiry.pickupLocation}</dd></div>
-                        </dl>
-                      </div>
+                    <div className="p-4 sm:p-5 space-y-5">
+                      <VehicleDetailsGallery
+                        display={resolveReservationVehicleDisplay([], null, submittedInquiry.preferredVehicle, submittedVehicleSnapshot)}
+                      />
+                      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs border-t border-slate-100 pt-4">
+                        <div><dt className="text-slate-500">Quantity requested</dt><dd className="font-bold">{submittedInquiry.vehiclesNeeded}</dd></div>
+                        <div><dt className="text-slate-500">Service</dt><dd className="font-bold">{submittedInquiry.serviceType}</dd></div>
+                        <div><dt className="text-slate-500">From</dt><dd className="font-bold">{submittedInquiry.startDate}</dd></div>
+                        <div><dt className="text-slate-500">To</dt><dd className="font-bold">{submittedInquiry.endDate}</dd></div>
+                        <div><dt className="text-slate-500">Pickup</dt><dd className="font-bold">{submittedInquiry.pickupLocation}</dd></div>
+                        <div><dt className="text-slate-500">Return location</dt><dd className="font-bold">{submittedInquiry.dropoffLocation}</dd></div>
+                      </dl>
                     </div>
                   </div>
                 )}
@@ -491,24 +498,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       </div>
                     </div>
                     {currentVehicleObj && (
-                      <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-3">
-                        {currentVehicleObj.imageUrl ? (
-                          <img src={currentVehicleObj.imageUrl} alt={currentVehicleObj.name}
-                            className="h-24 w-28 sm:w-36 object-cover rounded-lg bg-white shrink-0" />
-                        ) : (
-                          <div className="h-24 w-28 sm:w-36 rounded-lg bg-slate-100 flex items-center justify-center text-[11px] text-slate-500 shrink-0">Photo unavailable</div>
-                        )}
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-blue-700 uppercase">Selected vehicle</p>
-                          <p className="text-sm font-black text-slate-950 mt-0.5">{currentVehicleObj.name}</p>
-                          <p className="text-xs text-slate-600 mt-1">
-                            {[currentVehicleObj.type,
-                              currentVehicleObj.seats ? currentVehicleObj.seats + ' seats' : null,
-                              currentVehicleObj.transmission].filter(Boolean).join(' · ')}
-                          </p>
-                          {currentVehicleObj.description && <p className="text-xs text-slate-600 mt-1 line-clamp-2">{currentVehicleObj.description}</p>}
-                          <p className="text-[11px] text-slate-500 mt-1">Vehicle assignment is subject to BIG confirmation.</p>
-                        </div>
+                      <div className="rounded-2xl border border-blue-100 bg-blue-50/40 p-4 space-y-3">
+                        <p className="text-xs font-bold uppercase text-blue-700">Selected vehicle · Full details and gallery</p>
+                        <VehicleDetailsGallery display={currentVehicleDisplay} />
+                        <p className="text-xs text-slate-600">You are requesting a vehicle model; allocation is subject to BIG confirmation.</p>
                       </div>
                     )}
                   </motion.div>

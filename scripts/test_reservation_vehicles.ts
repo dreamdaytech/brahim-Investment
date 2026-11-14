@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { resolveReservationVehicle, resolveReservationVehicleDisplay, type ReservationVehicle } from '../src/lib/reservationVehicles';
+import { buildReservationVehicleSnapshot, readReservationVehicleSnapshot, resolveReservationVehicle, resolveReservationVehicleDisplay, type ReservationVehicle } from '../src/lib/reservationVehicles';
 
 const vehicles: ReservationVehicle[] = [
   { id: 'prado-1', makeModel: 'Toyota Land Cruiser Prado', imageUrl: '/prado1.jpg' },
@@ -112,4 +112,79 @@ test('disallowed image protocols are not forwarded into the UI', () => {
       galleryUrls: ['data:image/svg+xml,invalid', 'https://example.com/valid.jpg'] }
   ], 'custom-vehicle', 'Custom Vehicle');
   assert.deepEqual(display.photos, ['https://example.com/valid.jpg']);
+});
+
+test('Book Ride saves full public Prado specifications and a multi-photo gallery', () => {
+  const snapshot = buildReservationVehicleSnapshot({
+    id: 'toyota-prado', name: 'Toyota Land Cruiser Prado',
+    type: 'Heavy SUV', seats: 7, fuel: 'Diesel', transmission: 'Automatic',
+    pricePerDay: 150, engine: '3.0L D-4D Turbo Diesel',
+    imageUrl: 'https://example.com/one.jpg',
+    galleryUrls: ['https://example.com/one.jpg', 'https://example.com/two.jpg'],
+    features: ['Four-wheel drive', 'Air conditioning'],
+    detailedSpecs: {
+      engineSize: '2982 cc',
+      drivetrain: '4WD',
+      groundClearance: '215 mm',
+      fuelCapacity: '150 L',
+      bestFor: 'Upcountry',
+    },
+    description: 'Premium vehicle'
+  }, 'catalog');
+  assert.equal(snapshot.source, 'catalog');
+  assert.equal(snapshot.makeModel, 'Toyota Land Cruiser Prado');
+  assert.deepEqual(snapshot.galleryUrls, ['https://example.com/one.jpg', 'https://example.com/two.jpg']);
+  assert.deepEqual(snapshot.features, ['Four-wheel drive', 'Air conditioning']);
+  assert.equal(snapshot.specDrivetrain, '4WD');
+  assert.equal(snapshot.engineLabel, '3.0L D-4D Turbo Diesel');
+  assert.equal(snapshot.specBestFor, 'Upcountry');
+  assert.equal(snapshot.pricePerDay, 150);
+});
+
+test('saved inquiry gallery takes priority over later fleet or catalogue changes', () => {
+  const snapshot = buildReservationVehicleSnapshot({
+    id: 'fleet-uuid', name: 'Toyota Land Cruiser Prado',
+    imageUrl: 'https://example.com/original.jpg',
+    galleryUrls: ['https://example.com/second.jpg'],
+    features: ['Original feature']
+  }, 'fleet');
+  const display = resolveReservationVehicleDisplay([
+    { id: 'fleet-uuid', makeModel: 'Toyota Land Cruiser Prado',
+      imageUrl: 'https://example.com/new-photo.jpg', features: ['Changed'] }
+  ], 'fleet-uuid', 'Toyota Land Cruiser Prado', snapshot);
+  assert.equal(display.mediaSource, 'snapshot');
+  assert.equal(display.savedSource, 'fleet');
+  assert.equal(display.vehicle?.features?.[0], 'Original feature');
+  assert.deepEqual(display.photos, ['https://example.com/original.jpg', 'https://example.com/second.jpg']);
+});
+
+test('legacy inquiries without snapshots retain unique-name and catalogue fallback', () => {
+  const display = resolveReservationVehicleDisplay([], null, 'Toyota Land Cruiser Prado', null);
+  assert.equal(display.mediaSource, 'catalog');
+  assert.ok(display.photos.length >= 2);
+  assert.equal(display.vehicle?.features?.length, 6);
+  assert.equal(display.vehicle?.specBestFor !== undefined, true);
+});
+
+test('malformed snapshots and mismatched IDs do not override requested vehicle', () => {
+  const wrong = buildReservationVehicleSnapshot({
+    id: 'wrong-vehicle', name: 'Toyota Land Cruiser Prado',
+    imageUrl: 'https://example.com/wrong.jpg'
+  }, 'fleet');
+  const display = resolveReservationVehicleDisplay([], 'expected-vehicle', 'Toyota Land Cruiser Prado', wrong);
+  assert.equal(display.mediaSource, 'catalog');
+  assert.equal(display.photos.includes('https://example.com/wrong.jpg'), false);
+  assert.equal(readReservationVehicleSnapshot({ makeModel: 'Invalid', source: 'spoofed' }), null);
+});
+
+test('snapshot sanitizer never stores registration or internal fleet data', () => {
+  const data = {
+    id: 'toyota-prado', name: 'Toyota Land Cruiser Prado',
+    imageUrl: 'javascript:alert(1)', galleryUrls: ['data:image/svg+xml,bad', 'https://example.com/good.jpg'],
+    plateNumber: 'PRIVATE-REG', insuranceExpiry: '2030-01-01',
+  };
+  const snapshot = buildReservationVehicleSnapshot(data, 'catalog');
+  assert.equal('plateNumber' in snapshot, false);
+  assert.equal('insuranceExpiry' in snapshot, false);
+  assert.deepEqual(snapshot.galleryUrls, ['https://example.com/good.jpg']);
 });

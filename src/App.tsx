@@ -32,6 +32,7 @@ const mapInquiryToDB = (uiItem: Partial<Inquiry>): any => {
   if (uiItem.endDate !== undefined) mapped.enddate = uiItem.endDate;
   if (uiItem.preferredVehicle !== undefined) mapped.preferredvehicle = uiItem.preferredVehicle;
   if (uiItem.requestedVehicleId) mapped.requested_vehicle_id = uiItem.requestedVehicleId;
+  if (uiItem.requestedVehicleSnapshot) mapped.requested_vehicle_snapshot = uiItem.requestedVehicleSnapshot;
   if (uiItem.vehiclesNeeded !== undefined) mapped.vehiclesneeded = uiItem.vehiclesNeeded;
   if (uiItem.pickupLocation !== undefined) mapped.pickuplocation = uiItem.pickupLocation;
   if (uiItem.dropoffLocation !== undefined) mapped.dropofflocation = uiItem.dropoffLocation;
@@ -179,19 +180,28 @@ export default function App() {
   const handleAddInquiry = async (newInquiry: Inquiry): Promise<{success: boolean, error?: string}> => {
     try {
       const payload = mapInquiryToDB(newInquiry);
-      let { error } = await supabase.from('inquiries').insert([payload]);
+      // The new public snapshot and stable vehicle ID are additive columns.
+      // If the production migration is not installed yet, retry without ONLY
+      // the missing optional field; do not discard a valid booking.
+      let error: any = null;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const result = await supabase.from('inquiries').insert([payload]);
+        error = result.error;
+        if (!error) break;
 
-      // Backward compatible if the additive requested_vehicle_id migration
-      // has not been applied yet. Existing bookings must continue to work.
-      const missingNewColumn = error &&
-        payload.requested_vehicle_id &&
-        (error.code === 'PGRST204' || error.code === '42703') &&
-        /requested_vehicle_id/i.test(error.message || '');
-      if (missingNewColumn) {
-        const legacyPayload = { ...payload };
-        delete legacyPayload.requested_vehicle_id;
-        const legacyResult = await supabase.from('inquiries').insert([legacyPayload]);
-        error = legacyResult.error;
+        const missingColumn = ['PGRST204', '42703'].includes(error.code || '') &&
+          /requested_vehicle_(snapshot|id)/i.test(error.message || '');
+        if (!missingColumn) break;
+
+        const missingSnapshot = /requested_vehicle_snapshot/i.test(error.message || '');
+        const missingId = /requested_vehicle_id/i.test(error.message || '');
+        if (missingSnapshot && payload.requested_vehicle_snapshot) {
+          delete payload.requested_vehicle_snapshot;
+        } else if (missingId && payload.requested_vehicle_id) {
+          delete payload.requested_vehicle_id;
+        } else {
+          break;
+        }
       }
 
       if (error) {

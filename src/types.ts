@@ -118,6 +118,8 @@ export interface Inquiry {
   preferredVehicle: string;
   /** Optional stable fleet link; the requested vehicle is not necessarily assigned. */
   requestedVehicleId?: string | null;
+  /** Public vehicle details and gallery frozen when this inquiry was sent. */
+  requestedVehicleSnapshot?: import('./lib/reservationVehicles').ReservationVehicleSnapshot | null;
   vehiclesNeeded: number;
   pickupLocation: string;
   dropoffLocation: string;
