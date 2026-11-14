@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Car, Eye, X, CalendarDays, MapPin, Users } from 'lucide-react';
+import { Car, Eye, X, CalendarDays, MapPin, Users, Phone, Mail } from 'lucide-react';
 import type { Inquiry } from '../types';
-import { ReservationVehicle, resolveReservationVehicleDisplay } from '../lib/reservationVehicles';
+import { type ReservationVehicle, resolveReservationVehicleDisplay } from '../lib/reservationVehicles';
+import { VehicleDetailsGallery } from './VehicleDetailsGallery';
 
 interface ReservationVehiclePreviewProps {
   inquiry: Inquiry;
@@ -10,50 +11,47 @@ interface ReservationVehiclePreviewProps {
   onView: (inquiry: Inquiry) => void;
 }
 
-const VehiclePhoto: React.FC<{ vehicle: ReservationVehicle | null; imageUrl?: string; large?: boolean }> = ({ vehicle, imageUrl, large = false }) => (
-  <div className={large
-    ? 'h-48 sm:h-64 w-full rounded-2xl bg-slate-100 overflow-hidden flex items-center justify-center'
-    : 'h-20 w-28 sm:w-32 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 flex items-center justify-center'}>
-    {imageUrl || vehicle?.imageUrl ? (
-      <img src={imageUrl || vehicle?.imageUrl || ''} alt={vehicle?.makeModel || 'Requested vehicle'} className="w-full h-full object-cover" />
-    ) : (
-      <Car size={large ? 42 : 24} className="text-slate-400" aria-label="Vehicle image unavailable" />
-    )}
-  </div>
-);
-
 export const ReservationVehiclePreview: React.FC<ReservationVehiclePreviewProps> = ({
   inquiry, vehicles, onView
 }) => {
-  const display = resolveReservationVehicleDisplay(vehicles, inquiry.requestedVehicleId, inquiry.preferredVehicle);
-  const { vehicle } = display;
+  const display = resolveReservationVehicleDisplay(
+    vehicles, inquiry.requestedVehicleId, inquiry.preferredVehicle, inquiry.requestedVehicleSnapshot
+  );
+  const vehicle = display.vehicle;
   const shortDetails = vehicle
-    ? [vehicle.year, vehicle.vehicleCategory || vehicle.type, vehicle.seats ? vehicle.seats + ' seats' : null]
-        .filter(Boolean).join(' · ')
+    ? [vehicle.year, vehicle.vehicleCategory || vehicle.type,
+       vehicle.seats ? vehicle.seats + ' seats' : null].filter(Boolean).join(' · ')
     : '';
 
   return (
     <div className="flex flex-col sm:flex-row items-start gap-3 p-3 bg-blue-50/50 border border-blue-100 rounded-xl mt-3">
-      <VehiclePhoto vehicle={vehicle} imageUrl={display.photos[0]} />
+      <div className="h-20 w-28 sm:w-32 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 flex items-center justify-center">
+        {display.photos[0] ? (
+          <img src={display.photos[0]} alt={vehicle?.makeModel || inquiry.preferredVehicle}
+            className="w-full h-full object-cover" />
+        ) : <Car size={24} className="text-slate-400" aria-label="Vehicle image unavailable" />}
+      </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] uppercase tracking-wider font-bold text-blue-700">Requested Vehicle</p>
+        <p className="text-[10px] uppercase tracking-wider font-bold text-blue-700">Requested vehicle</p>
         <p className="font-bold text-slate-950 text-sm break-words">
           {inquiry.preferredVehicle || vehicle?.makeModel || 'Unspecified'} ({inquiry.vehiclesNeeded} {inquiry.vehiclesNeeded === 1 ? 'unit' : 'units'})
         </p>
         {shortDetails ? (
           <p className="text-xs text-slate-600 mt-1">{shortDetails}</p>
         ) : (
-          <p className="text-xs text-slate-500 mt-1">Specifications are unavailable for this inquiry.</p>
+          <p className="text-xs text-slate-500 mt-1">Specifications not available for this inquiry.</p>
         )}
-        {display.mediaSource === 'catalog' && (
-          <p className="text-[11px] text-amber-700 font-medium mt-1">Catalogue reference photo · not a confirmed assigned vehicle</p>
+        {(display.mediaSource === 'catalog' ||
+          (display.mediaSource === 'snapshot' && display.savedSource === 'catalog')) && (
+          <p className="text-[11px] text-amber-700 font-medium mt-1">Catalogue reference photos · not assigned units</p>
         )}
-        {display.photos.length === 0 && (
-          <p className="text-[11px] text-slate-500 mt-1">No vehicle photo available</p>
+        {display.mediaSource === 'snapshot' && display.savedSource === 'fleet' && (
+          <p className="text-[11px] text-slate-600 mt-1">Vehicle details saved at inquiry submission</p>
         )}
+        {!display.photos.length && <p className="text-[11px] text-slate-500 mt-1">No vehicle photo available</p>}
         <button type="button" onClick={() => onView(inquiry)}
           className="mt-2 inline-flex gap-1.5 items-center text-xs font-semibold text-blue-700 hover:underline">
-          <Eye size={13} /> View vehicle details
+          <Eye size={13} /> View complete vehicle details
         </button>
       </div>
     </div>
@@ -69,24 +67,24 @@ interface ReservationVehicleDetailsProps {
 export const ReservationVehicleDetails: React.FC<ReservationVehicleDetailsProps> = ({
   inquiry, vehicles, onClose
 }) => {
-  const display = resolveReservationVehicleDisplay(vehicles, inquiry.requestedVehicleId, inquiry.preferredVehicle);
-  const { vehicle, photos } = display;
-  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const displayedPhoto = selectedPhoto && photos.includes(selectedPhoto) ? selectedPhoto : photos[0];
+  const display = resolveReservationVehicleDisplay(
+    vehicles, inquiry.requestedVehicleId, inquiry.preferredVehicle, inquiry.requestedVehicleSnapshot
+  );
+  const vehicle = display.vehicle;
 
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [onClose]);
 
   return createPortal(
     <div className="fixed inset-0 z-[1000] p-3 sm:p-6 bg-slate-950/65 flex items-center justify-center"
       role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}>
       <section role="dialog" aria-modal="true" aria-labelledby="reservation-vehicle-title"
-        className="w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
+        className="w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
         <header className="p-4 sm:p-6 flex justify-between gap-3 items-start border-b border-slate-200">
           <div>
             <p className="uppercase text-xs text-blue-700 font-bold tracking-wide">Reservation inquiry · {inquiry.id}</p>
@@ -98,76 +96,34 @@ export const ReservationVehicleDetails: React.FC<ReservationVehicleDetailsProps>
           <button type="button" onClick={onClose} aria-label="Close vehicle details"
             className="p-2 rounded-xl hover:bg-slate-100 text-slate-600"><X size={20}/></button>
         </header>
-
-        <div className="p-4 sm:p-6 space-y-5">
-          {displayedPhoto ? (
-            <div className="space-y-3">
-              <div className="h-48 sm:h-64 w-full rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
-                <img src={displayedPhoto} alt={vehicle?.makeModel || 'Requested vehicle'} className="h-full w-full object-contain" />
-              </div>
-              {display.mediaSource === 'catalog' && (
-                <p className="text-xs leading-relaxed text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-                  These are catalogue reference photographs for the requested vehicle model. They do not confirm which specific fleet unit will be assigned.
-                </p>
-              )}
-              {photos.length > 1 && (
-                <div className="flex flex-wrap gap-2" aria-label="Vehicle photo gallery">
-                  {photos.map((url, index) => (
-                    <button key={url} type="button" onClick={() => setSelectedPhoto(url)}
-                      aria-label={`View vehicle photo ${index + 1}`}
-                      aria-pressed={url === displayedPhoto}
-                      className={`w-20 h-16 rounded-lg overflow-hidden border-2 transition-colors ${url === displayedPhoto ? 'border-blue-600' : 'border-slate-200 hover:border-slate-400'}`}>
-                      <img src={url} alt={`Vehicle thumbnail ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <VehiclePhoto vehicle={vehicle} large />
-          )}
-          {vehicle ? (
-            <>
-              {!display.matchedFleetRecord && (
-                <p className="text-xs leading-relaxed text-slate-600">
-                  Model specifications are from the public vehicle catalogue; the individual fleet vehicle has not been identified.
-                </p>
-              )}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[
-                  ['Model', vehicle.makeModel],
-                  ['Year', vehicle.year],
-                  ['Category', vehicle.vehicleCategory || vehicle.type],
-                  ['Seats', vehicle.seats],
-                  ['Fuel', vehicle.fuelType],
-                  ['Transmission', vehicle.transmission],
-                  ['Fleet status now', vehicle.status],
-                  ['Indicative daily rate (Le)', vehicle.pricePerDay ? vehicle.pricePerDay.toLocaleString() : null]
-                ].filter((entry) => entry[1] !== null && entry[1] !== undefined && entry[1] !== '').map(([label, value]) => (
-                  <div key={String(label)} className="rounded-xl bg-slate-50 p-3 border border-slate-100">
-                    <p className="text-[10px] uppercase font-bold text-slate-500">{label}</p>
-                    <p className="text-sm text-slate-900 font-semibold mt-1">{value}</p>
-                  </div>
-                ))}
-              </div>
-              {vehicle.description && <p className="text-sm text-slate-600">{vehicle.description}</p>}
-            </>
-          ) : (
+        <div className="p-4 sm:p-6 space-y-6">
+          <VehicleDetailsGallery display={display} title="Requested vehicle specifications and gallery" />
+          {!vehicle && (
             <p className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-sm text-amber-800">
-              No matching fleet record or exact catalogue entry is available for this inquiry. The saved requested vehicle name is retained. Check that the fleet record and its photographs are available in Vehicle Management.
+              This inquiry has no saved vehicle snapshot or unambiguous matching fleet/catalogue record.
+              Its original requested vehicle name is preserved.
             </p>
           )}
-
-          <div className="border-t border-slate-200 pt-4">
-            <h3 className="text-sm font-bold text-slate-950 mb-3">Inquiry details</h3>
-            <div className="grid sm:grid-cols-2 gap-3 text-sm">
+          <div className="border-t border-slate-200 pt-5">
+            <h3 className="text-base font-bold text-slate-950 mb-4">Complete inquiry details</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <p className="flex items-start gap-2 text-slate-700"><Users size={16} className="mt-0.5 shrink-0"/>{inquiry.vehiclesNeeded} requested {inquiry.vehiclesNeeded === 1 ? 'unit' : 'units'} · {inquiry.serviceType}</p>
               <p className="flex items-start gap-2 text-slate-700"><CalendarDays size={16} className="mt-0.5 shrink-0"/>{inquiry.startDate} to {inquiry.endDate}</p>
               <p className="flex items-start gap-2 text-slate-700"><MapPin size={16} className="mt-0.5 shrink-0"/>Pickup: {inquiry.pickupLocation}</p>
               <p className="flex items-start gap-2 text-slate-700"><MapPin size={16} className="mt-0.5 shrink-0"/>Return: {inquiry.dropoffLocation}</p>
               <p className="text-slate-700">Customer: <strong>{inquiry.fullName}</strong></p>
+              <p className="text-slate-700">Organization: <strong>{inquiry.organization || 'Not provided'}</strong></p>
+              {inquiry.email && <p className="flex items-start gap-2 text-slate-700 break-all"><Mail size={16} className="mt-0.5 shrink-0"/><a className="text-blue-700 hover:underline" href={`mailto:${inquiry.email}`}>{inquiry.email}</a></p>}
+              {inquiry.phone && <p className="flex items-start gap-2 text-slate-700"><Phone size={16} className="mt-0.5 shrink-0"/>{inquiry.phone}</p>}
               <p className="text-slate-700">Request status: <strong>{inquiry.status}</strong></p>
+              <p className="text-slate-700">Submitted: <strong>{inquiry.createdAt || 'Not recorded'}</strong></p>
             </div>
+            {inquiry.specialRequirementsDet && (
+              <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 className="text-sm font-bold text-slate-900 mb-1">Special requests / travel and fuel preferences</h4>
+                <p className="text-sm text-slate-700 whitespace-pre-line">{inquiry.specialRequirementsDet}</p>
+              </div>
+            )}
           </div>
         </div>
         <footer className="border-t border-slate-200 p-4 sm:px-6 flex justify-end">
