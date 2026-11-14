@@ -1,0 +1,29 @@
+name: Validate Reservations
+
+on:
+  push:
+    branches:
+      - feature/reservation-vehicle-previews-20261114
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'scripts/test_reservation_vehicles.ts'
+      - 'package*.json'
+      - '.github/workflows/reservations-validation.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Type-check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Reservation regression tests
+        run: npm run test:reservations
