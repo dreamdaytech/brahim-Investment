@@ -46,7 +46,7 @@ export const ReservationVehiclePreview: React.FC<ReservationVehiclePreviewProps>
         )}
         <button type="button" onClick={() => onView(inquiry)}
           className="mt-2 inline-flex gap-1.5 items-center text-xs font-semibold text-blue-700 hover:underline">
-          <Eye size={13} /> View request details
+          <Eye size={13} /> View vehicle details
         </button>
       </div>
     </div>
