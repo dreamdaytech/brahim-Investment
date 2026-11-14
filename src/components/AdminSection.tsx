@@ -238,7 +238,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
     const matchesSearch =
       item.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.preferredVehicle.toLowerCase().includes(searchTerm.toLowerCase());
+      (item.preferredVehicle || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'All' ? true : item.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
