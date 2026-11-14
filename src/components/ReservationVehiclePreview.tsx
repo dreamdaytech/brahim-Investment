@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Car, Eye, X, CalendarDays, MapPin, Users } from 'lucide-react';
 import type { Inquiry } from '../types';
@@ -63,6 +63,10 @@ export const ReservationVehicleDetails: React.FC<ReservationVehicleDetailsProps>
   inquiry, vehicles, onClose
 }) => {
   const vehicle = resolveReservationVehicle(vehicles, inquiry.requestedVehicleId, inquiry.preferredVehicle);
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const photos = Array.from(new Set([vehicle?.imageUrl, ...(vehicle?.galleryUrls || [])]
+    .filter((url): url is string => typeof url === 'string' && url.length > 0)));
+  const displayedPhoto = selectedPhoto && photos.includes(selectedPhoto) ? selectedPhoto : photos[0];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -90,7 +94,27 @@ export const ReservationVehicleDetails: React.FC<ReservationVehicleDetailsProps>
         </header>
 
         <div className="p-4 sm:p-6 space-y-5">
-          <VehiclePhoto vehicle={vehicle} large />
+          {displayedPhoto ? (
+            <div className="space-y-3">
+              <div className="h-48 sm:h-64 w-full rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
+                <img src={displayedPhoto} alt={vehicle?.makeModel || 'Requested vehicle'} className="h-full w-full object-contain" />
+              </div>
+              {photos.length > 1 && (
+                <div className="flex flex-wrap gap-2" aria-label="Vehicle photo gallery">
+                  {photos.map((url, index) => (
+                    <button key={url} type="button" onClick={() => setSelectedPhoto(url)}
+                      aria-label={`View vehicle photo ${index + 1}`}
+                      aria-pressed={url === displayedPhoto}
+                      className={`w-20 h-16 rounded-lg overflow-hidden border-2 transition-colors ${url === displayedPhoto ? 'border-blue-600' : 'border-slate-200 hover:border-slate-400'}`}>
+                      <img src={url} alt={`Vehicle thumbnail ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <VehiclePhoto vehicle={vehicle} large />
+          )}
           {vehicle ? (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
