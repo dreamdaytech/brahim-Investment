@@ -163,7 +163,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       if (['super_admin', 'admin', 'fleet_manager', 'finance'].includes(userRole)) {
         const { data: fleetData, error: fleetError } = await supabase
           .from('vehicles')
-          .select('id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status, plate_number');
+          .select('id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status');
         if (fleetError) {
           console.error('Could not load reservation vehicle previews:', fleetError);
         } else if (fleetData) {
