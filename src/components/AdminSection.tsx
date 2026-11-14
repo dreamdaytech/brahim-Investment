@@ -158,16 +158,32 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       const { data: inqData } = await supabase.from('inquiries').select('*');
       if (inqData) setInquiries(inqData.map(mapInquiryFromDB));
 
-      // Include unavailable/retired vehicles for historical inquiries. This
-      // lookup is only made after admin authentication and role verification.
+      // Include unavailable/retired vehicles for historical inquiries.
+      // Older deployments can lack some newer optional fleet columns: retry
+      // with progressively smaller public-field selections only on schema
+      // errors, without exposing the entire vehicles table to this view.
       if (['super_admin', 'admin', 'fleet_manager', 'finance'].includes(userRole)) {
-        const { data: fleetData, error: fleetError } = await supabase
-          .from('vehicles')
-          .select('id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status');
-        if (fleetError) {
-          console.error('Could not load reservation vehicle previews:', fleetError);
-        } else if (fleetData) {
-          setReservationVehicles(fleetData.map(mapReservationVehicleFromDB));
+        const selections = [
+          'id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status',
+          'id, make_model, image_url, gallery_urls',
+          'id, make_model, image_url',
+          'id, make_model',
+        ];
+        for (const columns of selections) {
+          const { data: fleetData, error: fleetError } = await supabase
+            .from('vehicles')
+            .select(columns);
+          if (!fleetError) {
+            setReservationVehicles((fleetData || []).map(mapReservationVehicleFromDB));
+            break;
+          }
+          const isMissingColumn = ['42703', 'PGRST204'].includes(fleetError.code || '') ||
+            /column .* does not exist|could not find .* column/i.test(fleetError.message || '');
+          if (!isMissingColumn || columns === selections[selections.length - 1]) {
+            console.error('Could not load reservation vehicle previews:', fleetError);
+            // The exact-name catalogue fallback can still show model photos.
+            break;
+          }
         }
       }
 
