@@ -31,19 +31,31 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         name: v.makeModel,
         type: v.vehicleCategory || v.type || 'SUV',
         pricePerDay: v.pricePerDay || 0,
-        imageUrl: v.imageUrl || (v.images && v.images[0]) || ''
+        imageUrl: v.imageUrl || (v.images && v.images[0]) || '',
+        year: v.year || null,
+        seats: v.seats || null,
+        fuel: v.fuelType || null,
+        transmission: v.transmission || null,
+        description: v.description || ''
       }))
     : VEHICLES.map(v => ({
         id: v.id,
         name: v.name,
         type: v.type,
         pricePerDay: v.pricePerDay,
-        imageUrl: v.imageUrl || ''
+        imageUrl: v.imageUrl || '',
+        year: null,
+        seats: v.seats,
+        fuel: v.fuel,
+        transmission: v.transmission,
+        description: v.description
       }));
 
   // Wizard Step State
   const [step, setStep] = useState<number>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [submittedInquiry, setSubmittedInquiry] = useState<Inquiry | null>(null);
+  const [submittedVehicleSnapshot, setSubmittedVehicleSnapshot] = useState<(typeof sourceVehicles)[number] | null>(null);
   
   // Custom Dropdown State
   const [isVehicleDropdownOpen, setIsVehicleDropdownOpen] = useState<boolean>(false);
@@ -139,6 +151,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       startDate,
       endDate,
       preferredVehicle: currentVehicleObj?.name || '',
+      // Persist stable ID when selected from the live fleet, not demo fallback.
+      requestedVehicleId: fleetVehicles?.some(v => v.id === preferredVehicle) &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(preferredVehicle)
+        ? preferredVehicle : undefined,
       vehiclesNeeded,
       pickupLocation,
       dropoffLocation,
@@ -153,6 +169,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       return;
     }
 
+    setSubmittedInquiry(newInquiry);
+    setSubmittedVehicleSnapshot(currentVehicleObj || null);
     setIsSubmitted(true);
     clearEstimateDetails();
   };
@@ -184,18 +202,59 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <div className="grid grid-cols-2 gap-4 text-xs">
                     <div>
                       <span className="text-slate-500 block font-mono">REQUEST REFERENCE</span>
-                      <span className="font-bold text-slate-800">BIG-9482-A</span>
+                      <span className="font-bold text-slate-800 break-all">{submittedInquiry?.id || '—'}</span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block font-mono">DISPATCH WINDOW</span>
-                      <span className="font-bold text-slate-800">As soon as possible</span>
+                      <span className="text-slate-500 block font-mono">REQUEST STATUS</span>
+                      <span className="font-bold text-amber-700">Pending Review</span>
                     </div>
                   </div>
                 </div>
 
+                {submittedInquiry && (
+                  <div className="text-left bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                    <div className="p-4 sm:p-5 border-b border-slate-100">
+                      <h3 className="font-black text-slate-950 text-base">Your requested vehicle</h3>
+                      <p className="text-xs text-slate-500 mt-1">This inquiry is not yet a confirmed reservation or vehicle assignment.</p>
+                    </div>
+                    <div className="p-4 sm:p-5 flex flex-col sm:flex-row gap-4">
+                      {submittedVehicleSnapshot?.imageUrl ? (
+                        <img src={submittedVehicleSnapshot.imageUrl} alt={submittedVehicleSnapshot.name}
+                          className="h-40 sm:h-32 w-full sm:w-48 object-cover bg-slate-50 rounded-xl border border-slate-100" />
+                      ) : (
+                        <div className="h-28 sm:h-32 sm:w-48 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 text-xs">Vehicle photo unavailable</div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-black text-slate-950 text-lg">{submittedInquiry.preferredVehicle || 'Selected vehicle'}</h4>
+                        <p className="text-sm text-slate-600 mt-1">
+                          {[submittedVehicleSnapshot?.year, submittedVehicleSnapshot?.type,
+                            submittedVehicleSnapshot?.seats ? submittedVehicleSnapshot.seats + ' seats' : null]
+                            .filter(Boolean).join(' · ')}
+                        </p>
+                        <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs mt-3">
+                          <div><dt className="text-slate-500">Quantity</dt><dd className="font-bold">{submittedInquiry.vehiclesNeeded}</dd></div>
+                          <div><dt className="text-slate-500">Service</dt><dd className="font-bold">{submittedInquiry.serviceType}</dd></div>
+                          <div><dt className="text-slate-500">From</dt><dd className="font-bold">{submittedInquiry.startDate}</dd></div>
+                          <div><dt className="text-slate-500">To</dt><dd className="font-bold">{submittedInquiry.endDate}</dd></div>
+                          <div className="col-span-2"><dt className="text-slate-500">Pickup</dt><dd className="font-bold">{submittedInquiry.pickupLocation}</dd></div>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <button 
                   onClick={() => {
                     setIsSubmitted(false);
+                    setSubmittedInquiry(null);
+                    setSubmittedVehicleSnapshot(null);
+                    setSelectedVehicleId('');
+                    setPreferredVehicle('');
+                    setVehiclesNeeded(1);
+                    setStartDate('');
+                    setEndDate('');
+                    setIsVehicleDropdownOpen(false);
+                    setVehicleSearchTerm('');
                     setStep(1);
                     setFullName('');
                     setOrganization('');
