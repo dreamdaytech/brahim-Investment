@@ -238,7 +238,12 @@ export const resolveReservationVehicleDisplay = (
   preferredVehicle?: string | null,
   savedSnapshot?: unknown
 ): ReservationVehicleDisplay => {
-  const snapshot = readReservationVehicleSnapshot(savedSnapshot);
+  // Never let a mismatched snapshot override the actual requested model or ID.
+  const candidate = readReservationVehicleSnapshot(savedSnapshot);
+  const snapshot = candidate &&
+    (!preferredVehicle || normalizeName(candidate.makeModel) === normalizeName(preferredVehicle)) &&
+    (!requestedVehicleId || candidate.id === requestedVehicleId)
+      ? candidate : null;
   if (snapshot) {
     const photos = safeImageUrls(snapshot.imageUrl, snapshot.galleryUrls);
     if (photos.length) {
