@@ -231,6 +231,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                             submittedVehicleSnapshot?.seats ? submittedVehicleSnapshot.seats + ' seats' : null]
                             .filter(Boolean).join(' · ')}
                         </p>
+                        {submittedVehicleSnapshot && (
+                          <p className="text-xs text-slate-600 mt-1">
+                            {[submittedVehicleSnapshot.fuel, submittedVehicleSnapshot.transmission].filter(Boolean).join(' · ')}
+                          </p>
+                        )}
                         <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs mt-3">
                           <div><dt className="text-slate-500">Quantity</dt><dd className="font-bold">{submittedInquiry.vehiclesNeeded}</dd></div>
                           <div><dt className="text-slate-500">Service</dt><dd className="font-bold">{submittedInquiry.serviceType}</dd></div>
