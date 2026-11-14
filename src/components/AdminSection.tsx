@@ -9,6 +9,9 @@ import { DashboardOverview } from './DashboardOverview';
 import { AccessControlView } from './AccessControlView';
 import { MaintenanceSection } from './MaintenanceSection'; 
 import { ExpensesSection } from './ExpensesSection';
+import { ReservationVehiclePreview, ReservationVehicleDetails } from './ReservationVehiclePreview';
+import { mapReservationVehicleFromDB } from '../lib/reservationVehicles';
+import type { ReservationVehicle } from '../lib/reservationVehicles';
 import { supabase } from '../lib/supabase';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -34,6 +37,9 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [clients, setClients] = useState<any[]>([]);
   const [adminTeamMembers, setAdminTeamMembers] = useState<any[]>([]);
+  // Requested vehicle previews are admin-only; never load fleet registry details in a public view.
+  const [reservationVehicles, setReservationVehicles] = useState<ReservationVehicle[]>([]);
+  const [selectedVehicleInquiry, setSelectedVehicleInquiry] = useState<Inquiry | null>(null);
   
   // Filtering & Searches States
   const [adminTab, setAdminTab] = useState<'overview' | 'reservations' | 'clients' | 'team' | 'performance' | 'dispatch_management' | 'drivers' | 'vehicles' | 'fuel' | 'billing' | 'maintenance' | 'expenses' | 'profile' | 'access'>('overview');
@@ -106,6 +112,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       startDate: dbItem.startdate || dbItem.startDate,
       endDate: dbItem.enddate || dbItem.endDate,
       preferredVehicle: dbItem.preferredvehicle || dbItem.preferredVehicle,
+      requestedVehicleId: dbItem.requested_vehicle_id || dbItem.requestedVehicleId || null,
       vehiclesNeeded: dbItem.vehiclesneeded || dbItem.vehiclesNeeded,
       pickupLocation: dbItem.pickuplocation || dbItem.pickupLocation,
       dropoffLocation: dbItem.dropofflocation || dbItem.dropoffLocation,
@@ -150,6 +157,20 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
     const fetchAdminData = async () => {
       const { data: inqData } = await supabase.from('inquiries').select('*');
       if (inqData) setInquiries(inqData.map(mapInquiryFromDB));
+
+      // Include unavailable/retired vehicles for historical inquiries. This
+      // lookup is only made after admin authentication and role verification.
+      if (['super_admin', 'admin', 'fleet_manager', 'finance'].includes(userRole)) {
+        const { data: fleetData, error: fleetError } = await supabase
+          .from('vehicles')
+          .select('id, make_model, year, image_url, gallery_urls, vehicle_category, vehicle_type, seats, fuel_type, transmission, description, price_per_day, status');
+        if (fleetError) {
+          console.error('Could not load reservation vehicle previews:', fleetError);
+        } else if (fleetData) {
+          setReservationVehicles(fleetData.map(mapReservationVehicleFromDB));
+        }
+      }
+
       const { data: clientsData } = await supabase.from('clients').select('*');
       if (clientsData) setClients(clientsData.map(mapClientFromDB));
       const { data: teamData } = await supabase.from('team_members').select('*').order('display_order', { ascending: true });
@@ -170,7 +191,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
       if (data) setAdminTeamMembers(data.map(mapTeamFromDB));
     }).subscribe();
     return () => { supabase.removeChannel(inqCh); supabase.removeChannel(cliCh); supabase.removeChannel(teamCh); };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, userRole]);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,6 +212,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
     localStorage.removeItem('big_group_team_cache');
     setInquiries([]);
     setClients([]);
+    setReservationVehicles([]);
+    setSelectedVehicleInquiry(null);
   };
 
   const onUpdateStatus = async (id: string, status: any) => { await supabase.from('inquiries').update({ status }).eq('id', id); };
@@ -215,7 +238,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
     const matchesSearch =
       item.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.preferredVehicle.toLowerCase().includes(searchTerm.toLowerCase());
+      (item.preferredVehicle || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'All' ? true : item.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -646,7 +669,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
                             
                             <div>
                               <p className="text-slate-600 font-bold text-[11px] uppercase tracking-wider">Renting Spec Logistics</p>
-                              <p className="font-black text-slate-950 text-base mt-1">{item.preferredVehicle} ({item.vehiclesNeeded} Unit)</p>
+                              <ReservationVehiclePreview
+                                inquiry={item}
+                                vehicles={reservationVehicles}
+                                onView={setSelectedVehicleInquiry}
+                              />
                               <p className="text-slate-700 font-bold">Service Class: {item.serviceType}</p>
                               <p className="text-slate-700 font-medium text-xs mt-1">Route Range: {item.startDate} &rarr; {item.endDate}</p>
                               <p className="text-slate-700 font-medium text-xs">Pickup: {item.pickupLocation}</p>
@@ -764,6 +791,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({ teamMembers = [], on
         </div>
       )}
 
+      {selectedVehicleInquiry && (
+        <ReservationVehicleDetails
+          inquiry={selectedVehicleInquiry}
+          vehicles={reservationVehicles}
+          onClose={() => setSelectedVehicleInquiry(null)}
+        />
+      )}
     </div>
   );
 };

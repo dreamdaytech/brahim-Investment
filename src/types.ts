@@ -116,6 +116,8 @@ export interface Inquiry {
   startDate: string;
   endDate: string;
   preferredVehicle: string;
+  /** Optional stable fleet link; the requested vehicle is not necessarily assigned. */
+  requestedVehicleId?: string | null;
   vehiclesNeeded: number;
   pickupLocation: string;
   dropoffLocation: string;

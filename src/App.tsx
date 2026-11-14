@@ -31,6 +31,7 @@ const mapInquiryToDB = (uiItem: Partial<Inquiry>): any => {
   if (uiItem.startDate !== undefined) mapped.startdate = uiItem.startDate;
   if (uiItem.endDate !== undefined) mapped.enddate = uiItem.endDate;
   if (uiItem.preferredVehicle !== undefined) mapped.preferredvehicle = uiItem.preferredVehicle;
+  if (uiItem.requestedVehicleId) mapped.requested_vehicle_id = uiItem.requestedVehicleId;
   if (uiItem.vehiclesNeeded !== undefined) mapped.vehiclesneeded = uiItem.vehiclesNeeded;
   if (uiItem.pickupLocation !== undefined) mapped.pickuplocation = uiItem.pickupLocation;
   if (uiItem.dropoffLocation !== undefined) mapped.dropofflocation = uiItem.dropoffLocation;
@@ -177,7 +178,22 @@ export default function App() {
   // moved into AdminSection.tsx behind authentication.
   const handleAddInquiry = async (newInquiry: Inquiry): Promise<{success: boolean, error?: string}> => {
     try {
-      const { error } = await supabase.from('inquiries').insert([mapInquiryToDB(newInquiry)]);
+      const payload = mapInquiryToDB(newInquiry);
+      let { error } = await supabase.from('inquiries').insert([payload]);
+
+      // Backward compatible if the additive requested_vehicle_id migration
+      // has not been applied yet. Existing bookings must continue to work.
+      const missingNewColumn = error &&
+        payload.requested_vehicle_id &&
+        (error.code === 'PGRST204' || error.code === '42703') &&
+        /requested_vehicle_id/i.test(error.message || '');
+      if (missingNewColumn) {
+        const legacyPayload = { ...payload };
+        delete legacyPayload.requested_vehicle_id;
+        const legacyResult = await supabase.from('inquiries').insert([legacyPayload]);
+        error = legacyResult.error;
+      }
+
       if (error) {
         return { success: false, error: error.message || JSON.stringify(error) };
       }
